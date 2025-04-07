@@ -1,0 +1,73 @@
+---
+// src/pages/projeler/[slug].astro
+import { type CollectionEntry, getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro'; // Layout dosyasının yolu doğru mu kontrol edin (genellikle doğrudur)
+
+// 1. getStaticPaths: Hangi sayfaların oluşturulacağını Astro'ya bildirir (Değişiklik yok)
+export async function getStaticPaths() {
+  const projeler = await getCollection('projeler', ({data}) => {
+     return !data.isDraft;
+  });
+  return projeler.map(proje => ({
+    params: { slug: proje.slug },
+    props: { proje },
+  }));
+}
+
+// 2. Sayfa Bileşeni: (Değişiklik yok)
+type Props = {
+  proje: CollectionEntry<'projeler'>;
+}
+const { proje } = Astro.props;
+const { Content } = await proje.render();
+---
+{/* === LAYOUT VE HTML KISMINA TAILWIND SINIFLARI EKLENDİ === */}
+<Layout title={proje.data.title} description={proje.data.description} image={proje.data.image.src}>
+  {/* Ana Article Konteyneri */}
+  <article class="max-w-3xl mx-auto py-8 px-4"> {/* Maksimum genişlik, ortalama, dikey/yatay padding */}
+
+    {/* Kapak Resmi */}
+    <img
+      src={proje.data.image.src}
+      alt={proje.data.image.alt}
+      class="w-full rounded-lg shadow-md mb-8" {/* Tam genişlik, köşeler, gölge, alt boşluk */}
+    />
+
+    {/* Başlık */}
+    <h1 class="text-4xl md:text-5xl font-bold mb-4 text-accent-light"> {/* Boyut (responsive), kalınlık, boşluk, renk */}
+      {proje.data.title}
+    </h1>
+
+    {/* Meta Bilgiler */}
+    <div class="text-sm text-gray-400 mb-6 border-b border-gray-700 pb-4"> {/* Boyut, renk, boşluk, alt kenarlık */}
+      {/* Yayın Tarihi */}
+      <span class="block mb-2"> {/* Alt alta gelmesi için block, boşluk */}
+        Yayınlanma Tarihi: {proje.data.publishDate.toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </span>
+      {/* Etiketler */}
+      {proje.data.tags && proje.data.tags.length > 0 && (
+        <div> {/* Etiketleri sarmalayan div */}
+          <span class="mr-2">Etiketler:</span> {/* "Etiketler:" yazısı */}
+          {proje.data.tags.map(tag => (
+            <span class="inline-block bg-gray-700 text-gray-300 text-xs font-medium mr-2 mb-1 px-2.5 py-0.5 rounded-full"> {/* Etiket stili */}
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+
+    {/* Markdown İçeriği Alanı (Typography Eklentisi ile Stilleme) */}
+    <div class="prose prose-lg prose-invert
+                prose-headings:text-accent-light prose-a:text-brand hover:prose-a:text-accent-light
+                prose-code:text-accent-light prose-pre:bg-gray-800
+                max-w-none"> {/* prose sınıfları, renk/stil özelleştirmeleri, max-width sıfırlama */}
+      <Content /> {/* Markdown içeriği buraya render edilecek ve 'prose' stilleri uygulanacak */}
+    </div>
+
+    {/* Geri Dön Linki */}
+    <a href="/projeler/" class="inline-block mt-12 text-accent-light hover:underline font-semibold">
+      ← Tüm Projelere Geri Dön
+    </a>
+  </article>
+</Layout>

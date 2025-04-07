@@ -1,0 +1,137 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content'; // İçerik çekmek için
+// Opsiyonel: Kendi bileşenlerinizi import edebilirsiniz (örn: ProjeKartı)
+// import ProjeKarti from '../components/ProjeKarti.astro';
+
+const pageTitle = "Ana Sayfa";
+const pageDescription = "Gulderen Lab: Elektronik ve yazılım dünyasındaki yenilikçi projelerimi, teknik yazılarımı ve yeteneklerimi keşfedin.";
+
+// === ÖNE ÇIKAN İÇERİKLERİ ALMA ===
+// Son 3 projeyi al (tarihe göre)
+const oneCikanProjeler = (await getCollection('projeler'))
+    .filter(proje => !proje.data.isDraft)
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+    .slice(0, 3); // Son 3 taneyi al
+
+// Son 2 blog yazısını al (tarihe göre)
+const sonYazilar = (await getCollection('blog'))
+    .filter(post => !post.data.isDraft)
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+    .slice(0, 2); // Son 2 taneyi al
+
+// Yetenek listesi (veya ikonlar)
+const yetenekler = [
+    { name: "Gömülü Sistemler (ESP32, Arduino)", icon: "cpu-chip" }, // Örnek ikon isimleri (Heroicons vb. için)
+    { name: "PCB Tasarımı (KiCad, Eagle)", icon: "rectangle-group" },
+    { name: "Web Geliştirme (Astro, React, Node.js)", icon: "code-bracket" },
+    { name: "Python (Veri Analizi, Simülasyon)", icon: "variable" },
+    { name: "MQTT & IoT Protokolleri", icon: "signal" },
+    { name: "Teknik Yazarlık & Dökümantasyon", icon: "document-text" },
+];
+
+// Heroicons (Örnek İkon Kütüphanesi)
+// İkonları doğrudan SVG olarak eklemek veya bir kütüphane kullanmak daha iyi olabilir.
+// Şimdilik sadece isimlerini kullanacağız.
+// const icons = { /* SVG kodları veya bileşenleri */ };
+---
+<Layout title={pageTitle} description={pageDescription}>
+
+  {/* 1. BÖLÜM: ETKİLEYİCİ GİRİŞ (HERO) */}
+  <section class="relative text-center py-20 md:py-32 overflow-hidden min-h-[60vh] flex flex-col justify-center items-center">
+     {/* İsteğe Bağlı: Arka Plan Efekti (Örn: gradient, desen, düşük opaklıkta resim) */}
+     <div class="absolute inset-0 -z-10 bg-gradient-to-br from-gray-900 via-gray-800 to-accent-dark/30 opacity-70"></div>
+     {/* İsteğe Bağlı: Soyut şekiller */}
+     {/* <div class="absolute top-10 left-10 w-32 h-32 bg-brand/10 rounded-full blur-2xl -z-10"></div> */}
+     {/* <div class="absolute bottom-10 right-10 w-48 h-48 bg-accent/10 rounded-full blur-3xl -z-10"></div> */}
+
+    <div class="container mx-auto px-4 relative z-10">
+        {/* Belki küçük bir logo veya ikon */}
+        {/* <img src="/logo-ikon.svg" alt="Gulderen Lab Ikon" class="w-16 h-16 mx-auto mb-4 opacity-80" /> */}
+
+        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 leading-tight">
+            <span class="block text-white">Yaratıcılığı Kodlamak,</span>
+            <span class="block bg-gradient-to-r from-accent-light via-brand to-accent-light bg-clip-text text-transparent mt-2">
+                Elektroniği Hayata Geçirmek
+            </span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mt-6 mb-10">
+            Gulderen Lab'a hoş geldiniz. Gömülü sistemlerden modern web teknolojilerine uzanan projelerimi ve teknik yazılarımı keşfedin.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="/projeler" class="px-8 py-3 bg-brand text-gray-900 font-semibold rounded-md shadow-lg hover:bg-opacity-85 transform hover:scale-105 transition duration-300 ease-in-out">
+                Projeleri Keşfet
+            </a>
+            <a href="/blog" class="px-8 py-3 bg-gray-700 text-white font-semibold rounded-md shadow-lg hover:bg-gray-600 transform hover:scale-105 transition duration-300 ease-in-out">
+                Blog Yazıları
+            </a>
+        </div>
+    </div>
+  </section>
+
+  {/* 2. BÖLÜM: ÖNE ÇIKAN PROJELER */}
+  {oneCikanProjeler.length > 0 && (
+    <section class="py-16 md:py-24 bg-gray-800/50"> {/* Hafif farklı arkaplan */}
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">Öne Çıkan Projeler</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Proje Kartlarını Döngüyle Oluşturma */}
+          {oneCikanProjeler.map((proje) => (
+            <a href={`/projeler/${proje.slug}/`} class="block bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 group">
+              <img src={proje.data.image.src} alt={proje.data.image.alt} loading="lazy" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"/>
+              <div class="p-5">
+                <h3 class="text-lg font-semibold mb-1 text-accent-light group-hover:text-brand transition-colors">{proje.data.title}</h3>
+                <p class="text-sm text-gray-400 mb-3 line-clamp-2">{proje.data.description}</p> {/* line-clamp-2: 2 satırla sınırla */}
+                <div class="text-xs text-gray-500">
+                  {proje.data.tags?.slice(0, 3).map(tag => <span class="mr-2">#{tag}</span>)} {/* İlk 3 etiket */}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+        <div class="text-center mt-12">
+          <a href="/projeler" class="text-brand hover:underline font-medium">Tüm Projeleri Gör →</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {/* 3. BÖLÜM: YETENEKLER */}
+   <section class="py-16 md:py-24">
+       <div class="container mx-auto px-4">
+           <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">Yeteneklerim & Araçlarım</h2>
+           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+               {yetenekler.map(yetenek => (
+                   <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-3 shadow hover:bg-gray-700/50 transition-colors">
+                       {/* Buraya SVG ikonu gelebilir */}
+                       <span class="text-brand text-xl"> {/* Geçici ikon yerine */}•</span>
+                       <span class="text-gray-300 text-sm md:text-base">{yetenek.name}</span>
+                   </div>
+               ))}
+           </div>
+       </div>
+   </section>
+
+  {/* 4. BÖLÜM: SON BLOG YAZILARI (Opsiyonel) */}
+  {sonYazilar.length > 0 && (
+    <section class="py-16 md:py-24 bg-gray-800/50">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">Son Yazılar</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {sonYazilar.map((post) => (
+            <a href={`/blog/${post.slug}/`} class="block bg-gray-800 rounded-lg shadow-md p-5 transition hover:shadow-lg group">
+              <h3 class="text-lg font-semibold mb-1 text-accent-light group-hover:text-brand transition-colors">{post.data.title}</h3>
+              <p class="text-sm text-gray-400 mb-3 line-clamp-3">{post.data.description}</p> {/* 3 satırla sınırla */}
+              <span class="text-xs text-brand group-hover:underline">Devamını Oku →</span>
+            </a>
+          ))}
+        </div>
+         <div class="text-center mt-12">
+          <a href="/blog" class="text-brand hover:underline font-medium">Tüm Yazıları Gör →</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+</Layout>

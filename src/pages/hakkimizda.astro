@@ -1,0 +1,61 @@
+---
+// src/pages/hakkimizda.astro
+import Layout from '../layouts/Layout.astro';
+
+const pageTitle = "Hakkımızda";
+const pageDescription = "Gulderen Lab'ın arkasındaki kişi ve bu sitenin amacı hakkında daha fazla bilgi edinin.";
+// const pageImage = '/images/hakkimda-og.jpg'; // İsterseniz özel OG resmi
+---
+<Layout title={pageTitle} description={pageDescription} {/* image={pageImage} */}>
+
+  {/* Sayfa Başlığı */}
+  <h1 class="text-4xl font-bold mb-6 text-center text-white">{pageTitle}</h1>
+
+  {/* İki Sütunlu Yapı (Orta ekrandan itibaren) */}
+  <div class="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+
+    {/* Sol Sütun (Profil Resmi - Opsiyonel) */}
+    <div class="w-full md:w-1/3 flex-shrink-0">
+      <img
+        src="/images/profil-placeholder.jpg" {/* public/images altına bir profil resmi veya placeholder koyun */}
+        alt="Abdullah G. Profil Resmi"
+        class="rounded-full shadow-lg mx-auto w-48 h-48 md:w-full md:h-auto object-cover border-4 border-gray-700"
+      />
+       {/* Sosyal Medya Linkleri (İkonlarla daha şık olabilir) */}
+       <div class="mt-6 text-center space-x-4">
+           <a href="https://github.com/GulderenLab" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-brand transition-colors text-lg">GitHub</a>
+           <span class="text-gray-600">|</span>
+           <a href="https://linkedin.com/in/abdullah-gülderen-31120b35b/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-brand transition-colors text-lg">LinkedIn</a>
+           {/* İkonlar için SVG veya FontAwesome gibi kütüphaneler düşünülebilir */}
+       </div>
+    </div>
+
+    {/* Sağ Sütun (Metin İçeriği) */}
+    <div class="w-full md:w-2/3">
+       {/* Giriş Paragrafı */}
+       <p class="text-lg text-gray-300 mb-6 leading-relaxed">
+          Merhaba! Ben Abdullah Gülderen. Bu platform, elektronik devre tasarımı, gömülü sistemler, web geliştirme ve yazılım mühendisliği alanlarındaki keşiflerimi, projelerimi ve öğrendiklerimi paylaştığım kişisel laboratuvarım.
+       </p>
+
+       {/* Alt Başlık */}
+       <h2 class="text-2xl font-semibold mb-3 text-accent-light border-b border-gray-700 pb-2">Motivasyonum</h2>
+       <p class="text-gray-400 mb-6 leading-relaxed">
+         Teknolojinin sürekli gelişen dünyasında, teorik bilgiyi pratik uygulamalara dönüştürmenin ve bu süreçte karşılaşılan zorlukların üstesinden gelmenin heyecanını yaşıyorum. Gulderen Lab, bu yolculuğu belgelemek ve benzer ilgi alanlarına sahip kişilerle bağlantı kurmak için bir alan sunuyor.
+       </p>
+
+       {/* Alt Başlık */}
+       <h2 class="text-2xl font-semibold mb-3 text-accent-light border-b border-gray-700 pb-2">Neler Bulacaksınız?</h2>
+       <ul class="list-disc list-inside text-gray-400 mb-6 space-y-2 leading-relaxed">
+          <li>Detaylı proje dökümantasyonları ve kod depolarına linkler.</li>
+          <li>Karşılaştığım teknik zorluklar ve çözüm yaklaşımlarım.</li>
+          <li>Kullandığım araçlar, teknolojiler ve platformlar hakkında notlar.</li>
+          <li>Web geliştirme (özellikle Astro!) ve yazılım üzerine blog yazıları.</li>
+       </ul>
+
+       <p class="text-gray-300 leading-relaxed">
+         Sitede gezinirken keyif almanız ve ilginizi çeken bir şeyler bulmanız dileğiyle!
+       </p>
+    </div>
+
+  </div>
+</Layout>

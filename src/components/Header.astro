@@ -1,0 +1,18 @@
+---
+// src/components/Header.astro
+const { siteTitle = "Varsayılan Başlık" } = Astro.props;
+---
+<header class="bg-gray-800 text-white shadow-md"> {/* Arkaplan, metin rengi, gölge */}
+  <nav class="container mx-auto px-4 py-3 flex justify-between items-center"> {/* Konteyner, padding, flex layout */}
+    <a href="/" class="text-xl font-bold hover:text-gray-300 transition-colors"> {/* Boyut, kalınlık, hover efekti */}
+      {siteTitle}
+    </a>
+    <ul class="flex space-x-6"> {/* Flex, linkler arası boşluk */}
+      <li><a href="/" class="hover:text-gray-300 transition-colors">Ana Sayfa</a></li>
+      <li><a href="/projeler" class="hover:text-gray-300 transition-colors">Projeler</a></li>
+      <li><a href="/blog" class="hover:text-gray-300 transition-colors">Blog</a></li> {/* YENİ LİNK */}
+      <li><a href="/hakkimizda" class="hover:text-gray-300 transition-colors">Hakkımızda</a></li>
+      <li><a href="/iletisim" class="hover:text-gray-300 transition-colors">İletişim</a></li>
+    </ul>
+  </nav>
+</header>

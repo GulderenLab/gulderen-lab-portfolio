@@ -1,0 +1,68 @@
+---
+// src/layouts/Layout.astro
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/tailwind.css';
+
+// Props interface'ini tanımlıyoruz
+interface Props {
+	title: string;
+	description?: string; // Açıklama (isteğe bağlı)
+    image?: string; // Sayfa resmi (OG için, isteğe bağlı)
+}
+
+// Prop'ları alıyoruz ve varsayılan değerler atıyoruz
+const {
+    title,
+    description = 'Elektronik ve Yazılım Projelerimi sergilediğim kişisel web sitem.', // Varsayılan açıklama
+    image
+} = Astro.props;
+
+const siteName = "Gulderen Lab"; // Site adını bir değişkende tutmak iyi
+const formattedTitle = `${title} | ${siteName}`; // Sayfa başlığı formatı
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = image ? new URL(image, Astro.site).toString() : undefined;
+
+if (!Astro.site) {
+    console.warn( /* ... uyarı mesajı ... */ );
+}
+---
+<!doctype html>
+<html lang="tr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+
+		{/* SEO ve META ETİKETLERİ */}
+		<title>{formattedTitle}</title>
+		<meta name="description" content={description} />
+
+        {/* Canonical URL - DÜZELTİLDİ */}
+        {Astro.site && <link rel="canonical" href={canonicalURL.toString()} />}
+
+		{/* Open Graph (Facebook, LinkedIn, vb.) */}
+		<meta property="og:title" content={formattedTitle} />
+		<meta property="og:description" content={description} />
+		{/* OG URL - DÜZELTİLDİ */}
+        <meta property="og:url" content={canonicalURL.toString()} />
+        {ogImageURL && <meta property="og:image" content={ogImageURL} />}
+		<meta property="og:type" content="website" />
+        <meta property="og:site_name" content={siteName} />
+        <meta property="og:locale" content="tr_TR" />
+
+        {/* Twitter Card (Yorumlu) */}
+		{/* ... */}
+        {/* /SEO ve META ETİKETLERİ */}
+
+	</head>
+    <body class="bg-gray-900 text-gray-200 flex flex-col min-h-screen">
+        <Header siteTitle={siteName} />
+        <main class="container mx-auto px-4 py-8 flex-grow">
+          <slot />
+        </main>
+        <Footer />
+    </body>
+</html>

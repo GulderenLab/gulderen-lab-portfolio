@@ -1,0 +1,26 @@
+---
+// src/components/Footer.astro
+const today = new Date();
+---
+{/* Footer'a Tailwind sınıfları ekliyoruz */}
+<footer class="mt-auto bg-gray-800 text-gray-400 text-sm border-t border-gray-700"> {/* Üste yapışma, Arkaplan, Metin rengi/boyutu, Üst kenarlık */}
+  {/* Konteyner: Maksimum genişlik, ortalama, iç boşluklar */}
+  <div class="container mx-auto px-4 py-6">
+    {/* Flex Container: Küçük ekranda alt alta, orta ekrandan itibaren yan yana, öğeler arası boşluk ve ortalama */}
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4"> {/* gap-4: öğeler arası boşluk */}
+      {/* Telif Hakkı Metni */}
+      <p class="text-center md:text-left"> {/* Küçük ekranda ortalı, orta ekrandan itibaren sola dayalı */}
+        Tüm hakları saklıdır © {today.getFullYear()} Gulderen Lab 
+      </p>
+      {/* Navigasyon Linkleri */}
+      <nav class="flex gap-x-6"> {/* Yatay boşluk (gap-x) */}
+        {/* Linklere stil ve hover efekti */}
+        <a href="https://github.com/GulderenLab" target="_blank" rel="noopener noreferrer" class="hover:text-white hover:underline transition-colors">GitHub</a>
+        <a href="https://linkedin.com/in/abdullah-gülderen-31120b35b/" target="_blank" rel="noopener noreferrer" class="hover:text-white hover:underline transition-colors">LinkedIn</a>
+        {/* <a href="/gizlilik-politikasi" class="hover:text-white hover:underline transition-colors">Gizlilik Politikası</a> */}
+      </nav>
+    </div>
+  </div>
+</footer>
+
+{/* <style> BLOKU BOŞ OLMALI VEYA SİLİNMİŞ OLMALI </style> */}

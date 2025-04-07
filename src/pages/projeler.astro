@@ -1,0 +1,74 @@
+---
+// src/pages/projeler.astro
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const pageTitle = "Projelerim";
+const pageDescription = "Elektronik, yazılım, PCB tasarımı ve daha fazlasını içeren özgün projelerimi bu alanda keşfedebilir, ilham alabilir ve siz de kendi projelerinize başlayabilirsiniz.";
+// const pageImage = '/images/ana-sayfa-og.jpg'; // Ana sayfaya özel bir OG resmi (public altına eklenmeli)
+
+const projeler = (await getCollection('projeler'))
+    .filter(proje => !proje.data.isDraft)
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+---
+<Layout title={pageTitle} description={pageDescription} {/* image={pageImage} */}>
+  {/* Sayfa Başlığı ve Açıklaması (Bunlara da biraz stil verelim) */}
+  <h1 class="text-4xl font-bold mb-4 text-center text-white">{pageTitle}</h1>
+  <p class="text-lg text-gray-400 mb-8 text-center">Burada elektronik ve yazılım alanındaki çalışmalarımdan bazılarını bulabilirsiniz.</p>
+
+  {/* Proje Listesi Grid'i */}
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"> {/* Duyarlı Grid yapısı ve boşluk */}
+    {projeler.map((proje) => (
+      // Proje Kartı Ana Div'i
+      <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col transition-transform duration-300 ease-in-out hover:transform hover:-translate-y-1 hover:shadow-xl"> {/* Arkaplan, köşe, gölge, taşma, flex, geçişler */}
+
+        {/* Resim Alanı */}
+        <a href={`/projeler/${proje.slug}/`} class="block"> {/* Resmi tıklanabilir yap */}
+          <img
+            src={proje.data.image.src}
+            alt={proje.data.image.alt}
+            loading="lazy"
+            class="w-full h-48 object-cover" {/* Tam genişlik, sabit yükseklik, resim sığdırma */}
+          />
+        </a>
+
+        {/* Kart İçeriği Alanı */}
+        <div class="p-6 flex flex-col flex-grow"> {/* İç boşluk, flex, kalan alanı doldurma */}
+
+          {/* Proje Başlığı */}
+          <h2 class="text-xl font-semibold mb-2 text-accent-light"> {/* text-blue-400 yerine text-accent-light */}
+            <a href={`/projeler/${proje.slug}/`} class="hover:underline">
+              {proje.data.title}
+            </a>
+          </h2>
+
+          {/* Proje Açıklaması */}
+          <p class="text-gray-400 text-sm mb-4 flex-grow"> {/* Renk, boyut, boşluk, kalan alanı doldurma */}
+            {proje.data.description}
+          </p>
+
+          {/* Etiketler Alanı */}
+          {proje.data.tags && proje.data.tags.length > 0 && (
+            <div class="mt-auto pt-2"> {/* Üste boşluk (auto), içeriği alta iter, iç boşluk */}
+              {proje.data.tags.map(tag => (
+                // Etiket Stili
+                <span class="inline-block bg-gray-700 text-gray-300 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded-full"> {/* Arkaplan, renk, boyut, boşluklar, yuvarlaklık */}
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Detayları Gör Linki (Opsiyonel, başlık zaten link) */}
+          {/*
+          <a href={`/projeler/${proje.slug}/`} class="mt-4 inline-block text-brand-color font-semibold hover:underline text-sm">
+            Detayları Gör →
+          </a>
+           */}
+        </div>
+      </div>
+    ))}
+  </div>
+</Layout>
+
+{/* <style> BLOKU BOŞ OLMALI VEYA SİLİNMİŞ OLMALI </style> */}

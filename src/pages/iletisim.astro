@@ -1,0 +1,95 @@
+---
+// src/pages/iletisim.astro
+import Layout from '../layouts/Layout.astro';
+
+const pageTitle = "İletişim";
+const pageDescription = "Benimle iletişime geçmek için aşağıdaki formu kullanabilir veya doğrudan e-posta gönderebilirsiniz.";
+const contactEmail = "iletisim@gulderenlab.com"; // GERÇEK E-POSTA ADRESİNİZİ YAZIN!
+---
+<Layout title={pageTitle} description={pageDescription}>
+
+  <div class="max-w-2xl mx-auto"> {/* İçeriği ortala ve genişliği sınırla */}
+    {/* Sayfa Başlığı */}
+    <h1 class="text-4xl font-bold mb-6 text-center text-white">{pageTitle}</h1>
+
+    {/* Açıklama */}
+    <p class="text-lg text-gray-400 mb-8 text-center leading-relaxed">
+      Aşağıdaki formu doldurarak veya <a href={`mailto:${contactEmail}`} class="text-brand hover:underline font-medium">doğrudan e-posta</a> göndererek bana ulaşabilirsiniz. Projeler, işbirliği teklifleri veya sadece merhaba demek için çekinmeyin!
+    </p>
+
+    {/* İletişim Formu */}
+    {/* 'mailto:' action'ı ve method='POST' enctype='text/plain' önemlidir */}
+    <form
+      action={`mailto:${contactEmail}?subject=Web Sitenizden Mesaj: Konu Başlığı`}
+      method="POST"
+      enctype="text/plain"
+      class="space-y-6" {/* Form elemanları arasına dikey boşluk */}
+    >
+      {/* İsim Alanı */}
+      <div>
+        <label for="name" class="block mb-2 text-sm font-medium text-gray-300">Adınız</label>
+        <input
+          type="text"
+          id="name"
+          name="Ad"  {/* E-postada görünecek etiket */}
+          required
+          class="block w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-md text-gray-200 placeholder-gray-500 focus:ring-brand focus:border-brand focus:outline-none text-base"
+          placeholder="Adınızı girin"
+        />
+      </div>
+
+      {/* E-posta Alanı */}
+      <div>
+        <label for="email" class="block mb-2 text-sm font-medium text-gray-300">E-posta Adresiniz</label>
+        <input
+          type="email"
+          id="email"
+          name="E-posta" {/* E-postada görünecek etiket */}
+          required
+          class="block w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-md text-gray-200 placeholder-gray-500 focus:ring-brand focus:border-brand focus:outline-none text-base"
+          placeholder="eposta@adresiniz.com"
+        />
+      </div>
+
+       {/* Konu Alanı (Opsiyonel ama önerilir) */}
+       <div>
+        <label for="subject" class="block mb-2 text-sm font-medium text-gray-300">Konu</label>
+        <input
+          type="text"
+          id="subject"
+          name="Konu" {/* E-postada görünecek etiket */}
+          required
+          class="block w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-md text-gray-200 placeholder-gray-500 focus:ring-brand focus:border-brand focus:outline-none text-base"
+          placeholder="Mesajınızın konusu"
+        />
+      </div>
+
+      {/* Mesaj Alanı */}
+      <div>
+        <label for="message" class="block mb-2 text-sm font-medium text-gray-300">Mesajınız</label>
+        <textarea
+          id="message"
+          name="Mesaj" {/* E-postada görünecek etiket */}
+          rows={6}  {/* Satır sayısı */}
+          required
+          class="block w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-md text-gray-200 placeholder-gray-500 focus:ring-brand focus:border-brand focus:outline-none text-base resize-y" {/* resize-y: Dikeyde boyutlandırmaya izin ver */}
+          placeholder="Mesajınızı buraya yazın..."
+        ></textarea>
+      </div>
+
+      {/* Gönder Butonu */}
+      <div>
+        <button
+          type="submit"
+          class="w-full px-6 py-3 bg-brand text-gray-900 font-semibold rounded-md shadow-md hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-brand transition ease-in-out duration-150"
+        >
+          E-posta İstemcisi ile Gönder
+        </button>
+      </div>
+    </form>
+     {/* mailto: notu */}
+     <p class="text-xs text-gray-500 mt-4 text-center">
+       Not: Bu form, gönderme işlemi için cihazınızdaki varsayılan e-posta uygulamasını açacaktır.
+     </p>
+  </div>
+</Layout>
