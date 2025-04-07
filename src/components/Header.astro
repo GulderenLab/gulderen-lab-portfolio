@@ -2,17 +2,72 @@
 // src/components/Header.astro
 const { siteTitle = "Varsayılan Başlık" } = Astro.props;
 ---
-<header class="bg-gray-800 text-white shadow-md"> {/* Arkaplan, metin rengi, gölge */}
-  <nav class="container mx-auto px-4 py-3 flex justify-between items-center"> {/* Konteyner, padding, flex layout */}
-    <a href="/" class="text-xl font-bold hover:text-gray-300 transition-colors"> {/* Boyut, kalınlık, hover efekti */}
+<header class="bg-gray-800 text-white shadow-md relative z-20"> {/* z-index ekledik */}
+  {/* Ana Navigasyon Çubuğu */}
+  <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
+    {/* Site Başlığı Linki */}
+    <a href="/" class="text-xl font-bold hover:text-gray-300 transition-colors">
       {siteTitle}
     </a>
-    <ul class="flex space-x-6"> {/* Flex, linkler arası boşluk */}
+
+    {/* === MOBİL MENÜ BUTONU (Hamburger İkonu) === */}
+    {/* Orta ekrandan ('md') itibaren gizlenecek */}
+    <button id="menu-toggle" class="md:hidden p-2 rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
+      {/* Hamburger İkonu (SVG) */}
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+      <span class="sr-only">Menüyü Aç/Kapat</span> {/* Ekran okuyucular için */}
+    </button>
+    {/* ========================================== */}
+
+    {/* === Masaüstü Navigasyon Linkleri === */}
+    {/* Başlangıçta mobilde gizli, orta ekrandan ('md') itibaren görünür */}
+    <ul class="hidden md:flex space-x-6">
       <li><a href="/" class="hover:text-gray-300 transition-colors">Ana Sayfa</a></li>
       <li><a href="/projeler" class="hover:text-gray-300 transition-colors">Projeler</a></li>
-      <li><a href="/blog" class="hover:text-gray-300 transition-colors">Blog</a></li> {/* YENİ LİNK */}
+      <li><a href="/blog" class="hover:text-gray-300 transition-colors">Blog</a></li>
       <li><a href="/hakkimizda" class="hover:text-gray-300 transition-colors">Hakkımızda</a></li>
       <li><a href="/iletisim" class="hover:text-gray-300 transition-colors">İletişim</a></li>
     </ul>
+    {/* ================================= */}
   </nav>
+
+  {/* === MOBİL MENÜ İÇERİĞİ === */}
+  {/* Başlangıçta tamamen gizli, JavaScript ile açılacak */}
+  {/* Orta ekrandan ('md') itibaren gizlenecek */}
+  <div id="mobile-menu" class="hidden md:hidden bg-gray-800 absolute top-full left-0 w-full shadow-md">
+    <ul class="flex flex-col px-4 pt-2 pb-4 space-y-2"> {/* Dikey liste, boşluklar */}
+      <li><a href="/" class="block py-2 px-2 rounded hover:bg-gray-700 transition-colors">Ana Sayfa</a></li>
+      <li><a href="/projeler" class="block py-2 px-2 rounded hover:bg-gray-700 transition-colors">Projeler</a></li>
+      <li><a href="/blog" class="block py-2 px-2 rounded hover:bg-gray-700 transition-colors">Blog</a></li>
+      <li><a href="/hakkimizda" class="block py-2 px-2 rounded hover:bg-gray-700 transition-colors">Hakkımızda</a></li>
+      <li><a href="/iletisim" class="block py-2 px-2 rounded hover:bg-gray-700 transition-colors">İletişim</a></li>
+    </ul>
+  </div>
+  {/* ========================= */}
 </header>
+
+{/* JavaScript for Mobile Menu Toggle */}
+<script>
+  // Gerekli elementleri seç
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  // Butona tıklama olayını dinle
+  if (menuToggle && mobileMenu) {
+    menuToggle.addEventListener('click', () => {
+      // 'hidden' sınıfını aç/kapat
+      mobileMenu.classList.toggle('hidden');
+    });
+  }
+
+  // Başka bir yere tıklandığında menüyü kapatma (Opsiyonel ama önerilir)
+  document.addEventListener('click', (event) => {
+    const isClickInsideHeader = menuToggle?.contains(event.target as Node) || mobileMenu?.contains(event.target as Node);
+    // Eğer tıklama header dışında ve menü açıksa, menüyü kapat
+    if (!isClickInsideHeader && !mobileMenu?.classList.contains('hidden')) {
+       mobileMenu?.classList.add('hidden');
+    }
+  });
+</script>
