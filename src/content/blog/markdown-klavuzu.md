@@ -1066,8 +1066,11 @@ Markdown'da bir görsel eklemenin temel yapısı, bağlantı (link) sözdizimine
   İçine görselin kaynağının URL'si veya dosya yolu yazılır.
 
   - **Web URL'si:**  
-    İnternet üzerindeki bir görselin tam adresi. Örnek:  
-    `https://www.example.com/images/logo.png`
+    İnternet üzerindeki bir görselin tam adresi. 
+
+Örnek:
+
+`https://www.example.com/images/logo.png`
   - **Yerel Dosya Yolu:**  
     Markdown dosyanızın bulunduğu yere göre görselin konumu. Bu, göreli (*relative*) veya mutlak (*absolute*) bir yol olabilir. Genellikle göreli yollar tercih edilir.
 
