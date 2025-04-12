@@ -1,6 +1,7 @@
 // tailwind.config.mjs
 /** @type {import('tailwindcss').Config} */
 import typography from '@tailwindcss/typography'; // <-- Eklentiyi import et
+// Gerekirse: import plugin from 'tailwindcss/plugin'; // Genelde inline fonksiyon için gerekmez
 
 export default {
   content: [
@@ -33,6 +34,23 @@ export default {
     },
   },
   plugins: [
-    typography(), // <-- Eklentiyi buraya ekle
+    typography(), // <-- Mevcut eklenti
+
+    // --- YENİ EKLENEN KISIM ---
+    // KaTeX display stilleri için özel eklenti
+    function({ addComponents }) {
+      addComponents({
+        '.katex-display': {
+          margin: '1rem 0',       // margin-top ve margin-bottom 1rem
+          overflowX: 'auto',    // Yatay taşma olursa scroll bar göster
+          // Not: CSS özelliklerini JS objelerinde camelCase (overflowX)
+          // veya tırnak içinde kebab-case ('overflow-x') olarak yazabilirsiniz.
+        }
+        // Başka özel component stilleri de buraya ekleyebilirsiniz
+        // '.baska-bir-sinif': { ... }
+      })
+    }
+    // --- YENİ EKLENEN KISIM SONU ---
   ],
 }
+

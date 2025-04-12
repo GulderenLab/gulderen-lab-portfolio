@@ -59,7 +59,7 @@ const { Content } = await proje.render();
 
     {/* Markdown İçeriği Alanı (Typography Eklentisi ile Stilleme) */}
     <div class="prose prose-lg prose-invert
-                prose-headings:text-accent-light prose-a:text-brand hover:prose-a:text-accent-light
+                *prose-headings:text-accent-light prose-a:text-brand hover:prose-a:text-accent-light
                 prose-code:text-accent-light prose-pre:bg-gray-800
                 max-w-none"> {/* prose sınıfları, renk/stil özelleştirmeleri, max-width sıfırlama */}
       <Content /> {/* Markdown içeriği buraya render edilecek ve 'prose' stilleri uygulanacak */}

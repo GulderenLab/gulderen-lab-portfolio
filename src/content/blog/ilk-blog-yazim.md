@@ -1,12 +1,11 @@
 ---
-title: 'Astro ile Blog Yapmaya Başlamak'
-description: 'Astro Content Collections kullanarak nasıl kolayca bir blog oluşturabileceğimize dair ilk adımlar.'
-author: 'Abdullah G.' # Varsayılanı geçersiz kılmak için
-publishDate: 2025-04-07 # Bugünün tarihi veya istediğiniz bir tarih
-tags: ['Astro', 'Web Geliştirme', 'Blog', 'JavaScript']
-image: # Bu yazı için kapak resmi ekleyebiliriz (public/images altına koyun)
-  src: '/images/blog/astro-blog-banner.png'
-  alt: 'Astro logosu ve blog kelimesi'
+title: 'Astro ile Sıfırdan Blog Oluşturma: Content Collections Kullanımı'
+description: "Astro'nun güçlü Content Collections özelliğini kullanarak Markdown ile içerik odaklı, hızlı ve modern bir blogu nasıl kolayca oluşturabileceğinizi adım adım öğrenin."
+publishDate: 2025-04-07 # YYYY-MM-DD formatında
+tags: ['Astro', 'Blog', 'Content Collections', 'Markdown', 'Web Geliştirme', 'Static Site Generator', 'Rehber'] 
+image:
+  src: '/images/astro-ile-blog.png'
+  alt: 'Astro Content Collections kullanarak blog oluşturma rehberi kapak görseli'
 isDraft: false
 ---
 

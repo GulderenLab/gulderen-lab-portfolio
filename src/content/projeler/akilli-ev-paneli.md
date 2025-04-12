@@ -13,6 +13,10 @@ isDraft: false
 
 Bu projede, ESP32 mikrodenetleyici kullanarak evdeki çeşitli cihazları (ışıklar, prizler vb.) kontrol edebilen ve sensör verilerini (sıcaklık, nem) okuyabilen bir sistem geliştirildi. Haberleşme için MQTT protokolü kullanıldı ve verilerin görselleştirildiği/kontrol edildiği bir React tabanlı web arayüzü oluşturuldu.
 
+Bu bir örnek metindir.[^1]
+
+[^1]: Bu bir ayak notasıdır. Detaylı açıklama veya referans bilgisi buraya yazılabilir.
+
 ## Kullanılan Teknolojiler
 
 *   **Donanım:** ESP32 Geliştirme Kartı, Röle Modülleri, DHT11 Sensörü
@@ -45,3 +49,4 @@ void loop() {
   // Gelen komutları dinle
   client.loop();
 }
+```

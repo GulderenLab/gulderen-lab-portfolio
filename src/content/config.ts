@@ -24,7 +24,7 @@ const blogCollection = defineCollection({
   schema: z.object({
     title: z.string(), // Yazı başlığı
     description: z.string(), // Kısa özet/açıklama (liste ve SEO için)
-    author: z.string().default('Gulderen Lab'), // Yazar (varsayılan değer atayabiliriz)
+    author: z.string().default('Abdullah Gülderen'), // Yazar (varsayılan değer atayabiliriz)
     publishDate: z.date(), // Yayın tarihi
     tags: z.array(z.string()).optional(), // Etiketler (isteğe bağlı)
     image: z.object({ // Kapak resmi (isteğe bağlı)
