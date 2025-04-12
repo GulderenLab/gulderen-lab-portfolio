@@ -223,7 +223,7 @@ Bu kod işlendiğinde, Markdown'un liste yapısı korunurken, <span ...> etiketl
 
 Bunun için genellikle ```<span>``` HTML etiketi ve ```style``` özelliği içinde ```color``` tanımlaması kullanılır. Sözdizimi şöyledir:
 
-`<span style="color:RENK_ADI_VEYA_HEX_KODU;">Renklendirmek istediğiniz metin buraya</span>`
+`<span style="color:RENK_ADI_VEYA_HEX_KODU; overflow-wrap: break-word; word-wrap: break-word;">Renklendirmek istediğiniz metin buraya gelecek.</span>`
 
 Aşağıda yaygın olarak kullanılan bazı renk isimleri ve birkaç Hex kodu örneği ile birlikte nasıl göründükleri listelenmiştir:
 
