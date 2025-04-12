@@ -65,8 +65,8 @@ Markdown'da 'Setext' stili olarak bilinen alternatif bir başlık yöntemi de bu
 
 | Markdown (Setext stili)             | HTML (Kod Olarak)                         | İşlenen Çıktı (Rendered Output) |
 | ----------------------- | ----------------------------------------- | ------------------------------- |
-|  Başlık seviye 1<br>=============== | \<h1>Başlık seviye 1\</h1> | <h1>Başlık seviye 1</h1>   |
-|  Başlık seviye 2<br>--------------- | \<h2>Başlık seviye 2\</h2> | <h2>Başlık seviye 2</h2>   |
+|  Başlık seviye 1<br>======| \<h1>Başlık seviye 1\</h1> | <h1>Başlık seviye 1</h1>   |
+|  Başlık seviye 2<br>------- | \<h2>Başlık seviye 2\</h2> | <h2>Başlık seviye 2</h2>   |
 
 ⚠️ **Not** :  Markdown'da başlık oluştururken # işareti (veya işaretleri) ile başlık metni arasında mutlaka bir boşluk bırakılmalıdır. Eğer boşluk olmazsa, metin başlık olarak yorumlanmaz!
 
