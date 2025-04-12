@@ -969,20 +969,24 @@ Tablo hücrelerinin içine standart satır içi Markdown biçimlendirmelerini uy
 Biçimlendirme Örneği:
 
 ```markdown
-| Özellik         | Açıklama                         | Durum        | Bağlantı         |
-| --------------- | -------------------------------- | ------------ | --------------- |
-| **Performans**  | *Yüksek* hızlı işlemci          | `Tamamlandı` | [Detaylar](https://gulderenlab.com/) |
-| *Depolama*      | ~~512 GB SSD~~ **1 TB SSD**      | `Güncellendi`| _Yok_           |
-| `Ağ Bağlantısı` | Gigabit Ethernet ve ***Wi-Fi 6*** | `Aktif`      | `N/A`           |
+| Markdown Kodu Öğesi (Örnek Satır İçeriği)        | Açıklama ve Gösterim Biçimi                                                                 |
+| :--------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| `\| **Konu Başlığı** \| Açıklama Metni \|`      | İlk sütunda `**Metin**` kullanarak **kalın** bir başlık oluşturur.                          |
+| `\| *Alt Konu* \| ~~Eski Bilgi~~ **Yeni Bilgi** \|` | `*Metin*` ile *italik* vurgu yapar. `~~Metin~~` ile ~~üstü çizili~~ eski veriyi, `**Metin**` ile **yeni** veriyi gösterir. (Örn: *MR*: ~~1.5T~~ **3T**) |
+| `\| \`Durum Kodu\` \| *Açıklayıcı* metin \|`    | `` `Kod` `` formatı genellikle `Durum` veya `teknik terimler` için kullanılır. İtalik metinle birleştirilebilir. (Örn: `Aşı`: *mRNA/Vektör* `Aktif`) |
+| `\| ***Önemli Vurgu*** \| Detaylar için [Link](URL) \|` | `***Metin***` hem ***kalın hem italik*** yapar. `[Görünen Ad](URL)` formatıyla [bağlantı](https://www.example.com) ekler. (Örn: ***Kan Şekeri***: [Bilgi](https://tr.wikipedia.org/wiki/Kan_şekeri_izleme)) |
+| `\| Basit Metin \| \`N/A\` veya _Yok_ \|`        | Normal metin ve durum belirtmek için `Kod` veya _italik_ kullanılabilir. (Örn: Ağ: Gigabit _Yok_) |
 ```
 
 Görünüm: 
 
-| Özellik         | Açıklama                         | Durum        | Bağlantı         |
-| --------------- | -------------------------------- | ------------ | --------------- |
-| **Performans**  | *Yüksek* hızlı işlemci          | `Tamamlandı` | [Detaylar](https://gulderenlab.com/) |
-| *Depolama*      | ~~512 GB SSD~~ **1 TB SSD**      | `Güncellendi`| _Yok_           |
-| `Ağ Bağlantısı` | Gigabit Ethernet ve ***Wi-Fi 6*** | `Aktif`      | `N/A`           |
+| Markdown Kodu Öğesi (Örnek Satır İçeriği)        | Açıklama ve Gösterim Biçimi                                                                 |
+| :--------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| `\| **Konu Başlığı** \| Açıklama Metni \|`      | İlk sütunda `**Metin**` kullanarak **kalın** bir başlık oluşturur.                          |
+| `\| *Alt Konu* \| ~~Eski Bilgi~~ **Yeni Bilgi** \|` | `*Metin*` ile *italik* vurgu yapar. `~~Metin~~` ile ~~üstü çizili~~ eski veriyi, `**Metin**` ile **yeni** veriyi gösterir. (Örn: *MR*: ~~1.5T~~ **3T**) |
+| `\| \`Durum Kodu\` \| *Açıklayıcı* metin \|`    | `` `Kod` `` formatı genellikle `Durum` veya `teknik terimler` için kullanılır. İtalik metinle birleştirilebilir. (Örn: `Aşı`: *mRNA/Vektör* `Aktif`) |
+| `\| ***Önemli Vurgu*** \| Detaylar için [Link](URL) \|` | `***Metin***` hem ***kalın hem italik*** yapar. `[Görünen Ad](URL)` formatıyla [bağlantı](https://www.example.com) ekler. (Örn: ***Kan Şekeri***: [Bilgi](https://tr.wikipedia.org/wiki/Kan_şekeri_izleme)) |
+| `\| Basit Metin \| \`N/A\` veya _Yok_ \|`        | Normal metin ve durum belirtmek için `Kod` veya _italik_ kullanılabilir. (Örn: Ağ: Gigabit _Yok_) |
 
 > ⚠️ Dikkat: Hücre içine resim ```(![Alt](URL))``` eklemek teknik olarak mümkün olsa da, genellikle tablo düzenini bozar veya tüm platformlarda düzgün görüntülenmeyebilir. Tablolarda resim kullanmaktan kaçınmak genellikle daha iyidir. Ayrıca, blok seviyesi elemanlar (başka listeler, kod blokları vb.) genellikle tablo hücreleri içinde çalışmaz.
 
