@@ -1074,7 +1074,10 @@ Markdown'da bir görsel eklemenin temel yapısı, bağlantı (link) sözdizimine
 
 Örnek:
 
-`https://www.example.com/images/logo.png`
+```html
+  `https://www.example.com/images/logo.png`
+```
+
   - **Yerel Dosya Yolu:**  
     Markdown dosyanızın bulunduğu yere göre görselin konumu. Bu, göreli (*relative*) veya mutlak (*absolute*) bir yol olabilir. Genellikle göreli yollar tercih edilir.
 
