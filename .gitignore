@@ -22,3 +22,5 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+# Yerel SSL sertifika ve anahtar dosyalarını yoksay
+*.pem

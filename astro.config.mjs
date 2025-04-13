@@ -7,32 +7,51 @@ import mdx from '@astrojs/mdx';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
-// Tailwind typography eklentisi (genellikle tailwind.config.mjs içinde kullanılır)
-// Eğer tailwind.config.mjs dosyanızda `require('@tailwindcss/typography')` şeklinde
-// ekli değilse, burada import etmenizin doğrudan bir etkisi olmayabilir.
-// import typography from '@tailwindcss/typography'; // <-- Bu satır muhtemelen gereksizdir eğer Tailwind config içindeyse.
+// Node.js modüllerini import et (HTTPS için dosya yolları)
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+
+// Dosya yollarını config dosyasına göre çözmek için helper
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
-  // Sitenizin canlı URL'si
+  // Sitenizin canlı URL'si (build ve SSR için önemli)
   site: 'https://www.gulderenlab.com',
 
   // Entegrasyonlar
   integrations: [
     tailwind({
-      // `applyBaseStyles: false` ayarı genellikle Tailwind typography eklentisiyle
-      // birlikte kullanılır. Eğer tailwind.config.mjs içinde typography ayarlıysa
-      // bu ayar burada kalabilir veya kaldırılabilir, duruma göre deneyin.
-      // applyBaseStyles: false,
+      // applyBaseStyles: false, // İhtiyacınıza göre bu ayarı kullanabilirsiniz.
     }),
     mdx(),
-    // Tailwind'in kendi eklentileri (typography gibi) genellikle Astro integrasyonlarına değil,
-    // doğrudan tailwind.config.mjs içindeki `plugins` dizisine eklenir.
-    // Bu yüzden `typography()` burada çağrılmamalıdır.
   ],
 
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [[rehypeKatex, { strict: false }]],
-  }
+  },
+
+  // Geliştirme sunucusu ayarları
+  server: {
+    // host: true, // Yerel ağdan erişime izin vermek için. Astro bazen bunu otomatik yapar ama belirtmek iyi olabilir.
+    https: {
+      // mkcert ile oluşturulan özel anahtar dosyasının yolu
+      // DOSYA ADINI KONTROL EDİN! `mkcert localhost ...` komutunun çıktısındaki ada göre güncelleyin.
+      key: path.resolve(__dirname, './localhost+3-key.pem'), // Örnek dosya adı, sizinki farklı olabilir
+
+      // mkcert ile oluşturulan sertifika dosyasının yolu
+      // DOSYA ADINI KONTROL EDİN! `mkcert localhost ...` komutunun çıktısındaki ada göre güncelleyin.
+      cert: path.resolve(__dirname, './localhost+3.pem'),   // Örnek dosya adı, sizinki farklı olabilir
+    },
+  },
+
 });
+
+// ÖNEMLİ HATIRLATMALAR:
+// 1. Yukarıdaki `key` ve `cert` yollarındaki dosya adlarının (`localhost+3-key.pem`, `localhost+3.pem`)
+//    `mkcert localhost <ip-adresiniz>` komutunu çalıştırdığınızda projenizin kök dizininde
+//    oluşturulan gerçek dosya adlarıyla eşleştiğinden emin olun. Eğer farklıysa, bu yolları güncelleyin.
+// 2. Bu `.pem` dosyalarını `.gitignore` dosyanıza ekleyerek Git reponuza göndermediğinizden emin olun:
+//    # .gitignore
+//    *.pem
