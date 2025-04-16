@@ -3,6 +3,8 @@ import { defineConfig } from 'astro/config';
 import tailwind from "@astrojs/tailwind";
 import mdx from '@astrojs/mdx';
 
+import sitemap from '@astrojs/sitemap';
+
 // Markdown eklentileri
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -25,6 +27,7 @@ export default defineConfig({
       // applyBaseStyles: false, // İhtiyacınıza göre bu ayarı kullanabilirsiniz.
     }),
     mdx(),
+    sitemap(),
   ],
 
   markdown: {
@@ -34,7 +37,7 @@ export default defineConfig({
 
   // Geliştirme sunucusu ayarları
   server: {
-    // host: true, // Yerel ağdan erişime izin vermek için. Astro bazen bunu otomatik yapar ama belirtmek iyi olabilir.
+    host: true, // Yerel ağdan erişime izin vermek için. Astro bazen bunu otomatik yapar ama belirtmek iyi olabilir.
     https: {
       // mkcert ile oluşturulan özel anahtar dosyasının yolu
       // DOSYA ADINI KONTROL EDİN! `mkcert localhost ...` komutunun çıktısındaki ada göre güncelleyin.
