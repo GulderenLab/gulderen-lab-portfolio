@@ -8,103 +8,87 @@ export default {
   ],
   theme: {
     extend: {
-      // Kendi özel renk ve rgb tanımlamalarınız
       colors: {
         'accent': 'rgb(var(--accent-rgb))',
         'accent-light': 'rgb(var(--accent-light-rgb))',
         'accent-dark': 'rgb(var(--accent-dark-rgb))',
-        'brand': '#40E0D0', // Turquoise rengi
+        'brand': '#40E0D0',
       },
       rgb: {
          'accent-rgb': '136, 58, 234',
          'accent-light-rgb': '224, 204, 250',
          'accent-dark-rgb': '49, 10, 101',
-         'brand-rgb': '64, 224, 208', // Turquoise RGB
+         'brand-rgb': '64, 224, 208',
       },
-      // Typography eklentisi için özelleştirmeler
+      // --- YENİ EKLENEN/GÜNCELLENEN TYPOGRAPHY KISMI ---
       typography: (theme) => ({
         DEFAULT: { // Varsayılan 'prose' sınıfı için stiller
           css: {
-            // --- RENK AYARLAMALARI (İsteğe bağlı - Ana metin vb. için) ---
-            // Eğer tüm prose metinlerini de ayarlamak isterseniz buraya
-            // '--tw-prose-body': theme('colors.gray.700'),
-            // '--tw-prose-headings': theme('colors.gray.900'),
-            // vb. ekleyebilirsiniz. Şimdilik sadece tabloyu etkiliyoruz.
-            // --- RENK AYARLAMALARI SONU ---
+            // ... (typography eklentisinin diğer varsayılan stilleri burada geçerli olur)
 
-            // --- Tablo Stilleri (Kaydırma Aktif, Başlık ve Hücre Yazısı Beyaz) ---
+            // Tablolar için özelleştirme
             'table': {
-              overflowX: 'auto',    // Yatay kaydırmayı etkinleştir
-              maxWidth: '100%',     // Kapsayıcıdan taşmasını önle
+              display: 'block',        // Tabloyu blok seviyesine getir
+              overflowX: 'auto',     // Yatay taşma olursa kaydır
+              whiteSpace: 'nowrap',    // Hücre içeriğinin alta kaymasını engelle (önerilir)
+              maxWidth: '100%',      // Kapsayıcının genişliğini aşmasın
               borderCollapse: 'collapse', // Kenarlıkları birleştir
-              marginTop: theme('spacing.6'), // Üst ve alt boşluk
-              marginBottom: theme('spacing.6'),
-              // Önemli: Beyaz yazının görünmesi için koyu arka plan gerekebilir.
-              // backgroundColor: theme('colors.gray.800'), // Örnek koyu arka plan
-              // color: theme('colors.white'), // Alternatif: Tüm tabloya varsayılan beyaz renk
+              marginTop: theme('spacing.6'), // Üst boşluk (isteğe bağlı, temanıza göre ayarlayın)
+              marginBottom: theme('spacing.6'),// Alt boşluk (isteğe bağlı)
+              // İsteğe bağlı: Tabloya hafif bir kenarlık ekleyebilirsiniz
+              // borderWidth: '1px',
+              // borderColor: theme('colors.gray.200', 'currentColor'), // Temanızdan renk alın
+              // borderRadius: theme('borderRadius.md'), // Köşe yuvarlatma (isteğe bağlı)
             },
-            'thead': { // Tablo başlık satırı (thead) için genel stiller
-              borderBottomWidth: '1px', // Başlık altı çizgisi
-              borderColor: theme('colors.gray.600'), // Koyu arka plan için kenarlık rengi örneği
+            // İsteğe bağlı: typography'nin varsayılan hücre stillerini koru/ayarla
+            'thead': {
+               borderBottomWidth: '1px', // Başlık altı çizgisi (typography zaten ekleyebilir)
+               borderColor: theme('colors.gray.300', 'currentColor'),
             },
-            'th': { // Başlık Hücreleri (th) için stiller
-              paddingTop: theme('spacing.2'), // Hücre içi boşluklar
-              paddingBottom: theme('spacing.2'),
-              paddingLeft: theme('spacing.3'),
-              paddingRight: theme('spacing.3'),
-              verticalAlign: 'baseline', // Dikey hizalama
-              whiteSpace: 'normal',    // Metnin hücre içinde alt satıra kaymasına izin ver
-              color: theme('colors.white'), // <-- BAŞLIK METİN RENGİ BEYAZ
-              fontWeight: theme('fontWeight.semibold'), // Başlıkları biraz kalın yapalım
-              textAlign: 'left', // Başlıkları sola hizala
-              // Kenarlık rengi thead'den veya table'dan miras alınabilir
-              // veya özel olarak ayarlanabilir:
-              // borderColor: theme('colors.gray.600'),
+            'td, th': {
+               // typography eklentisi zaten dolgu ve hizalama verir,
+               // ama isterseniz burada üzerine yazabilirsiniz.
+               paddingTop: theme('spacing.2'),
+               paddingBottom: theme('spacing.2'),
+               paddingLeft: theme('spacing.3'),
+               paddingRight: theme('spacing.3'),
+               verticalAlign: 'baseline', // Hizalama (varsayılan genellikle iyidir)
+               // Kenarlıklar (typography zaten ekleyebilir)
+               // borderBottomWidth: '1px',
+               // borderColor: theme('colors.gray.200', 'currentColor'),
             },
-            'td': { // Normal Hücreler (td) için stiller
-              paddingTop: theme('spacing.2'), // Hücre içi boşluklar
-              paddingBottom: theme('spacing.2'),
-              paddingLeft: theme('spacing.3'),
-              paddingRight: theme('spacing.3'),
-              verticalAlign: 'baseline', // Dikey hizalama
-              whiteSpace: 'normal',    // Metnin hücre içinde alt satıra kaymasına izin ver
-              color: theme('colors.white'), // <-- NORMAL HÜCRE METİN RENGİ DE BEYAZ
-              borderBottomWidth: '1px', // Hücrelerin altına çizgi (isteğe bağlı)
-              borderColor: theme('colors.gray.700'), // Koyu arka plan için hücre altı çizgi rengi örneği
-            },
-            // --- Tablo Stilleri Sonu ---
-
-            // --- Diğer Prose Stilleri (Varsayılanlar geçerli) ---
-            // ...
-            // --- Diğer Prose Stilleri Sonu ---
-
-            // --- KaTeX Stilleri ---
-            // Eğer KaTeX kullanıyorsanız ve onun da renklerini ayarlamak isterseniz:
-            // '.katex': { color: theme('colors.white'), /* veya başka bir renk */ },
+            // KaTeX için varsayılan stilleri korumak önemli olabilir (eğer kullanılıyorsa)
             '.katex-display > .katex': {
-              'textAlign': 'center',
+              'text-align': 'center', // Örnek KaTeX stili
             },
-            // --- KaTeX Stilleri Sonu ---
+            // --- Tablo özelleştirme sonu ---
+
+            // Mevcut KaTeX display stiliniz burada da tanımlanabilir
+            // Ancak eklenti olarak eklemek de geçerli bir yöntemdir.
+            // '.katex-display': {
+            //   margin: '1rem 0',
+            //   overflowX: 'auto',
+            // }
           },
         },
-        // İsterseniz 'prose-sm', 'prose-lg', 'prose-xl' gibi diğer boyutlar için
-        // farklı CSS kuralları tanımlayabilirsiniz.
-        // lg: { css: { ... } },
+        // İsterseniz 'prose-sm', 'prose-lg' gibi diğer boyutlar için de
+        // farklı tablo stilleri tanımlayabilirsiniz.
+        // lg: { css: { table: { ... } } },
       }),
+      // --- TYPOGRAPHY KISMI SONU ---
     },
   },
   plugins: [
-    // Tailwind Typography Eklentisi
-    typography(),
+    typography(), // <-- Mevcut eklenti
 
-    // KaTeX display stilleri için özel eklentiniz
+    // KaTeX display stilleri için özel eklentiniz (Bu kalabilir, çalışır)
     function({ addComponents }) {
       addComponents({
         '.katex-display': {
-          display: 'block',
+          display: 'block', // Katex'in düzgün çalışması için block olabilir
           margin: '1rem 0',
           overflowX: 'auto',
-          '-webkit-overflow-scrolling': 'touch',
+          '-webkit-overflow-scrolling': 'touch', // iOS için akıcı kaydırma
         }
       })
     }
