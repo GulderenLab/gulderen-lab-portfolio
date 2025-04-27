@@ -1341,6 +1341,17 @@ oyuklu_kutu = ana_kutu.cut(kesici_kure)
 # show_object(oyuklu_kutu, name="Oyuklu Kutu")
 # exporters.export(oyuklu_kutu, 'cut_ornegi.step')
 ```
+
+<Layout title="3B Model Görüntüleyici">
+  <h1 class="text-3xl font-bold mb-6">Prizmada Küre Şeklinde Oyuk Oluşturma</h1>
+  <model-viewer
+    src="/models/prizma_kure_oyuk.gltf" # Dosyanın var olduğundan emin olun
+    alt="Bir üçgenin extrude edilmesiyle oluşturulmuş prizma"
+    auto-rotate
+    camera-controls
+    style="width: 100%; height: 600px; background-color:rgb(245, 246, 243);" />
+</Layout>
+
 Bu örnekte, `ana_kutu`'dan `kesici_kure`'nin kapladığı hacim çıkarılır ve kutunun köşesinde küresel bir oyuk oluşur.
 
 #### `cutBlind()` ve `cutThruAll()` ile Profil Kesme
@@ -1406,15 +1417,11 @@ model_son = model_tam_delik.cut(kesici_dikdortgen) # Genel cut ile kes
 
 🔍 `cut()` – `cutBlind()` – `cutThruAll()` Karşılaştırması
 
-<article class="prose lg:prose-xl max-w-none">
-
 | Metod         | Açıklama                                    | Derinlik Kontrolü | Tam Delik Garantisi | Okunabilirlik         | Tipik Kullanım                             |
 |---------------|---------------------------------------------|-------------------|---------------------|-----------------------|--------------------------------------------|
 | `cut()`       | Genel Boolean çıkarma (Katıdan katı çıkar) | ✅ (Kesiciye bağlı) | ❌                  | 🟡 Orta (Niyet gizli) | Karmaşık şekillerle kesme, genel çıkarma |
 | `cutBlind()`  | 2D profilden belirli derinliğe kesme        | ✅ (Parametre ile) | ❌                  | ✅ Yüksek (Niyet açık)| Cep açma, kör delik                        |
 | `cutThruAll()`| 2D profilden tüm katı boyunca kesme         | ❌ (Gerek yok)    | ✅                  | ✅ Yüksek (Niyet açık)| Tam delik, boydan boya kanal             |
-
-</article>
 
 ---
 
