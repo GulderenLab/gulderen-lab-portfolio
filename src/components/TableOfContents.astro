@@ -1,0 +1,88 @@
+---
+// src/components/TableOfContents.astro
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+// İsteğe bağlı: Başlıkları filtrele
+// const displayHeadings = headings.filter(h => h.depth === 2 || h.depth === 3);
+const displayHeadings = headings; // Tüm başlıkları kullan
+
+const shouldShowToc = displayHeadings && displayHeadings.length > 1;
+---
+
+{shouldShowToc && (
+  <nav class="toc mb-8" aria-label="İçerik Tablosu">
+    <h2 class="text-xl font-semibold mb-3 text-gray-100 dark:text-gray-200">
+      İçerik
+    </h2>
+    {/* list-none sınıfı kalmalı ama CSS ile de destekleyeceğiz */}
+    <ul class="list-none space-y-1.5">
+      {displayHeadings.map((heading) => (
+        // Girintileme için padding kullanacağız, bu yüzden ml-* sınıfları kaldırıldı
+        // Temel li stilini aşağıdaki <style> bloğunda sıfırlıyoruz
+        <li class={`toc-item toc-depth-${heading.depth}`}>
+          <a
+            href={`#${heading.slug}`}
+            class="block text-brand hover:text-accent-light hover:underline dark:text-brand-dark dark:hover:text-accent-dark transition-colors duration-150"
+            // Yukarıdaki link renklerini kendi sitenize göre ayarlayın
+            // 'block' sınıfı eklendi, padding'in doğru çalışmasına yardımcı olabilir
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .toc ul {
+    padding-left: 0; /* Ana listenin varsayılan sol boşluğunu kaldır */
+  }
+  .toc li {
+    /* ">" işaretini ve diğer olası liste işaretlerini kaldır */
+    list-style-type: none;
+    list-style: none;
+    padding-left: 0; /* Her li için varsayılan padding'i sıfırla */
+    margin-left: 0; /* Her li için varsayılan margin'i sıfırla */
+    position: relative; /* ::before içeriği eklemeye gerek kalmadı ama dursun */
+  }
+  /* ::before pseudo-elementini de hedefleyerek fazladan içerik olmadığından emin olalım */
+  .toc li::before {
+    content: none;
+  }
+  /* ::marker pseudo-elementini de hedefleyelim */
+   .toc li::marker {
+    content: none;
+  }
+
+  /* Girintilemeyi padding-left ile yapalım */
+  .toc li.toc-depth-3 {
+    /* h3 başlıkları için girinti (1rem = 16px) */
+    padding-left: 1rem;
+  }
+  .toc li.toc-depth-4 {
+    /* h4 başlıkları için girinti (2rem = 32px) */
+    padding-left: 2rem;
+  }
+  .toc li.toc-depth-5 {
+    /* h5 başlıkları için girinti (isteğe bağlı) */
+    padding-left: 3rem;
+  }
+  .toc li.toc-depth-6 {
+     /* h6 başlıkları için girinti (isteğe bağlı) */
+    padding-left: 4rem;
+  }
+
+  /* Linkin tüm li alanını kaplaması için (opsiyonel ama önerilir) */
+  /* .toc li a {
+    display: block;
+    padding: 2px 0; /* Dikey boşluk
+  } */
+  /* Yukarıdaki block sınıfını doğrudan <a> etiketine ekledik */
+
+</style>

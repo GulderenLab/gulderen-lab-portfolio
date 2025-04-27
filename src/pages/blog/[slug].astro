@@ -1,7 +1,8 @@
 ---
 // src/pages/blog/[slug].astro
 import { type CollectionEntry, getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro'; // Layout yolu ../../ oldu
+import Layout from '../../layouts/Layout.astro'; // Layout yolu doğru varsayıldı
+import TableOfContents from '../../components/TableOfContents.astro'; // ToC bileşenini import et
 
 // getStaticPaths: Hangi blog sayfalarının oluşturulacağını bildirir
 export async function getStaticPaths() {
@@ -10,19 +11,26 @@ export async function getStaticPaths() {
   });
   return posts.map(post => ({
     params: { slug: post.slug },
-    props: { post }, // Prop adı 'post' oldu
+    props: { post }, // Prop adı 'post'
   }));
 }
 
 // Sayfa Bileşeni:
 type Props = {
-  post: CollectionEntry<'blog'>; // Prop tipini 'blog' olarak değiştir
+  post: CollectionEntry<'blog'>; // Prop tipi 'blog'
 }
-const { post } = Astro.props; // Prop adını 'post' olarak değiştir
-const { Content } = await post.render();
+const { post } = Astro.props; // Prop adı 'post'
+
+// post.render() çağrısından hem Content hem de headings'i al
+const { Content, headings } = await post.render();
+
+// --- YENİ: Bölüm Navigasyonu için Verileri Al ---
+const { part, totalPages, prevPageSlug, nextPageSlug } = post.data;
+// --- BİTİŞ: Bölüm Navigasyonu için Verileri Al ---
+
 ---
 {/* Layout'a blog post verilerini geçiyoruz */}
-<Layout title={post.data.title} description={post.data.description} image={post.data.image?.src}> {/* image opsiyonel olduğu için ?. kullandık */}
+<Layout title={post.data.title} description={post.data.description} image={post.data.image?.src}>
   <article class="max-w-3xl mx-auto py-8 px-4">
 
     {/* Opsiyonel Kapak Resmi */}
@@ -34,16 +42,22 @@ const { Content } = await post.render();
         />
     )}
 
-    {/* Başlık */}
+    {/* Başlık - YENİ: Bölüm bilgisi eklendi */}
     <h1 class="text-4xl md:text-5xl font-bold mb-4 text-accent-light">
       {post.data.title}
+      {/* Eğer part ve totalPages bilgisi varsa başlığa ekle */}
+      {part && totalPages && (
+        <span class="block text-2xl text-gray-400 mt-1">Bölüm {part} / {totalPages}</span>
+        // Veya aynı satırda: ` (${part}/${totalPages})` şeklinde de ekleyebilirsiniz.
+      )}
     </h1>
 
     {/* Meta Bilgiler: Tarih ve Yazar */}
     <div class="text-sm text-gray-400 mb-6 border-b border-gray-700 pb-4">
         <span class="block mb-1">Yayınlanma Tarihi: {post.data.publishDate.toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-        <span class="block">Yazar: {post.data.author}</span>
-         {/* Etiketler (Buraya da eklenebilir) */}
+        {/* Yazar bilgisi varsa göster (opsiyonel) */}
+        {post.data.author && <span class="block">Yazar: {post.data.author}</span>}
+         {/* Etiketler */}
          {post.data.tags && post.data.tags.length > 0 && (
             <div class="mt-3">
               <span class="mr-2">Etiketler:</span>
@@ -56,16 +70,51 @@ const { Content } = await post.render();
         )}
     </div>
 
-    {/* Markdown İçeriği Alanı (Typography Eklentisi ile Stilleme) */}
+    {/* İçerik Tablosu */}
+    {/* Sadece birden fazla başlık varsa ToC'yi göster (TableOfContents içinde zaten bu kontrol var ama burada da yapılabilir) */}
+    {headings && headings.length > 1 && <TableOfContents headings={headings} />}
+
+
+    {/* Markdown İçeriği Alanı */}
     <div class="prose prose-lg prose-invert
                 prose-headings:text-accent-light prose-a:text-brand hover:prose-a:text-accent-light
                 prose-code:text-accent-light prose-pre:bg-gray-800
-                max-w-none">
+                max-w-none mt-8">
       <Content />
     </div>
 
+    {/* --- YENİ: Bölüm Navigasyon Linkleri --- */}
+    {(prevPageSlug || nextPageSlug) && ( // Sadece en az bir link varsa bu bölümü göster
+      <div class="flex justify-between items-center mt-12 border-t border-gray-700 pt-6">
+        <div>
+          {prevPageSlug && (
+            <a href={`/blog/${prevPageSlug}/`} class="inline-flex items-center text-accent-light hover:underline font-semibold">
+              {/* İkon ekleyebilirsiniz (opsiyonel) */}
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Önceki Bölüm
+            </a>
+          )}
+        </div>
+        <div>
+          {nextPageSlug && (
+            <a href={`/blog/${nextPageSlug}/`} class="inline-flex items-center text-accent-light hover:underline font-semibold">
+              Sonraki Bölüm
+               {/* İkon ekleyebilirsiniz (opsiyonel) */}
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
+    )}
+    {/* --- BİTİŞ: Bölüm Navigasyon Linkleri --- */}
+
+
     {/* Geri Dön Linki */}
-    <a href="/blog/" class="inline-block mt-12 text-accent-light hover:underline font-semibold">
+    <a href="/blog/" class="inline-block mt-8 text-accent-light hover:underline font-semibold">
       ← Tüm Yazılara Geri Dön
     </a>
   </article>

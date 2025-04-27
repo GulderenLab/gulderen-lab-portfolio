@@ -13,6 +13,9 @@ import rehypeKatex from 'rehype-katex';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
+import rehypeSlug from 'rehype-slug'; // Başlıklara ID ekler
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'; // Başlıklara otomatik link ekler
+
 // Dosya yollarını config dosyasına göre çözmek için helper
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -32,7 +35,24 @@ export default defineConfig({
 
   markdown: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [[rehypeKatex, { strict: false }]],
+    // TÜM rehype eklentilerini TEK BİR dizi içinde toplayın:
+    rehypePlugins: [
+      [rehypeKatex, { strict: false }], // Katex
+      rehypeSlug,                      // Slug
+      [                                // Autolink Headings
+        rehypeAutolinkHeadings,
+        {
+          behavior: 'append',
+          properties: {
+            className: ['anchor-link'],
+            'aria-hidden': 'true',
+            tabIndex: -1,
+          },
+        },
+      ],
+    ],
+    // syntaxHighlight: 'shiki', // veya 'prism', kod renklendirme kullanıyorsanız ekleyin
+    // shikiConfig: { theme: 'github-dark' }, // tema ayarı
   },
 
   // Geliştirme sunucusu ayarları
