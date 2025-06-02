@@ -39,6 +39,10 @@ const blogCollection = defineCollection({
     prevPageSlug: z.string().nullable().optional(), // Önceki sayfa slug'ı (string, null olabilir, isteğe bağlı)
     nextPageSlug: z.string().nullable().optional(), // Sonraki sayfa slug'ı (string, null olabilir, isteğe bağlı)
     // --------------------------------------
+
+    // 3D Model için özel alan
+    modelPath: z.string().optional(), // Modelin public klasöründeki yolu (örn: /models/my_model.glb)
+    modelHeight: z.string().optional().default('600px'), // Model görüntüleyici yüksekliği
   }),
 });
 // ==========================================

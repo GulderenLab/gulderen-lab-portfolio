@@ -15,7 +15,7 @@ part: 2                  # Bu, serinin 2. bölümü
 totalPages: 8            # Toplam bölüm sayısı (Tüm bölümlerde aynı olmalı, gerekirse güncelleyin)
 seriesSlug: 'cad-query-klavuzu'
 prevPageSlug: 'cad-query-klavuzu-bolum-1' # <<< DİKKAT: Önceki bölümün slug'ının DOĞRU olduğundan emin olun!
-nextPageSlug: '' # <<< DİKKAT: Sonraki bölümün slug'ının DOĞRU olduğundan emin olun (yoksa null yapın)!
+nextPageSlug: 'cad-query-klavuzu-bolum-3' # <<< DİKKAT: Sonraki bölümün slug'ının DOĞRU olduğundan emin olun (yoksa null yapın)!
 # --- Seri Bilgileri Sonu ---
 ---
 
@@ -801,8 +801,33 @@ Bazen standart şekiller yeterli olmaz ve kendi özel yollarımızı çizmemiz g
 </Layout>
 
 *   **Yaylar (`threePointArc`, `tangentArcPoint`)**: Düz çizgiler yerine eğimli yollar çizmek için kullanılır.
-    *   `threePointArc((x1, y1), (x2, y2))`: Mevcut konumdan başlayıp, verilen birinci noktadan (`(x1, y1)`) geçerek ikinci noktada (`(x2, y2)`) biten bir yay çizer.
-    *   `tangentArcPoint((x, y))`: Mevcut konumdan başlayıp verilen noktada (`(x, y)`) biten ve başlangıçtaki son çizgi segmentine **teğet** olan bir yay çizer. Yumuşak geçişler için kullanışlıdır.
+    *   `threePointArc((x1, y1), (x2, y2))`
+    Mevcut konumdan başlayıp, verilen birinci noktadan (`(x1, y1)`) geçerek ikinci noktada (`(x2, y2)`) biten bir yay çizer. Üç nokta ile tanımlanır:
+    - Başlangıç noktası (otomatik olarak mevcut konum)
+    - Ara nokta
+    - Bitiş noktası
+
+    **Örnek:**
+    ```python
+        cq.Workplane("XY").moveTo(0, 0).threePointArc((2, 2), (4, 0))
+    ```
+
+    Bu kod, `(0,0)` → `(2,2)` → `(4,0)` noktalarından geçen bir yay çizer.
+
+    *   `tangentArcPoint((x, y))` Mevcut konumdan başlayıp verilen noktada (`(x, y)`) biten ve **başlangıçtaki son çizgi segmentine teğet** olan bir yay çizer. Yumuşak geçişler için idealdir çünkü yay, önceki çizginin yönüyle uyum sağlar.
+
+    **Önemli Özellikler:**
+         - **Göreli Koordinat:** Varsayılan olarak `relative=True` olduğu için, verilen nokta **mevcut konuma göre hesaplanır**.
+         - **Teğetlik:** Yay, önceki çizginin sonuna pürüzsüz bir şekilde bağlanır.
+
+    **Örnek:**
+
+    ```python
+        cq.Workplane("XY").moveTo(0, 0).lineTo(10, 0).tangentArcPoint((5, 8))
+    ```
+    Bu kod:
+    1. `(0,0)` → `(10,0)` doğrusunu çizer.
+    2. `(10,0)` noktasından başlayarak, `(10+5, 0+8) = (15,8)` noktasında biten ve önceki çizgiye teğet bir yay ekler.
 
     ```python
     import cadquery as cq
@@ -837,6 +862,22 @@ Bazen standart şekiller yeterli olmaz ve kendi özel yollarımızı çizmemiz g
     camera-controls
     style="width: 100%; height: 600px; background-color:rgb(255, 255, 255);" />
 </Layout>
+
+-----
+
+📌 İpuçları ve Dikkat Edilmesi Gerekenler
+
+1. **Koordinat Sistemleri:**
+   - `relative=True`: Noktalar mevcut pozisyona göre hesaplanır.
+   - `relative=False`: Noktalar mutlak koordinatlardır.
+
+2. **Yayların Teğetliği:**
+   - `tangentArcPoint`, önceki çizginin yönüne göre eğimli geçişler sağlar. Bu, aerodinamik profillerde doğal görünümler oluşturmak için idealdir.
+
+3. **Şekil Kapatma:**
+   - `.close()`, son noktayı başlangıç noktasına otomatik bağlar. Manuel olarak `.lineTo()` kullanmak daha kontrol edilebilir olabilir.
+
+-----
 
 *   **Örnek: Ay-Yıldız Modeli** (Daha karmaşık bir eskiz ve Boolean operasyonları içerir)
 

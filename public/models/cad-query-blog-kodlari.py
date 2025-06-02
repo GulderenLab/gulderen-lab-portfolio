@@ -1,20 +1,37 @@
-# CadQuery'yi içe aktar
 import cadquery as cq
-# Dışa aktarma modülünü içe aktar
-from cadquery import exporters
 
+# 🔷 1. Plaka ölçüleri
+uzunluk = 60
+genislik = 40
+kalinlik = 6
+delik_cap = 5
+kenardan_uzaklik = 10
 
-model = (
+# 🔹 2. Çeyrek plaka (pozitif X ve Y)
+ceyrek_wp = (
     cq.Workplane("XY")
-    .box(20, 20, 10)
-    .faces(">Z").workplane()
-    .polyline[(-5, -5), (0, -5), (5, 5), (0, 5)]
-    .extrude(10)
+    .box(uzunluk/2, genislik/2, kalinlik, centered=False)  # (0,0)'dan başlayarak
+    .faces(">Z").workplane(origin=(0,0,0))
+    .center((uzunluk/2)-kenardan_uzaklik, (genislik/2)-kenardan_uzaklik)
+    .circle(delik_cap/2)
+    .cutThruAll()
 )
 
-# Prizmayı 'prizma.step' olarak STEP formatında dışa aktar (veya .gltf)
-# Blog'da göstermek için .gltf formatını tercih edebilirsiniz:
-exporters.export(model, 'box.step') 
+# 🔁 3. X eksenine göre aynala → yarım plaka
+ceyrek = ceyrek_wp.val()
+ayna_x = ceyrek_wp.mirror("YZ", (0,0,0)).val()
+yarim_wp = cq.Workplane().add(ceyrek).add(ayna_x)
 
-# Prizmayı görüntüleyicide göster (varsa)
-show_object(model)
+# 🔁 4. Y eksenine göre aynala → tam simetrik plaka
+yarim = yarim_wp.val()
+ayna_y = yarim_wp.mirror("XZ", (0,0,0)).val()
+tam_wp = cq.Workplane().add(yarim).add(ayna_y)
+
+# 🧱 5. Montaj olarak göster
+montaj = cq.Assembly(name="simetrik_plaka")
+montaj.add(tam_wp, name="plaka", color=cq.Color("steelBlue"))
+
+show_object(montaj)
+
+# 💾 6. .gltf olarak dışa aktar
+montaj.save("simetrik_plaka.gltf")

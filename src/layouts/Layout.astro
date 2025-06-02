@@ -18,16 +18,12 @@ const {
     image,
 } = Astro.props;
 
-const siteName = 'Gulderen Lab'; // Site adını bir değişkende tutmak iyi
-const formattedTitle = `${title} | ${siteName}`; // Sayfa başlığı formatı (Backtick eklendi)
+const siteName = 'Gulderen Lab';
+const formattedTitle = `${title} | ${siteName}`;
+const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const ogImageURL = image && Astro.site ? new URL(image, Astro.site).toString() : undefined;
 
-// Canonical ve OG URL için sayfanın tam URL'sini alıyoruz
-// Astro.url mevcut sayfanın URL bilgilerini içerir
-const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined; // Astro.site astro.config.mjs'de tanımlanmalı!
-const ogImageURL = image && Astro.site ? new URL(image, Astro.site).toString() : undefined; // Tam resim URL'si (varsa)
-
-// Astro.site'ın tanımlı olup olmadığını kontrol edelim (build için önemli)
-if (!Astro.site && import.meta.env.PROD) { // Sadece üretim build'inde uyar
+if (!Astro.site && import.meta.env.PROD) {
     console.warn(
         `Astro.site yapılandırması astro.config.mjs dosyasında tanımlanmamış. Canonical ve OG URL'ler düzgün oluşturulamayacak.`
     );
@@ -48,78 +44,125 @@ if (!Astro.site && import.meta.env.PROD) { // Sadece üretim build'inde uyar
         <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
         <script>
           document.addEventListener("DOMContentLoaded", function () {
-            renderMathInElement(document.body, {
-              delimiters: [
-                { left: "$$", right: "$$", display: true }, // Blok modu
-                { left: "$", right: "$", display: false }   // Satır içi mod
-              ]
-            });
+            const renderMath = () => {
+              if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                  delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false }
+                  ]
+                });
+              }
+            };
+            renderMath();
+            document.addEventListener('astro:page-load', renderMath);
           });
         </script>
         {/* =============================================== */}
 
-
-        <!-- === model-viewer script === -->
-        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
+        {/* === model-viewer script === */}
+        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" defer></script>
 
         {/* === SEO ve META ETİKETLERİ === */}
         <title>{formattedTitle}</title>
         <meta name="description" content={description} />
-        {canonicalURL && <link rel="canonical" href={canonicalURL.toString()} />} {/* Null kontrolü eklendi */}
+        {canonicalURL && <link rel="canonical" href={canonicalURL.toString()} />}
         <meta property="og:title" content={formattedTitle} />
         <meta property="og:description" content={description} />
-        {canonicalURL && <meta property="og:url" content={canonicalURL.toString()} />} {/* Null kontrolü eklendi */}
+        {canonicalURL && <meta property="og:url" content={canonicalURL.toString()} />}
         {ogImageURL && <meta property="og:image" content={ogImageURL} />}
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={siteName} />
         <meta property="og:locale" content="tr_TR" />
-        {/* Twitter Card'ları da ekleyebilirsin */}
         {/* === /SEO ve META ETİKETLERİ === */}
 
-        {/* === KOD KOPYALAMA BUTONU STİLİ === */}
+        {/* === KOD KOPYALAMA BUTONU VE MODEL-VIEWER STİLLERİ === */}
         <style is:inline>
             pre > button.copy-button {
                 position: absolute;
                 top: 0.5rem;
                 right: 0.5rem;
                 padding: 0.25rem 0.5rem;
-                background-color: #4a5568; /* Tailwind bg-gray-700 */
-                color: #e2e8f0; /* Tailwind text-gray-300 */
+                background-color: #4a5568;
+                color: #e2e8f0;
                 border: none;
-                border-radius: 0.25rem; /* Tailwind rounded */
-                font-size: 0.75rem; /* Tailwind text-xs */
-                font-family: inherit; /* Ana fontu kullansın */
-                line-height: 1; /* Satır yüksekliğini ayarla */
+                border-radius: 0.25rem;
+                font-size: 0.75rem;
+                font-family: inherit;
+                line-height: 1;
                 cursor: pointer;
-                opacity: 0; /* Başlangıçta tamamen gizli */
-                visibility: hidden; /* Başlangıçta tamamen gizli */
+                opacity: 0;
+                visibility: hidden;
                 transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out,
                     background-color 0.2s ease-in-out;
-                z-index: 10; /* Diğer içeriklerin üzerinde kalması için */
+                z-index: 10;
             }
             pre:hover > button.copy-button {
-                opacity: 0.7; /* Hover'da görünür yap (hafif şeffaf) */
+                opacity: 0.7;
                 visibility: visible;
             }
             pre > button.copy-button:hover {
-                background-color: #2d3748; /* Tailwind bg-gray-800 */
-                opacity: 1; /* Hover'da tam görünür */
+                background-color: #2d3748;
+                opacity: 1;
             }
             pre > button.copy-button.copied {
-                background-color: #38a169; /* Tailwind bg-green-600 */
+                background-color: #38a169;
                 color: white;
-                opacity: 1; /* Kopyalandığında tam görünür */
+                opacity: 1;
                 visibility: visible;
             }
-            /* Odaklanma stilini kaldıralım (isteğe bağlı) */
             pre > button.copy-button:focus {
                 outline: none;
             }
-            /* pre elementine göreceli konumlandırma ekleyelim (script bunu yapsa da garanti olsun) */
             pre {
                 position: relative;
             }
+
+            /* === MODEL-VIEWER İÇİN STİLLER === */
+            .model-container {
+              position: relative;
+              border: 1px solid #cbd5e1; /* Tailwind gray-300, beyaz arka plana uygun */
+              border-radius: 0.5rem;
+              overflow: hidden;
+              background-color: white; /* Konteynerin arka planı beyaz */
+            }
+            .model-container model-viewer {
+                width: 100%;
+                height: 100%;
+                --scene-background: white; /* model-viewer'ın kendi sahne arka planını beyaz yapar */
+            }
+            .model-container .progress-bar { /* Bu kısım progress-bar slot'u için */
+              display: block;
+              width: 100%;
+              height: 100%;
+              position: absolute;
+              top: 0;
+              left: 0;
+              background-color: rgba(229, 231, 235, 0.8); /* Tailwind gray-200 with opacity */
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              pointer-events: none;
+            }
+            .model-container .progress-bar > .update-bar {
+              background-color: #4299e1; /* Tailwind bg-blue-500 */
+              width: 0%;
+              height: 5px;
+              position: absolute;
+              bottom: 20px;
+              left: 50%;
+              transform: translateX(-50%);
+              transition: width 0.3s ease-out;
+              border-radius: 2.5px;
+            }
+            model-viewer:not([loaded]) > div[slot="progress-bar"] {
+                opacity: 1;
+            }
+            model-viewer[loaded] > div[slot="progress-bar"] {
+                opacity: 0;
+                transition: opacity 0.5s 0.5s ease-out;
+            }
+            /* =============================================== */
         </style>
         {/* =============================== */}
     </head>
@@ -133,33 +176,26 @@ if (!Astro.site && import.meta.env.PROD) { // Sadece üretim build'inde uyar
         {/* === KOD KOPYALAMA SCRIPT'İ === */}
         <script is:inline>
             function addCopyButtons() {
-                // `code` içeren `pre` bloklarını hedef alalım (markdown çıktısı genellikle böyledir)
                 document.querySelectorAll('pre:has(code)').forEach((block) => {
                     if (block.querySelector('button.copy-button')) return;
-
                     if (window.getComputedStyle(block).position === 'static') {
                      	block.style.position = 'relative';
                     }
-
                     const copyButton = document.createElement('button');
                     copyButton.className = 'copy-button';
                     copyButton.textContent = 'Kopyala';
                     copyButton.setAttribute('aria-label', 'Kodu kopyala');
                     copyButton.type = 'button';
-
                     block.appendChild(copyButton);
-
                     copyButton.addEventListener('click', async () => {
                         const codeElement = block.querySelector('code');
                         const codeToCopy = codeElement ? codeElement.textContent : '';
-
                         if (codeToCopy && navigator.clipboard) {
                             try {
                                 await navigator.clipboard.writeText(codeToCopy);
                                 copyButton.textContent = 'Kopyalandı!';
                                 copyButton.classList.add('copied');
                                 copyButton.setAttribute('aria-label', 'Kod kopyalandı');
-
                                 setTimeout(() => {
                                     copyButton.textContent = 'Kopyala';
                                     copyButton.classList.remove('copied');
@@ -186,15 +222,16 @@ if (!Astro.site && import.meta.env.PROD) { // Sadece üretim build'inde uyar
                     });
                 });
             }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', addCopyButtons);
-            } else {
+            const initCopyButtons = () => {
+                document.querySelectorAll('pre > button.copy-button').forEach(btn => btn.remove());
                 addCopyButtons();
-            }
-
-            document.addEventListener('astro:after-swap', addCopyButtons);
+            };
+            if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initCopyButtons); } else { initCopyButtons(); }
+            document.addEventListener('astro:after-swap', initCopyButtons);
         </script>
         {/* ============================== */}
+
+        {/* MODEL-VIEWER EKSEN EKLEME SCRIPT'İ KALDIRILDI */}
+
     </body>
 </html>

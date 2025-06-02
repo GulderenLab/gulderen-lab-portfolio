@@ -1,0 +1,262 @@
+---
+# Dosya Adı: src/content/blog/cad-query-klavuzu-bolum-4.md
+
+title: 'CAD Query ile Parametrik 3D Modelleme - 🚀 Bölüm 4: İleri CadQuery Özellikleri ve Teknikleri'
+description: 'CadQueryde seçiciler (selectors), çalışma düzlemi manipülasyonu, koşullu modelleme, parametrik diziler, ayna görüntüsü ve daha karmaşık montaj tekniklerini öğrenin.'
+publishDate: 2025-06-01 # Örnek tarih
+tags: ['cadquery', 'python', '3d modelleme', 'parametrik tasarım', 'ileri cadquery', 'selectors', 'workplane', 'koşullu modelleme', 'montaj', 'array', 'mirror', 'cadquery örnekleri']
+image:
+  src: '/images/cadquery-python-3d-modeling-kapak.png' # Yeni bir kapak görseli olabilir
+  alt: 'CadQuery ile ileri seviye 3D modelleme tekniklerini gösteren kapak görseli'
+isDraft: false
+
+# --- Seri Bilgileri ---
+part: 4
+totalPages: 8
+seriesSlug: 'cad-query-klavuzu'
+prevPageSlug: 'cad-query-klavuzu-bolum-3'
+nextPageSlug: 'cad-query-klavuzu-bolum-5' # <<< DİKKAT: Sonraki bölümün slug'ını şimdiden belirleyelim (yoksa '' yapın)!
+# --- Seri Bilgileri Sonu ---
+
+---
+
+# 🔧 Bölüm 4: İleri CadQuery Özellikleri  
+Önceki bölümlerde CadQuery ile temel ve ileri seviye katı modelleme tekniklerini öğrendik: `extrude`, `revolve`, `sweep`, `loft` gibi komutlarla karmaşık formlar oluşturduk. Artık sıra, modellerimizi daha akıllıca, dinamik ve ölçeklenebilir hale getirmek için kullanılan bazı **ileri düzey özelliklere** geçiyor.
+
+Bu bölümde şunları öğreneceğiz:
+- 🎯 Nesneleri seçmek için güçlü `selector` sistemleri  
+- 🔄 Çalışma düzlemini (`workplane`) manipüle etme ve referans değiştirme  
+- ⚙️ Koşullu yapılarla akıllı modelleme  
+- 🧱 Birden fazla parçayı yönetmek ve montaj kurmak (`Assembly`)  
+- 📐 Parametrik diziler (arrays) oluşturma  
+- 💎 Simetri uygulamaları ve ayna görüntüsü (`mirror`)  
+
+Hazırsanız, CadQuery'nin daha sofistike ve parametrik olarak kontrol edilebilen yönlerine dalalım! 🚀
+
+---
+
+## 🎯 Selectors ve Obje Seçme Teknikleri  
+CadQuery'de nesneleri seçmek, özellikle büyük veya karmaşık modeller üzerinde çalışırken çok önemlidir. `Selector` sistemi sayesinde yüzeyler, kenarlar, köşeler gibi geometri bileşenlerini filtreleyebilir, gruplayabilir ve istenen işlemleri sadece bu elemanlara uygulayabilirsiniz.
+
+### Temel Selector Kullanımı
+```python
+result = (
+    cq.Workplane("XY")
+    .box(50, 40, 30)
+    .faces(">Z")           # Sadece üst yüzeyi seç
+    .edges(">X")           # Üst yüzeyde X yönünde olan kenarları seç
+    .fillet(2)             # Sadece bu kenarlara pah ekle
+)
+```
+
+### Yaygın Selector Kuralları:
+| Selector       | Açıklama |
+|----------------|----------|
+| `>Z`           | Z yönündeki yüzey (en yüksek Z koordinatına sahip) |
+| `<Y`           | Y yönünün tersindeki yüzey |
+| `||X`          | X'e paralel olan yüzeyler |
+| `rounded`      | Yuvarlatılmış kenarlar |
+| `circular`     | Dairesel kenarlar veya yüzeyler |
+| `edged with length > 10` | Belirli uzunluktaki kenarlar |
+
+### Örnek: Seçici Kenar Pahlama
+```python
+(
+    cq.Workplane("XY")
+    .box(60, 40, 30)
+    .edges("<X or >Y or <Z")  # Belirli kenarları seç
+    .chamfer(3)                # Sadece bu kenarlara pah ver
+)
+```
+
+Selectors, özellikle otomasyon, tekrarlayan işlemler ve dinamik modellemede hayat kurtarır. Modeliniz büyüdükçe ve karmaşıklaştıkça bu sistem olmadan çalışmak zorlaşır.
+
+---
+
+## 🔄 Workplane Manipülasyonu ve Referans Değiştirme  
+`Workplane` (çalışma düzlemi), CadQuery'nin en güçlü ve esnek özelliklerinden biridir. Ancak çoğu zaman varsayılan XY düzleminde kalıyoruz. Gerçek gücü ise çalışma düzlemini yeniden konumlandırarak kullanmaktan gelir.
+
+### `transformed()` ile Workplane Taşıma
+```python
+wp = (
+    cq.Workplane("XY")
+    .transformed(offset=(20, 10, 15), rotate=(0, 0, 45))  # Yeni bir workplane tanımla
+    .circle(5)
+    .extrude(10)  # Bu yeni düzlemden başlayarak çıkıntı yap
+)
+```
+
+### `Plane` Sınıfı ile Özel Düzlem Tanımlama
+```python
+new_plane = cq.Plane(origin=(10, 10, 10), xDir=(1, 0, 1), normal=(0, 0, 1))
+wp = cq.Workplane(new_plane).rect(10, 20).extrude(5)
+```
+
+### Örnek: Eğik Bir Yüzeye Paralel Çizim
+```python
+model = (
+    cq.Workplane("XY")
+    .box(50, 40, 30)
+    .faces(">Z")
+    .workplane()  # Üst yüzeye paralel düzlem
+    .circle(10)
+    .cutThruAll()  # Üst yüzeye paralel kesim
+)
+```
+
+`Workplane`'i doğru şekilde manipüle edebilmek, 3D modelleme yeteneklerinizi kat be kat artırır. Özellikle simülasyonlar, mekanizmalar veya eğrisel yüzeyler üzerinde çalışırken bu bilgi çok değerli olur.
+
+---
+
+## ⚙️ Koşullu Modelleme ve Kontrol Yapıları  
+Python’un doğal kontrol yapılarını (if/else, for, while) kullanarak CadQuery’yi daha akıllı hale getirebilirsiniz. Bu, aynı modeli farklı boyutlarla veya farklı yapılandırmalarla hızlıca üretmenize olanak tanır.
+
+### Örnek: Eğer/Yoksa Yapısıyla Akıllı Delik
+```python
+parametreli_model = (
+    cq.Workplane("XY")
+    .box(60, 40, 10)
+)
+
+ekstra_delik_var_mi = True
+
+if ekstra_delik_var_mi:
+    parametreli_model = (
+        parametreli_model
+        .faces(">Z").workplane()
+        .center(20, 0)
+        .hole(5)
+    )
+```
+
+### Örnek: For Döngüsüyle Tekrar Eden Yapı
+```python
+model = cq.Workplane("XY")
+
+for i in range(5):
+    model = model.add(
+        cq.Workplane("XY")
+        .moveTo(i*20, 0)
+        .circle(5)
+        .extrude(10)
+    )
+```
+
+Koşullar ve döngüler sayesinde modelleme süreciniz artık statik değil — parametrik, dinamik ve çok yönlü oluyor.
+
+---
+
+## 🧱 Montaj ve Çoklu Parça Modelleme  
+Gerçek dünya tasarımları genellikle tek bir parça değil, birden fazla bileşenden oluşur. CadQuery’nin `Assembly` sınıfı sayesinde bu tür kompleks yapıları organize biçimde oluşturabilirsiniz.
+
+### Basit Montaj Oluşturma
+```python
+from cadquery import Assembly, Color
+
+plaka = cq.Workplane("XY").box(60, 40, 10)
+pim = cq.Workplane("XY").cylinder(20, 2.5)
+
+montaj = Assembly()
+montaj.add(plaka, name="plaka", color=Color("lightgray"))
+montaj.add(pim, name="pim", color=Color("steelblue"), loc=cq.Location((0, 0, 15)))
+```
+
+### Öneri: Her Parçayı Fonksiyonla Oluştur
+```python
+def delikli_plaka():
+    return (
+        cq.Workplane("XY")
+        .box(60, 40, 10)
+        .faces(">Z").workplane()
+        .hole(8)
+    )
+
+def metal_pim(yukseklik, cap):
+    return cq.Workplane("XY").cylinder(yukseklik, cap / 2)
+
+montaj = Assembly()
+montaj.add(delikli_plaka(), name="plaka", loc=cq.Location((0, 0, 0)))
+montaj.add(metal_pim(20, 7.9), name="pim", loc=cq.Location((0, 0, 15)))
+```
+
+Montajlar, gerçek mekanik sistemleri CAD ortamında simüle etmek için önemli bir adımdır. Gelecek bölümlerde bu konuyu daha da derinleştirip `mate` sistemleriyle ilişki kuracağız.
+
+---
+
+## 📐 Parametrik Dizi Oluşturma (Arrays)  
+Tekrarlayan yapılar, plakalardaki delik sıraları, dişliler ya da ısı emici kanatçıklar gibi öğeleri manuel olarak modellemek hem zaman alır hem de hataya açıktır. `eachpoint()` ve `pushPoints()` gibi yöntemlerle dizi oluşturmak, bu işi kolaylaştırır.
+
+### `pushPoints()` ile Nokta Dizisi
+```python
+model = (
+    cq.Workplane("XY")
+    .pushPoints([(0, 0), (20, 0), (40, 0)])
+    .circle(5)
+    .extrude(10)
+)
+```
+
+### `eachpoint()` ile Dinamik Dizi
+```python
+def dikdortgen(index, loc):
+    return cq.Workplane().box(5, 5, 5).val().located(loc)
+
+dizi_noktalari = [(x * 10, 0, 0) for x in range(5)]
+model = cq.Workplane("XY").eachpoint(dikdortgen, True).combine()
+
+show_object(model)
+```
+
+Dizi komutlarıyla aynı yapıyı çok hızlı ve tutarlı şekilde çoğaltabilirsiniz. Bu özellikle üretim mühendisliği ve prototipleme süreçlerinde çok faydalıdır.
+
+---
+
+## 💎 Ayna Görüntüsü ve Simetri Uygulamaları  
+Simetri, hem estetik hem de fonksiyonel tasarım açısından çok önemlidir. `mirror()` komutu sayesinde bir objenin simetrisini alabilir, simetrik parçalar oluşturabilirsiniz.
+
+### Örnek: Yatay Eksen Boyunca Aynalama
+```python
+obje = (
+    cq.Workplane("XY")
+    .pushPoints([(0, 0), (20, 0)])
+    .circle(5)
+    .extrude(10)
+    .mirror(mirrorPlane="YZ")  # X ekseni boyunca simetri
+)
+```
+
+### Yaygın Ayna Düzlemleri:
+| Düzlem | Açıklama |
+|--------|----------|
+| `"XY"` | Z ekseni boyunca simetri |
+| `"YZ"` | X ekseni boyunca simetri |
+| `"XZ"` | Y ekseni boyunca simetri |
+
+### Örnek: Tam Simetrik Plaka
+```python
+simetrik_plaka = (
+    cq.Workplane("XY")
+    .box(30, 20, 5)
+    .mirror("YZ")  # X yönünde simetri al
+)
+```
+
+Aynalama, hem tasarım hızınızı artırır hem de simetrik yapıların doğruluğunu garanti altına alır.
+
+---
+
+## ✅ Bölüm 4 Özeti: İleri Seviye CadQuery Yetenekleri  
+Bu bölümde, CadQuery'nin gerçek gücünü ortaya koyan gelişmiş özellikleri keşfettik:
+
+- **Selectors**: Karmaşık modellerde spesifik yüzeyleri, kenarları ve köşeleri seçebildik.
+- **Workplane Manipülasyonu**: Çalışma düzlemini taşıyarak yeni perspektifler kazandık.
+- **Koşullu Yapılar**: Python kontrol yapılarıyla akıllı, değişken tabanlı modeller oluşturduk.
+- **Montaj Yönetimi**: `Assembly` ile çok parçalı yapıları düzenli şekilde birleştirdik.
+- **Parametrik Diziler**: `pushPoints` ve `eachpoint` ile tekrarlayan yapıları hızlıca ürettik.
+- **Simetri ve Aynalama**: `mirror()` ile simetrik parçalar tasarladık.
+
+Artık modelleme becerileriniz yalnızca geometrik değil, aynı zamanda mantıklı, dinamik ve parametrik!
+
+Bir sonraki bölümde, bu tüm araçları kullanarak gerçek bir proje yapacağız: **bir dişli kutusu tasarımı**. Hazırlanan parçaları bir araya getirecek, montaj haline sokacak ve görselleştirme yapacağız.
+
+--- 
