@@ -1,26 +1,68 @@
 ---
 // src/components/Footer.astro
 const today = new Date();
+
+// Footer linklerini yönetimi kolay bir dizi olarak tanımlıyoruz
+const footerLinks = [
+  {
+    href: 'https://github.com/GulderenLab',
+    text: 'GitHub',
+    isExternal: true, // Bu link dışarıya açılıyor
+  },
+  {
+    href: 'https://linkedin.com/in/abdullah-gülderen-31120b35b/',
+    text: 'LinkedIn',
+    isExternal: true, // Bu link de dışarıya açılıyor
+  },
+  {
+    href: '/gizlilik-politikasi',
+    text: 'Gizlilik Politikası',
+    isExternal: false, // Bu site içi bir link
+  },
+];
 ---
-{/* Footer'a Tailwind sınıfları ekliyoruz */}
-<footer class="mt-auto bg-gray-800 text-gray-400 text-sm border-t border-gray-700"> {/* Üste yapışma, Arkaplan, Metin rengi/boyutu, Üst kenarlık */}
-  {/* Konteyner: Maksimum genişlik, ortalama, iç boşluklar */}
+
+<footer class="mt-auto bg-gray-800 text-gray-400 text-sm border-t border-gray-700">
   <div class="container mx-auto px-4 py-6">
-    {/* Flex Container: Küçük ekranda alt alta, orta ekrandan itibaren yan yana, öğeler arası boşluk ve ortalama */}
-    <div class="flex flex-col md:flex-row justify-between items-center gap-4"> {/* gap-4: öğeler arası boşluk */}
-      {/* Telif Hakkı Metni */}
-      <p class="text-center md:text-left"> {/* Küçük ekranda ortalı, orta ekrandan itibaren sola dayalı */}
-        Tüm hakları saklıdır © {today.getFullYear()} Gulderen Lab 
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+      
+      <p class="text-center md:text-left">
+        Tüm hakları saklıdır © {today.getFullYear()} Gulderen Lab
       </p>
-      {/* Navigasyon Linkleri */}
-      <nav class="flex gap-x-6"> {/* Yatay boşluk (gap-x) */}
-        {/* Linklere stil ve hover efekti */}
-        <a href="https://github.com/GulderenLab" target="_blank" rel="noopener noreferrer" class="hover:text-white hover:underline transition-colors">GitHub</a>
-        <a href="https://linkedin.com/in/abdullah-gülderen-31120b35b/" target="_blank" rel="noopener noreferrer" class="hover:text-white hover:underline transition-colors">LinkedIn</a>
-        <a href="/gizlilik-politikasi" class="hover:text-white hover:underline transition-colors">Gizlilik Politikası</a>
+
+      <nav class="flex gap-x-6">
+        {footerLinks.map((link) => (
+          <a
+            href={link.href}
+            // Dış link ise yeni sekmede aç ve güvenlik önlemini ekle
+            target={link.isExternal ? '_blank' : undefined}
+            rel={link.isExternal ? 'noopener noreferrer' : undefined}
+            class="hover:text-white hover:underline transition-colors inline-flex items-center gap-1.5"
+          >
+            {link.text}
+            
+            {/* Sadece dış linkler için ikonu göster */}
+            {link.isExternal && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="w-4 h-4"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                />
+              </svg>
+            )}
+          </a>
+        ))}
       </nav>
+
     </div>
   </div>
 </footer>
-
-{/* <style> BLOKU BOŞ OLMALI VEYA SİLİNMİŞ OLMALI </style> */}
