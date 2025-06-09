@@ -1,4 +1,30 @@
 /* src/styles/tailwind.css */
+
+/* Tailwind'in temel katmanlarını içeri aktar */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 
+  Tailwind Typography (prose) sınıfının varsayılan davranışını
+  üzerine yazmak (override) için bu katmanı kullanıyoruz.
+*/
+@layer base {
+  /*
+    .prose veya .prose-invert içindeki tüm linklerin ('a' etiketleri)
+    varsayılan alt çizgisini kaldır.
+  */
+  .prose a,
+  .prose-invert a {
+    @apply no-underline; /* text-decoration: none; */
+  }
+
+  /*
+    Kullanıcı deneyimini iyileştirmek için, fare üzerine gelince
+    alt çizgiyi geri ekle.
+  */
+  .prose a:hover,
+  .prose-invert a:hover {
+    @apply underline; /* text-decoration: underline; */
+  }
+}
