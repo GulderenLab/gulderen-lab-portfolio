@@ -9,13 +9,12 @@ import sitemap from '@astrojs/sitemap';
 // Markdown eklentileri
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import rehypeSlug from 'rehype-slug'; // Başlıklara ID ekler
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'; // Başlıklara otomatik link ekler
 
 // Node.js modüllerini import et (HTTPS için dosya yolları)
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-
-import rehypeSlug from 'rehype-slug'; // Başlıklara ID ekler
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'; // Başlıklara otomatik link ekler
 
 // Dosya yollarını config dosyasına göre çözmek için helper
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -39,9 +38,17 @@ export default defineConfig({
     remarkPlugins: [remarkMath],
     // TÜM rehype eklentilerini TEK BİR dizi içinde toplayın:
     rehypePlugins: [
-      [rehypeKatex, { strict: false }], // Katex
-      rehypeSlug,                      // Slug
-      [                                // Autolink Headings
+      // KaTeX yapılandırması
+      [rehypeKatex, {
+        // Hata toleransı (bilinmeyen komutlarda hata vermez)
+        strict: false,
+        // \colorbox ve \fcolorbox gibi komutları etkinleştirmek için bu ayar ZORUNLUDUR.
+        trust: true,
+      }],
+      
+      // Slug ve Autolink Headings
+      rehypeSlug,
+      [
         rehypeAutolinkHeadings,
         {
           behavior: 'append',
@@ -59,24 +66,21 @@ export default defineConfig({
 
   // Geliştirme sunucusu ayarları
   server: {
-    host: true, // Yerel ağdan erişime izin vermek için. Astro bazen bunu otomatik yapar ama belirtmek iyi olabilir.
+    host: true, // Yerel ağdan erişime izin vermek için.
     https: {
       // mkcert ile oluşturulan özel anahtar dosyasının yolu
-      // DOSYA ADINI KONTROL EDİN! `mkcert localhost ...` komutunun çıktısındaki ada göre güncelleyin.
-      key: path.resolve(__dirname, './localhost+3-key.pem'), // Örnek dosya adı, sizinki farklı olabilir
+      key: path.resolve(__dirname, './localhost+3-key.pem'),
 
       // mkcert ile oluşturulan sertifika dosyasının yolu
-      // DOSYA ADINI KONTROL EDİN! `mkcert localhost ...` komutunun çıktısındaki ada göre güncelleyin.
-      cert: path.resolve(__dirname, './localhost+3.pem'),   // Örnek dosya adı, sizinki farklı olabilir
+      cert: path.resolve(__dirname, './localhost+3.pem'),
     },
   },
 
 });
 
 // ÖNEMLİ HATIRLATMALAR:
-// 1. Yukarıdaki `key` ve `cert` yollarındaki dosya adlarının (`localhost+3-key.pem`, `localhost+3.pem`)
-//    `mkcert localhost <ip-adresiniz>` komutunu çalıştırdığınızda projenizin kök dizininde
-//    oluşturulan gerçek dosya adlarıyla eşleştiğinden emin olun. Eğer farklıysa, bu yolları güncelleyin.
-// 2. Bu `.pem` dosyalarını `.gitignore` dosyanıza ekleyerek Git reponuza göndermediğinizden emin olun:
-//    # .gitignore
-//    *.pem
+// 1. Yukarıdaki `key` ve `cert` yollarındaki dosya adlarının
+//    projenizin kök dizininde oluşturulan gerçek dosya adlarıyla
+//    eşleştiğinden emin olun.
+// 2. Bu `.pem` dosyalarını `.gitignore` dosyanıza ekleyerek
+//    Git reponuza göndermediğinizden emin olun.
