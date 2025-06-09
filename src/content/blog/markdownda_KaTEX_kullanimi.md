@@ -1023,6 +1023,7 @@ Bazen bir denklemin belirli bir kısmını vurgulamak veya farklı değişkenler
 Renkler, standart isimlerle veya daha fazla kontrol için HEX renk kodlarıyla belirtilebilir.
 
 
+
 | Açıklama | Kod Örneği | Görünüm |
 | :--- | :--- | :--- |
 | Metin Rengi (KaTeX) | `\color{cyan}{x^2} + \color{orange}{y^2}` | \$\color{cyan}{x^2} + \color{orange}{y^2}\$ |
@@ -1030,6 +1031,8 @@ Renkler, standart isimlerle veya daha fazla kontrol için HEX renk kodlarıyla b
 | Renkli Kutu (HTML) | `<span style="background-color:#ffffcc; color:black; padding:2px 5px; border-radius:3px;">\$E=mc^2\$</span>` | <span style="background-color:#ffffcc; color:black; padding:2px 5px; border-radius:3px;">$E=mc^2$</span> |
 | Çerçeveli Kutu (HTML) | `<span style="background-color:#2c3e50; border:1px solid #00aaff; color:white; padding:2px 5px; border-radius:3px;">FORMÜL</span>` | <span style="background-color:#2c3e50; border:1px solid #00aaff; color:white; padding:2px 5px; border-radius:3px;">FORMÜL</span> |
 | Çerçeveli Kutu (KaTeX) | `\fcolorbox{#00aaff}{#2c3e50}{\color{white}FORMÜL}` | \$\fcolorbox{#00aaff}{#2c3e50}{\color{white}FORMÜL}\$ |
+
+
 
 
 📝 **İpucu:** Bir ifadenin sadece bir bölümünü renklendirmek, okuyucunun dikkatini önemli noktalara çekmek için çok etkilidir. Örneğin, bir ispatın kilit adımını veya bir çözümdeki sonucu vurgulayabilirsiniz. KaTeX'in `\colorbox` komutu web ortamlarında her zaman istikrarlı çalışmadığı için, tabloda gösterilen **HTML `<span>` yöntemini kullanmak çok daha güvenilir bir çözümdür.**
@@ -1421,12 +1424,7 @@ Karmaşık formüller yazdıkça, LaTeX kodunuzun okunabilirliği azalabilir. T�
 
 *   **Uzun Formülleri Bölün:** Çok uzun veya çok adımlı denklemler için `aligned` ortamını kullanarak kodunuzu mantıksal satırlara ayırın. Bu, hem kodun okunabilirliğini artırır hem de çıktının daha anlaşılır olmasını sağlar.
 
-    **Kötü Fikir (Okunması Zor):**
-    ```latex
-    $$f(x) = (x+y)^3 = (x+y)(x^2+2xy+y^2) = x^3+2x^2y+xy^2+x^2y+2xy^2+y^3 = x^3+3x^2y+3xy^2+y^3$$
-    ```
-
-    $$f(x) = (x+y)^3 = (x+y)(x^2+2xy+y^2) = x^3+2x^2y+xy^2+x^2y+2xy^2+y^3 = x^3+3x^2y+3xy^2+y^3$$
+    **Kötü Bir Alışkanlık:** Tek satırda uzun denklemler yazmak, hem okunabilirliği düşürür hem de mobil cihazlarda sayfa düzeninin bozulmasına neden olabilir.
 
     **İyi Fikir (Temiz ve Anlaşılır):**
     ```latex

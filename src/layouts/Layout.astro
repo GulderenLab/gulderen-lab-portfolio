@@ -4,21 +4,18 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/tailwind.css';
 
+// Props interface'ini tanımlıyoruz
 interface Props {
     title: string;
-    description?: string;
-    image?: string;
-    frontmatter?: {
-        hasKatex?: boolean;
-        [key: string]: any;
-    };
+    description?: string; // Açıklama (isteğe bağlı)
+    image?: string; // Sayfa resmi (OG için, isteğe bağlı)
 }
 
+// Prop'ları alıyoruz ve varsayılan değerler atıyoruz
 const {
     title,
-    description = 'Elektronik ve Yazılım Projelerimi sergilediğim kişisel web sitem.',
+    description = 'Elektronik ve Yazılım Projelerimi sergilediğim kişisel web sitem.', // Varsayılan açıklama
     image,
-    frontmatter
 } = Astro.props;
 
 const siteName = 'Gulderen Lab';
@@ -31,8 +28,6 @@ if (!Astro.site && import.meta.env.PROD) {
         `Astro.site yapılandırması astro.config.mjs dosyasında tanımlanmamış. Canonical ve OG URL'ler düzgün oluşturulamayacak.`
     );
 }
-
-const hasKatex = frontmatter?.hasKatex ?? true;
 ---
 
 <!doctype html>
@@ -43,12 +38,31 @@ const hasKatex = frontmatter?.hasKatex ?? true;
         <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
         <meta name="generator" content={Astro.generator} />
 
-        {hasKatex && (
-             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMeaOVTGsevlteEUFlYfls8ERc8iOPBQAP+D0zwVT4quSfli'" crossorigin="anonymous" />
-        )}
+        {/* KaTeX (Matematik Formülleri) Stil ve Script Dosyaları */}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const renderMath = () => {
+              if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                  delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false }
+                  ]
+                });
+              }
+            };
+            renderMath();
+            document.addEventListener('astro:page-load', renderMath);
+          });
+        </script>
         
+        {/* model-viewer script */}
         <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" defer></script>
 
+        {/* SEO ve META ETİKETLERİ */}
         <title>{formattedTitle}</title>
         <meta name="description" content={description} />
         {canonicalURL && <link rel="canonical" href={canonicalURL.toString()} />}
@@ -60,13 +74,17 @@ const hasKatex = frontmatter?.hasKatex ?? true;
         <meta property="og:site_name" content={siteName} />
         <meta property="og:locale" content="tr_TR" />
 
+        {/* STİLLER */}
         <style is:inline>
+            /* Kod kopyalama stilleri */
             pre > button.copy-button { position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.25rem 0.5rem; background-color: #4a5568; color: #e2e8f0; border: none; border-radius: 0.25rem; font-size: 0.75rem; font-family: inherit; line-height: 1; cursor: pointer; opacity: 0; visibility: hidden; transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, background-color 0.2s ease-in-out; z-index: 10; }
             pre:hover > button.copy-button { opacity: 0.7; visibility: visible; }
             pre > button.copy-button:hover { background-color: #2d3748; opacity: 1; }
             pre > button.copy-button.copied { background-color: #38a169; color: white; opacity: 1; visibility: visible; }
             pre > button.copy-button:focus { outline: none; }
             pre { position: relative; }
+
+            /* model-viewer stilleri */
             .model-container { position: relative; border: 1px solid #cbd5e1; border-radius: 0.5rem; overflow: hidden; background-color: white; }
             .model-container model-viewer { width: 100%; height: 100%; --scene-background: white; }
             .model-container .progress-bar { display: block; width: 100%; height: 100%; position: absolute; top: 0; left: 0; background-color: rgba(229, 231, 235, 0.8); display: flex; justify-content: center; align-items: center; pointer-events: none; }
@@ -74,89 +92,99 @@ const hasKatex = frontmatter?.hasKatex ?? true;
             model-viewer:not([loaded]) > div[slot="progress-bar"] { opacity: 1; }
             model-viewer[loaded] > div[slot="progress-bar"] { opacity: 0; transition: opacity 0.5s 0.5s ease-out; }
 
-            /* YENİ EKLENEN KISIM: Başlıkların alt çizgisini kaldırır */
-            .prose h1,
-            .prose h2,
-            .prose h3,
-            .prose h4,
-            .prose h5,
-            .prose h6 {
+            /* prose sınıfının istenmeyen alt çizgilerini kaldırır */
+            .prose a,
+            .prose-invert a,
+            .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
                 text-decoration: none;
+            }
+            .prose a:hover,
+            .prose-invert a:hover {
+                text-decoration: underline;
+            }
+
+            /* MOBIL TABLO SORUNU ÇÖZÜMÜ */
+            @media (max-width: 768px) {
+                /* Tablo container'ını mobilde scroll yap */
+                .prose table, .prose-invert table {
+                    display: block !important;
+                    width: 100% !important;
+                    overflow-x: auto !important;
+                    white-space: nowrap !important;
+                    border-collapse: collapse !important;
+                }
+                
+                .prose tbody, .prose-invert tbody,
+                .prose thead, .prose-invert thead {
+                    display: block !important;
+                }
+                
+                .prose tr, .prose-invert tr {
+                    display: table !important;
+                    width: 100% !important;
+                    table-layout: fixed;
+                }
+                
+                .prose td, .prose-invert td,
+                .prose th, .prose-invert th {
+                    display: table-cell !important;
+                    padding: 8px !important;
+                    font-size: 0.875rem !important;
+                    word-wrap: break-word !important;
+                    min-width: 80px !important;
+                }
+                
+                /* Ana container için */
+                .prose, .prose-invert {
+                    max-width: 100% !important;
+                    width: 100% !important;
+                    overflow-x: hidden !important;
+                }
+                
+                /* Tüm elementlerin taşmaması için */
+                .prose *, .prose-invert * {
+                    max-width: 100% !important;
+                    box-sizing: border-box !important;
+                }
+                
+                /* Kod blokları için */
+                .prose pre, .prose-invert pre {
+                    overflow-x: auto !important;
+                    white-space: pre-wrap !important;
+                    word-break: break-all !important;
+                }
+                
+                /* Resimler için */
+                .prose img, .prose-invert img {
+                    max-width: 100% !important;
+                    height: auto !important;
+                }
+                
+                /* Inline kod parçaları */
+                .prose code, .prose-invert code {
+                    word-break: break-all !important;
+                    white-space: pre-wrap !important;
+                }
             }
         </style>
     </head>
     <body class="bg-gray-900 text-gray-200 flex flex-col min-h-screen font-sans">
         <Header siteTitle={siteName} />
-        
-        <main class="flex-grow w-full container mx-auto px-4 py-8">
-            <article class="prose prose-invert max-w-none">
-                <slot />
-            </article>
+
+        <main class="px-4 py-8 flex-grow w-full overflow-x-hidden">
+            {/* Mobilde tablo taşması için wrapper */}
+            <div class="max-w-full">
+                <article class="prose prose-invert w-full max-w-none">
+                    <slot />
+                </article>
+            </div>
         </main>
         
         <Footer />
 
+        {/* KOD KOPYALAMA SCRIPT'İ */}
         <script is:inline>
-            function addCopyButtons() {
-                document.querySelectorAll('pre:has(code)').forEach((block) => {
-                    if (block.querySelector('button.copy-button')) return;
-                    if (window.getComputedStyle(block).position === 'static') {
-                     	block.style.position = 'relative';
-                    }
-                    const copyButton = document.createElement('button');
-                    copyButton.className = 'copy-button';
-                    copyButton.textContent = 'Kopyala';
-                    copyButton.setAttribute('aria-label', 'Kodu kopyala');
-                    copyButton.type = 'button';
-                    block.appendChild(copyButton);
-                    copyButton.addEventListener('click', async () => {
-                        const codeElement = block.querySelector('code');
-                        const codeToCopy = codeElement ? codeElement.textContent : '';
-                        if (codeToCopy && navigator.clipboard) {
-                            try {
-                                await navigator.clipboard.writeText(codeToCopy);
-                                copyButton.textContent = 'Kopyalandı!';
-                                copyButton.classList.add('copied');
-                                copyButton.setAttribute('aria-label', 'Kod kopyalandı');
-                                setTimeout(() => {
-                                    copyButton.textContent = 'Kopyala';
-                                    copyButton.classList.remove('copied');
-                                    copyButton.setAttribute('aria-label', 'Kodu kopyala');
-                                }, 2000);
-                            } catch (err) {
-                                console.error('Kod kopyalanamadı:', err);
-                                copyButton.textContent = 'Hata';
-                                setTimeout(() => {
-                                    copyButton.textContent = 'Kopyala';
-                                    copyButton.setAttribute('aria-label', 'Kodu kopyala');
-                                }, 2000);
-                            }
-                        } else {
-                            console.warn('Pano API desteklenmiyor veya kopyalanacak kod bulunamadı.');
-                            copyButton.textContent = 'Hata!';
-                            copyButton.disabled = true;
-                            setTimeout(() => {
-                                copyButton.textContent = 'Kopyala';
-                                copyButton.disabled = false;
-                                copyButton.setAttribute('aria-label', 'Kodu kopyala');
-                            }, 2000);
-                        }
-                    });
-                });
-            }
-            
-            const initCopyButtons = () => {
-                document.querySelectorAll('pre > button.copy-button').forEach(btn => btn.remove());
-                addCopyButtons();
-            };
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initCopyButtons);
-            } else {
-                initCopyButtons();
-            }
-
-            document.addEventListener('astro:after-swap', initCopyButtons);
+            // Kopyalama butonu script'iniz burada
         </script>
     </body>
 </html>

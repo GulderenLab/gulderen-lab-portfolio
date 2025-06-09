@@ -1,30 +1,23 @@
 /* src/styles/tailwind.css */
 
-/* Tailwind'in temel katmanlarını içeri aktar */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* 
-  Tailwind Typography (prose) sınıfının varsayılan davranışını
-  üzerine yazmak (override) için bu katmanı kullanıyoruz.
+  SİTENİN TAMAMI İÇİN GEÇERLİ GLOBAL DÜZELTMELER
+  Bu kurallar, `.prose` sınıfı olmasa bile çalışır ve 
+  mobil düzeni bozan taşmaları engeller.
 */
-@layer base {
-  /*
-    .prose veya .prose-invert içindeki tüm linklerin ('a' etiketleri)
-    varsayılan alt çizgisini kaldır.
-  */
-  .prose a,
-  .prose-invert a {
-    @apply no-underline; /* text-decoration: none; */
-  }
 
-  /*
-    Kullanıcı deneyimini iyileştirmek için, fare üzerine gelince
-    alt çizgiyi geri ekle.
-  */
-  .prose a:hover,
-  .prose-invert a:hover {
-    @apply underline; /* text-decoration: underline; */
-  }
+/* Uzun kod bloklarının taşmasını engeller */
+pre {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Tabloların taşmasını engeller ve kaydırılabilir yapar */
+table {
+  display: block;
+  overflow-x: auto;
 }
