@@ -1,0 +1,4244 @@
+---
+# Dosya Adı: src/content/blog/i2c_haberlesme_protokolu_teknik_rehber.mdx
+
+title: "I2C Haberleşme Protokolü: Gömülü Sistemler için Kapsamlı Teknik Rehber"
+description: "Inter-Integrated Circuit (I2C) protokolünün A'dan Z'ye teknik analizi. Donanım bağlantıları, protokol detayları, kod örnekleri, debugging teknikleri ve gerçek dünya uygulamaları ile gömülü sistem geliştiricileri için eksiksiz rehber."
+publishDate: 2025-06-15 # Yazıyı yayınlayacağın tarih
+tags: [
+  'i2c', 
+  'embedded systems', 
+  'mikroişlemci', 
+  'arduino', 
+  'raspberry pi', 
+  'stm32',
+  'haberleşme protokolü',
+  'serial communication',
+  'electronics',
+  'iot',
+  'sensör',
+  'eeprom',
+  'master-slave',
+  'debugging',
+  'oscilloscope',
+  'logic analyzer',
+  'c programming',
+  'python',
+  'hal library',
+  'smbus',
+  'philips',
+  'nxp',
+  'open drain',
+  'pull-up resistor',
+  'clock stretching',
+  'arbitration',
+  'ack nack',
+  'start stop condition',
+  'sda scl',
+  'timing diagram',
+  'electrical characteristics',
+  'noise immunity',
+  'bus recovery',
+  'multi-master',
+  'address space',
+  '7-bit addressing',
+  '10-bit addressing',
+  'fast mode',
+  'high speed mode',
+  'spi comparison',
+  'uart comparison',
+  'pmbus',
+  'i3c',
+  'automotive',
+  'industrial automation',
+  'consumer electronics',
+  'medical devices',
+  'security',
+  'fault tolerance',
+  'best practices',
+  'troubleshooting',
+  'performance optimization',
+  'code examples',
+  'practical applications',
+  'technical documentation',
+  'embedded programming',
+  'hardware design',
+  'pcb design',
+  'signal integrity',
+  'emi',
+  'real-time systems'
+]
+image:
+  src: '/images/i2c/Şekil_3_6__Çift_Yönlü_Seviye_Dönüştürücü__Level_Shifter_.png' # Bu yazı için özel bir kapak görseli
+  alt: 'I2C haberleşme protokolü SDA ve SCL sinyal hatları, master-slave mimarisi ve timing diyagramının teknik gösterimi'
+isDraft: false
+---
+
+{/* 
+  Burası en önemli kısım: Bileşenimizi import ediyoruz.
+  `@/` takma adı, projenizin `src/` klasörünü işaret eder ve en temiz yoldur.
+*/}
+// import P5Sketch from '@/components/P5Sketch.astro';
+// Astro bileşen importu kaldırıldı. Eğer React bileşeni olarak kullanılacaksa uygun şekilde eklenmelidir.
+import { gsap } from 'gsap';
+
+
+import { ImageWithCaption } from '@/components/i2c/ImageWithCaption.jsx';
+// YENİ: Tekrar kullanılabilir animasyon bileşenimizi import ediyoruz.
+import { SvgAnimationContainer } from '@/components/i2c/SvgAnimationContainer.jsx';
+
+import I2CRepeatedStartDiagram from '@/components/i2c/I2CRepeatedStartDiagram.jsx';
+
+
+
+import { gsap } from 'gsap';
+
+
+<style jsx>{`
+  /* YENİ: Her şeyi saran ana kapsayıcı */
+  .animation-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Görsel ile kontroller arasına boşluk */
+  }
+
+  /* YENİ: Animasyon başlığı için stil */
+  .animation-caption {
+    text-align: center;
+    font-size: 0.9em;
+    color: #ccc; /* Koyu temada iyi görünen açık gri bir renk */
+    padding: 0.5rem 0;
+  }
+
+  /* GÜNCELLENDİ: Artık sadece slaytları barındırıyor */
+  .svg-animation-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 783 / 469;
+    max-height: 80vh;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    /* margin kaldırıldı, ana kapsayıcıya taşınabilir */
+  }
+  
+  .svg-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+    box-sizing: border-box;
+  }
+  
+  .svg-slide.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  
+  .svg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
+    transform: scale(1); 
+    transition: transform 0.3s ease;
+  }
+  
+  .svg-image:hover {
+    transform: scale(1); 
+  }
+  
+  /* YENİ: Tüm kontrolleri içeren panel */
+  .animation-controls-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+  }
+  
+  /* YENİ: Sayaç ve ilerleme çubuğunu yan yana getirmek için */
+  .progress-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  /* GÜNCELLENDİ: position: absolute kaldırıldı */
+  .progress-container {
+    flex-grow: 1; /* Kalan boşluğu doldur */
+    height: 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+    width: 0%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  
+  /* GÜNCELLENDİ: position: absolute kaldırıldı */
+  .controls {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+  
+  .btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+  }
+  
+  /* GÜNCELLENDİ: position: absolute kaldırıldı */
+  .slide-indicator {
+    color: white;
+    font-size: 14px;
+    background: rgba(0,0,0,0.3);
+    padding: 5px 10px;
+    border-radius: 15px;
+    white-space: nowrap; /* "1 / 4" yazısının tek satırda kalmasını sağlar */
+  }
+`}</style>
+
+<script>
+{`
+  // Animasyon ayarları (bunlar sabit kalabilir)
+  const SLIDE_DURATION = 3000;
+  const TRANSITION_DURATION = 800;
+
+  /**
+   * Belirli bir animasyon kapsayıcısı için yeni bir animasyon örneği oluşturur.
+   * @param {HTMLElement} containerElement - Animasyonun ana kapsayıcısı (.animation-wrapper)
+   */
+  function createAnimationInstance(containerElement) {
+    // === 1. Her Örneğe Özel Değişkenler ===
+    // Bu değişkenler artık global değil, her animasyonun kendi içinde saklanıyor.
+    let currentSlide = 0;
+    let isPlaying = false;
+    let intervalId = null;
+
+    // === 2. Her Örneğe Özel DOM Elemanları ===
+    // Seçiciler artık tüm belge (document) yerine, sadece bu animasyonun kapsayıcısını arar.
+    const slides = containerElement.querySelectorAll('.svg-slide');
+    const progressBar = containerElement.querySelector('.progress-bar');
+    const indicator = containerElement.querySelector('.slide-indicator');
+    const playBtn = containerElement.querySelector('.play-btn');
+    const pauseBtn = containerElement.querySelector('.pause-btn');
+    const resetBtn = containerElement.querySelector('.reset-btn');
+    const nextBtn = containerElement.querySelector('.next-btn');
+    const prevBtn = containerElement.querySelector('.prev-btn');
+    
+    // Toplam slayt sayısını dinamik olarak alalım.
+    const totalSlides = slides.length;
+    if (totalSlides === 0) return; // Slayt yoksa hiçbir şey yapma
+
+    // === 3. Her Örneğe Özel Fonksiyonlar ===
+    // Bu fonksiyonlar, yukarıdaki yerel değişkenler ve DOM elemanları üzerinde çalışır.
+
+    function updateIndicator() {
+      if (indicator) {
+        indicator.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+      }
+    }
+
+    function updateProgressBar() {
+      if (progressBar) {
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        progressBar.style.width = progress + '%';
+      }
+    }
+    
+    function showSlide(index) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      if (slides[index]) {
+        slides[index].classList.add('active');
+      }
+      currentSlide = index;
+      updateIndicator();
+      updateProgressBar();
+    }
+
+    function startSequence() {
+      if (isPlaying) return;
+      isPlaying = true;
+      intervalId = setInterval(() => {
+        const nextIndex = (currentSlide + 1) % totalSlides;
+        showSlide(nextIndex);
+      }, SLIDE_DURATION);
+    }
+
+    function pauseSequence() {
+      isPlaying = false;
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    }
+
+    function resetSequence() {
+      pauseSequence();
+      showSlide(0);
+    }
+
+    function nextSlide() {
+      pauseSequence();
+      const nextIndex = (currentSlide + 1) % totalSlides;
+      showSlide(nextIndex);
+    }
+
+    function prevSlide() {
+      pauseSequence();
+      const prevIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+      showSlide(prevIndex);
+    }
+
+    function setupEventListeners() {
+      if (playBtn) playBtn.addEventListener('click', startSequence);
+      if (pauseBtn) pauseBtn.addEventListener('click', pauseSequence);
+      if (resetBtn) resetBtn.addEventListener('click', resetSequence);
+      if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+      if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+    }
+
+    // === 4. Bu Örneği Başlat ===
+    showSlide(0);
+    setupEventListeners();
+  }
+
+  // === Sayfa Yüklendiğinde Tüm Animasyonları Başlatıcı ===
+  function initAllAnimations() {
+    if (typeof window === 'undefined') return;
+    // Sayfadaki tüm animasyon sarmalayıcılarını bul
+    const animationWrappers = document.querySelectorAll('.animation-wrapper');
+    // Her biri için bağımsız bir animasyon örneği oluştur
+    animationWrappers.forEach(createAnimationInstance);
+  }
+
+  // DOM yüklendiğinde başlat
+  if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAllAnimations);
+    } else {
+      initAllAnimations();
+    }
+  }
+`}
+</script>
+
+# I2C Haberleşme Protokolü: Kapsamlı Teknik Rehber
+
+---
+
+### ** I²C Protokolü: Gömülü Sistemlerin Vazgeçilmez İletişim Dili**
+
+Gömülü sistemler, günümüz teknolojisinin temel taşlarından biridir. Akıllı telefonlardan otomobillere, ev aletlerinden endüstriyel otomasyon sistemlerine kadar her yerde karşımıza çıkan bu sistemler, birden fazla bileşenin koordineli çalışmasıyla karmaşık görevleri yerine getirir. Peki, tek bir baskı devre kartı (PCB) üzerinde yer alan bir mikrodenetleyici, çok sayıda sensör, bir bellek yongası ve bir motor sürücü nasıl olur da uyum içinde çalışır? Tüm bu bileşenlerin eş zamanlı ve hatasız çalışabilmesinin temelinde, aralarındaki iletişimi standardize eden **haberleşme protokolleri** yer alır.
+
+---
+
+#### **Neden Bir Haberleşme Protokolüne İhtiyaç Duyarız?**
+
+Modern bir elektronik tasarımda, farklı görevlere sahip onlarca bileşenin birbiriyle veri alışverişi yapması gerekir. Haberleşme protokolleri bu sürecin standart, verimli ve güvenilir olmasını sağlar. 
+
+*   **Fiziksel Kaynak Optimizasyonu:** Gömülü sistemlerde her pin ve her milimetrekarelik PCB alanı değerlidir. Protokoller, çok sayıda cihazı minimum hat kullanarak (örneğin I²C'de sadece iki hat) bağlamaya olanak tanır. Bu, pin sayısını, kablo karmaşıklığını ve üretim maliyetini ciddi ölçüde azaltır.
+*   **Standartlaşma ve Birlikte Çalışabilirlik:** Standart protokoller, farklı üreticilerin geliştirdiği bileşenlerin "aynı dili konuşmasını" sağlar. Bu sayede bir mühendis, farklı markalara ait bileşenleri aynı veriyolu üzerinde sorunsuzca kullanabilir.
+*   **Veri Bütünlüğü ve Senkronizasyon:** Veri aktarımının güvenilirliği kritiktir. Protokoller, saat sinyalleri ile senkronizasyonu ve ACK/NACK gibi geri bildirim mekanizmalarıyla veri bütünlüğünü garanti altına alır.
+*   **Verimli Güç Yönetimi:** Özellikle pille çalışan cihazlarda, modern protokoller bileşenlerin ihtiyaç duyulmadığında düşük güç modlarına geçmesine olanak tanıyarak enerji tasarrufu sağlar.
+
+> **Örnek Senaryo:** Günümüzün modern bir akıllı saatini düşünelim. Bu küçük cihazın içinde, adımlarınızı sayan bir **ivme ölçer**, kalp atış hızınızı ölçen bir **optik sensör**, ekran komutlarınızı algılayan bir **dokunmatik denetleyici** ve batarya durumunu bildiren bir **güç yönetim çipi** bulunur. Bu bileşenlerin her biri, sürekli olarak ana işlemciyle iletişim kurmak zorundadır. Tüm bu farklı görevlerin, tek bir mikrodenetleyici tarafından, çoğunlukla aynı iki kablo (I²C veri yolu) üzerinden yönetilmesi, haberleşme protokollerinin getirdiği standartlaşma ve kaynak optimizasyonu olmadan neredeyse imkânsız olurdu.
+
+Bu temel ihtiyaçlar doğrultusunda geliştirilen en popüler ve zarif çözümlerden biri de I²C'dir.
+
+---
+
+#### **I²C'nin Doğuşu: 1980'lerin Karmaşasına Basit Bir Çözüm**
+
+I²C (Inter-Integrated Circuit) protokolünün temelleri, 1982 yılında Philips Semiconductor (şimdiki adıyla NXP Semiconductor) tarafından, o dönemin elektronik tasarım zorluklarına bir yanıt olarak atıldı [^1][^2]. 1980'lerde televizyon gibi tüketici elektroniği ürünleri giderek daha fazla özellik kazanıyor, bu da PCB üzerindeki entegre (çip) sayısını artırıyordu.
+
+O dönemin temel sorunu, her bir çipin diğeriyle iletişim kurmak için çok sayıda paralel veri hattı gerektirmesiydi. Bu durum, hem PCB tasarımlarını aşırı karmaşık hale getiriyor hem de maliyeti artırıyordu. Philips mühendisleri bu soruna devrimci bir çözüm getirdi: Tüm iletişimi yalnızca iki kablo üzerinden yürüten bir protokol.
+
+*   **SCL (Serial Clock Line):** Veri aktarımını senkronize eden saat sinyalini taşır.
+*   **SDA (Serial Data Line):** Asıl veriyi ve cihaz adreslerini taşır.
+
+Bu iki hatlı "veri yolu (bus)" mimarisi, birden fazla cihazın aynı hatlara paralel olarak bağlanmasına izin veriyordu. Bir denetleyici cihaz, benzersiz bir adres göndererek hangi hedef cihazla konuşacağını seçebiliyordu. Bu yalın yaklaşım, I²C'nin doğuş amacını, yani **basitlik, maliyet azaltma ve esnekliği** mükemmel bir şekilde karşılıyordu [^1].
+
+---
+
+#### **I²C'yi Farklı Kılan Teknik Felsefe**
+
+I²C'nin 40 yılı aşkın süredir popülerliğini korumasının ardında yatan birkaç temel tasarım kararı vardır:
+
+*   **Adresleme Mekanizması:** SPI gibi protokollerin aksine her cihaz için ayrı bir "Chip Select" pini gerektirmez. Bunun yerine, 7-bit veya 10-bit adresleme kullanarak teorik olarak binden fazla cihazın aynı iki hatta bağlanmasına olanak tanır.
+*   **Open-Drain Yapısı:** Bu tasarım, farklı voltaj seviyelerinde çalışan cihazların (örneğin 3.3V bir sensör ile 5V bir mikrodenetleyici) aynı veri yolunda sorunsuzca iletişim kurmasını sağlar. Ayrıca, birden fazla cihazın aynı anda hattı sürmeye çalışmasını engelleyerek "Multi-Master" desteğine zemin hazırlar.
+*   **Clock Stretching:** Protokol, yavaş hedef cihazlara söz hakkı tanır. Eğer bir hedef cihaz veriyi işlemek için hazır değilse, saat hattını (SCL) geçici olarak "LOW" seviyede tutarak denetleyiciyi bekletebilir. Bu, sistem senkronizasyonu için büyük bir esneklik sağlar.
+
+---
+
+#### **Yıllar İçinde Evrim: Hız ve Yeteneklerin Artışı**
+
+I²C protokolü, doğduğu günden bu yana yerinde saymadı ve sürekli olarak gelişti.
+
+*   **Başlangıç (1982):** Orijinal spesifikasyon, yalnızca **100 kHz** iletişim hızını ve 7-bit adreslemeyi destekliyordu [^2].
+*   **İlk Genişleme (1992):** Yayınlanan ilk halka açık spesifikasyonla birlikte **400 kHz**'lik **"Hızlı Mod" (Fast-mode)** ve kapasiteyi artıran **10-bit** adresleme alanı eklendi [^2].
+*   **Modern Hızlar:** Teknolojinin ilerlemesiyle birlikte çok daha yüksek hızlara sahip modlar da standartlaştırıldı [^2]:
+    *   **Fast-mode plus:** 1 MHz
+    *   **High-speed mode (Hs-mode):** 3.4 MHz
+    *   **Ultra-fast mode (UFm):** 5 MHz
+
+Bu evrim, I²C'nin basit uygulamalardan yüksek hız gerektiren modern sistemlere kadar geniş bir yelpazede kullanılabilmesini sağlamıştır.
+
+---
+
+#### **Sonuç: Neden Hâlâ I²C?**
+
+1982'de televizyon devrelerindeki kablo karmaşasını çözmek için doğan I²C, basitliği, iki hatlı mimarisi ve çoklu cihaz desteği sayesinde günümüz elektroniğinin vazgeçilmez bir parçası haline gelmiştir. 2006'dan bu yana lisans gerektirmemesi, endüstride evrensel olarak benimsenmesini sağlamıştır [^1].
+
+Öğrenme ve uygulama kolaylığı, sensör entegrasyonlarındaki ezici üstünlüğü ve 40 yılı aşan kanıtlanmış geçmişiyle I²C, IoT cihazlarından endüstriyel otomasyona kadar her alanda karşımıza çıkmaya devam edecektir. Kısacası, gömülü sistemlerin bu güvenilir yapı taşı, daha uzun yıllar boyunca önemini koruyacak gibi görünüyor.
+
+
+[^1]: Texas Instruments, "A Basic Guide to I2C," Application Note SBAA565 – NOVEMBER 2022. [Online]. Available: https://www.ti.com/lit/an/sbaa565/sbaa565.pdf
+
+[^2]: SparkFun Electronics, "A Brief History of I2C," SparkFun Learn, [Online]. Available: https://learn.sparkfun.com/tutorials/i2c/a-brief-history-of-i2c. [Accessed: Jun. 12, 2025].
+
+---
+
+
+### ** I²C Protokolünün Temel Özellikleri**
+
+Peki, I²C bu kadar az kaynakla bu kadar çok işi nasıl başarıyor? Protokolün gücü, birbiriyle mükemmel uyum içinde çalışan birkaç temel tasarım prensibinde gizlidir. Şimdi bu prensiplere tek tek, görsellerin yardımıyla daha yakından bakalım.
+
+#### **1. İki Telli Seri Haberleşme (SDA ve SCL)**
+
+I²C'nin en temel özelliği, tüm iletişimi yalnızca iki hat üzerinden gerçekleştirmesidir. Bu, pin sayısını ve kablo karmaşıklığını azaltarak donanım tasarımını inanılmaz derecede basitleştirir.
+
+*   **SDA (Serial Data Line - Seri Veri Hattı):** Verinin kendisi bu hat üzerinden taşınır.
+*   **SCL (Serial Clock Line - Seri Saat Hattı):** Veri aktarımını senkronize eden saat sinyalini taşır.
+
+
+
+<ImageWithCaption
+  src="/images/i2c/Temel_i2c_bağlantısı.svg"
+  alt="i2c temel bağlantısı"
+>
+  <strong>Şekil 2.1:</strong> Temel I²C Bağlantısı
+</ImageWithCaption>
+
+
+{/*
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+
+\begin{document}
+
+\begin{tikzpicture}[
+  box/.style = {draw, line width=1.5pt, minimum width=5cm, minimum height=3cm, align=center, rounded corners=6pt },
+  arrow/.style = {
+    -{Latex[length=4mm]},
+    very thick,
+  },
+  bidir/.style = {
+    {Latex[length=4mm]}-{Latex[length=4mm]},
+    very thick
+  },
+  lineonly/.style = {
+  line width=2pt,
+  very thick,
+  % renk vs ekleyebilirsin
+}
+]
+
+% ÖNERİLEN 16:9 TUVAL BOYUTU
+% Beyaz arka plan: SVG'ye dönüştürünce şeffaflık problemi olmaz
+\fill[white] (-8, -4.5) rectangle (8, 4.5);
+\path[use as bounding box] (-8, -4.5) rectangle (8, 4.5);
+
+
+% Yardımcı Izgara (çalışırken kullan, çıktıdan önce silebilirsin)
+%\draw[help lines, step=1cm, gray, thin] (-8, -4.5) grid (8, 4.5);
+%\draw[->, gray] (-8,0) -- (8,0) node[right] {x};
+%\draw[->, gray] (0,-4.5) -- (0,4.5) node[above] {y};
+
+% Düğümler
+\node[box, fill=green!10, font=\Large] (master) at (-4, 0) {Mikrodenetleyici\\(Master)};
+\node[box, fill=blue!10, font=\Large] (slave)  at (4, 0) {Sensör\\(Slave)};
+
+% Oklar
+\draw[lineonly] ([yshift=0.4cm]master.east) -- node[above, yshift=0.1cm] {\textbf{\large{SCL}}} ([yshift=0.4cm]slave.west);
+\draw[lineonly] ([yshift=-0.4cm]master.east) -- node[below, yshift=-0.1cm] {\textbf{\large{SDA}}} ([yshift=-0.4cm]slave.west);
+
+\end{tikzpicture}
+\end{document}
+
+*/}
+
+Görselde de görebileceğiniz gibi, bir denetleyici ile bir çevre birimi arasındaki tüm iletişim bu iki hat üzerinden akar. Veriler, SCL hattının belirlediği ritimle SDA hattı üzerinden tek tek (seri olarak) gönderilir.
+
+---
+
+
+
+#### **2. Master-Slave Mimarisi**
+
+I²C veriyolu üzerindeki iletişim, hiyerarşik bir yapı olan **Master-Slave** (Efendi-Köle) mimarisine dayanır.
+
+*   **Master:** İletişimi başlatan, saat sinyalini (SCL) üreten ve hangi Slave ile konuşulacağını belirleyen cihazdır.
+*   **Slave:** Master tarafından kendisine seslenildiğinde yanıt veren cihazdır. Kendi başına iletişim başlatamaz.
+
+
+
+<ImageWithCaption
+  src="/images/i2c/i2c_haberlesme_yönleri.svg"
+  alt="i2c sinyal yönleri"
+>
+  <strong>Şekil 2.2:</strong> I²C Sinyal Yönleri
+</ImageWithCaption>
+
+{/* Yukarıdaki şekil aşağıdaki LaTEX kodu ile oluşturulmuştur. 
+
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+
+\begin{document}
+
+\begin{tikzpicture}[
+  box/.style = {draw, line width=1.5pt, minimum width=5cm, minimum height=3cm, align=center, rounded corners=6pt },
+  arrow/.style = {
+    -{Latex[length=4mm]},
+    very thick,
+  },
+  bidir/.style = {
+    {Latex[length=4mm]}-{Latex[length=4mm]},
+    very thick
+  }
+]
+
+% ÖNERİLEN 16:9 TUVAL BOYUTU
+% Beyaz arka plan: SVG'ye dönüştürünce şeffaflık problemi olmaz
+\fill[white] (-8, -4.5) rectangle (8, 4.5);
+\path[use as bounding box] (-8, -4.5) rectangle (8, 4.5);
+
+
+% Yardımcı Izgara (çalışırken kullan, çıktıdan önce silebilirsin)
+%\draw[help lines, step=1cm, gray, thin] (-8, -4.5) grid (8, 4.5);
+%\draw[->, gray] (-8,0) -- (8,0) node[right] {x};
+%\draw[->, gray] (0,-4.5) -- (0,4.5) node[above] {y};
+
+% Düğümler
+\node[box, fill=green!10, font=\Large] (master) at (-4, 0) {Mikrodenetleyici\\(Master)};
+\node[box, fill=blue!10, font=\Large] (slave)  at (4, 0) {Sensör\\(Slave)};
+
+% Oklar
+\draw[arrow] ([yshift=0.4cm]master.east) -- node[above, yshift=0.1cm] {\textbf{\large{SCL}}} ([yshift=0.4cm]slave.west);
+\draw[bidir] ([yshift=-0.4cm]master.east) -- node[below, yshift=-0.1cm] {\textbf{\large{SDA}}} ([yshift=-0.4cm]slave.west);
+
+\end{tikzpicture}
+\end{document}
+
+
+*/}
+
+Bu mimari sayesinde veriyolunda bir düzen oluşur. Master cihaz, orkestra şefi gibi davranarak tüm veri trafiğini yönetir. Görselde Master cihazın SCL hattını tek yönlü olarak nasıl kontrol ettiğine, SDA hattının ise veri alışverişi için nasıl çift yönlü kullanıldığına dikkat edin.
+
+---
+
+#### **3. Çok Cihazlı Veriyolu ve Adresleme**
+
+I²C'nin asıl gücü, aynı iki hatta onlarca cihazı bağlayabilme yeteneğidir. Bu, "veriyolu (bus)" mimarisi olarak adlandırılır. Peki Master, aynı hatta bağlı onca cihazdan doğru olanla nasıl konuşur? Cevap: **Adresleme**.
+
+
+<ImageWithCaption
+  src="/images/i2c/çoklu_i2c_cihaz_bağlantısı.svg"
+  alt="çoklu i2c cihaz bağlantı şeması"
+>
+  <strong>Şekil 2.3:</strong> Çoklu I²C cihaz bağlantı şeması
+</ImageWithCaption>
+
+
+{/*
+
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, quotes}
+
+\begin{document}
+
+\begin{tikzpicture}[
+  % --- STİLLER ---
+  % Stillerde değişiklik yok, temel olarak aynı kalıyor
+  box/.style = {
+    draw, 
+    line width=1.2pt, 
+    minimum width=4.5cm, 
+    minimum height=2cm, 
+    align=center, 
+    rounded corners=8pt,
+    font=\large
+  },
+  addr/.style = {
+    font=\small\bfseries,
+    text=black!60,
+    anchor=north
+  },
+  arrow/.style = {-{Latex[length=3mm]}, line width=1.5pt},
+  bidir/.style = {{Latex[length=3mm]}-{Latex[length=3mm]}, line width=1pt},
+  busline/.style = {line width=1.5pt},
+  dot/.style={shape=circle, fill, inner sep=0pt, minimum size=6pt}
+]
+
+% --- GÖRÜNMEZ TUVAL VE ARKA PLAN ---
+\fill[white] (-8, -4.5) rectangle (8, 4.5);
+\path[use as bounding box] (-8, -4.5) rectangle (8, 4.5);
+
+% --- Yardımcı Izgara (İsteğe bağlı) ---
+%\draw[help lines, step=1cm, gray, thin] (-8, -4.5) grid (8, 4.5);
+%\draw[->, red] (-8,0) -- (8,0) node[right] {x};
+%\draw[->, red] (0,-4.5) -- (0,4.5) node[above] {y};
+
+% --- 1. DÜĞÜMLER (Değişiklik yok) ---
+\node[box, fill=green!10, font=\Large] (master) at (-4.6, 0) {Mikrodenetleyici\\(Master)};
+
+\node[box, fill=brown!10] (slave_eeprom) at (4.5, 0) {EEPROM Bellek};
+\node[box, fill=blue!10, above=0.5cm of slave_eeprom] (slave_temp) {Sıcaklık Sensörü};
+\node[box, fill=pink!10, below=0.5cm of slave_eeprom] (slave_lcd) {LCD};
+
+% --- 2. ADRES ETİKETLERİ (Değişiklik yok) ---
+\node[addr] at (slave_temp.south)  {Adres: 0x68};
+\node[addr] at (slave_eeprom.south) {Adres: 0x50};
+\node[addr] at (slave_lcd.south) {Adres: 0x29};
+
+
+% --- 3. YENİ VERİYOLU HATLARI (İSTEKLERİNİZE GÖRE YENİDEN YAPILDI) ---
+
+% SCL Hattı (Üstteki)
+% master'ın 0.5cm üstünden başlar ve x=1'e kadar yatay gider.
+\draw[busline, color = blue] ([yshift=0.5cm]master.east) -- 
+    node[midway, above] {\textbf{\large SCL}} 
+    ([yshift=0.5cm]master.east -| 1,0);
+
+\node[dot, color=blue, minimum size=6pt] at (1,0.5) {};
+
+\draw[arrow, color = blue] (1, 0.5) |- ([yshift=0.45cm]slave_temp.west);
+\draw[arrow, color = blue] (1, 0.5) -- ([yshift=0.5cm]slave_eeprom.west);
+\draw[arrow, color = blue] (1, 0.5) |- ([yshift=0.55cm]slave_lcd.west);
+
+
+% Yazıyı başlangıca daha yakın yerleştirmek için (yolun %35'ine)
+\draw[arrow, color=orange!90!black] (0, -0.5) -- node[pos=0.35, above] {\textbf{\large SDA}} ([yshift=-0.5cm]master.east);
+
+\node[dot, color=orange!90!black, minimum size=6pt] at (0,-0.5) {};
+
+\draw[arrow, color=orange!90!black] (0, -0.5) |- ([yshift=-0.45cm]slave_temp.west);
+\draw[arrow, color=orange!90!black] (0, -0.5) -- ([yshift=-0.5cm]slave_eeprom.west);
+\draw[arrow, color=orange!90!black] (0, -0.5) |- ([yshift=-0.55cm]slave_lcd.west);
+
+
+
+
+\end{tikzpicture}
+\end{document}
+
+*/}
+
+Şemamızda gördüğünüz gibi, tüm cihazlar aynı iletişim hatlarını paylaşır. Master bir iletişim başlatmak istediğinde, önce hedef Slave cihazın benzersiz adresini veriyoluna gönderir. Sadece adresi eşleşen Slave cihaz bu çağrıya yanıt verir ve iletişime hazırlanır. Diğerleri ise bir sonraki çağrıya kadar pasif kalır. Bu sayede ek pinlere ihtiyaç duymadan seçici iletişim mümkün olur.
+
+---
+
+
+#### **4. Teknik Sır: Açık Kolektör (Open-Drain) Mimarisi**
+
+I²C'nin esnekliğinin ardındaki en büyük sır, **açık kolektör (open-drain)** mimarisidir. Bu mimarinin tek ve çok önemli bir kuralı vardır:
+
+> **Cihazlar, iletişim hattını yalnızca '0' (Düşük) seviyesine çekebilir, asla '1' (Yüksek) seviyesine itemez.**
+
+Peki hat nasıl '1' oluyor? Cevap, hatta bağlı olan **pull-up dirençlerinde** gizli.
+
+Aşağıdaki animasyon, bu prensibi adım adım canlandırıyor. Animasyonu izlerken **renk değişimlerine** ve sol alttaki MOSFET durum etiketine özellikle dikkat edin:
+
+
+
+ 
+  
+
+
+
+
+
+<SvgAnimationContainer
+  slides={[
+    { src: "/images/i2c/m1_kesimde_1.svg", alt: "Frame 1" },
+    { src: "/images/i2c/m1_iletimde_2.svg", alt: "Frame 2" },
+    { src: "/images/i2c/m1_kesimde_3.svg", alt: "Frame 3" },
+    { src: "/images/i2c/m1_iletimde_4.svg", alt: "Frame 4" }
+  ]}
+>
+  <strong>Şekil 2.4:</strong> Mosfet'in iletim ve kesimde olma durumuna göre hattın geriliminin değişimi.
+</SvgAnimationContainer>
+
+
+
+
+{/* Mosfet Kesim Durumunda
+
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath} % \text komutu için eklendi
+\usepackage{tikz}
+\usepackage[siunitx]{circuitikz} 
+\usetikzlibrary{arrows.meta, positioning, backgrounds}
+
+\begin{document}
+
+% --- YENİ EKLENEN SEÇENEKLER ---
+\begin{tikzpicture}[
+    % Bu komut, TikZ'e arka planı göstermesini söyler.
+    show background rectangle, 
+    % Bu komut, gösterilecek arka planın stilini (beyaz dolgu) belirler.
+    background rectangle/.style={fill=white}
+]
+% ---------------------------------
+
+% İsteğe bağlı: Tüm çizimi bir scope içine alarak genel bir kaydırma uyguluyoruz.
+% Bu, çizimin merkezini (0,0) noktasına yaklaştırarak kodu daha yönetilebilir kılar.
+% Değerleri değiştirerek ince ayar yapabilirsiniz.
+\begin{scope}[shift={(-1, 0.5)}]
+
+	% Paths, nodes and wires:
+\node[
+    shape=rectangle, 
+    draw, 
+    line width=1pt, 
+    inner sep=0, 
+    minimum width=5.665cm, 
+    minimum height=5.365cm,
+    % --- DÜZENLENMİŞ LABEL SATIRI ---
+label={
+    [anchor=north west, yshift=-10pt, xshift=10pt, text width=5.5cm] % 2pt'lik bir aşağı kaydırma ekledik
+    south west:{$M_1$ Mosfeti Kesim Durumunda}
+}
+] at (-1.55, -0.37) {};
+
+    \node[nmos,black] (m1) at (0.8, -1.3) {}; 
+    \node[anchor=north west, inner sep=1pt] at (m1.south west) {\large{$M_1$}};
+
+    \fill[black] (0.8, -1.3) ++ (-0.17,-0.344) -- ++(0.18,0.075) -- ++(-0.18,0.075) -- cycle;
+    
+    \node[
+        shape=rectangle, 
+        draw, 
+        line width=1pt, 
+        minimum width=2.565cm, 
+        minimum height=3.365cm, 
+        font=\Large,
+        align=center
+    ] at (-2.6, -0.37) {I$^2$C Lojik};
+    
+    \draw node[buffer, rotate=-180, yscale=-1] at (-0.3, 0.63) {};
+    \draw (0.8, -0.53) |- (0.4, 0.63);
+    \draw  (-1, 0.63) -- (-1.32, 0.63) -| (-1.32, -0.07);
+    \draw node[ground,blue] at (0.8, -2.07) {};
+    \draw [blue] (-0.18, -1.3) -- (-1.32, -1.27);
+    \draw (-1.32, -1.27) -- (-1.32, -0.07);
+
+    \fill[blue] (-1, -1.37) -- ++(0.18,0.075) -- ++(-0.18,0.075) -- cycle;
+    \fill[black] (-1, 0.555) -- ++(-0.18,0.075) -- ++(0.18,0.075) -- cycle;
+    
+    \draw[red] (3.3, 2.93) to[
+        american resistor, 
+        l = {\color{black}\textbf{$ R_{\text{çekme-direnci}} $}}
+    ] (3.3, -0.47);
+
+    \node[
+        ocirc, 
+        label={[label distance=3pt]right:SDA veya SCK}
+    ] at (4.3, -0.47) {};
+
+    \draw[ red] (4.3, -0.47) -- (3.3, -0.47);
+    \draw[ red] (3.3, -0.47) |- (0.8, -0.47) -- (0.8, -0.53);
+    \draw node[vcc, color=red] at (3.3, 2.93) {$+V_{cc}$};
+
+    % sinyal eksenleri
+    \draw [->, dashed, gray] (4,-4) -- (4,-1.5) node[above] {Gerilim};
+    \draw [->, dashed, gray] (3,-3) -- (8.5,-3) node[below] {zaman};
+
+    % sinyal
+    \draw [very thick, red] (4,-3) -- (4,-2);
+    \draw [very thick, red] (4,-2) -- (5,-2);
+    \draw [very thick, blue] (5, -2) -- (5, -3);
+    \draw [very thick, blue] (5, -3) -- (6, -3);
+    \draw [very thick, red] (6,-3) -- (6,-2);
+    \draw [very thick, red] (6,-2) -- (7,-2);
+    
+\end{scope} % Kaydırma kapsamının sonu
+
+\end{tikzpicture}
+\end{document}
+
+
+
+%----------------------------------------
+
+% Mosfet İletim Durumunda
+
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath} % \text komutu için eklendi
+\usepackage{tikz}
+\usepackage[siunitx]{circuitikz} 
+% 'backgrounds' kütüphanesi, dinamik arka plan eklemek için eklendi.
+\usetikzlibrary{arrows.meta, positioning, backgrounds}
+
+\begin{document}
+
+% --- YENİ EKLENEN SEÇENEKLER ---
+\begin{tikzpicture}[
+    % Bu komut, TikZ'e arka planı göstermesini söyler.
+    show background rectangle, 
+    % Bu komut, gösterilecek arka planın stilini (beyaz dolgu) belirler.
+    background rectangle/.style={fill=white}
+]
+% ---------------------------------
+
+% Tüm çizimi bir scope içine alarak genel bir kaydırma uyguluyoruz.
+\begin{scope}[shift={(-1, 0.5)}]
+
+	% Paths, nodes and wires:
+\node[
+    shape=rectangle, 
+    draw, 
+    line width=1pt, 
+    inner sep=0, 
+    minimum width=5.665cm, 
+    minimum height=5.365cm,
+    % --- DÜZENLENMİŞ LABEL SATIRI ---
+label={
+    [anchor=north west, yshift=-10pt, xshift=10pt, text width=6.5cm] % 2pt'lik bir aşağı kaydırma ekledik
+    south west:% 1. "İletimde" için:
+{$M_1$ MOSFET Durumu:} \makebox[2.5cm][l]{\color{red}iletimde}
+}
+] at (-1.55, -0.37) {};
+
+    \node[nmos,blue] (m1) at (0.8, -1.3) {}; 
+    \node[anchor=north west, inner sep=1pt] at (m1.south west) {\large{$M_1$}};
+
+    \fill[blue] (0.8, -1.3) ++ (-0.17,-0.344) -- ++(0.18,0.075) -- ++(-0.18,0.075) -- cycle;
+    
+    \node[
+        shape=rectangle, 
+        draw, 
+        line width=1pt, 
+        minimum width=2.565cm, 
+        minimum height=3.365cm, 
+        font=\Large,
+        align=center
+    ] at (-2.6, -0.37) {I$^2$C Lojik};
+    
+    \draw node[buffer, rotate=-180, yscale=-1] at (-0.3, 0.63) {};
+    \draw (0.8, -0.53) |- (0.4, 0.63);
+    \draw  (-1, 0.63) -- (-1.32, 0.63) -| (-1.32, -0.07);
+    \draw node[ground,blue] at (0.8, -2.07) {};
+    \draw [red] (-0.18, -1.3) -- (-1.32, -1.27);
+    \draw (-1.32, -1.27) -- (-1.32, -0.07);
+
+    \fill[red] (-1, -1.3575) -- ++(0.18,0.075) -- ++(-0.18,0.075) -- cycle;
+    \fill[black] (-1, 0.555) -- ++(-0.18,0.075) -- ++(0.18,0.075) -- cycle;
+    
+    \draw[red] (3.3, 2.93) to[
+        american resistor, 
+        l = {\color{black}\textbf{$ R_{\text{çekme-direnci}} $}}
+    ] (3.3, -0.47);
+
+    \node[
+        ocirc, 
+        label={[label distance=3pt]right:SDA veya SCK}
+    ] at (4.3, -0.47) {};
+
+    \draw[ very thick, blue] (4.3, -0.47) -- (3.3, -0.47);
+    \draw[ very thick, blue] (3.3, -0.47) |- (0.8, -0.47) -- (0.8, -0.53);
+    \draw node[vcc, color=red] at (3.3, 2.93) {$+V_{cc}$};
+
+    % sinyal eksenleri
+    \draw [->, dashed, gray] (4,-4) -- (4,-1.5) node[above] {Gerilim};
+    \draw [->, dashed, gray] (3,-3) -- (8.5,-3) node[below] {zaman};
+
+    % sinyal
+    \draw [very thick, red] (4,-3) -- (4,-2);
+    \draw [very thick, red] (4,-2) -- (5,-2);
+    \draw [very thick, blue] (5, -2) -- (5, -3);
+    \draw [very thick, blue] (5, -3) -- (6, -3);
+    %\draw [very thick, red] (6,-3) -- (6,-2);
+    %\draw [very thick, red] (6,-2) -- (7,-2);
+    %\draw [very thick, blue] (7, -2) -- (7, -3);
+    %\draw [very thick, blue] (7, -3) -- (8, -3);
+    
+\end{scope} % Kaydırma kapsamının sonu
+
+\end{tikzpicture}
+\end{document}
+
+
+*/}
+
+
+{/* N-mosfet için ok ucunu çizen kod:
+
+\usetikzlibrary{calc}
+
+% Bipoles Specifications
+\ctikzset{bipoles/thickness=1.2, label distance=1mm, voltage shift = 1}
+
+\def\nu{10}
+\definecolor{myblue}{HTML}{ABDCEC}
+
+\begin{document}
+
+\begin{tikzpicture}
+	% MOSFET
+	\draw node[nmos] at (8.625, 7.5) {};
+	
+	% Ok ucu - sağa dönük
+	\fill
+            [black] (8.625, 7.5) ++ (-0.17,-0.344) % başlangıç noktası
+            -- ++(0.18,0.075)  % sağa doğru
+            -- ++(-0.18,0.075) %yukarı
+            -- cycle;
+\end{tikzpicture}
+
+\end{document}
+
+P-MOS ucunu ekleyen kod:
+
+\usetikzlibrary{calc}
+
+% Bipoles Specifications
+\ctikzset{bipoles/thickness=1.2, label distance=1mm, voltage shift = 1}
+
+\def\nu{10}
+\definecolor{myblue}{HTML}{ABDCEC}
+
+\begin{document}
+
+\begin{tikzpicture}
+	% MOSFET
+	\draw node[nmos] at (8.625, 7.5) {};
+	
+	% Ok ucu - sağa dönük
+	\fill
+            [black] (8.625, 7.5) ++ (-0.29,+0.195) % başlangıç noktası
+            -- ++(-0.18,0.075)  % sağa doğru
+            -- ++(0.18,0.075) %yukarı
+            -- cycle;
+\end{tikzpicture}
+
+\end{document}
+
+*/}
+
+**1. Durum: Hat Yüksek Seviyede (Mantıksal '1')**
+
+Animasyonda `M₁ MOSFET Durumu: kesimde` yazdığını göreceksiniz.
+*   **Ne Oluyor?** `I²C Lojik` birimi, MOSFET'in kapısına (**gate**) düşük bir sinyal gönderir (kapıya giden **mavi çizgi**).
+*   **Sonuç:** Bu düşük sinyal, $M_1$ MOSFET'ini **kesime sokar**, yani bir açık anahtar gibi davranmasını sağlar. Artık hatta bağlı tek aktif eleman olan pull-up direnci ($R_{\text{çekme-direnci}}$), SDA/SCK hattını VCC'ye doğru çekerek **kırmızı** renkle gösterilen yüksek ('1') seviyesine ulaştırır.
+
+**2. Durum: Hat Düşük Seviyede (Mantıksal '0')**
+
+Şimdi `M₁ MOSFET Durumu: iletimde` yazdığı ana bakalım.
+*   **Ne Oluyor?** Bu kez `I²C Lojik` birimi, kapıya yüksek bir sinyal gönderir (kapıya giden **kırmızı çizgi**).
+*   **Sonuç:** Bu yüksek sinyal, $M_1$'i **iletime geçirir** ve onu toprağa bağlı kapalı bir anahtar haline getirir. Artık hat, pull-up direncine rağmen doğrudan toprağa bağlandığı için voltajı sıfırlanır. Bu durum, hattın **mavi** renge dönmesiyle gösterilir.
+
+Bu basit ama dahiyane tasarım, birden fazla cihazın aynı anda hattı '0' yapmaya çalışsa bile birbiriyle çakışmasını veya kısa devreye neden olmasını engeller. Peki bu tam olarak nasıl olur?
+
+Bu dahiyane tasarımın bir adım ötesine geçelim ve iki cihazın aynı anda hattı sıfıra çekmeye karar verdiği o anı hayal edelim.
+
+**Senaryo 1: İki Cihaz da Aynı Anda '0' Gönderiyor**
+
+*   **Cihaz A**, kendi MOSFET'ini iletime geçirerek hattı toprağa çeker.
+*   **Cihaz B**, aynı anda kendi MOSFET'ini iletime geçirerek o da hattı toprağa çeker.
+
+**Sonuç:** Elektriksel olarak, SDA hattına paralel bağlanmış iki kapalı anahtar oluşur. Her ikisi de hattı toprağa bağladığı için, sonuç değişmez: Hat kesin bir şekilde '0' seviyesindedir. Bir kısa devre veya voltaj çakışması olmaz, çünkü her iki cihaz da aynı şeyi yapmaktadır ve hiçbiri hatta zıt bir voltaj (örneğin +5V) basmaya çalışmaz.
+
+**Senaryo 2: Asıl Sihrin Gerçekleştiği An (Wired-AND Mantığı)**
+
+İşte I²C'nin gücünün ortaya çıktığı yer burasıdır. Bir cihaz '1' gönderirken diğeri '0' gönderirse ne olur?
+
+*   **Cihaz A** '1' göndermek istiyor. Bunu yapmak için MOSFET'ini **kesime sokar** (anahtarı açar) ve hattın pull-up direnci tarafından '1'e çekilmesine izin verir.
+*   **Cihaz B** ise tam o anda '0' göndermek istiyor ve MOSFET'ini **iletime geçirir** (anahtarı kapatır).
+
+**Sonuç:** Cihaz B'nin kapattığı anahtar, Cihaz A'nın açık anahtarını "geçersiz kılar". Hat, Cihaz B üzerinden toprağa çekildiği için sonuç yine kesin bir şekilde '0' olur. '0' her zaman baskındır!
+
+Buna elektronikte **"Wired-AND" (Kablolu VE)** mantığı denir. Yani, hat **sadece ve sadece** hatta bağlı **TÜM cihazlar** '1' göndermek istediğinde '1' seviyesinde olabilir. Eğer tek bir cihaz bile '0' çekerse, tüm hat '0' olur.
+
+#### Bu Neden Bu Kadar Önemli?
+
+Bu "sıfırın baskınlığı" kuralı, I²C'ye iki kritik özellik kazandırır:
+
+1.  **Çok Efendili Yönetim (Multi-Master Arbitration):** Eğer iki "Master" cihaz aynı anda konuşmaya başlarsa, '1' göndermeye çalışırken hattın '0' kaldığını gören cihaz, hattı başka birinin kullandığını anlar, "kaybettiğini" kabul eder ve hemen susarak diğerinin konuşmasını bitirmesini bekler. Bu, veri bozulmasını engelleyen zarif bir trafik kuralıdır.
+
+2.  **Saat Esnetme (Clock Stretching):** Eğer yavaş bir "Slave" cihaz, Master'ın gönderdiği veriyi işlemek için daha fazla zamana ihtiyaç duyarsa, Saat (SCL) hattını geçici olarak '0'da tutar. Master, saati '1' yapmaya çalışsa bile hattın '0' kaldığını görür ve "Anlaşıldı, bekliyorum" diyerek Slave cihaz hattı serbest bırakana kadar duraklar.
+
+Kısacası, bu tasarım sadece bir güvenlik önlemi değil, aynı zamanda I²C protokolünün en gelişmiş özelliklerinin temelini oluşturan aktif bir mekanizmadır. İşte I²C'yi bu kadar esnek ve popüler yapan sır tam olarak budur.
+
+## **3. Fiziksel Katman ve Donanım**
+
+I²C protokolünün yazılım katmanına dalmadan önce, bu sihrin gerçekleştiği fiziksel dünyayı anlamamız gerekiyor. Teller, voltajlar ve dirençler... İşte I²C'nin kalbinin attığı yer burasıdır.
+
+### **3.1 Sinyal Hatları**
+
+I²C'nin en zarif yanlarından biri sadeliğidir. Karmaşık paralel veriyollarının aksine, I²C tüm iletişimi sadece iki hat üzerinden yürütür.
+
+
+
+<ImageWithCaption
+  src="/images/i2c/temel_i2c_donanım_yapısı.svg"
+  alt="temel_i2c_donanım_yapısı"
+>
+  <strong>Şekil 3.1:</strong> Temel I²C Donanım Yapısı
+</ImageWithCaption>
+
+// ... MDX içeriğiniz devam eder ...
+
+{/*
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath} % \text komutu için eklendi
+\usepackage{tikz}
+\usepackage[siunitx]{circuitikz} 
+% 'backgrounds' kütüphanesi, dinamik arka plan eklemek için eklendi.
+\usetikzlibrary{arrows.meta, positioning, backgrounds}
+
+\begin{document}
+\begin{tikzpicture}[
+    % Bu komut, TikZ'e arka planı göstermesini söyler.
+    show background rectangle, 
+    % Bu komut, gösterilecek arka planın stilini (beyaz dolgu) belirler.
+    background rectangle/.style={fill=white}
+]
+
+% Tüm koordinatları ortalamak için genel bir kaydırma
+\begin{scope}[shift={(0, 0)}] % Ortalanmış pozisyon
+
+    % Dikdörtgen kutular
+    \node[shape=rectangle, draw, line width=1pt, inner sep=3pt, minimum width=2.965cm, minimum height=1.965cm, text centered, align=center, fill=green!10] at (-2.5, 1){Mikrodenetleyici \\ (Master)};
+    \node[shape=rectangle, draw, line width=1pt, inner sep=3pt, minimum width=1.965cm, minimum height=1.965cm, text centered, align=center, fill=blue!10] at (2, 1){EEPROM \\ (Slave 1)};
+    \node[shape=rectangle, draw, line width=1pt, inner sep=3pt, minimum width=1.965cm, minimum height=1.965cm, text centered, align=center, fill=blue!10] at (5, 1){Sensör \\ (Slave 2)};
+    
+    
+    % Yatay ana hatlar
+    \draw (-5, 3) -- (7, 3);
+    \draw (-5, 4) -- (7, 4);
+
+        % Hat etiketleri
+    \node[above] at (-4, 4) {SDA (veri)};
+    \node[above] at (-4, 3) {SCL (saat)};
+    
+    % Direnç elemanları
+    \draw (0, 6) to[american resistor,  l = {\color{black}\textbf{$ R_{\text{p}} $}}
+    ] (0, 4.4);
+    \draw (2, 6) to[american resistor, l = {\color{black}\textbf{$ R_{\text{p}} $}}] (2, 4.4);
+    
+    % Atlama geçişleri ve bağlantılar
+    \draw node[jump crossing, rotate=-90] at (2, 4) {};
+    \draw (2, 4.4) -| (2, 4.14);
+    \draw (2, 3.86) -| (2, 3);
+    \draw (0, 4.4) -| (0, 4);
+    
+    % Sol taraf bağlantıları
+    \draw (-3, 3) -| (-3, 2);
+    \draw node[jump crossing, rotate=-90] at (-2, 3) {};
+    \draw (-2, 3.14) -| (-2, 4);
+    \draw (-2, 2.86) -- (-2, 2);
+    
+    % Orta ve sağ taraf bağlantıları
+    \draw (1.5, 2) -- (1.5, 3);
+    \draw node[jump crossing, rotate=-90] at (2.5, 3) {};
+    \draw node[jump crossing, rotate=-90] at (5.5, 3) {};
+    \draw (2.5, 3.14) -| (2.5, 4);
+    \draw (2.5, 2.86) -| (2.5, 2);
+    \draw (4.5, 3) -| (4.5, 2);
+    \draw (5.5, 2.86) -| (5.5, 2);
+    \draw (5.5, 3.14) -| (5.5, 4);
+    
+    % Üst bağlantı hattı
+    \draw (-2, 6.5) -- (4, 6.5);
+    \draw (0, 6) -| (0, 6.5);
+    \draw (2, 6) -| (2, 6.5);
+    
+    % Vcc bağlantısı
+    \draw node[vcc] at (1, 7) {$+V_{cc} = +5V$};
+    \draw (1, 7) -- (1, 6.5);
+    
+\end{scope}
+
+\end{tikzpicture}
+\end{document}
+*/}
+
+Şekil 3.1'de gördüğünüz gibi, bir "Master" cihaz (genellikle bir mikrodenetleyici) ve birden fazla "Slave" cihaz (sensörler, bellek çipleri vb.) aynı iki tele paralel olarak bağlanır. Bu hatlar şunlardır:
+
+*   **SDA (Serial Data Line) - Veri Hattı:** Tüm veri aktarımı, master ve slave adresleri, okuma/yazma komutları ve asıl veri bitleri bu hat üzerinden akar. Çift yönlü bir hattır.
+*   **SCL (Serial Clock Line) - Saat Sinyali Hattı:** Veri aktarımının hızını ve zamanlamasını belirleyen saat sinyali bu hat üzerinden gönderilir. Saat sinyali her zaman **Master** tarafından üretilir.
+
+#### **Pull-up Dirençlerinin Hayati Önemi**
+
+Şekil 3.1'de gördüğünüz `Rp` ile etiketlenmiş **pull-up dirençleri**, I²C'nin çalışması için **opsiyonel değil, zorunludur**. Bir önceki bölümde bahsettiğimiz "açık-kolektör" mimarisi sayesinde, cihazlar hattı sadece '0' (Düşük) seviyesine çekebilirler. Hattı '1' (Yüksek) seviyesine döndürme görevi tamamen bu dirençlere aittir.
+
+
+
+
+Pull-Up Direncinin Hayati Rolü
+
+
+
+
+
+<SvgAnimationContainer
+  slides={[
+    { src: "/images/i2c/m1_kesimde_1.svg", alt: "Frame 1" },
+    { src: "/images/i2c/m1_iletimde_2.svg", alt: "Frame 2" }
+  ]}
+>
+  <strong>Şekil 3.2:</strong> Pull-up Direncinin I²C İçin Önemi.
+</SvgAnimationContainer>
+
+
+
+
+Şekil 3.2'deki animasyon bu durumu özetliyor:
+1.  Bir cihaz hattı serbest bıraktığında (MOSFET kesimde), pull-up direnci hattı $+V_{cc}$'ye bağlayarak '1' seviyesine çeker.
+2.  Bir cihaz '0' göndermek istediğinde (MOSFET iletimde), hattı doğrudan toprağa çekerek pull-up direncini "etkisiz kılar" ve hattı '0' yapar.
+
+Doğru pull-up direnci seçimi, veriyolunun kararlılığı için kritiktir. Çok yüksek değerli bir direnç, hattın yeterince hızlı '1'e çıkmasını engeller. Çok düşük değerli bir direnç ise cihaz '0'a çekmeye çalıştığında çok fazla akım çekilmesine neden olur. Genel bir kural olarak, çoğu 5V'luk sistem için **4.7kΩ**, 3.3V'luk sistemler için ise **2.2kΩ** ila **4.7kΩ** arası dirençler iyi bir başlangıç noktasıdır.
+
+---
+
+### **I²C Bus Kapasitansı ve Maksimum Kablo Uzunluğu: Neden Metrelerce Kablo Kullanamıyoruz?**
+
+I²C (Inter-Integrated Circuit), mikrodenetleyiciler, sensörler ve diğer çevre birimleri arasında, özellikle aynı baskı devre kartı (PCB) üzerinde, veri alışverişi yapmak için tasarlanmış zarif ve verimli bir protokoldür. Sadece iki kablo (SDA ve SCL) ile çok sayıda cihazı yönetme yeteneği, onu sayısız elektronik projenin vazgeçilmezi yapar.
+
+Ancak bu basitliğin arkasında, protokolün performansını doğrudan etkileyen kritik bir fiziksel sınır vardır: **bus kapasitansı**. Peki, bu ne anlama geliyor ve neden I²C hattını birkaç metreden fazla uzatamıyoruz? Gelin, bu konunun teknik detaylarına birlikte inelim.
+
+---
+
+#### **Analizin Odak Noktası: Kritik Devre Bloğu**
+
+Her şey, I²C'nin çalışma prensibini ve fiziksel yapısını anlamakla başlar. Aşağıdaki şema, bir I²C hattının basitleştirilmiş bir modelini göstermektedir.
+
+
+<ImageWithCaption
+  src="/images/i2c/ŞEKİL_3_3__Bus_Kapasitansı.svg"
+  alt="Bus Kapasitansı"
+>
+  <strong>Şekil 3.3:</strong> I²C Hattı ve Bus Kapasitansı
+</ImageWithCaption>
+
+Bu devrede dikkat etmemiz gereken birkaç anahtar bileşen var:
+
+*   **Pull-Up Dirençleri ($R_p$):** SDA ve SCL hatlarını, kimse aktif olarak kullanmadığında varsayılan voltaj seviyesi olan $V_{cc}$'ye (Lojik $1$) çekerler.
+*   **Open-Drain Yapısı ($M_1$ MOSFET):** I²C cihazları, hattı $0$ seviyesine çekmek için $M_1$ gibi bir N-Kanal MOSFET kullanır. MOSFET iletime geçtiğinde, hat doğrudan toprağa bağlanır. Hattı $1$ yapmak için ise MOSFET'i yalıtıma alır ve görevi pull-up dirençlerine bırakır. Bu yapıya "open-drain" denir.
+*   **Parazitik Bus Kapasitansı ($C_{bus}$):** İşte en kritik eleman budur. Kullandığımız kabloların kendisi, devre kartı yolları ve hatta cihazların pinleri, SDA/SCL hatları ile toprak (GND) arasında küçük birer kondansatör gibi davranır. Kablo uzadıkça bu "parazitik" kapasitans değeri de artar. $C_{bus}$, hattaki tüm bu istenmeyen kapasitansların toplamını temsil eder.
+
+#### **Lojik Seviyelerin Oluşumu: Hızlı Düşüş, Yavaş Yükseliş**
+
+Devremizi anladığımıza göre, sinyalin nasıl oluştuğuna bakalım:
+
+1.  **Lojik $0$ (Hattı Aşağı Çekme):** Bir cihaz hatta $0$ göndermek istediğinde, $M_1$ MOSFET'ini sürer. Akım, **$i_{desarj}$** yolunu izleyerek hattaki voltajı çok hızlı bir şekilde toprağa çeker. Bu işlem, MOSFET'in düşük iç direnci sayesinde neredeyse anlıktır.
+
+2.  **Lojik $1$ (Hattı Serbest Bırakma):** Cihaz $1$ göndermek istediğinde ise sadece $M_1$ MOSFET'ini kapatır. Artık toprağa giden bir yol yoktur. Bu noktada, pull-up direnci $R_p$ üzerinden akan **$i_{sarj}$** akımı, $C_{bus}$ kapasitörünü $V_{cc}$ voltajına doğru şarj etmeye başlar.
+
+Sorun tam da burada ortaya çıkar. $R_p$ direnci ve $C_{bus}$ kapasitansı, bir **RC devresi** oluşturur. Bir RC devresinin şarj olma hızı, zaman sabitesine ($τ = R * C$) bağlıdır. `Cbus` ne kadar büyükse (yani kablo ne kadar uzunsa), hattın voltajının Lojik $1$ seviyesine yükselmesi o kadar uzun sürer.
+
+
+
+
+
+
+#### **Yükselen Kenarın Ardındaki Mantık**
+
+Bu yavaşlamanın sinyal üzerindeki etkisini aşağıdaki grafikte net bir şekilde görüyoruz. Grafik, farklı kablo uzunlukları için SDA hattı voltajının ($v_{SDA}(t)$) zamana göre değişimini karşılaştırıyor.
+
+<ImageWithCaption
+  src="/images/i2c/ŞEKİL_3_3__Yükseliş_Zamanı__RC_Gecikmesi.svg"
+  alt="RC Gecikmesi"
+>
+  <strong>Şekil 3.4:</strong> I²C Sinyal Yükselme Süresi Grafiği
+</ImageWithCaption>
+
+
+{/*
+
+\documentclass[border=10pt]{standalone}
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\usepackage{pgfplots}
+\usepackage{circuitikz}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{decorations.markings, arrows.meta}
+
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+
+\begin{document}
+% --- Parametreleri burada tanımlayalım ---
+\def\Vs{5}      % Kaynak Gerilimi (V)
+\def\tauval{1}  % Zaman Sabiti (s) - Kolaylık için 1 alıyoruz
+\def\VIH{0.67*\Vs} % VIH gerilimini bir formül olarak tanımlayalım
+
+\begin{tikzpicture}
+\ctikzset{tripoles/mos style=arrows}
+\usetikzlibrary{decorations.markings}
+    % --- Sol taraf: Devre ---
+    \begin{scope}[xshift=-6cm]
+        % Paths, nodes and wires:
+        \draw node[nmos,](npn) at (-0, 0.37) {};
+        \node[anchor=north west, inner sep=-2pt] at (npn.south west) {{$M_1$}};
+        \draw node[buffer, rotate=-180] at (-1, 2.2) {};
+        \draw (0, 1.14) -| (0, 2.2) -- (-0.3, 2.2);
+        \draw (2, 0.1) to[capacitor,l_= $C_{bus}$] (2, 0.7);
+        \draw (0, 1.4) -- (2, 1.4) -| (2, 0.7);
+        \draw node[ground] at (-0, -1) {};
+        \draw node[ground] at (2, -1) {};
+        \draw (2, -1) -| (2, 0.1);
+        \draw (0, -1) -| (0, -0.4);
+        \node[shape=rectangle, draw, line width=1pt, inner sep=0, minimum width=5.965cm, minimum height=4.265cm, label={
+    [anchor=north west, yshift=-5pt, xshift=40pt, text width=5.5cm] % 2pt'lik bir aşağı kaydırma ekledik
+    south west:{Master veya Slave}}] at (-2, 1.35){};
+        \node[shape=rectangle, draw, line width=1pt, inner sep=0, minimum width=2.165cm, minimum height=3.265cm] at (-3.1, 1.35){I²C Lojik};
+        \draw (-1.7, 2.2) -- (-2, 2.2);
+        \draw (-0.98, 0.37) -| (-2, 0.4);
+        \draw (-3, 4) -- (4, 4);
+        \draw (-3, 5) -- (4, 5);
+        \draw (-3, 4) -- (-5, 4);
+        \draw (-3, 5) -- (-5, 5);
+        \draw (-3, 5.3) to[american resistor, l = $R_p$] (-3, 7);
+        \draw (-2, 5.3) to[american resistor, l_ = $R_p$] (-2, 7);
+        \draw node[jump crossing, rotate=-90] at (-2, 5) {};
+        \draw (-3, 5.3) -| (-3, 5);
+        \draw (-2, 4.86) -- (-2, 4);
+        \draw (-2, 5.14) -| (-2, 5.3);
+        \draw (-2, 7.3) -- (-4.6, 7.3);
+        \draw (-3, 7) -| (-3, 7.3);
+        \draw (-2, 7) -| (-2, 7.3);
+        \draw node[jump crossing, rotate=-90] at (2, 4) {};
+        \draw (2, 5) -| (2, 4.14);
+        \draw (2, 3.86) -- (2, 1.4);
+        \draw node[squarepole] at (1, 1.4) {};
+        \draw node[squarepole] at (0, -0.8) {};
+        \draw node[ocirc] at (4, 1.4) {};
+        \node[above] at (4, 1.4) {$v_{SDA}(t)$};
+        \draw node[circ] at (2, 1.4) {};
+        \draw (2, 1.4) -- (4, 1.4);
+        \draw node[vcc, rotate=90] at (-4.6, 7.3) {};
+        \node[above] at (-4.5, 5) {SDA};
+        \node[above] at (-4.5, 4) {SCL};
+        \node[below] at (-4.5, 7.3) {$V_{cc}$};
+
+
+    % Eğriyi çiziyoruz
+    \draw[
+        line width=0.8pt,
+        green!50!black,
+        rounded corners=8pt,
+        dashed,
+        postaction={
+            decorate,
+            decoration={
+                markings,
+                mark=between positions 0.1 and 1.0 step 0.2 with {
+                    \arrow[fill=green!50!black]{Triangle[length=2.5mm, width=1.5mm]}
+                }
+            }
+        }
+    ]
+    (-5, 7.6) -- (-2.7, 7.6) -- (-2.7, 5.3) -- (2.3, 5.3) -- (2.3, 0.6);
+
+        % Eğriyi çiziyoruz
+    \draw[
+        line width=0.8pt,
+        orange,
+        rounded corners=8pt,
+        dashed,
+        postaction={
+            decorate,
+            decoration={
+                markings,
+                mark=between positions 0.2 and 1.0 step 0.3 with {
+                    \arrow[fill=green!50!black]{Triangle[length=2.5mm, width=1.5mm]}
+                }
+            }
+        }
+    ]
+    (1.7, 0.6) -- (1.7, 1.1) -- (0.3, 1.1) -- (0.3, -1.4);
+
+    \node[above, green!50!black] at (0, 5.3) {$i_{sarj}$};
+    \node[right, orange] at (0.3, -1.2) {$i_{desarj}$};
+
+
+        
+        
+        % Devre açıklaması
+        %\node[anchor=south, font=\small\bfseries] at (-1, 8) {I²C Bus Devresi};
+    \end{scope}
+    
+    % --- Sağ taraf: Grafik ---
+    \begin{axis}[
+        width=12cm,
+        height=6cm,
+        axis lines=middle,
+        xlabel=$t$ (zaman),
+        ylabel={$v_{SDA}(t)$ (gerilim)},
+        xlabel style={anchor=north east},
+        ylabel style={anchor=north east, rotate=-90},
+        xmin=0,
+        xmax=5.5*\tauval, % Grafiği 5 tau'dan biraz fazla gösterelim
+        ymin=-0.5,
+        ymax=\Vs*1.2,
+        xtick={0, \tauval, 2*\tauval, 3*\tauval, 4*\tauval},
+        xticklabels={$0$, $T$, $2T$, $3T$, $4T$},
+        % --- Y EKSENİ İŞARETLERİNİ GÜNCELLEME ---
+        % ytick listesine VIH değerini ekliyoruz.
+        ytick={\Vs, \VIH}, 
+        % yticklabels listesine de karşılık gelen etiketi ekliyoruz.
+        % Sıralama ytick ile aynı olmalı!
+        yticklabels={$V_{cc}$, $V_{IH}(min)$},
+        grid=both,
+        grid style={dashed, gray!50},
+        samples=100,
+        no marks,
+        clip=false % Dikey çizginin eksen dışına taşmasını engellememek için
+    ]
+
+        % --- 2. VIH YATAY ÇİZGİSİNİ EKLEME ---
+    \addplot[
+        thick,           % Çizgi kalınlığı
+        cyan,             % Renk (kırmızı eşik seviyeleri için iyidir)
+        dashed,          % Kesikli çizgi stili
+        domain=0:5.5*\tauval % Grafiğin başından sonuna kadar çiz
+    ] {\VIH}; % Çizilecek fonksiyonun y-değeri (sabit)
+
+        \draw[thick, cyan, dashed] 
+        (axis cs:\tauval/4.5, {\Vs*0.67*(1-exp(-5))}) -- (axis cs:\tauval/4.5, 0);
+
+            % --- t1 ETİKETİNİ MANUEL OLARAK EKLEME ---
+    % Belirtilen x konumuna bir düğüm (metin kutusu) yerleştiriyoruz.
+    \node[
+        anchor=north,  % Metin kutusunun ÜST kenarını belirttiğimiz noktaya sabitle
+        font=\small    % Diğer eksen etiketleriyle aynı boyutta olması için
+    ] 
+    at (axis cs:\tauval/5, 0) % Konum: dikey çizginin bittiği yer (x ekseni)
+    {$\tau_1$   $\tau_2$}; % Yazılacak metin
+
+        \draw[thick, cyan, dashed] 
+        (axis cs:\tauval/15, {\Vs*0.67*(1-exp(-5))}) -- (axis cs:\tauval/15, 0);
+
+    % Grafik açıklaması
+        %\node[anchor=south, font=\small\bfseries] at (2, 8) {I²C Bus Gerilim Grafiği};
+    
+    % --- Parça 1: 
+    %düşük kapasitans
+    \addplot[thick, blue, domain=0:\tauval] {\Vs*(1-exp(-20*x/\tauval))};
+    \draw[thick, blue, dashed] 
+        (axis cs:\tauval, {\Vs*(1-exp(-5))}) -- (axis cs:\tauval, 0);
+    
+    %İlk Şarj (0 -> tau) ---
+    % Formül: V_S * (1 - e^(-t/tau))
+    \addplot[thick, red, domain=0:\tauval] {\Vs*(1-exp(-5*x/\tauval))};
+    % --- Anlık Düşüş (t = tau'da) ---
+    % t=tau anındaki gerilimden (V_1) sıfıra dikey bir çizgi çiziyoruz.
+    % Dashed stil, anlık bir olayı temsil etmek için iyi bir seçimdir.
+    \draw[thick, red, dashed] 
+        (axis cs:\tauval, {\Vs*(1-exp(-5))}) -- (axis cs:\tauval, 0);
+    % --- Parça 2: Sıfır Gerilim (tau -> 2*tau) ---
+    % Gerilim bu aralıkta sabit olarak 0.
+    \addplot[ very thick, red, domain=\tauval:2*\tauval] {0};
+    %ideal
+    \addplot[thick, blue, domain=\tauval:2*\tauval] {0};
+    % --- Parça 3: Yeniden Şarj (t >= 2*tau) ---
+    %ideal
+    \addplot[thick, blue, domain=2*\tauval:3*\tauval] {\Vs*(1-exp(-20*(x-2)/\tauval))};
+    \draw[thick, blue, dashed] 
+        (axis cs:3*\tauval, {\Vs*(1-exp(-5))}) -- (axis cs:3*\tauval, 0);
+    
+    % Formül: V_S * (1 - e^(-(t-2*tau)/tau))
+    % t ekseninde 2*tau kadar kaydırılmış standart şarj eğrisi.
+    \addplot[thick, red, domain=2*\tauval:3*\tauval] {\Vs*(1-exp(-5*(x-2)/\tauval))};
+        % --- Anlık Düşüş (t = 3*tau'da) ---
+    % t=tau anındaki gerilimden (V_1) sıfıra dikey bir çizgi çiziyoruz.
+    % Dashed stil, anlık bir olayı temsil etmek için iyi bir seçimdir.
+    \draw[thick, red, dashed] 
+        (axis cs:3*\tauval, {\Vs*(1-exp(-5))}) -- (axis cs:3*\tauval, 0);
+    % --- Parça 4: Sıfır Gerilim (3*tau -> 4*tau) ---
+    % Gerilim bu aralıkta sabit olarak 0.
+    \addplot[very thick, red, domain=3*\tauval:4*\tauval] {0};
+    \addplot[thick, blue, domain=3*\tauval:4*\tauval] {0};
+        % --- Parça 5: Yeniden Şarj (t >= 2*tau) ---
+    %ideal
+    \addplot[thick, blue, domain=4*\tauval:5*\tauval] {\Vs*(1-exp(-20*(x-4)/\tauval))};
+    
+    % Formül: V_S * (1 - e^(-(t-2*tau)/tau))
+    % t ekseninde 2*tau kadar kaydırılmış standart şarj eğrisi.
+    \addplot[thick, red, domain=4*\tauval:5*\tauval] {\Vs*(1-exp(-5*(x-4)/\tauval))};
+    % --- Yardımcı Çizgiler ve Etiketler ---
+    
+    % Asimptot çizgisi
+    \addplot[dashed, red, domain=0:4.5*\tauval] {\Vs};
+    \node[anchor=west, red] at (axis cs:4.5*\tauval, \Vs) {};
+    
+    % Lejant (grafiğin altında)
+    \node[draw, fill=white, anchor=north, inner sep=8pt] at (axis cs:2.75, -1.5) {
+        \begin{tabular}{ll}
+            \textcolor{red}{\rule{0.5cm}{2pt}} & Uzun kablo / Yüksek kapasitans \\[2pt]
+            \textcolor{blue}{\rule{0.5cm}{2pt}} & Kısa kablo / Düşük kapasitans
+        \end{tabular}
+    };
+    
+    \end{axis}
+\end{tikzpicture}
+\end{document}
+
+*/}
+
+
+*   **Mavi Eğri (Kısa Kablo / Düşük Kapasitans):** $C_{bus}$ değeri düşüktür. Bu nedenle RC zaman sabiti küçüktür ve sinyal hızla yükselir. Voltaj, alıcı cihazın bir sinyali Lojik $1$ olarak tanıması için gereken minimum eşik olan **$VIH(min)$** seviyesini $τ_1$ gibi çok kısa bir sürede aşar. İletişim sorunsuzdur.
+
+*   **Kırmızı Eğri (Uzun Kablo / Yüksek Kapasitans):** Kablo uzadıkça $C_{bus}$  artar, RC zaman sabiti büyür. Sinyalin yükselen kenarı belirgin şekilde "yuvarlaklaşır" ve $VIH(min)$ eşiğine ulaşması $τ_2$ gibi çok daha uzun bir zaman alır.
+
+
+#### **Veri Neden Bozulur?**
+
+I²C protokolü, saat sinyali (SCL) tarafından belirlenen katı bir zamanlamaya tabidir. Alıcı cihaz, veriyi (SDA) okumak için SCL sinyalinin belirli bir anını bekler. Eğer uzun kablonun neden olduğu yavaş yükselme yüzünden SDA hattı voltajı, okunması gereken o kritik anda $VIH(min)$ seviyesine ulaşamamışsa, alıcı gönderilen $1$'i hatalı bir şekilde $0$ olarak yorumlar. Bu durum, veri bütünlüğünü bozar ve iletişimin başarısız olmasına neden olur.
+
+Bu fiziksel sınırlamadan dolayı I²C standardı, toplam bus kapasitansını **400 pF** ile sınırlar (Standart ve Hızlı Mod için). Bu da pratikte kablo uzunluğunu genellikle birkaç metre ile kısıtlar.
+
+Kısacası, I²C'nin uzun mesafeler için uygun olmamasının sebebi, kablonun kendisinin sinyali yavaşlatan bir kapasitör gibi davranmasıdır. Başarılı bir I²C iletişimi için bu "gizli" kapasitansı daima kontrol altında tutmak zorundayız.
+
+---
+
+### **3.2 Voltaj Seviyeleri: Gönderici Garantisi ve Alıcı Beklentisi**
+
+I²C protokolünün en güçlü yanlarından biri, farklı voltaj seviyeleriyle (5V, 3.3V, 1.8V vb.) çalışabilen esnek yapısıdır. Ancak bu esnekliğin sorunsuz işlemesi için, hatta bağlı tüm cihazların "Lojik 1" (HIGH) ve "Lojik 0" (LOW) kavramları üzerinde hemfikir olması gerekir. İşte bu noktada standartlaştırılmış voltaj eşikleri devreye girer.
+
+Aşağıdaki şema, bir I²C iletişiminin temelini oluşturan gönderici ve alıcı arasındaki bu "anlaşmayı" mükemmel bir şekilde özetlemektedir.
+
+<ImageWithCaption
+  src="/images/i2c/Şekil_3_5__I2C_Lojik_Voltaj_Seviyeleri.svg"
+  alt="I²C Lojik Voltaj Seviyeleri"
+>
+  <strong>Şekil 3.5:</strong> I²C Lojik Voltaj Seviyeleri
+</ImageWithCaption>
+
+{/*
+
+% =================================================================
+%              ÇALIŞTIĞI TEST EDİLMİŞ TAM KOD
+% =================================================================
+\documentclass[border=10pt, a4paper]{standalone}
+
+% --- Gerekli Paketler ---
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+
+% --- TikZ ve Gerekli Tüm Kütüphaneler ---
+\usepackage{circuitikz}
+\ctikzset{tripoles/mos style=arrows}
+\usetikzlibrary{
+    patterns,
+    positioning,
+    arrows.meta,
+    fit,
+    calc
+}
+
+\begin{document}
+
+\begin{tikzpicture}[
+    font=\sffamily,
+    >={Stealth[length=2.5mm, width=2mm]}
+]
+    % --- Değişkenler ---
+    \def\VccHeight{8cm}
+    \def\BarWidth{4.5cm}
+    \def\VILmaxRatio{0.3}
+    \def\VIHminRatio{0.7}
+
+    % ===================================================================
+    % SOL TARAF: GÖNDERİCİ MEKANİZMASI (circuitikz)
+    % ===================================================================
+    \begin{scope}[xshift=-6cm, american]
+        % Devre Elemanları
+        \node[nmos, anchor=source] (m1) at (0,0) {};
+        \node[ground] (gnd) at (0, -0.5) {};
+        \draw (m1.source) -- (gnd);
+        
+        \coordinate (sda_line) at (0, 2.5);
+        \draw (m1.drain) to[short, -o] (sda_line) node[right, xshift=2mm] {SDA};
+
+        \draw (sda_line) to[R, l=$R_p$] (0, \VccHeight);
+        \node[vcc] (vcc) at (0, \VccHeight) {Vcc};
+        
+        % Etiketler ve Açıklamalar
+        \node[below left=0.1cm and 0.1cm of m1.gate] {$M_1$};
+        \draw[->, gray] (m1.gate) ++(-1.2, 0) node[left, black, align=right] {Gate Sinyali \\ (Master/Slave)} -- (m1.gate);
+        
+        % Açıklayıcı oklar
+        \draw[<-, thick, blue!60!black] (m1.D) ++(2, -1) node[right, align=left] {MOSFET toprağa çeker \\ (Aktif LOW)} -- (m1.D);
+        \draw[<-, thick, red!60!black] (sda_line) ++(2, 2) node[right, align=left] {$R_p$ Vcc'ye çeker \\ (Pasif HIGH)} -- (0, 3.5);
+        
+        % Çevreleyen kutu
+        \node[draw, dashed, inner sep=1cm, fit=(m1)(vcc)(gnd), label={[yshift=-0.5cm]below:\textbf{Gönderici Mekanizması}}] {};
+    \end{scope}
+
+% ===================================================================
+% SAĞ TARAF: ALICI TARAFINDAN YORUMLAMA
+% ===================================================================
+\begin{scope}[xshift=4cm]
+    % --- Köşeler için görünmez düğümler (fit komutu için gerekli) ---
+    \coordinate (bottom_left_corner) at (0,0);
+    \coordinate (top_right_corner) at (\BarWidth, \VccHeight);
+    
+    % --- Bölgeler (DÜZELTİLMİŞ) ---
+    
+    % 1. SADECE GARANTİLİ LOW bölgesini maviye boya
+    \fill[blue!80!black] (bottom_left_corner) rectangle (\BarWidth, \VILmaxRatio*\VccHeight);
+    
+    % 2. Tanımsız Bölge'yi desenle doldur
+    \fill[pattern=north east lines, pattern color=gray!80] (0, \VILmaxRatio*\VccHeight) rectangle (\BarWidth, \VIHminRatio*\VccHeight);
+    
+    % 3. SADECE GARANTİLİ HIGH bölgesini kırmızıya boya
+    \fill[red!80!black] (0, \VIHminRatio*\VccHeight) rectangle (top_right_corner);
+    
+    % Metinler
+    % ... (metinler kısmı aynı kalabilir) ...
+    
+    % Metinler
+    \node[white, text width=\BarWidth-0.5cm, align=center] at (\BarWidth/2, {(\VILmaxRatio/2) * \VccHeight}) {\textbf{GARANTİLİ LOW} \\ $V < 0.3V_{cc}$};
+    \node[text width=\BarWidth-0.5cm, align=center] at (\BarWidth/2, {(\VILmaxRatio+\VIHminRatio)/2 * \VccHeight}) {\textbf{TANIMSIZ BÖLGE}};
+    \node[white, text width=\BarWidth-0.5cm, align=center] at (\BarWidth/2, {(\VIHminRatio+1)/2 * \VccHeight}) {\textbf{GARANTİLİ HIGH} \\ $V > 0.7V_{cc}$};
+    
+    % Ana çerçeve
+    \draw[line width=1pt] (bottom_left_corner) rectangle (top_right_corner);
+    
+    % Etiketler
+    \draw[dashed] (0, \VILmaxRatio*\VccHeight) -- ++(-0.5,0) node[left] {$V_{IL}(\text{max})$};
+    \draw[dashed] (0, \VIHminRatio*\VccHeight) -- ++(-0.5,0) node[left] {$V_{IH}(\text{min})$};
+    \draw (0,0) -- ++(-0.5,0) node[left] {GND (0V)};
+    \draw (0, \VccHeight) -- ++(-0.5,0) node[left] {$V_{cc}$};
+
+    % --- DÜZELTİLMİŞ FIT KOMUTU ---
+    % Tüm alıcı mekanizmasını çevreleyen kutu
+    % fit komutuna ham koordinatlar yerine düğüm isimlerini veriyoruz.
+    \node[
+        draw, 
+        dashed, 
+        inner sep=0.7cm, 
+        fit=(bottom_left_corner)(top_right_corner), 
+        label={[yshift=-0.5cm]below:\textbf{Alıcı Tarafından Yorumlama}}
+    ] {};
+    % --- DEĞİŞİKLİK SONU ---
+    \end{scope}
+
+    % ===================================================================
+    % BAĞLANTI OKLARI
+    % ===================================================================
+    % LOW Seviye Bağlantısı
+    \coordinate (vol_point) at ($(m1.drain)+(0.5,0)$);
+    \coordinate (vil_target) at (4, 0.15*\VccHeight);
+    \draw[->, thick, shorten >=2pt, shorten <=2pt, orange!90!black] (vol_point) .. controls +(1.5,0) and +(-1.5,0) .. (vil_target)
+        node[midway, fill=white, inner sep=2pt, rounded corners=3pt] {$V_{OL} < V_{IL}(\text{max})$ (Güvenli)};
+        
+    % HIGH Seviye Bağlantısı
+    \coordinate (voh_point) at ($(0, \VccHeight)+(-4.5,0)$);
+    \coordinate (vih_target) at (4, 0.85*\VccHeight);
+    \draw[->, thick, shorten >=2pt, shorten <=2pt, cyan!80!black] (voh_point) .. controls +(1.5,0) and +(-1.5,0) .. (vih_target)
+        node[midway, fill=white, inner sep=2pt, rounded corners=3pt] {$V_{OH} \approx V_{cc} > V_{IH}(\text{min})$ (Güvenli)};
+
+    % --- Genel Başlık ---
+    %\node[below=1.5cm of current bounding box.south, text width=16cm, align=center] 
+    %{\textbf{ŞEKİL 3.5:} I²C Gönderici Mekanizması ve Alıcı Voltaj Seviyeleri};
+
+\end{tikzpicture}
+
+\end{document}
+
+*/}
+
+Bu görseli iki temel bölümde inceleyelim: "Alıcı Tarafından Yorumlama" (kurallar) ve "Gönderici Mekanizması" (kurallara uyma eylemi).
+
+#### **Alıcı Tarafından Yorumlama: İletişimin Kuralları**
+
+Şemanın sağ tarafı, bir alıcı cihazın hattaki voltajı nasıl yorumlayacağının kurallarını belirler:
+
+*   **GARANTİLİ HIGH ($V > VIH(min)$):** Alıcı cihaz, voltajı **$VIH(min)$** (Minimum Input High Voltage - Minimum Yüksek Seviye Giriş Voltajı) değerinin üzerinde okuduğunda, bunu **kesinlikle $1$** olarak kabul eder. Bu eşik genellikle $0.7 * Vcc$ olarak belirlenmiştir.
+*   **GARANTİLİ LOW ($V < VIL(max)$):** Alıcı cihaz, voltajı **$VIL(max)$** (Maximum Input Low Voltage - Maksimum Düşük Seviye Giriş Voltajı) değerinin altında okuduğunda, bunu **kesinlikle $0$** olarak kabul eder. Bu eşik ise genellikle $0.3 * Vcc$'dir.
+*   **TANIMSIZ BÖLGE:** $VIL(max)$ ile $VIH(min)$ arasındaki bu kritik bölge, bir "gri alan"dır. Bu aralığa düşen bir sinyalin $0$ mı yoksa $1$ mi olarak yorumlanacağı belirsizdir ve bu durum kararsızlığa ve veri hatalarına yol açar. Bu nedenle, gönderici cihazın sinyallerini bu bölgeden her zaman uzak tutması gerekir.
+
+#### **Gönderici Mekanizması: Kurallara Uymak**
+
+Şemanın sol tarafı, bir gönderici cihazın bu kurallara nasıl uyduğunu ve güvenli sinyalleri nasıl ürettiğini gösterir:
+
+1.  **Aktif LOW (Lojik $0$ Gönderme):**
+    *   Cihaz, $0$ göndermek için dahili MOSFET'ini ($M1$) aktif hale getirir.
+    *   MOSFET, SDA hattını doğrudan toprağa (GND) çeker. Bu **aktif bir çekme** işlemidir.
+    *   Hattaki voltaj ($VOL$ - Output Low Voltage), MOSFET'in küçük iç direnci nedeniyle tam olarak 0V olmaz ama standardın gerektirdiği gibi **$VOL < VIL(max)$** olacak kadar düşük bir seviyeye iner. Bu, sinyalin "GARANTİLİ LOW" bölgesine güvenli bir şekilde yerleşmesini sağlar.
+
+2.  **Pasif HIGH (Lojik $1$ Gönderme):**
+    *   Cihaz, $1$ göndermek için çok daha zarif bir yöntem kullanır: MOSFET'ini kapatır ve hattı "serbest bırakır".
+    *   Bu durumda cihaz voltajı aktif olarak yukarı sürmez. Görev, hatta bağlı olan harici **pull-up direncine ($R_p$)** düşer. Bu direnç, hattı **pasif olarak** besleme voltajı $V_{cc}$'ye çeker.
+    *   Hattaki voltaj ($VOH$ - Output High Voltage), hatta bir yük olmadığı sürece $V_{cc}$'ye çok yakın bir değere yükselir. Bu değer, alıcının beklediği $VIH(min)$ eşiğinden **konforlu bir şekilde daha yüksektir ($VOH ≈ Vcc > VIH(min)$)**. Bu da sinyalin "GARANTİLİ HIGH" bölgesine güvenli bir şekilde yerleştiği anlamına gelir.
+
+Bu yapı sayesinde, göndericinin ürettiği sinyaller ile alıcının beklediği seviyeler arasında bir **"gürültü marjı"** (noise margin) oluşur. Bu marj, hattaki olası elektriksel gürültüye karşı iletişimin direncini artırarak I²C'yi güvenilir bir protokol yapar.
+
+---
+
+
+#### **Farklı Voltaj Seviyelerinde Çalışan Cihazların Bağlanması**
+
+Modern elektronikte en sık karşılaşılan senaryolardan biri, farklı çalışma voltajlarına sahip bileşenleri bir araya getirme ihtiyacıdır. Örneğin, klasik bir $5V$ Arduino'yu, $3.3V$ ile çalışan yeni nesil bir sensörle aynı I²C hattı üzerinde nasıl konuşturabiliriz? Bu cihazları doğrudan birbirine bağlamak, $5V$'luk sinyalin $3.3V$ ile çalışan hassas sensörün giriş pinlerine zarar vermesiyle sonuçlanabilir. Bu ciddi riski ortadan kaldırmanın yolu, **çift yönlü (bidirectional) bir lojik seviye dönüştürücü** kullanmaktır.
+
+Aşağıdaki şemada, bu iş için özel olarak tasarlanmış, tek bir MOSFET üzerine kurulu son derece zarif bir devre gösterilmektedir.
+
+<ImageWithCaption
+  src="/images/i2c/Şekil_3_6__Çift_Yönlü_Seviye_Dönüştürücü__Level_Shifter_.svg"
+  alt="Çift Yönlü Seviye Dönüştürücü"
+>
+  <strong>Şekil 3.6:</strong> Çift Yönlü Seviye Dönüştürücü
+</ImageWithCaption>
+
+Bu devre, I²C'nin open-drain yapısının avantajlarını kullanarak iki farklı voltaj "dünyası" arasında güvenli ve çift yönlü bir köprü kurar. Devrenin nasıl çalıştığını adım adım inceleyelim:
+
+**Temel Prensip:** Devrenin sırrı, MOSFET'in ($M1$ ve $M2$) Gate (Kapı) terminalinin her zaman **düşük voltaj tarafının beslemesine ($VCC1 = 3.3V$)** bağlanmasıdır.
+
+##### **Durum 1: Hat Boşta (Her İki Tarafta Lojik $1$)**
+Hiçbir cihaz hattı $0$'a çekmediğinde, her iki taraf da kendi pull-up dirençleri ($R_p$) tarafından kendi besleme voltajlarına çekilir.
+*   $SDA_1$ hattı $3.3V$'a çekilir.
+*   $SDA_2$ hattı $5V$'a çekilir.
+*   Bu durumda MOSFET'in Gate voltajı ($3.3V$) ile Source voltajı ($SDA_1$, $3.3V$) birbirine eşittir. $V_{GS} = 0V$ olduğu için MOSFET **kapalı (OFF)** kalır.
+*   **Sonuç:** İki hat birbirinden yalıtılmıştır ve her biri kendi Lojik $1$ seviyesinde güvenle bekler.
+
+##### **Durum 2: Düşük Voltajlı Cihaz Hattı $0$'a Çektiğinde (3.3V → 5V Yönü)**
+$3.3V$'luk bir cihaz $SDA_1$ hattını $0$'a (GND) çektiğinde:
+*   MOSFET'in Source voltajı $~0V$ olur.
+*   Gate voltajı hala $3.3V$'ta olduğu için, Gate-Source arası voltaj farkı $V_{GS} ≈ 3.3V$ olur.
+*   Bu voltaj, MOSFET'i **açmak (ON)** için yeterlidir.
+*   Açılan MOSFET, $SDA_2$ (Drain) ile $SDA_1$ (Source) arasında düşük dirençli bir yol oluşturur ve $SDA_2$ hattını da $0$'a çeker.
+*   **Sonuç:** $3.3V$ tarafındaki Lojik $0$ sinyali, güvenli bir şekilde $5V$ tarafına iletilmiş olur.
+
+##### **Durum 3: Yüksek Voltajlı Cihaz Hattı $0$'a Çektiğinde ($5V → 3.3V$ Yönü)**
+Bu, devrenin en akıllıca çalıştığı kısımdır. $5V$'luk bir cihaz $SDA_2$ hattını $0$'a çektiğinde:
+*   $SDA_2$ hattının (MOSFET'in Drain'i) voltajı $~0V$'a düşer.
+*   Bu sırada $SDA_1$ hattı (MOSFET'in Source'u) hala $3.3V$'tadır.
+*   MOSFET'lerin yapısında bulunan ve normalde pasif olan **parazitik gövde diyotu (body diode)**, Source'tan Drain'e doğru yönlüdür. Source voltajı ($3.3V$), Drain voltajından ($~0V$) daha yüksek olduğu için bu diyot iletime geçer.
+*   Diyot, $SDA_1$ hattının voltajını, $SDA_2$ hattının seviyesine (artı küçük bir diyot düşüşü, örn: $~0.6V$) kadar düşürür. Bu voltaj, $3.3V$'luk cihaz için geçerli bir Lojik $0$ seviyesidir.
+*   $SDA_1$ hattının voltajı düştüğü anda, bir önceki senaryoda olduğu gibi $V_{GS}$ yükselir ve MOSFET tam olarak iletime geçerek bağlantıyı güçlendirir.
+*   **Sonuç:** $5V$ tarafındaki Lojik $0$ sinyali, önce gövde diyotu, sonra da MOSFET kanalı aracılığıyla $3.3V$ tarafına güvenli bir şekilde yansıtılır.
+
+Bu basit ama dâhiyane devre sayesinde, farklı voltaj seviyelerinde çalışan cihazlar aynı I²C hattı üzerinde hiçbir risk olmadan, çift yönlü ve sorunsuz bir şekilde haberleşebilir.
+
+---
+
+{/*
+
+\documentclass[border=10pt]{standalone}
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\usepackage{pgfplots}
+\usepackage{circuitikz}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{decorations.markings, arrows.meta}
+\usetikzlibrary{positioning}
+
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+
+\begin{document}
+\begin{tikzpicture}
+\ctikzset{tripoles/mos style=arrows}
+\usetikzlibrary{decorations.markings}
+    % --- Sol taraf: Devre ---
+    \begin{scope}[xshift=0 cm]
+	% Paths, nodes and wires:
+	\draw (-3, 6.1) to[american resistor, l = $R_p$] (-3, 7.8);
+	\draw (-2, 6.1) to[american resistor, l_=$R_p$] (-2, 7.8);
+	\draw (-2, 8) -- (-4.6, 8);
+	\draw node[vcc, rotate=90] at (-4.6, 8) {};
+	\node[shape=rectangle, draw, line width=1pt, inner sep=0, minimum width=1.965cm, minimum height=0.965cm] at (-4, 1.5){$3.3V$ Cihaz};
+        
+	\node[shape=rectangle, draw, line width=1pt, inner sep=0, minimum width=1.965cm, minimum height=0.965cm] at (-1, 1.5){$3.3V$ Cihaz};
+	\node[shape=rectangle, draw, line width=1pt, inner sep=0, minimum width=1.965cm, minimum height=0.965cm] at (2, 1.5){$5V$ Cihaz};
+	\node[shape=rectangle, draw, line width=1pt, inner sep=0, minimum width=1.965cm, minimum height=0.965cm] at (5, 1.5){$5V$ Cihaz};
+	\draw node[nmos, bodydiode, rotate=-90 ](m1) at (-0.7, 5.7) {};
+        \node[anchor=west] at (m1.west) {$M_1$};
+	\draw node[nmos, bodydiode, rotate=-90](m2) at (0.7, 4) {};
+    \node[anchor=west] at (m2.west) {$M_2$};
+	\draw (-3.5, 2) -| (-3.5, 4);
+	\draw node[jump crossing, rotate=-90] at (-4.5, 4) {};
+	\draw (-4.5, 3.86) -- (-4.5, 2);
+	\draw (-4.5, 4.14) -| (-4.5, 5);
+	\draw (-0.5, 2) -- (-0.5, 4);
+	\draw node[jump crossing, rotate=-90] at (-1.5, 4) {};
+	\draw (-1.5, 3.86) -| (-1.5, 2);
+	\draw (-1.5, 4.14) -| (-1.5, 5);
+	\draw node[jump crossing, rotate=-90] at (-2, 5.7) {};
+	\draw node[jump crossing, rotate=-90] at (0.7, 5.7) {};
+	\draw (-4.36, 4) -- (-3.5, 4);
+	\draw (-3.5, 4) -- (-1.64, 4);
+	\draw (-1.36, 4) -- (-0.5, 4);
+	\draw (-0.5, 4) -- (-0.07, 4);
+	\draw (0.7, 4.98) -- (0.7, 5.56);
+	\draw (0.56, 5.7) |- (0.04, 5.7);
+	\draw (-2, 5.56) -- (-2, 4);
+	\draw (-2, 5.84) -| (-2, 6.1);
+	\draw (-3, 6.1) -| (-3, 5.7);
+	\draw (-4.5, 5) -| (-4.5, 5.7);
+	\draw (-4.5, 5.7) -- (-5, 5.7);
+	\draw (-4.64, 4) |- (-5, 4);
+	\draw (-3, 7.8) -| (-3, 8);
+	\draw (-2, 7.8) -| (-2, 8);
+	\draw (0.7, 5.84) -- (0.7, 8) -- (-2, 8);
+	\draw (1.47, 4) -- (6, 4);
+	\draw (0.84, 5.7) -- (6, 5.7);
+	\draw (5.5, 2) -| (5.5, 4);
+	\draw (2.5, 2) -| (2.5, 4);
+	\draw node[jump crossing, rotate=-90] at (1.5, 4) {};
+	\draw node[jump crossing, rotate=-90] at (4.5, 4) {};
+	\draw node[jump crossing, rotate=-90] at (3, 5.7) {};
+	\draw (3, 6.1) to[american resistor, l=$R_p$ ] (3, 7.8);
+	\draw (4, 6.1) to[american resistor, l_=$R_p$] (4, 7.8);
+	\draw node[vcc, rotate=-90] at (5.6, 8) {};
+	\draw (5.6, 8) -- (3, 8) -| (3, 7.8);
+	\draw (4, 7.8) -| (4, 8);
+	\draw (3, 5.84) |- (3, 6.1);
+	\draw (4, 6.1) -| (4, 5.7);
+	\draw (4.5, 4.14) |- (4.5, 5.7);
+	\draw (4.5, 3.86) |- (4.5, 2);
+	\draw (1.5, 3.86) -| (1.5, 2);
+	\draw (1.5, 4.14) -| (1.5, 5.7);
+	\draw (3, 5.56) |- (3, 4);
+	\draw (-0.7, 6.68) -| (-0.7, 8);
+	\draw (-1.47, 5.7) |- (-1.86, 5.7);
+	\draw (-1.5, 5) -| (-1.5, 5.7);
+	\draw (-2.14, 5.7) |- (-3, 5.7);
+	\draw (-4.5, 5.7) -- (-3, 5.7);
+	\draw node[circ] at (-4.5, 5.7) {};
+	\draw node[circ] at (-3.5, 4) {};
+	\draw node[circ] at (-3, 5.7) {};
+	\draw node[circ] at (-1.5, 5.7) {};
+	\draw node[circ] at (-2, 4) {};
+	\draw node[circ] at (-0.5, 4) {};
+	\draw node[circ] at (-0.7, 8) {};
+	\draw node[circ] at (-2, 8) {};
+	\draw node[circ] at (-3, 8) {};
+	\draw node[circ] at (2.5, 4) {};
+	\draw node[circ] at (1.5, 5.7) {};
+	\draw node[circ] at (3, 4) {};
+	\draw node[circ] at (5.5, 4) {};
+	\draw node[circ] at (4.5, 5.7) {};
+	\draw node[circ] at (4, 5.7) {};
+	\draw node[circ] at (4, 8) {};
+
+    % --- Sol Taraf Etiketleri ---
+    \node[anchor=east] at (-5.5, 8.2) {$V_{\mathrm{CC1}} = 3.3\,\mathrm{V}$};
+    \node[anchor=east] at (-5.5, 5.7) {SDA$_1$};
+    \node[anchor=east] at (-5.5, 4) {SCK$_1$};
+    % Ok uçlarını da ekleyelim
+    \draw[->] (-5, 5.7) -- ++(-0.3,0);
+    \draw[->] (-5, 4) -- ++(-0.3,0);
+    
+    
+    % --- Sağ Taraf Etiketleri ---
+    \node[anchor=west] at (6.5, 8.2) {$V_{\mathrm{CC2}} = 5\,\mathrm{V}$};
+    \node[anchor=west] at (6.5, 5.7) {SDA$_2$};
+    \node[anchor=west] at (6.5, 4) {SCK$_2$};
+    % Ok uçları
+    \draw[->] (6, 5.7) -- ++(0.3,0);
+    \draw[->] (6, 4) -- ++(0.3,0);
+
+     % Devre açıklaması
+        %\node[anchor=south, font=\small\bfseries] at (-1, 8) {Çift Yönlü Seviye Dönüştürücü (Level Shifter)};
+    \end{scope}
+\end{tikzpicture}
+\end{document}
+
+*/}
+
+---
+
+
+### **4.1 Master-Slave Mimarisi**
+
+I²C protokolü, bus üzerindeki cihazlar arasında net bir hiyerarşi kuran **Master-Slave** mimarisini temel alır. Bu yapı, iletişim süreçlerinin düzenli ve çakışmasız yürütülmesini sağlar. İletişimi başlatan ve saat sinyalini üreten cihaz **Master**, bu sinyallere yanıt veren cihazlar ise **Slave** olarak tanımlanır.
+
+Aşağıdaki blok diyagram, tipik bir I²C bus topolojisini göstermektedir.
+
+<ImageWithCaption
+  src="/images/i2c/şekil_4_1_i2c_master_slave_ilişkisi.svg"
+  alt="I²C Master-Slave İlişkisi "
+>
+  <strong>Şekil 4.1:</strong> I²C Master-Slave İlişkisi 
+</ImageWithCaption>
+
+{/*
+
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath} % \text komutu için eklendi
+\usepackage{tikz}
+\usepackage[siunitx]{circuitikz} 
+% 'backgrounds' kütüphanesi, dinamik arka plan eklemek için eklendi.
+\usetikzlibrary{arrows.meta, positioning, quotes}
+
+\begin{document}
+\begin{tikzpicture}
+[
+  % --- STİLLER ---
+  % Stillerde değişiklik yok, temel olarak aynı kalıyor
+  box/.style = {
+    draw, 
+    line width=1.2pt, 
+    minimum width=4.5cm, 
+    minimum height=2cm, 
+    align=center, 
+    rounded corners=8pt,
+    font=\large
+  },
+  addr/.style = {
+    font=\small\bfseries,
+    text=black!60,
+    anchor=north
+  },
+  arrow/.style = {-{Latex[length=3mm]}, line width=1.5pt},
+  bidir/.style = {{Latex[length=3mm]}-{Latex[length=3mm]}, line width=1.5pt},
+  busline/.style = {line width=1.5pt},
+  dot/.style={shape=circle, fill, inner sep=0pt, minimum size=6pt}
+]
+
+% Tüm koordinatları ortalamak için genel bir kaydırma
+\begin{scope}[shift={(0, 0)}] % Ortalanmış pozisyon
+
+	% Paths, nodes and wires:
+	\node[shape=rectangle, draw, line width=1pt, inner sep=0, minimum width=3.965cm, minimum height=1.965cm, text centered, align=center, fill=green!10](master) at (0, -0){Mikrodenetleyici \\ Master};
+	\node[shape=rectangle, draw, line width=1pt, inner sep=0, minimum width=2.2cm, minimum height=1.965cm, text centered, align=center, fill=yellow!20](slave1) at (0, 4){SSD1306 \\ OLED};
+	\node[shape=rectangle, draw, line width=1pt, inner sep=0, minimum width=2.2cm, minimum height=1.965cm, text centered, align=center, fill=orange!15](slave2) at (5, -0){DS3231 RTC\\ Modülü};
+	\node[shape=rectangle, draw, line width=1pt, inner sep=0, minimum width=2.2cm, minimum height=1.965cm, text centered, align=center, fill=purple!10](slave3) at (-5, -0){AT24C256\\EEPROM};
+	\node[shape=rectangle, draw, line width=1pt, inner sep=0, minimum width=2.2cm, minimum height=1.965cm, text centered, align=center, fill=pink!10](slave4) at (0, -4){BME280\\Sensör};
+
+
+    % Slave1 Oklar
+\draw[arrow] ([xshift=0.4cm]master.north) -- node[right, yshift=0.1cm] {\textbf{SCL}} ([xshift=0.4cm]slave1.south);
+\draw[bidir] ([xshift=-0.4cm]master.north) -- node[left, yshift=-0.1cm] {\textbf{SDA}} ([xshift=-0.4cm]slave1.south);
+
+    % Slave2 Oklar
+\draw[arrow] ([yshift=0.4cm]master.east) -- node[above, yshift=0.1cm] {\textbf{SCL}} ([yshift=0.4cm]slave2.west);
+\draw[bidir] ([yshift=-0.4cm]master.east) -- node[below, yshift=-0.1cm] {\textbf{SDA}} ([yshift=-0.4cm]slave2.west);
+
+    % Slave3 Oklar
+\draw[arrow] ([yshift=0.4cm]master.west) -- node[above, yshift=0.1cm] {\textbf{SCL}} ([yshift=0.4cm]slave3.east);
+\draw[bidir] ([yshift=-0.4cm]master.west) -- node[below, yshift=-0.1cm] {\textbf{SDA}} ([yshift=-0.4cm]slave3.east);
+
+
+    % Slave4 Oklar
+\draw[arrow] ([xshift=0.4cm]master.south) -- node[right, yshift=0.1cm] {\textbf{SCL}} ([xshift=0.4cm]slave4.north);
+\draw[bidir] ([xshift=-0.4cm]master.south) -- node[left, yshift=-0.1cm] {\textbf{SDA}} ([xshift=-0.4cm]slave4.north);
+
+%Adresler
+\node[above=1mm of slave1] {Adres: 0x3C};
+\node[below=1mm of slave2] {Adres: 0x68};
+\node[below=1mm of slave3] {Adres: 0x50};
+\node[below=1mm of slave4] {Adres: 0x76};
+
+\end{scope}
+\end{tikzpicture}
+\end{document}
+
+*/}
+
+Diyagramda, merkezi bir **Mikrodenetleyici** Master rolünü üstlenirken, dört farklı çevre birimi Slave olarak yapılandırılmıştır:
+*   **SSD1306 OLED:** Grafiksel veri çıkış birimi. Adres: $0x3C$.
+*   **DS3231 RTC:** Zamanlama verisi sağlayan birim. Adres: $0x68$.
+*   **BME280 Sensör:** Çevresel veri (sıcaklık, nem, basınç) giriş birimi. Adres: $0x76$.
+*   **AT24C256 EEPROM:** Uçucu olmayan veri depolama birimi. Adres: $0x50$.
+
+Tüm cihazlar, ortak **SDA (Serial Data)** ve **SCL (Serial Clock)** hatlarına paralel olarak bağlanmıştır. Sistemin deterministik çalışması, Master ve Slave cihazların kesin olarak tanımlanmış rollerine ve sorumluluklarına dayanır.
+
+#### **Master Cihazın Fonksiyonları ve Sorumlulukları**
+
+Master cihaz, I²C bus'ının tüm veri transfer operasyonlarını kontrol eder.
+
+1.  **Bus Kontrolünün Başlatılması ve Sonlandırılması:** Master, bir veri transferi başlatmak için **START (S)** koşulunu ve transferi sonlandırmak için **STOP (P)** koşulunu üretir. Bu iki koşul, bus'ın meşgul veya boşta olduğunu belirleyen yegane sinyallerdir.
+2.  **Saat Sinyalinin (SCL) Üretimi:** Veri aktarımı süresince SCL hattındaki saat darbeleri sadece Master tarafından üretilir. Bu, tüm veri bitlerinin senkronizasyonunu ve aktarım hızını (bit rate) belirler.
+3.  **Slave Adreslemesi:** Master, START koşulunu takiben, hedef Slave cihazın 7-bit veya 10-bit adresini SDA hattı üzerinden yayınlar. Diyagramdaki örnekte, Master BME280 sensörü ile iletişim kurmak için `0x76` adresini gönderir. Adresi eşleşmeyen diğer tüm Slave cihazlar, bir STOP koşulu algılanana kadar SDA hattındaki sonraki veri akışını yok sayar.
+4.  **Veri Transfer Yönünün Belirlenmesi:** Adres baytının son biti olan **R/W (Read/Write)** biti, veri akışının yönünü tayin eder.
+    *   **R/W = 0 (Write):** Master'dan Slave'e veri transferi.
+    *   **R/W = 1 (Read):** Slave'den Master'a veri transferi.
+5.  **Veri Transferinin Yönetimi:** Master, her bayt transferinin SCL darbeleriyle senkronize bir şekilde gerçekleşmesini sağlar ve transferin sonunda STOP koşulunu üreterek bus'ı serbest bırakır.
+
+#### **Slave Cihazların Fonksiyonları**
+
+Slave cihazlar, Master'dan gelen komutlara reaktif olarak yanıt veren pasif birimlerdir.
+
+*   **Adres Tanıma:** Her Slave cihaz, kendi donanımında veya yazılımında tanımlanmış benzersiz bir adrese sahiptir. Bus üzerinde bir START koşulu algıladıktan sonra gelen adres baytını izler ve kendi adresiyle karşılaştırır.
+*   **Onay Sinyali (Acknowledge - ACK):** Adreslemesi yapılan Slave, adres baytını doğru bir şekilde aldığını ve işleme hazır olduğunu belirtmek için, dokuzuncu SCL darbesi sırasında SDA hattını aktif olarak LOW seviyesine çeker. Bu **ACK** biti, Master'a iletişimin başarılı bir şekilde kurulduğunu teyit eder. Adresi eşleşmeyen veya meşgul olan bir Slave, hattı HIGH seviyesinde bırakarak bir **NACK (Not Acknowledge)** sinyali oluşturur.
+*   **Veri Alımı/Gönderimi:** Adreslenen Slave, Master tarafından belirlenen R/W bitine uygun olarak ve SCL saat sinyaliyle tam senkronizasyon içinde, SDA hattı üzerinden veri alır veya hatta veri yazar.
+
+Bu yapısal hiyerarşi, I²C'nin çoklu cihaz ortamlarında (multi-drop bus) çakışma olmaksızın, deterministik ve güvenilir bir şekilde çalışmasını sağlar. Her transfer, Master tarafından başlatılan, adreslenen ve sonlandırılan izole bir işlemdir.
+
+---
+
+
+### **Multi-Master Yapılar ve Arbitration (Öncelik Verme)**
+
+I²C protokolü, birden fazla "Master" (Yönetici) cihazın aynı veri hattı üzerinde bulunmasına olanak tanıyan esnek bir yapı sunar. Bu durum, **Şekil 4.1**'de görüldüğü gibi iki veya daha fazla mikrodenetleyicinin aynı sensör verisine erişmek istediği karmaşık sistemlerde büyük bir avantaj sağlar.
+
+<ImageWithCaption
+  src="/images/i2c/multi_master_şeması.svg"
+  alt="I²C Multi-Master Öncelik Durumu "
+>
+  <strong>Şekil 4.1:</strong> I²C Multi-Master Öncelik Durumu
+</ImageWithCaption>
+
+{/*
+
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath} % \text komutu için eklendi
+\usepackage{tikz}
+\usepackage[siunitx]{circuitikz} 
+% 'backgrounds' kütüphanesi, dinamik arka plan eklemek için eklendi.
+\usetikzlibrary{arrows.meta, positioning, backgrounds}
+
+\begin{document}
+\begin{tikzpicture}[
+    % Bu komut, TikZ'e arka planı göstermesini söyler.
+    show background rectangle, 
+    % Bu komut, gösterilecek arka planın stilini (beyaz dolgu) belirler.
+    background rectangle/.style={fill=white}
+]
+
+% Tüm koordinatları ortalamak için genel bir kaydırma
+\begin{scope}[shift={(0, 0)}] % Ortalanmış pozisyon
+
+    % Dikdörtgen kutular
+    \node[shape=rectangle, draw, line width=1pt, inner sep=3pt, minimum width=3cm, minimum height=2cm, text centered, align=center, fill=green!10] at (-2.5, 1){Mikrodenetleyici \\ (Master 1)};
+    \node[shape=rectangle, draw, line width=1pt, inner sep=3pt, minimum width=3cm, minimum height=2cm, text centered, align=center, fill=green!10] at (1, 1){Mikrodenetleyici \\ (Master 2)};
+    \node[shape=rectangle, draw, line width=1pt, inner sep=3pt, minimum width=2cm, minimum height=2cm, text centered, align=center, fill=blue!10] at (5, 1){Sensör \\ (Slave 1)};
+    
+    
+    % Yatay ana hatlar
+    \draw (-5, 3) -- (7, 3);
+    \draw (-5, 4) -- (7, 4);
+
+        % Hat etiketleri
+    \node[above] at (-4, 4) {SDA};
+    \node[above] at (-4, 3) {SCL};
+    
+    % Direnç elemanları
+    \draw (2, 6) to[american resistor,  l = {\color{black}\textbf{$ R_{\text{p}} $}}
+    ] (2, 4.4);
+    \draw (4, 6) to[american resistor, l = {\color{black}\textbf{$ R_{\text{p}} $}}] (4, 4.4);
+    
+    % Atlama geçişleri ve bağlantılar
+    \draw node[jump crossing, rotate=-90] at (4, 4) {};
+    \draw (4, 4.4) -| (4, 4.14);
+    \draw (4, 3.86) -| (4, 3);
+    \draw (2, 4.4) -| (2, 4);
+    
+    % Sol taraf bağlantıları
+    \draw (-3, 3) -| (-3, 2);
+    \draw node[jump crossing, rotate=-90] at (-2, 3) {};
+    \draw (-2, 3.14) -| (-2, 4);
+    \draw (-2, 2.86) -- (-2, 2);
+    
+    % Orta ve sağ taraf bağlantıları
+    \draw (1.5, 2) -- (1.5, 3);
+    \draw node[jump crossing, rotate=-90] at (0.5, 3) {};
+    \draw node[jump crossing, rotate=-90] at (5.5, 3) {};
+    \draw (0.5, 3.14) -| (0.5, 4);
+    \draw (0.5, 2.86) -| (0.5, 2);
+    \draw (4.5, 3) -| (4.5, 2);
+    \draw (5.5, 2.86) -| (5.5, 2);
+    \draw (5.5, 3.14) -| (5.5, 4);
+    
+    % Üst bağlantı hattı
+    \draw (0, 6.5) -- (6, 6.5);
+    \draw (4, 6) -| (4, 6.5);
+    \draw (2, 6) -| (2, 6.5);
+    
+    % Vcc bağlantısı
+    \draw node[vcc] at (3, 7) {$+V_{cc} = +5V$};
+    \draw (3, 7) -- (3, 6.5);
+    
+\end{scope}
+
+\end{tikzpicture}
+\end{document}
+
+*/}
+
+
+
+Peki, iki Master cihaz aynı anda iletişimi başlatmaya çalışırsa ne olur? Veri bozulur mu? Hayır. Bu sorunun cevabı, I²C'nin "open-drain" (açık kollektör) yapısında ve dâhiyane **Arbitration (Öncelik Verme)** mekanizmasında yatmaktadır.
+
+**Şekil 4.1**'deki devrede SDA ve SCL hatları, $R_p$ pull-up dirençleri ile $+V_{cc}$ye ($+5V$) çekilmiştir. Bu şu anlama gelir:
+*   **$1$ göndermek için:** Cihaz, hattı serbest bırakır ve pull-up direnci hattı lojik $1$ seviyesine çeker.
+*   **$0$ göndermek için:** Cihaz, hattı aktif olarak toprağa ($GND$) çekerek lojik $0$ seviyesine indirir.
+
+Bu fiziksel yapı, önceliklendirme mekanizmasının temelini oluşturur. **Şekil 4.2**, bu önceliklendirme anını adım adım göstermektedir:
+
+<ImageWithCaption
+  src="/images/i2c/öncelik_durumu.svg"
+  alt="I²C Multi-Master Öncelik Durumu"
+>
+  <strong>Şekil 4.3:</strong> I²C Multi-Master Öncelik Durumu
+</ImageWithCaption>
+
+{/*
+
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{amssymb} % \checkmark sembolü için
+\usetikzlibrary{
+    decorations.pathreplacing,
+    arrows.meta,
+    positioning,
+    decorations.pathmorphing, % <--- Şimşek için eklendi
+    backgrounds              % <--- Arka plan vurgulaması için eklendi
+}
+
+\begin{document}
+
+\begin{tikzpicture}[
+    % Stiller
+    signal/.style={very thick, blue!80!black},
+    intended/.style={thick, dashed, gray},
+    guide/.style={dashed, black!50},
+    label_text/.style={align=center, font=\sffamily},
+    phase_label/.style={label_text, font=\sffamily\small},
+    win_icon/.style={color=green!60!black, font=\bfseries, scale=1.5},
+    lose_icon/.style={color=red, font=\bfseries, scale=1.5},
+    % --- YENİ STİLLER ---
+    skipped_signal/.style={densely dashed, blue!80!black, very thick}, % Atlanan sinyal hattı stili
+    skipped_intended/.style={densely dashed, gray, thick},           % Atlanan niyet hattı stili
+    skip_indicator/.style={font=\huge, black!70, rotate=15}           % Zaman atlama simgesi '//'
+]
+
+% --- Dikey Eksen Seviyeleri ---
+\def\sclH{6}   \def\sclL{5}
+\def\maH{4}    \def\maL{3} 
+\def\mbH{2}    \def\mbL{1}
+\def\sdaH{0}   \def\sdaL{-1}
+
+% --- Eksen Etiketleri ---
+\node[label_text, left=0.5cm] at (0, 6) {SCL};
+\node[label_text, left=0.5cm] at (0, 4) {Master A \\ (niyeti)};
+\node[label_text, left=0.5cm] at (0, 2) {Master B \\ (niyeti)};
+\node[label_text, left=0.5cm] at (0, 0) {\textbf{SDA} \\ \textbf{(Gerçek Hat)}};
+
+% ===============================
+% 1. SCL (SAAT) SİNYALİ
+% ===============================
+% Başlangıç ve Eşleşen Bit
+\draw[signal] (0, \sclH) -- (2, \sclH) -- (2.5, \sclL) -- (4, \sclL) -- (4.5, \sclH) -- (5.5, \sclH) -- (6, \sclL);
+% --- ZAMAN ATLAMA BÖLÜMÜ ---
+\draw[skipped_signal] (6, \sclL) -- (7.5, \sclL);
+% Arbitrasyon ve sonrası
+\draw[signal] (7.5, \sclL) -- (8, \sclH)  -- (9, \sclH)   -- (9.5, \sclL) -- (11, \sclL) -- (11.5, \sclH) -- (12.5, \sclH) -- (13, \sclL) -- (14.5, \sclL);
+
+% ===============================
+% 2. MASTER A'NIN NİYET ETTİĞİ SİNYAL (KAYBEDEN)
+% ===============================
+\draw[intended] (0, \maH) -- (1, \maH) -- (1.5, \maL) -- (4, \maL) -- (4.5, \maH) -- (6, \maH);
+\draw[skipped_intended] (6, \maH) -- (7.5, \maH);
+\draw[intended] (7.5, \maH); % Arbitrasyon için '1' göndermek istiyor
+\node[lose_icon] at (9, \maH+0.5) {X};
+\draw[intended, red] (8.5, \maH) -- (9.5, \maH); % Kaybettikten sonra hattı bırakır
+\node[label_text, red, right] at (9.5, \maH) {Kaybetti!};
+
+% ===============================
+% 3. MASTER B'NİN NİYET ETTİĞİ SİNYAL (KAZANAN)
+% ===============================
+\draw[intended] (0, \mbH) -- (1, \mbH) -- (1.5, \mbL) -- (4, \mbL) -- (4.5, \mbH) -- (6, \mbH);
+\draw[skipped_intended] (6, \mbH) -- (7.5, \mbH);
+\draw[intended] (7.5, \mbH) -- (8, \mbL) -- (9.5, \mbL); % Arbitrasyon için '0' gönderiyor
+\node[win_icon] at (9, \mbL+0.5) {\checkmark};
+\draw[intended] (9.5, \mbL) -- (11, \mbL) -- (11.5, \mbH) -- (14.5, \mbH);
+
+% ===============================
+% 4. GERÇEK SDA HATTI (WIRED-AND SONUCU)
+% ===============================
+\draw[signal] (0, \sdaH) -- (1, \sdaH) -- (1.5, \sdaL) -- (4, \sdaL) -- (4.5, \sdaH) -- (6, \sdaH);
+\draw[skipped_signal] (6, \sdaH) -- (7.5, \sdaH);
+\draw[signal] (7.5, \sdaH) -- (8, \sdaL) -- (9.5, \sdaL); % ARBİTRASYON ANI
+\draw[signal] (9.5, \sdaL) -- (11, \sdaL) -- (11.5, \sdaH) -- (14.5, \sdaH);
+
+% --- Geliştirilmiş Vurgulama (Daha Mükemmel Versiyon) ---
+\begin{scope}[on background layer]
+    % 1. ARKA PLAN VURGULAMASI: Kritik bölgeyi kırmızı bir kutu ile vurgula
+    \fill[red!15, rounded corners=3pt] 
+        (7.75, \sdaL - 0.2) rectangle (9.25, \maH + 2.2);
+\end{scope}
+
+% 2. ŞİMŞEK İLE ÇATIŞMAYI GÖSTERME
+% Master A'nın niyeti ('1') ile hatta okuduğu ('0') arasındaki çakışma
+\draw[->, decorate, decoration={
+        zigzag,            % Şimşek efekti
+        segment length=4pt,
+        amplitude=1.5pt,
+        post=lineto, post length=4pt % Ok ucunun düz bir çizgide bitmesi için
+    }, thick, red!80!black] 
+    (8.5, \maH) -- (8.5, \sdaL);
+
+% 3. MİNİMALİST DEĞER ETİKETLERİ
+\node[label_text, red!80!black, left=3pt] at (8.5, \maH) {\textbf{1}};
+\node[label_text, red!80!black, left=3pt] at (8.5, \sdaL) {\textbf{0}};
+
+% 4. AÇIKLAYICI METİN KUTUSU
+\node[label_text, red!80!black, text width=3.2cm, right=10pt, anchor=west] 
+    at (9.25, 2.5) {\small\textbf{Öncelik:} Master A '1' göndermeyi beklerken hatta '0 okur ve önceliği kaybeder.};
+% ===============================
+% FAZLARI GÖSTEREN ETİKETLER VE ÇİZGİLER
+% ===============================
+\draw[guide] (1.25, -2.5) -- (1.25, 6.5);
+\draw[guide] (3.5, -2.5) -- (3.5, 6.5);
+% --- ZAMAN ATLAMA İŞARETLEYİCİLERİ ---
+\draw[guide] (6.5, -2.5) -- (6.5, 6.5);
+\node[skip_indicator] at (6.75, 2.75) {//}; % Simgenin konumu
+\draw[guide] (7.0, -2.5) -- (7.0, 6.5);
+% ---
+\draw[guide] (10.25, -2.5) -- (10.25, 6.5);
+
+\node[phase_label, below=3mm] at (-0.25, -2.5) {Boşta};
+\node[phase_label, below=3mm, font=\bfseries\sffamily] at (1.5, -2.5) {BAŞLAMA\\Koşulu};
+\node[phase_label, below=3mm] at (5, -2.5) {Adres bitleri ve diğer \\ eşleşen bitler};
+\node[phase_label, below=3mm, font=\bfseries\sffamily, red] at (8.5, -2.5) {ÖNCELİK \\BELİRLEME ANI};
+\node[phase_label, below=3mm] at (12.5, -2.5) {Master B \\ Devam Ediyor};
+
+% ===============================
+% ANA BAŞLIK
+% ===============================
+%\node[label_text, font=\bfseries\Large, below=4cm] at (7.25, 0) {ŞEKİL 4.2: MULTI-MASTER ARBITRATION SÜRECİ};
+
+\end{tikzpicture}
+
+\end{document}
+
+*/}
+
+
+1.  **Başlangıç:** İki Master (Master A ve Master B) hattın "Boşta" olduğunu görür ve aynı anda bir "BAŞLAMA Koşulu" göndererek iletişimi başlatır. Bu aşamada bir çakışma yoktur.
+
+2.  **Veri Aktarımı:** Her iki Master da verilerini (genellikle önce Slave adresini) bit bit göndermeye başlar. Gönderdikleri bitler aynı olduğu sürece ("Adres bitleri ve diğer eşleşen bitler"), hatta bir çakışma olmaz ve iletişim devam eder.
+
+3.  **Öncelik Belirleme Anı (Arbitration):** Asıl kritik an, iki Master'ın farklı bitler göndermeye çalıştığı andır. Şekildeki **"ÖNCELİK BELİRLEME ANI"** nda tam olarak bu durum yaşanır:
+    *   **Master B** bir $0$ göndermek ister ve SDA hattını toprağa çeker.
+    *   **Master A** ise bir $1$ göndermek ister ve SDA hattını serbest bırakır, pull-up direncinin hattı $1$ seviyesine çekmesini bekler.
+
+4.  **Sonuç ve Karar:**
+    *   **Gerçekleşen Durum:** "Open-drain" yapısı nedeniyle, bir cihaz hattı $0$'a çektiğinde, diğerinin $1$ yapma girişimi geçersiz kalır. Dolayısıyla, SDA hattındaki gerçek sinyal (**"Gerçek Hat"**) kaçınılmaz olarak **$0$** olur.
+    *   **Kontrol ve Karar:** I²C kuralı gereği, her Master gönderdiği bitin ardından hattı okuyarak sinyalin doğruluğunu kontrol eder.
+        *   **Master B**, hatta $0$ okur. Bu, kendi gönderdiği bitle eşleştiği için iletişime devam etme hakkını kazandığını anlar ve **"yoluna devam eder"**.
+        *   **Master A**, hatta $0$ okur. Ancak kendisi $1$ göndermeyi amaçlamıştı. Bu uyumsuzluk, hattı başka bir Master'ın kontrol ettiğini gösterir. Master A, **arbitration'ı kaybettiğini** ("Kaybetti!") anlar, veri göndermeyi hemen durdurur ve hattın tekrar boşa düşmesini bekler.
+
+Bu zarif mekanizma sayesinde, **hiçbir veri bozulmaz**. Önceliği kazanan Master B, iletişimini kesintisiz bir şekilde tamamlarken, kaybeden Master A sessizce kenara çekilir. Bu süreç, genellikle adresi daha düşük olan cihazın (adres bitlerinde daha erken $0$'a sahip olduğu için) arbitration'ı kazanma olasılığını artırır.
+
+---
+
+
+### **4.2 Adres Yapısı**
+
+Bir I²C hattı üzerinde birden fazla cihaz (sensör, bellek, sürücü vb.) bulunabilir. Master cihazın, bu cihazlardan yalnızca biriyle hedefe yönelik bir iletişim kurabilmesi için her Slave cihazın benzersiz bir kimliğe, yani bir **adrese** ihtiyacı vardır. Tıpkı bir apartmandaki dairelerin kapı numaraları gibi, bu adresler de verinin doğru alıcıya ulaşmasını garanti eder. I²C protokolünde temel olarak iki tür adresleme şeması kullanılır: 7-bit ve 10-bit.
+
+#### **7-bit Adres Sistemi**
+
+Bu, I²C dünyasında en yaygın olarak kullanılan adresleme standardıdır. Bu yapıda Master, bir **BAŞLAMA (START)** koşulu oluşturduktan hemen sonra 8 bitlik bir kontrol baytı gönderir. Bu baytın ilk 7 biti Slave adresini, son biti ise yapılacak işlemin yönünü belirtir.
+
+<ImageWithCaption
+  src="/images/i2c/7_bit_adres.svg"
+  alt="7-bit adres yapısı"
+>
+  <strong>Şekil 4.4:</strong> 7-bit adres yapısı
+</ImageWithCaption>
+
+
+{/*
+
+\documentclass[border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{xcolor}
+
+\usetikzlibrary{
+    decorations.pathreplacing,
+    arrows.meta,
+    positioning,
+    shapes.geometric,
+    decorations.pathmorphing, % <--- Şimşek için eklendi
+    backgrounds              % <--- Arka plan vurgulaması için eklendi
+}
+
+
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+
+
+\begin{document}
+
+\begin{tikzpicture}[
+    show background rectangle,
+    background rectangle/.style={fill=white},
+    % Stil tanımlamaları
+    start/.style={rectangle, rounded corners=3pt, fill=green!70, draw=green!80!black, thick, minimum width=1.2cm, minimum height=0.8cm, text=white, font=\small\bfseries},
+    address/.style={rectangle, fill=blue!70, draw=blue!80!black, thick, minimum width=0.8cm, minimum height=0.8cm, text=white, font=\small\bfseries},
+    rw/.style={rectangle, fill=orange!70, draw=orange!80!black, thick, minimum width=1.2cm, minimum height=0.8cm, text=white, font=\small\bfseries},
+    ack/.style={rectangle, fill=purple!70, draw=purple!80!black, thick, minimum width=1.6cm, minimum height=0.8cm, text=white, font=\small\bfseries},
+    arrow/.style={-{Stealth[length=3mm]}, thick},
+]
+
+% Başlık
+%\node[font=\large\bfseries] at (4, 3) {Şekil 4.3: 7-Bit I2C İletişim Paketi};
+
+% START koşulu
+\node[start] (start) at (0, 1.5) {START};
+
+% Adres bitleri A6-A0
+\node[address] (a6) at (1.5, 1.5) {A6};
+\node[address] (a5) at (2.4, 1.5) {A5};
+\node[address] (a4) at (3.3, 1.5) {A4};
+\node[address] (a3) at (4.2, 1.5) {A3};
+\node[address] (a2) at (5.1, 1.5) {A2};
+\node[address] (a1) at (6.0, 1.5) {A1};
+\node[address] (a0) at (6.9, 1.5) {A0};
+
+% R/W biti
+\node[rw] (rw) at (8.2, 1.5) {R/W};
+
+% ACK/NACK biti
+\node[ack] (ack) at (9.8, 1.5) {ACK/NACK};
+
+% Bit pozisyon etiketleri
+\node[font=\tiny, text=black] at (1.5, 0.8) {Bit 7};
+\node[font=\tiny, text=black] at (2.4, 0.8) {Bit 6};
+\node[font=\tiny, text=black] at (3.3, 0.8) {Bit 5};
+\node[font=\tiny, text=black] at (4.2, 0.8) {Bit 4};
+\node[font=\tiny, text=black] at (5.1, 0.8) {Bit 3};
+\node[font=\tiny, text=black] at (6.0, 0.8) {Bit 2};
+\node[font=\tiny, text=black] at (6.9, 0.8) {Bit 1};
+\node[font=\tiny, text=black] at (8.2, 0.8) {Bit 0};
+\node[font=\tiny, text=black] at (9.8, 0.8) {ACK};
+
+% R/W biti içinde yazma/okuma ikonları
+%\node[font=\tiny, text=white] at (7.9, 1.3) {✎ 0};
+%\node[font=\tiny, text=white] at (8.5, 1.7) {   1};
+
+% Slave'den ACK/NACK'e ok
+\node[font=\small\bfseries] (slave) at (10.5, 0.1) {Slave};
+\draw[arrow] (slave) -- (10.5, 1);
+
+% Açıklama kutusu
+%\node[anchor=north west, font=\small] at (0, -0.2) {
+ %   \begin{tabular}{@{}ll@{}}
+  %  \textbf{Açıklama:} & \\
+   % \textcolor{green!70}{■} & START koşulu \\
+   % \textcolor{blue!70}{■} & 7-bit slave adresi (A6-A0) \\
+   % \textcolor{orange!70}{■} & R/W biti (0=Yazma, 1=Okuma) \\
+   % \textcolor{purple!70}{■} & ACK/NACK biti (Slave kontrolü) \\
+   % \end{tabular}
+%};
+
+\end{tikzpicture}
+%\caption{I$^2$C veri çerçevesinin ilk baytı bit detayları ile gösterilmiştir.}
+
+\end{document}
+
+*/}
+
+Şekil 4.3'teki iletişim akışını adım adım inceleyelim:
+1.  **BAŞLAMA (START) Koşulu:** Master, veri hattını (SDA) saat hattı (SCL) yüksekken alçak seviyeye çekerek iletişimi başlatır.
+2.  **Adres Çerçevesi (Address Frame):**
+    *   Master, hedef Slave'in 7-bitlik adresini (Şekilde `A6`'dan `A0`'a kadar olan bitler) en anlamlı bitten (MSB) başlayarak hatta sürer.
+    *   Bu 7 bit ile teorik olarak 2⁷ = 128 farklı cihaz adreslenebilir.
+3.  **R/W (Read/Write) Biti:** 8. bit, veri akışının yönünü tanımlar:
+    *   **`R/W = 0` (Write):** Master, Slave'e veri **yazacak**.
+    *   **`R/W = 1` (Read):** Master, Slave'den veri **okuyacak**.
+4.  **ACK/NACK (Acknowledge/Not Acknowledge) Biti:**
+    *   Master, 8 biti (7 adres + 1 R/W) gönderdikten sonra SDA hattını serbest bırakır.
+    *   Eğer hatta bu adrese sahip bir Slave cihaz varsa ve iletişime hazırsa, SDA hattını 9. saat darbesi sırasında alçak seviyeye çekerek bir **Onay (Acknowledge - ACK)** sinyali gönderir. Bu, "Adresini aldım ve hazırım" demektir.
+    *   Eğer hatta o adreste bir cihaz yoksa veya meşgulse, SDA hattı yüksek kalır ve bu durum **Onaylanmama (Not Acknowledge - NACK)** olarak yorumlanır. Master, iletişimi sonlandırır.
+
+#### **10-bit Adres Sistemi**
+
+Elektronik dünyasındaki cihaz çeşitliliği arttıkça, 128 adreslik 7-bit alanı yetersiz kalmaya başladı. Bu ihtiyacı karşılamak üzere, 2¹⁰ = 1024 cihaza kadar adresleme imkanı sunan **10-bit adresleme** standardı geliştirildi. Bu sistem, geriye dönük uyumluluğu koruyacak şekilde akıllıca tasarlanmıştır; 7-bit cihazlar, 10-bit bir adres çağrısını özel bir önek sayesinde tanıyıp görmezden gelirler.
+
+<ImageWithCaption
+  src="/images/i2c/10_bit_adres.svg"
+  alt="10-bit adres yapısı"
+>
+  <strong>Şekil 4.5:</strong> 10-bit adres yapısı
+</ImageWithCaption>
+
+{/*
+
+\documentclass[border=15pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{
+    decorations.pathreplacing,
+    arrows.meta,
+    positioning,
+    shapes.geometric,
+    decorations.pathmorphing,
+    backgrounds
+}
+\usepackage[svgnames]{xcolor}
+\pagecolor{white}
+
+\begin{document}
+\begin{tikzpicture}[
+    show background rectangle,
+    background rectangle/.style={fill=white},
+    % Optimized stil tanımlamaları
+    BAŞLAMA/.style={
+        rectangle, 
+        rounded corners=4pt, 
+        fill=green!70, 
+        draw=green!80!black, 
+        very thick, 
+        minimum width=1.4cm, 
+        minimum height=1cm, 
+        text=white, 
+        font=\footnotesize\bfseries,
+        align=center
+    },
+    prefixbit/.style={
+        rectangle, 
+        fill=red!70, 
+        draw=red!80!black, 
+        very thick, 
+        minimum width=0.7cm, 
+        minimum height=1cm, 
+        text=white, 
+        font=\small\bfseries,
+        align=center
+    },
+    address/.style={
+        rectangle, 
+        fill=blue!70, 
+        draw=blue!80!black, 
+        very thick, 
+        minimum width=0.85cm, 
+        minimum height=1cm, 
+        text=white, 
+        font=\small\bfseries,
+        align=center
+    },
+    rw/.style={
+        rectangle, 
+        fill=orange!70, 
+        draw=orange!80!black, 
+        very thick, 
+        minimum width=2.2cm, 
+        minimum height=1cm, 
+        text=white, 
+        font=\footnotesize\bfseries,
+        align=center
+    },
+    ack/.style={
+        rectangle, 
+        fill=purple!70, 
+        draw=purple!80!black, 
+        very thick, 
+        minimum width=2.4cm, 
+        minimum height=1cm, 
+        text=white, 
+        font=\footnotesize\bfseries,
+        align=center
+    },
+    arrow/.style={-{Stealth[length=4mm]}, very thick, color=black!70},
+    title/.style={font=\Large\bfseries, text=black},
+    byte_label/.style={font=\large\bfseries, text=black!80},
+    bit_label/.style={font=\scriptsize, text=black!70},
+]
+
+% 1. BAYT BAŞLIĞI
+\node[byte_label] at (6, 4) {1. Bayt (10-bit adresleme tanımlayıcı baytı)};
+
+% 1. BAYT - BAŞLAMA koşulu
+\node[BAŞLAMA] (BAŞLAMA1) at (0, 2.8) {BAŞLAMA};
+
+% 1. BAYT - 11110 ön eki (5 bit) - daha düzenli aralıklarla
+\node[prefixbit] (p1) at (1.7, 2.8) {1};
+\node[prefixbit] (p2) at (2.4, 2.8) {1};
+\node[prefixbit] (p3) at (3.1, 2.8) {1};
+\node[prefixbit] (p4) at (3.8, 2.8) {1};
+\node[prefixbit] (p5) at (4.5, 2.8) {0};
+
+% 1. BAYT - A9, A8 bitleri
+\node[address] (a9) at (5.5, 2.8) {A9};
+\node[address] (a8) at (6.35, 2.8) {A8};
+
+% 1. BAYT - R/W biti
+\node[rw] (rw1) at (7.8, 2.8) {R/W = 0\\(Yazma)};
+
+% 1. BAYT - ACK/NACK biti
+\node[ack] (ack1) at (10.2, 2.8) {ACK/NACK\\(Yanıt)};
+
+% 1. BAYT - Bit pozisyonları (daha düzenli hizalama)
+\node[bit_label] at (1.7, 2.1) {Bit 7};
+\node[bit_label] at (2.4, 2.1) {Bit 6};
+\node[bit_label] at (3.1, 2.1) {Bit 5};
+\node[bit_label] at (3.8, 2.1) {Bit 4};
+\node[bit_label] at (4.5, 2.1) {Bit 3};
+\node[bit_label] at (5.5, 2.1) {Bit 2};
+\node[bit_label] at (6.35, 2.1) {Bit 1};
+\node[bit_label] at (7.8, 2.1) {Bit 0};
+
+% 11110 ön ekini vurgulama - daha büyük ve net
+\draw[decorate, decoration={brace, amplitude=8pt, mirror}, very thick, red!80] 
+    (1.35, 2) -- (4.85, 2);
+\node[font=\small\bfseries, text=red!80] at (3.1, 1.5) {11110 (10-bit adresleme göstergesi)};
+
+% 2. BAYT BAŞLIĞI
+\node[byte_label] at (6, 1) {2. Bayt (Adresin alt 8 biti)};
+
+% 2. BAYT - Adres bitleri A7-A0 (daha düzenli aralıklarla)
+\node[address] (a7) at (1.7, -0.2) {A7};
+\node[address] (a6) at (2.55, -0.2) {A6};
+\node[address] (a5) at (3.4, -0.2) {A5};
+\node[address] (a4) at (4.25, -0.2) {A4};
+\node[address] (a3) at (5.1, -0.2) {A3};
+\node[address] (a2) at (5.95, -0.2) {A2};
+\node[address] (a1) at (6.8, -0.2) {A1};
+\node[address] (a0) at (7.65, -0.2) {A0};
+
+% 2. BAYT - ACK
+\node[ack] (ack2) at (10.2, -0.2) {ACK/NACK\\(Yanıt)};
+
+% 2. BAYT - Bit pozisyonları
+\node[bit_label] at (1.7, -0.9) {Bit 7};
+\node[bit_label] at (2.55, -0.9) {Bit 6};
+\node[bit_label] at (3.4, -0.9) {Bit 5};
+\node[bit_label] at (4.25, -0.9) {Bit 4};
+\node[bit_label] at (5.1, -0.9) {Bit 3};
+\node[bit_label] at (5.95, -0.9) {Bit 2};
+\node[bit_label] at (6.8, -0.9) {Bit 1};
+\node[bit_label] at (7.65, -0.9) {Bit 0};
+
+% 3. OKUMA İŞLEMİ BAŞLIĞI
+\node[byte_label] at (6, -1.8) {Okuma İşlemi (Tekrarlanan BAŞLAMA koşulu)};
+
+% 3. OKUMA - Repeated BAŞLAMA
+\node[BAŞLAMA] (rBAŞLAMA) at (0, -3) {Y-BAŞLAMA};
+
+% 3. OKUMA - 11110 + A9A8 + R/W=1
+\node[prefixbit] (rp1) at (1.7, -3) {1};
+\node[prefixbit] (rp2) at (2.4, -3) {1};
+\node[prefixbit] (rp3) at (3.1, -3) {1};
+\node[prefixbit] (rp4) at (3.8, -3) {1};
+\node[prefixbit] (rp5) at (4.5, -3) {0};
+\node[address] (ra9) at (5.5, -3) {A9};
+\node[address] (ra8) at (6.35, -3) {A8};
+\node[rw] (rrw) at (7.8, -3) {R/W = 1\\(Okuma)};
+\node[ack] (rack) at (10.2, -3) {ACK/NACK\\(Yanıt)};
+
+% Slave kontrolü okları - daha düzenli konumlandırma
+\node[font=\small\bfseries, text=black!70] (slave1) at (10.2, 1.6) {Slave};
+\draw[arrow] (slave1) -- (10.2, 2.3);
+
+\node[font=\small\bfseries, text=black!70] (slave2) at (10.2, -1.4) {Slave};
+\draw[arrow] (slave2) -- (10.2, -0.7);
+
+\node[font=\small\bfseries, text=black!70] (slave3) at (10.2, -4.2) {Slave};
+\draw[arrow] (slave3) -- (10.2, -3.5);
+
+% Sağ taraf açıklama kutuları - daha düzenli ve okunaklı
+\node[
+    font=\footnotesize, 
+    text=black!80, 
+    anchor=west,
+    draw=black!30,
+    fill=gray!10,
+    rounded corners=3pt,
+    inner sep=8pt
+] at (12, 2.8) {
+    \begin{tabular}{@{}l@{}}
+    \textbf{1. Bayt:} 11110 + A9A8 + (R/W = 0) \\
+    Yalnızca yazma modu (zorunlu)
+    \end{tabular}
+};
+
+\node[
+    font=\footnotesize, 
+    text=black!80, 
+    anchor=west,
+    draw=black!30,
+    fill=gray!10,
+    rounded corners=3pt,
+    inner sep=8pt
+] at (12, -0.2) {
+    \begin{tabular}{@{}l@{}}
+    \textbf{2. Bayt:} A7–A0 \\
+    Adresin düşük 8 biti
+    \end{tabular}
+};
+
+\node[
+    font=\footnotesize, 
+    text=black!80, 
+    anchor=west,
+    draw=black!30,
+    fill=gray!10,
+    rounded corners=3pt,
+    inner sep=8pt
+] at (12, -3) {
+    \begin{tabular}{@{}l@{}}
+    \textbf{Okuma için:} 11110 + A9A8 + (R/W = 1) \\
+    Tekrarlanan BAŞLAMA koşuluyla
+    \end{tabular}
+};
+
+% Alt lejant - daha profesyonel görünüm
+\node[
+    anchor=north west, 
+    font=\footnotesize,
+    draw=black!30,
+    fill=blue!5,
+    rounded corners=3pt,
+    inner sep=10pt
+] at (0, -4.5) {
+    \begin{tabular}{@{}ll@{}}
+    \textbf{Lejant:} & \\[2pt]
+    \textcolor{green!70}{\rule{0.4cm}{0.3cm}} & BAŞLAMA/Yeniden BAŞLAMA koşulu \\[1pt]
+    \textcolor{red!70}{\rule{0.4cm}{0.3cm}} & 10-bit adresleme göstergesi (11110) \\[1pt]
+    \textcolor{blue!70}{\rule{0.4cm}{0.3cm}} & Adres bitleri (A9–A0) \\[1pt]
+    \textcolor{orange!70}{\rule{0.4cm}{0.3cm}} & R/W biti (0=Yazma, 1=Okuma) \\[1pt]
+    \textcolor{purple!70}{\rule{0.4cm}{0.3cm}} & ACK/NACK yanıt biti (Slave kontrolü) \\
+    \end{tabular}
+};
+
+\end{tikzpicture}
+\end{document}
+
+
+*/}
+
+10-bit adresleme, Şekil 4.5'te detaylandırıldığı gibi iki baytlık bir adresleme süreci gerektirir.
+
+**Adım 1: Yazma Modunda Adres Gönderimi (Zorunlu İlk Adım)**
+
+Bir Slave'e 10-bit adres ile erişmek için, Master her zaman önce bir yazma işlemi başlatır.
+
+*   **1. Bayt (Tanımlayıcı Bayt):**
+    *   **BAŞLAMA** koşulunun ardından Master, ilk baytı gönderir.
+    *   Bu baytın ilk 5 biti (`Bit 7`'den `Bit 3`'e) her zaman sabit olan `11110` dizisidir. Bu, I²C spesifikasyonunda "10-bit adresleme göstergesi" olarak ayrılmıştır. Hatta bulunan tüm cihazlar bu öneki gördüğünde, gelen adresin 10-bit olduğunu anlar.
+    *   Sonraki 2 bit (`A9` ve `A8`), 10-bitlik adresin en anlamlı iki bitidir (MSB).
+    *   Son bit (`Bit 0`) olan **R/W biti, bu ilk baytta her zaman `0` (Yazma) olmak zorundadır.** Bu, Master'ın Slave'e adresin geri kalanını "yazdığını" belirtir.
+    *   Doğru adrese sahip Slave, bu baytı alınca bir **ACK** yanıtı verir.
+
+*   **2. Bayt (Adresin Alt 8 Biti):**
+    *   Master, adresin geri kalan 8 bitini (`A7`'den `A0`'a) ikinci bayt olarak gönderir.
+    *   Slave, bu baytı da doğru bir şekilde aldığında ikinci bir **ACK** yanıtı verir.
+
+Bu iki bayt ve iki ACK sinyalinden sonra, Slave tamamen adreslenmiş olur. Bundan sonra Master, ya veri yazmaya devam eder ya da okuma işlemi için özel bir adım atar.
+
+**Adım 2: Okuma İşlemi (Tekrarlanan BAŞLAMA Koşulu)**
+
+Master, 10-bit adresli bir Slave'den veri okumak istediğinde, yukarıdaki iki baytlık adresleme sürecini tamamladıktan sonra iletişimi bir STOP koşulu ile bitirmez. Bunun yerine bir **Tekrarlanan BAŞLAMA (Repeated START - Şekilde Y-BAŞLAMA)** koşulu üretir.
+
+*   **Okuma için Adres Çerçevesi:**
+    *   Tekrarlanan BAŞLAMA'dan sonra Master, ilk adres baytını tekrar gönderir: `11110` (önek) + `A9A8` (adresin üst bitleri).
+    *   Ancak bu sefer **R/W bitini `1` (Okuma) olarak ayarlar.**
+    *   Zaten adreslenmiş olan Slave, bu sinyali aldığında R/W bitinin '1' olduğunu görür ve artık kendisinden veri okunacağını anlar. Bir **ACK** yanıtı daha verir.
+    *   Bu son ACK'den sonra Slave, veri göndermeye başlar ve Master okuma işlemini gerçekleştirir.
+
+#### **Ayrılmış Adresler ve Adres Çakışmaları**
+
+I²C adres alanında bazı adresler özel amaçlar için rezerve edilmiştir:
+*   **`0000 000` (Genel Çağrı - General Call):** Master bu adresi kullanarak hatta bağlı tüm cihazlara aynı anda bir mesaj gönderebilir.
+*   **`1111 0XX` (10-bit Adresleme):** Yukarıda açıklandığı gibi, bu önek 10-bit adresleme için kullanılır.
+
+Pratikte karşılaşılan en büyük zorluklardan biri **adres çakışmalarıdır**. Farklı üreticilere ait iki modülün (örneğin bir jiroskop ve bir gerçek zamanlı saat modülü) fabrikada aynı I²C adresiyle (`0x68` gibi) ayarlanmış olması mümkündür. Bu iki modülü aynı I²C hattına bağlarsanız, Master `0x68` adresini çağırdığında her ikisi de aynı anda yanıt vermeye çalışır ve bu durum iletişimi bozar.
+
+**Çözümler:**
+1.  **Adres Seçim Pinleri:** Birçok Slave cihaz, `AD0` veya `A0` gibi fiziksel pinler aracılığıyla adreslerinin son bir veya iki bitini değiştirme imkanı sunar. Bu pini Vcc (güç) veya GND (toprak) hattına bağlayarak cihazın adresini değiştirebilirsiniz.
+2.  **Yazılımsal I²C (Bit-Banging):** Mikrodenetleyicinin donanımsal I²C modülü yerine, farklı genel amaçlı giriş/çıkış (GPIO) pinlerini kullanarak ikinci bir sanal I²C hattı oluşturulabilir. Bu, çakışan cihazı farklı bir hatta çalıştırmanızı sağlar.
+3.  **I²C Çoklayıcı/Anahtar (Multiplexer/Switch):** Bu, en temiz ve ölçeklenebilir çözümdür. I²C çoklayıcı entegresi, Master'dan gelen tek bir I²C hattını alır ve onu birden çok ayrı alt hatta ayırır. Master, çoklayıcıya bir komut göndererek hangi alt hattın aktif olacağını seçer. Bu sayede, aynı adrese sahip cihazlar farklı "kanallarda" birbirlerinden izole bir şekilde sorunsuzca çalışabilir.
+
+---
+
+
+## **5. I²C Veri İletim Protokolü**
+
+Adresleme, Master'ın hangi Slave ile konuşacağını belirlemesini sağlar. Adresleme başarılı olduktan sonra ise asıl veri alışverişi başlar. I²C protokolü, bu veri akışını yönetmek ve senkronizasyonu sağlamak için bir dizi temel sinyal ve kural üzerine kurulmuştur. Bu bölümde, verinin bit düzeyinde nasıl aktarıldığını ve iletişimin temel yapı taşlarını inceleyeceğiz.
+
+### **5.1 Temel Sinyaller**
+
+I²C hattı üzerindeki "konuşma", rastgele 1'ler ve 0'lar göndermekten ibaret değildir. Her iletişim, belirli başlangıç, bitiş ve onay sinyalleriyle çerçevelenir. Bu sinyaller, hattaki tüm cihazların ne zaman dinlemesi, ne zaman konuşması ve ne zaman sessiz kalması gerektiğini anlamasını sağlar.
+
+#### **BAŞLAMA (START) ve DURMA (STOP) Koşulları**
+
+Bu iki sinyal, I²C iletişim paketinin sınırlarını çizer. Normal veri aktarımı sırasında asla meydana gelemeyecek özel durumlardır, bu da onların benzersiz birer sinyal olmasını sağlar.
+
+*   **BAŞLAMA Koşulu (START Condition):** Bir Master'ın iletişimi başlatmak için kullandığı sinyaldir. Saat hattı (SCL) **yüksek** seviyedeyken, veri hattının (SDA) **yüksekten alçağa** çekilmesiyle oluşur. Bu sinyal, hatta bağlı tüm Slave cihazlar için bir "uyandırma" çağrısıdır; hepsi gelen adresi dinlemeye başlar.
+
+*   **DURMA Koşulu (STOP Condition):** Master'ın iletişimi sonlandırdığını bildiren sinyaldir. Saat hattı (SCL) **yüksek** seviyedeyken, veri hattının (SDA) **alçaktan yükseğe** çekilmesiyle oluşur. Bu sinyalden sonra I²C hattı boşa çıkar (idle state) ve başka bir Master tarafından kullanılabilir hale gelir.
+
+<ImageWithCaption
+  src="/images/i2c/baslama_durma_koşulları.svg"
+  alt="I²C Başlama ve Durma Koşulları"
+>
+  <strong>Şekil 5.1:</strong> I²C Başlama ve Durma Koşulları
+</ImageWithCaption>
+
+{/*
+
+\documentclass[tikz, border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{xcolor}
+% Brace (süslü parantez) ve ok başlıkları için TikZ kütüphaneleri
+\usetikzlibrary{
+    decorations.pathreplacing,
+    arrows.meta,
+    positioning,
+    shapes.geometric,
+    decorations.pathmorphing,
+    backgrounds
+}
+\usepackage[svgnames]{xcolor}
+\pagecolor{white}
+
+\begin{document}
+\begin{tikzpicture}[
+    show background rectangle,
+    background rectangle/.style={fill=white},
+    % Stilleri önceden tanımlayarak kodu daha okunaklı hale getirelim
+    signal/.style={very thick, line cap=round, line join=round},
+    scl_signal/.style={signal, color=blue!70!black},
+    sda_signal/.style={signal, color=red!70!black},
+    guide/.style={dashed, gray!60, thin},
+    event/.style={dashed, thick, color=orange!80!black},
+    label_text/.style={align=center, font=\sffamily\small},
+    main_label/.style={align=center, font=\sffamily\bfseries},
+    voltage_label/.style={font=\sffamily\tiny, gray!70},
+    critical_point/.style={circle, fill=red!80!black, inner sep=1.5pt}
+]
+
+% --- Y Eksenindeki Seviyeleri ve Renkleri Tanımlayalım ---
+\def\sclH{3}    % SCL High seviyesi
+\def\sclL{2}    % SCL Low seviyesi
+\def\sdaH{1}    % SDA High seviyesi
+\def\sdaL{0}    % SDA Low seviyesi
+
+% Arka plan grid çizgileri (opsiyonel, daha profesyonel görünüm için)
+\draw[guide, opacity=0.3] (0,\sclH) -- (12,\sclH);
+\draw[guide, opacity=0.3] (0,\sclL) -- (12,\sclL);
+\draw[guide, opacity=0.3] (0,\sdaH) -- (12,\sdaH);
+\draw[guide, opacity=0.3] (0,\sdaL) -- (12,\sdaL);
+
+% =============================================
+% --- SCL (Serial Clock) Sinyalini Çizelim ---
+% =============================================
+\node[main_label, left=8mm, color=blue!70!black] at (0, 2.5) {SCL\\(Saat)};
+
+% Voltaj etiketleri
+\node[voltage_label, left=2mm] at (0, \sclH) {YÜKSEK};
+\node[voltage_label, left=2mm] at (0, \sclL) {DÜŞÜK};
+
+% Sinyalin başlangıcı ve START koşulu sırasındaki durumu
+\draw[scl_signal] (0.5, \sclH) -- (1.75, \sclH);
+% START koşulu sırasında SCL high kalır
+\draw[scl_signal] (1.75, \sclH) -- (2.25, \sclH);
+% Clock sinyalinin düşüşü
+\draw[scl_signal] (2.25, \sclH) -- (2.5, \sclL);
+% Data Transfer için clock pulseları (birkaç örnek pulse)
+\draw[scl_signal] (2.5, \sclL) -- (3.5, \sclL) -- (3.75, \sclH) -- (4.5, \sclH) -- (4.75, \sclL);
+\draw[scl_signal] (4.75, \sclL) -- (5.5, \sclL) -- (5.75, \sclH) -- (6.5, \sclH) -- (6.75, \sclL);
+% Devam eden clock pulseları için kesikli çizgi
+\draw[scl_signal, dashed] (6.75, \sclL) -- (10.5, \sclL);
+%\draw[scl_signal, dashed] (7.5, \sclL) -- (10.5, \sclL);
+% STOP koşulu öncesi ve sonrası
+\draw[scl_signal] (10.5, \sclL) -- (10.5, \sclL) -- (10.75, \sclH) -- (13.5, \sclH);
+
+% ===========================================
+% --- SDA (Serial Data) Sinyalini Çizelim ---
+% ===========================================
+\node[main_label, left=8mm, color=red!70!black] at (0, 0.5) {SDA\\(Veri)};
+
+% Voltaj etiketleri
+\node[voltage_label, left=2mm] at (0, \sdaH) {YÜKSEK};
+\node[voltage_label, left=2mm] at (0, \sdaL) {DÜŞÜK};
+
+% Sinyalin başlangıcı
+\draw[sda_signal] (0.5, \sdaH) -- (1.5, \sdaH);
+% START koşulu (SCL high iken SDA'nın düşmesi) - kritik nokta
+\draw[sda_signal] (1.5, \sdaH) -- (1.75, \sdaL);
+% Data bits (örnek data pattern - birkaç bit)
+\draw[sda_signal] (1.75, \sdaL) -- (3.5, \sdaL) -- (4.5, \sdaL) -- (4.75, \sdaH);
+\draw[sda_signal] (4.75, \sdaH) -- (5.5, \sdaH) -- (5.75, \sdaL) -- (6.5, \sdaL);
+% Devam eden veri için kesikli çizgi
+\draw[sda_signal, dashed] (6.75, \sdaL) -- (10.5, \sdaL);
+%\draw[sda_signal, dashed] (9.5, \sdaL) -- (10.5, \sdaL);
+% STOP koşulu (SCL high iken SDA'nın yükselmesi) - kritik nokta
+\draw[sda_signal] (10.5, \sdaL) -- (12, \sdaL) -- (12.25, \sdaH);
+% Sinyalin bitişi
+\draw[sda_signal] (12.25, \sdaH) -- (13.5, \sdaH);
+
+% ======================================================
+% --- Kritik Noktaları İşaretleyelim ---
+% ======================================================
+% START koşulu kritik noktası
+\node[critical_point] at (1.625, 0.5) {};
+% STOP koşulu kritik noktası  
+\node[critical_point] at (12.125, 0.5) {};
+
+% ======================================================
+% --- Dikey Referans Çizgileri ve Etiketler ---
+% ======================================================
+
+% START Condition bölgesi
+\draw[event] (1.25, -0.7) -- (1.25, 3.5);
+\draw[event] (2.25, -0.7) -- (2.25, 3.5);
+% START koşulu ok ve etiketi
+\draw[-{Stealth[length=4mm, width=3mm]}, thick, color=red!70!black] (1.75, -1.2) -- (1.75, -0.3);
+\node[label_text, below, color=red!70!black, font=\sffamily\bfseries] at (1.75, -1.2) {BAŞLAMA\\Koşulu\\(SDA ↓ SCL=H)};
+
+% STOP Condition bölgesi
+\draw[event] (11.5, -0.7) -- (11.5, 3.5);
+\draw[event] (12.5, -0.7) -- (12.5, 3.5);
+% STOP koşulu ok ve etiketi
+\draw[-{Stealth[length=4mm, width=3mm]}, thick, color=green!70!black] (12, -1.2) -- (12, -0.3);
+\node[label_text, below, color=green!70!black, font=\sffamily\bfseries] at (12, -1.2) {DURMA\\Koşulu\\(SDA ↑ SCL=H)};
+
+% Data Transfer bölgesi
+\draw [decorate, decoration={
+        brace,
+        mirror,
+        amplitude=12pt,
+        raise=20pt
+    }, thick, color=blue!60!black]
+    (2.5, \sdaL) -- (11.5, \sdaL) 
+    node [midway, below=35pt, label_text, color=blue!60!black, font=\sffamily\bfseries] 
+    {VERİ TRANSFERİ\\(8-bit adres + R/W + ACK + Data + ...)};
+
+% Kesikli çizgi bölgesinde "devam ediyor" göstergesi
+\node[label_text, above=2mm, font=\sffamily\scriptsize, color=gray] at (8.5, 1.5) {\textbf{...}};
+\node[label_text, below=1mm, font=\sffamily\tiny, color=gray!70] at (8.5, 1.2) {(devam eden bitler)};
+
+% Başlık
+%\node[above=5mm, font=\sffamily\Large\bfseries, color=black] at (6, 3.5) {I2C Protokolü: START ve STOP Koşulları};
+
+% Zaman ekseni
+%\draw[-{Stealth[length=3mm]}, thick, gray!70] (0.5, -1.8) -- (11.5, -1.8);
+%\node[below, font=\sffamily\small, color=gray!70] at (11.5, -1.8) {Zaman};
+
+% Açıklama kutusu
+%\node[draw, rounded corners, fill=yellow!10, text width=4cm, font=\sffamily\scriptsize, 
+%      above right, color=black] at (0.5, 3.5) {
+%    \textbf{Önemli Noktalar:}\\
+%    • START: SCL=HIGH iken SDA düşer\\
+%    • STOP: SCL=HIGH iken SDA yükselir\\
+%    • Data: SCL=LOW iken değişir\\
+%    • Transfer: SCL yükselen kenarında okunur
+%};
+
+\end{tikzpicture}
+\end{document}
+
+*/}
+
+#### **ACK/NACK (Onay/Red) Mekanizması**
+
+I²C, güvenilir bir iletişim için geri bildirim mekanizması kullanır. Her 8 bitlik veri (adres veya data) gönderiminden sonra, alıcı cihazın bu veriyi doğru alıp almadığını bildirmesi için 9. bir saat darbesi periyodu ayrılmıştır.
+
+*   **ACK (Acknowledge - Onay):** Alıcı cihaz (genellikle Slave), 8 biti başarıyla aldığını ve bir sonraki bayta hazır olduğunu belirtmek için, 9. saat darbesi sırasında SDA hattını **alçak** seviyesine çeker. Bu, "Mesaj alındı, devam et" anlamına gelir.
+*   **NACK (Not Acknowledge - Onaylanmama/Red):** Eğer alıcı cihaz 9. saat darbesi sırasında SDA hattını serbest bırakırsa (yüksek seviyede kalırsa), bu bir NACK sinyalidir. NACK'in birkaç anlamı olabilir:
+    1.  Slave, adresi tanımamıştır veya o adreste bir cihaz yoktur.
+    2.  Slave, meşguldür ve şu anda veri alamaz (örneğin, bir önceki veriyi işliyor).
+    3.  Master, bir okuma işlemi sırasında Slave'e "daha fazla veri gönderme" demek için kasıtlı olarak bir NACK gönderir. Bu, okuma işlemini sonlandırmanın standart yoludur.
+
+
+<ImageWithCaption
+  src="/images/i2c/ack_nack_sinyali.svg"
+  alt="ACK (Onay) ve NACK (Onaylanmama) Sinyalleri"
+>
+  <strong>Şekil 5.2:</strong> ACK (Onay) ve NACK (Onaylanmama) Sinyalleri
+</ImageWithCaption>
+
+
+{/*
+
+\documentclass[tikz, border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{emoji}
+\usepackage{xcolor}
+% Brace (süslü parantez) ve ok başlıkları için TikZ kütüphaneleri
+
+\usepackage{fontspec}
+\setmainfont{DejaVu Sans}
+
+\usetikzlibrary{
+    decorations.pathreplacing,
+    arrows.meta,
+    positioning,
+    shapes.geometric,
+    decorations.pathmorphing,
+    backgrounds
+}
+\usepackage[svgnames]{xcolor}
+\pagecolor{white}
+
+\begin{document}
+\begin{tikzpicture}[
+    show background rectangle,
+    background rectangle/.style={fill=white},
+    % Stilleri önceden tanımlayarak kodu daha okunaklı hale getirelim
+    signal/.style={very thick, line cap=round, line join=round},
+    scl_signal/.style={signal, color=blue!70!black},
+    sda_signal/.style={signal, color=red!70!black},
+    guide/.style={dashed, gray!60, thin},
+    event/.style={dashed, thick, color=orange!80!black},
+    label_text/.style={align=center, font=\sffamily\small},
+    main_label/.style={align=center, font=\sffamily\bfseries},
+    voltage_label/.style={font=\sffamily\tiny, gray!70},
+    critical_point/.style={circle, fill=red!80!black, inner sep=1.5pt},
+    bit_label/.style={font=\sffamily\tiny, color=gray!80}
+]
+
+
+% --- Y Eksenindeki Seviyeleri ve Renkleri Tanımlayalım ---
+\def\sclH{3}    % SCL High seviyesi
+\def\sclL{2}    % SCL Low seviyesi
+\def\sdaH{1}    % SDA High seviyesi
+\def\sdaL{0}    % SDA Low seviyesi
+
+% =============================================
+% --- ACK DİYAGRAMI (ÜST) ---
+% =============================================
+
+% Başlık
+%\node[above=3mm, font=\sffamily\Large\bfseries, color=blue!80!black] at (6, 4.5) {ACK (Acknowledgment) Durumu};
+
+% Arka plan grid çizgileri
+\draw[guide, opacity=0.3] (0,\sclH) -- (12,\sclH);
+\draw[guide, opacity=0.3] (0,\sclL) -- (12,\sclL);
+\draw[guide, opacity=0.3] (0,\sdaH) -- (12,\sdaH);
+\draw[guide, opacity=0.3] (0,\sdaL) -- (12,\sdaL);
+
+% SCL Etiketi
+\node[main_label, left=8mm, color=blue!70!black] at (0, 2.5) {SCL\\(Saat)};
+
+% Voltaj etiketleri
+\node[voltage_label, left=2mm] at (0, \sclH) {YÜKSEK};
+\node[voltage_label, left=2mm] at (0, \sclL) {DÜŞÜK};
+
+% SCL Sinyali - 9 adet clock pulse (8 data bit + 1 ACK)
+\draw[scl_signal] (0.5, \sclL) -- (1, \sclL) -- (1.25, \sclH) -- (1.75, \sclH) -- (2, \sclL);
+\draw[scl_signal] (2, \sclL) -- (2.5, \sclL) -- (2.75, \sclH) -- (3.25, \sclH) -- (3.5, \sclL);
+\draw[scl_signal] (3.5, \sclL) -- (4, \sclL) -- (4.25, \sclH) -- (4.75, \sclH) -- (5, \sclL);
+\draw[scl_signal] (5, \sclL) -- (5.5, \sclL) -- (5.75, \sclH) -- (6.25, \sclH) -- (6.5, \sclL);
+\draw[scl_signal] (6.5, \sclL) -- (7, \sclL) -- (7.25, \sclH) -- (7.75, \sclH) -- (8, \sclL);
+\draw[scl_signal] (8, \sclL) -- (8.5, \sclL) -- (8.75, \sclH) -- (9.25, \sclH) -- (9.5, \sclL);
+\draw[scl_signal] (9.5, \sclL) -- (10, \sclL) -- (10.25, \sclH) -- (10.75, \sclH) -- (11, \sclL);
+\draw[scl_signal] (11, \sclL) -- (11.5, \sclL) -- (11.75, \sclH) -- (12.25, \sclH) -- (12.5, \sclL);
+% 9. clock pulse (ACK için)
+\draw[scl_signal] (12.5, \sclL) -- (13, \sclL) -- (13.25, \sclH) -- (13.75, \sclH) -- (14, \sclL);
+
+% SDA Etiketi
+\node[main_label, left=8mm, color=red!70!black] at (0, 0.5) {SDA\\(Veri)};
+
+% Voltaj etiketleri
+\node[voltage_label, left=2mm] at (0, \sdaH) {YÜKSEK};
+\node[voltage_label, left=2mm] at (0, \sdaL) {DÜŞÜK};
+
+% SDA Sinyali - örnek data pattern (8 bit) + ACK
+\draw[sda_signal] (0.5, \sdaH) -- (2, \sdaH) -- (2, \sdaL) -- (3.5, \sdaL);    % Bit 1: 1, Bit 2: 0
+\draw[sda_signal] (3.5, \sdaL) -- (5, \sdaL) -- (5, \sdaH) -- (6.5, \sdaH);    % Bit 3: 0, Bit 4: 1
+\draw[sda_signal] (6.5, \sdaH) -- (8, \sdaH) -- (8, \sdaL) -- (9.5, \sdaL);    % Bit 5: 1, Bit 6: 0
+\draw[sda_signal] (9.5, \sdaL) -- (11, \sdaL) -- (11, \sdaH) -- (12.5, \sdaH); % Bit 7: 0, Bit 8: 1
+% 9. bit (ACK) - Slave tarafından LOW'a çekiliyor
+\draw[sda_signal] (12.5, \sdaH) -- (12.5, \sdaL) -- (14, \sdaL);
+
+% Bit etiketleri
+\node[bit_label, above=1mm] at (1.5, \sdaH) {Bit 1};
+\node[bit_label, above=1mm] at (3, \sdaL) {Bit 2};
+\node[bit_label, above=1mm] at (4.5, \sdaL) {Bit 3};
+\node[bit_label, above=1mm] at (6, \sdaH) {Bit 4};
+\node[bit_label, above=1mm] at (7.5, \sdaH) {Bit 5};
+\node[bit_label, above=1mm] at (9, \sdaL) {Bit 6};
+\node[bit_label, above=1mm] at (10.5, \sdaL) {Bit 7};
+\node[bit_label, above=1mm] at (12, \sdaH) {Bit 8};
+
+% Master kontrolü göstergesi
+\draw [decorate, decoration={
+        brace,
+        mirror,
+        amplitude=8pt,
+        raise=15pt
+    }, thick, color=green!60!black]
+    (0.5, \sdaL) -- (12.5, \sdaL) 
+    node [midway, below=25pt, label_text, color=green!60!black, font=\sffamily\bfseries] 
+    {MASTER KONTROLÜ (8 Veri Biti)};
+
+% ACK bölgesi
+\draw[event, color=blue!80!black] (12.5, -0.5) -- (12.5, 3.7);
+\draw[event, color=blue!80!black] (14, -0.5) -- (14, 3.7);
+\draw[-{Stealth[length=4mm, width=3mm]}, thick, color=blue!80!black] (13.25, -0.8) -- (13.25, -0.2);
+%\node[label_text, below, color=blue!80!black, font=\sffamily\bfseries] at (13.25, -0.8) {ACK\\(Slave Kontrolü)};
+
+% ACK kritik noktası ve açıklama kutusu
+%\node[critical_point, color=green!80!black] at (13.25, 0.5) {};
+\node[draw, fill=green!10, rounded corners, below=8mm, align=left, font=\sffamily\small] at (13.25, -0.25)
+    {\emoji{check-mark} \textbf{ACK:} \\
+    Slave, SDA hattını LOW yaparak\\
+    verinin alındığını onaylar.};
+
+% 9. bit için ok ve açıklama
+\draw[->, thick, color=blue!60!black] (14.2, 0.5) -- (14.7, 0.5)
+    node[right, align=left, font=\sffamily\tiny, color=blue!60!black] {9. bit:\\ACK/NACK};
+
+% 9. bit için ok ve açıklama
+\draw[->, thick, color=blue!60!black] (14.2, -6.5) -- (14.7, -6.5)
+    node[right, align=left, font=\sffamily\tiny, color=blue!60!black] {9. bit:\\ACK/NACK};
+
+% =============================================
+% --- NACK DİYAGRAMI (ALT) ---
+% =============================================
+
+% Y offset for second diagram
+\def\yoffset{-7}
+
+% Başlık
+%\node[above=3mm, font=\sffamily\Large\bfseries, color=red!80!black] at (6, 4.5+\yoffset) {NACK (Not Acknowledgment) Durumu};
+
+% Arka plan grid çizgileri
+\draw[guide, opacity=0.3] (0,\sclH+\yoffset) -- (12,\sclH+\yoffset);
+\draw[guide, opacity=0.3] (0,\sclL+\yoffset) -- (12,\sclL+\yoffset);
+\draw[guide, opacity=0.3] (0,\sdaH+\yoffset) -- (12,\sdaH+\yoffset);
+\draw[guide, opacity=0.3] (0,\sdaL+\yoffset) -- (12,\sdaL+\yoffset);
+
+% SCL Etiketi
+\node[main_label, left=8mm, color=blue!70!black] at (0, 2.5+\yoffset) {SCL\\(Saat)};
+
+% Voltaj etiketleri
+\node[voltage_label, left=2mm] at (0, \sclH+\yoffset) {YÜKSEK};
+\node[voltage_label, left=2mm] at (0, \sclL+\yoffset) {DÜŞÜK};
+
+% SCL Sinyali - aynı clock pattern
+\draw[scl_signal] (0.5, \sclL+\yoffset) -- (1, \sclL+\yoffset) -- (1.25, \sclH+\yoffset) -- (1.75, \sclH+\yoffset) -- (2, \sclL+\yoffset);
+\draw[scl_signal] (2, \sclL+\yoffset) -- (2.5, \sclL+\yoffset) -- (2.75, \sclH+\yoffset) -- (3.25, \sclH+\yoffset) -- (3.5, \sclL+\yoffset);
+\draw[scl_signal] (3.5, \sclL+\yoffset) -- (4, \sclL+\yoffset) -- (4.25, \sclH+\yoffset) -- (4.75, \sclH+\yoffset) -- (5, \sclL+\yoffset);
+\draw[scl_signal] (5, \sclL+\yoffset) -- (5.5, \sclL+\yoffset) -- (5.75, \sclH+\yoffset) -- (6.25, \sclH+\yoffset) -- (6.5, \sclL+\yoffset);
+\draw[scl_signal] (6.5, \sclL+\yoffset) -- (7, \sclL+\yoffset) -- (7.25, \sclH+\yoffset) -- (7.75, \sclH+\yoffset) -- (8, \sclL+\yoffset);
+\draw[scl_signal] (8, \sclL+\yoffset) -- (8.5, \sclL+\yoffset) -- (8.75, \sclH+\yoffset) -- (9.25, \sclH+\yoffset) -- (9.5, \sclL+\yoffset);
+\draw[scl_signal] (9.5, \sclL+\yoffset) -- (10, \sclL+\yoffset) -- (10.25, \sclH+\yoffset) -- (10.75, \sclH+\yoffset) -- (11, \sclL+\yoffset);
+\draw[scl_signal] (11, \sclL+\yoffset) -- (11.5, \sclL+\yoffset) -- (11.75, \sclH+\yoffset) -- (12.25, \sclH+\yoffset) -- (12.5, \sclL+\yoffset);
+% 9. clock pulse (NACK için)
+\draw[scl_signal] (12.5, \sclL+\yoffset) -- (13, \sclL+\yoffset) -- (13.25, \sclH+\yoffset) -- (13.75, \sclH+\yoffset) -- (14, \sclL+\yoffset);
+
+% SDA Etiketi
+\node[main_label, left=8mm, color=red!70!black] at (0, 0.5+\yoffset) {SDA\\(Veri)};
+
+% Voltaj etiketleri
+\node[voltage_label, left=2mm] at (0, \sdaH+\yoffset) {YÜKSEK};
+\node[voltage_label, left=2mm] at (0, \sdaL+\yoffset) {DÜŞÜK};
+
+% SDA Sinyali - aynı data pattern (8 bit) + NACK
+\draw[sda_signal] (0.5, \sdaH+\yoffset) -- (2, \sdaH+\yoffset) -- (2, \sdaL+\yoffset) -- (3.5, \sdaL+\yoffset);    % Bit 1: 1, Bit 2: 0
+\draw[sda_signal] (3.5, \sdaL+\yoffset) -- (5, \sdaL+\yoffset) -- (5, \sdaH+\yoffset) -- (6.5, \sdaH+\yoffset);    % Bit 3: 0, Bit 4: 1
+\draw[sda_signal] (6.5, \sdaH+\yoffset) -- (8, \sdaH+\yoffset) -- (8, \sdaL+\yoffset) -- (9.5, \sdaL+\yoffset);    % Bit 5: 1, Bit 6: 0
+\draw[sda_signal] (9.5, \sdaL+\yoffset) -- (11, \sdaL+\yoffset) -- (11, \sdaH+\yoffset) -- (12.5, \sdaH+\yoffset); % Bit 7: 0, Bit 8: 1
+% 9. bit (NACK) - HIGH seviyede kalıyor
+\draw[sda_signal] (12.5, \sdaH+\yoffset) -- (14, \sdaH+\yoffset);
+
+% Bit etiketleri
+\node[bit_label, above=1mm] at (1.5, \sdaH+\yoffset) {Bit 1};
+\node[bit_label, above=1mm] at (3, \sdaL+\yoffset+0.2) {Bit 2};
+\node[bit_label, above=1mm] at (4.5, \sdaL+\yoffset+0.2) {Bit 3};
+\node[bit_label, above=1mm] at (6, \sdaH+\yoffset) {Bit 4};
+\node[bit_label, above=1mm] at (7.5, \sdaH+\yoffset) {Bit 5};
+\node[bit_label, above=1mm] at (9, \sdaL+\yoffset+0.2) {Bit 6};
+\node[bit_label, above=1mm] at (10.5, \sdaL+\yoffset+0.2) {Bit 7};
+\node[bit_label, above=1mm] at (12, \sdaH+\yoffset) {Bit 8};
+
+% Master kontrolü göstergesi
+\draw [decorate, decoration={
+        brace,
+        mirror,
+        amplitude=8pt,
+        raise=15pt
+    }, thick, color=green!60!black]
+    (0.5, \sdaL+\yoffset) -- (12.5, \sdaL+\yoffset) 
+    node [midway, below=25pt, label_text, color=green!60!black, font=\sffamily\bfseries] 
+    {MASTER KONTROLÜ (8 Veri Biti)};
+
+% NACK bölgesi
+\draw[event, color=red!80!black] (12.5, -0.5+\yoffset) -- (12.5, 3.7+\yoffset);
+\draw[event, color=red!80!black] (14, -0.5+\yoffset) -- (14, 3.7+\yoffset);
+\draw[-{Stealth[length=4mm, width=3mm]}, thick, color=red!80!black] (13.25, -0.8+\yoffset) -- (13.25, -0.2+\yoffset);
+%\node[label_text, below, color=red!80!black, font=\sffamily\bfseries] at (13.25, -1.2+\yoffset) {NACK\\(Slave Kontrolü veya\\Master Okumayı Bitiriyor)};
+
+% NACK kritik noktası ve açıklama kutusu
+%\node[critical_point, color=orange!80!black] at (13.25, 0.5+\yoffset) {};
+\node[draw, fill=red!10, rounded corners, below=8mm, align=left, font=\sffamily\small] at (13.25, -0.25+\yoffset)
+    {\emoji{cross-mark} \textbf{NACK:} \\
+    Slave, SDA hattını HIGH bırakır.\\
+    Veri alınmadı veya iletişim bitti.};
+
+% Diyagramın altına genel bilgi kutusu
+%\node[draw, fill=yellow!10, rounded corners, below=2cm, align=left, font=\sffamily\footnotesize] at (7, -8.5)
+%    {
+%        \textbf{ACK (Acknowledge):} Slave, veriyi aldığını belirtmek için SDA hattını LOW yapar.\\
+%        \textbf{NACK (Not Acknowledge):} Slave, veriyi almadığını veya iletişimin bittiğini belirtmek için SDA hattını HIGH bırakır. 
+%    };
+
+\end{tikzpicture}
+\end{document}
+
+*/}
+
+
+---
+
+#### **Tekrarlanan BAŞLAMA (Repeated START) Koşulu**
+
+Bazen Master'ın, hattı serbest bırakmadan bir işlemi bitirip hemen yenisine başlaması gerekir. En yaygın senaryo, bir Slave'in belirli bir iç kaydını (register) okumaktır:
+1.  Master, Slave'e yazma modunda adresini gönderir (`R/W=0`).
+2.  Master, okunacak kaydın adresini Slave'e yazar.
+3.  Master, Slave'den veri okumak için okuma moduna geçmelidir.
+
+Eğer Master bu noktada bir STOP ve ardından yeni bir START gönderirse, başka bir Master araya girip hattı ele geçirebilir. Bunu önlemek için **Tekrarlanan BAŞLAMA (Repeated START)** kullanılır. Bu, bir STOP koşulu olmadan gönderilen bir START koşuludur ve Master'ın hat üzerindeki kontrolünü kaybetmeden iletişim yönünü değiştirmesine olanak tanır.
+
+
+<I2CRepeatedStartDiagram client:load />
+
+
+---
+
+
+### **5.2 Veri Frame Yapısı**
+
+Temel sinyaller iletişimin çerçevesini oluştururken, verinin kendisi de belirli kurallara göre iletilir.
+
+#### **Bit Düzeyinde Veri İletimi**
+
+I²C'nin en temel kuralı şudur: **SCL hattı yüksek seviyedeyken SDA hattındaki veri kararlı (sabit) olmalıdır.** SDA hattındaki değişiklikler (0'dan 1'e veya 1'den 0'a) yalnızca **SCL hattı alçak seviyedeyken** yapılabilir. Master, SCL'yi yükseğe çektiğinde, Slave'ler o an SDA hattında hangi seviye varsa onu "okur". Veri, en anlamlı bitten (Most Significant Bit - MSB) başlayarak gönderilir.
+
+import I2CBitLevelDiagram from '@/components/i2c/I2CBitLevelDiagram.jsx';
+
+<I2CBitLevelDiagram client:load />
+
+
+---
+
+#### **Clock Stretching (Saat Esnetme) Mekanizması**
+
+Bazen bir Slave cihaz, Master'ın gönderdiği hızda veriyi işleyemeyebilir. Örneğin, bir sensör yeni bir ölçüm yapmalı veya bir EEPROM gelen veriyi fiziksel olarak yazmalıdır. 
+Bu durumda Slave, Master'a "biraz bekle" demek için **Clock Stretching** mekanizmasını kullanır.
+ Slave, SCL hattını **zorla düşük seviyede tutar**. Master, SCL'yi yükseğe çekmeye çalışsa bile hattın düşük kaldığını görür ve Slave hattı serbest bırakana kadar bekler. Bu, yavaş cihazların hızlı bir Master ile sorunsuzca çalışabilmesini sağlayan kritik bir özelliktir.
+
+import I2CClockStretchingDiagram from '@/components/i2c/I2CClockStretchingDiagram.jsx';
+
+<I2CClockStretchingDiagram client:load />
+
+---
+
+#### **Veri Setup ve Hold Zamanları (Timing)**
+
+Güvenilir iletişim için, SDA ve SCL sinyalleri arasındaki zamanlama ilişkileri standartlarla tanımlanmıştır. Bu kritik zamanlamalar, özellikle yüksek hızlarda veya gürültülü ortamlarda hayati önem taşır.
+
+*   **Setup Time (t_SU;DAT):** Bir verinin geçerli sayılması için, SCL'nin yükselen kenarından **önce** SDA hattında ne kadar süre kararlı kalması gerektiğini belirten minimum süredir.
+*   **Hold Time (t_HD;DAT):** Bir verinin geçerli sayılması için, SCL'nin düşen kenarından **sonra** SDA hattında ne kadar süre daha kararlı kalması gerektiğini belirten minimum süredir.
+
+Bu zamanlamalara uyulmaması, alıcının veriyi yanlış okumasına neden olabilir.
+
+
+
+import I2CTimingDiagram from '@/components/i2c/I2CTimingDiagram.jsx';
+
+<I2CTimingDiagram client:load />
+
+---
+
+## 6. I2C İletişim Senaryoları
+
+I2C protokolü, sadece bit ve byte'ları bir noktadan diğerine göndermekten ibaret değildir. Farklı veri transferi ihtiyaçlarına yönelik olarak tasarlanmış çeşitli iletişim senaryolarını destekleyen esnek bir yapıya sahiptir. Bu senaryoları anlamak, gömülü sistemlerde verimli ve hatasız bir firmware geliştirmenin temelini oluşturur. Bu bölümde, temel yazma/okuma işlemlerinden başlayarak daha karmaşık veri transferi metodolojilerine kadar I2C'nin en yaygın kullanım senaryolarını inceleyeceğiz.
+
+### 6.1 Temel Okuma/Yazma İşlemleri
+
+Bu işlemler, I2C iletişiminin en temel yapı taşlarıdır ve bir Master ile tek bir Slave arasındaki en basit veri alışverişini temsil eder.
+
+#### Master'dan Slave'e Veri Yazma (Write)
+
+Bu, en yaygın I2C operasyonudur. Master, bir Slave cihazın belirli bir register'ına veya belleğine veri yazar. İşlem adımları şu şekildedir:
+
+1.  **START Koşulu:** Master, SDA hattını SCL hattı yüksekken düşüğe çekerek iletişimi başlatır.
+2.  **Adres Çerçevesi (Address Frame):** Master, veri yazmak istediği Slave'in 7-bit adresini ve ardından '0' olan Yazma (Write) bitini ($R/W=0$) gönderir. Bu 8 bitlik paket, hattaki tüm Slave'ler tarafından dinlenir.
+3.  **ACK (Acknowledge):** Adresi üzerine alan Slave, 9. saat darbesinde SDA hattını düşüğe çekerek adresi tanıdığını ve iletişime hazır olduğunu Master'a bildirir.
+4.  **Veri Çerçevesi (Data Frame):** Master, göndermek istediği 8 bitlik veri byte'ını gönderir. Bu genellikle Slave'in dahili register adresidir.
+5.  **ACK:** Slave, veri byte'ını başarıyla aldığını belirtmek için tekrar bir ACK sinyali gönderir.
+6.  **Veri Çerçevesi (Data Frame):** Master, az önce belirttiği register'a yazılacak olan asıl veriyi gönderir.
+7.  **ACK:** Slave, bu veriyi de aldığını bir ACK ile teyit eder.
+8.  **STOP Koşulu:** Master, SCL hattı yüksekken SDA hattını yükseğe çekerek iletişimi sonlandırır ve bus'ı serbest bırakır.
+
+import MasterdanSlaveYazmak  from '@/components/i2c/MasterdanSlaveYazmak.jsx';
+
+<MasterdanSlaveYazmak client:load />
+
+#### Slave'den Master'a Veri Okuma (Read)
+
+Bu senaryoda Master, bir Slave cihazdan veri talep eder. Yazma işleminden temel farkı, veri transferi yönünün değişmesi ve ACK/NACK sinyallerinin yönetimindedir.
+
+1.  **START Koşulu:** Master iletişimi başlatır.
+2.  **Adres Çerçevesi:** Master, bu kez Slave'in 7-bit adresini ve ardından '1' olan Okuma (Read) bitini ($R/W=1$) gönderir.
+3.  **ACK:** Adreslenen Slave, adresi kabul ettiğini ACK ile bildirir. Bu noktadan sonra SDA hattının kontrolü Slave'e geçer.
+4.  **Veri Çerçevesi:** Slave, Master'ın okuması için 8 bitlik veri byte'ını SDA hattına koyar.
+5.  **ACK/NACK:** Veriyi alan Master, okumaya devam etmek istiyorsa **ACK** gönderir. Bu, Slave'e bir sonraki veri byte'ını göndermesi için bir işarettir (Sequential Read). Eğer okuma işlemi bu byte ile bitecekse, Master **NACK (Not Acknowledge)** gönderir. NACK, Slave'e veri göndermeyi durdurmasını ve SDA hattını serbest bırakmasını söyler.
+6.  **STOP Koşulu:** Master, NACK gönderdikten sonra STOP koşulunu oluşturarak iletişimi sonlandırır.
+
+#### Combined Format (Birleşik Format) / Repeated START
+
+Bazen bir I2C işlemi, bus'ı serbest bırakmadan birden fazla operasyonu atomik (bölünemez) bir şekilde gerçekleştirmeyi gerektirir. En tipik örnek, bir sensörün belirli bir register'ından okuma yapmaktır: önce o register'ın adresini *yazmanız*, ardından bus'ı bırakmadan o register'dan *okuma yapmanız* gerekir.
+
+Bu, **Repeated START (Sr)** koşulu ile sağlanır. STOP koşulu göndermek yerine, Master tekrar bir START koşulu oluşturur. Bu, bus'ın kontrolünü kaybetmeden işlem modunu (örneğin Yazma'dan Okuma'ya) değiştirmesini sağlar.
+
+**Örnek Senaryo: Bir sensörün `0x2A` register'ından veri okuma**
+
+1.  **S (Start)**
+2.  **Slave Address + W(0)** -> ACK
+3.  **Register Address (`0x2A`)** -> ACK (Slave'e hangi register'ı okumak istediğimizi söyledik)
+4.  **Sr (Repeated Start)** (STOP yerine tekrar START)
+5.  **Slave Address + R(1)** -> ACK (Şimdi aynı Slave'e okuma yapacağımızı söylüyoruz)
+6.  Slave, `0x2A` register'ındaki veriyi gönderir.
+7.  **NACK** (Master tek byte okuyup bitireceğini bildirir)
+8.  **P (Stop)**
+
+import CombinedFormatDiagram  from '@/components/i2c/CombinedFormatDiagram.jsx';
+
+<CombinedFormatDiagram client:load />
+
+### 6.2 İleri Seviye İşlemler
+
+Temel operasyonların üzerine inşa edilen bu teknikler, daha verimli ve büyük ölçekli veri transferleri için kullanılır.
+
+#### Sequential Read/Write (Ardışık Okuma/Yazma)
+
+Çoğu I2C Slave cihazı, dahili bir adres işaretçisine (address pointer) sahiptir. Bir okuma veya yazma işlemi yapıldığında, bu işaretçi otomatik olarak bir sonraki adrese geçer. Bu özellik, büyük veri bloklarını tek bir işlemde transfer etmek için kullanılır ve protokol overhead'ini ciddi ölçüde azaltır.
+
+*   **Sequential Write:** Master, başlangıç register adresini ve ilk veri byte'ını gönderdikten sonra, STOP koşulu göndermeden sadece veri byte'ları göndermeye devam eder. Her veri byte'ından sonra Slave ACK gönderir ve kendi iç adres işaretçisini bir artırır.
+*   **Sequential Read:** Master, bir okuma işlemi başlattıktan sonra, okuduğu her byte için STOP yerine **ACK** gönderir. Master'dan gelen her ACK, Slave için "bir sonraki byte'ı gönder" komutu anlamına gelir. Okunacak son byte'tan sonra Master **NACK** ve ardından **STOP** göndererek okumayı sonlandırır.
+
+#### Random Access (Rastgele Erişim)
+
+"Rastgele Erişim" terimi, aslında yukarıda açıkladığımız **Combined Format** operasyonunun pratik adıdır. Bir Slave'in belleğindeki ardışık olmayan, belirli bir adresten veri okumak için kullanılır. İşlem, "Yazma" (register adresini ayarlamak için) ve ardından "Okuma" (veriyi almak için) adımlarını birleştiren bir Repeated START işlemiyle gerçekleştirilir. Bu, I2C tabanlı EEPROM veya sensörlerden veri okumanın standart yöntemidir.
+
+#### Block Read/Write Protokolleri
+
+Bu protokoller genellikle I2C'nin üzerinde çalışan SMBus (System Management Bus) gibi daha üst seviye protokollerde tanımlanmıştır, ancak saf I2C cihazlarında da benzer implementasyonlar görülebilir. Buradaki temel fikir, transfer edilecek veri bloğunun boyutunun iletişimin bir parçası olarak gönderilmesidir.
+
+*   **Block Write:** Master, Slave adresi ve yazma komutunu gönderdikten sonra, ilk veri byte'ı olarak gönderilecek toplam veri byte sayısını (**$N$**) gönderir. Slave bu bilgiyi aldıktan sonra, takip eden **$N$** adet veri byte'ını almaya hazır olur.
+    *   `S -> Addr+W -> ACK -> Command -> ACK -> Byte Count (N) -> ACK -> Data_1 -> ACK -> ... -> Data_N -> ACK -> P`
+*   **Block Read:** Genellikle bir Combined Format işlemi gerektirir. Master önce okumak istediği bloğun komutunu yazar, ardından Repeated START ile okuma moduna geçer. Slave, ilk byte olarak bloğun boyutunu (**$N$**) gönderir ve Master bunu takiben **$N$** byte veri okur.
+    *   `S -> Addr+W -> ACK -> Command -> ACK -> Sr -> Addr+R -> ACK -> Byte Count (N) -> ACK -> Data_1 -> ACK -> ... -> Data_N -> NACK -> P`
+
+Bu ileri seviye senaryoları anlamak, özellikle yüksek veri hacmine sahip sensörler, bellek yongaları veya karmaşık çevre birimleriyle çalışırken firmware'in performansını ve sağlamlığını doğrudan etkiler. Her zaman hedef Slave cihazın veri sayfasını (datasheet) inceleyerek desteklediği spesifik protokolleri doğrulamak kritik öneme sahiptir.
+
+---
+
+## 7. I2C Hız Modları ve Performans
+
+I2C protokolü, ilk ortaya çıktığı günden bu yana gömülü sistemlerin artan veri transferi ihtiyaçlarına cevap verebilmek için sürekli evrim geçirmiştir. Bu evrim, farklı hız modlarının standartlaştırılmasıyla sonuçlanmıştır. Ancak daha yüksek hız, her zaman daha iyi performans anlamına gelmez; çünkü hız arttıkça, fiziksel katman (physical layer) üzerinde dikkat edilmesi gereken mühendislik detayları da artar. Bu bölümde, standart I2C hız modlarını ve bus performansını optimize etmenin kritik yollarını ele alacağız.
+
+### 7.1 Standart Hız Modları
+
+Her bir hız modu, maksimum saat frekansını ve buna bağlı olarak uyulması gereken elektriksel zamanlama kısıtlamalarını tanımlar. Bir sistem tasarlarken, bus üzerindeki en yavaş cihazın desteklediği hız modunun, tüm iletişimin hızını belirlediğini unutmamak önemlidir.
+
+*   **Standard Mode (S-mode): 100 kHz**
+    Bu, I2C'nin orijinal ve en temel modudur. Maksimum 100 kbit/s veri transfer hızına izin verir. Geriye dönük uyumluluğun en yüksek olduğu moddur ve basit sensörler, EEPROM'lar gibi düşük hız gerektiren çevre birimleri için hala yaygın olarak kullanılmaktadır. Elektriksel gereksinimleri en esnek olan mod olduğu için en sağlam (robust) iletişim bu modda sağlanır.
+
+*   **Fast Mode (F-mode): 400 kHz**
+    Günümüzdeki birçok mikrokontrolcü ve sensör için "standart" haline gelmiş moddur. Maksimum 400 kbit/s hıza ulaşabilir. Standard Mode'a göre daha keskin (daha kısa) yükselme ve düşme zamanları (rise/fall times) gerektirir. Bu nedenle, pull-up dirençlerinin seçimi ve bus kapasitansı daha kritik hale gelir.
+
+*   **Fast Mode Plus (Fm+): 1 MHz**
+    Daha yüksek bant genişliği gerektiren uygulamalar için geliştirilmiştir. 1 Mbit/s'ye kadar veri transferi sağlar. Bu hıza ulaşabilmek için, I/O pinlerinin daha yüksek akım çekebilen (daha güçlü) sürücülere sahip olması ve daha düşük değerli pull-up dirençleri kullanılarak yükselme zamanlarının kısaltılması gerekir. Her cihaz bu modu desteklemez, bu nedenle datasheet kontrolü zorunludur.
+
+*   **High-Speed Mode (HS-mode): 3.4 MHz**
+    Bu mod, protokol seviyesinde önemli bir farklılık getirir. 3.4 Mbit/s gibi yüksek hızlara çıkmak için, sadece pasif pull-up dirençlerine güvenmek yerine, Master cihaz iletişim sırasında SCL hattını aktif olarak hem düşüğe hem de yükseğe sürer (active pull-up).
+    İletişim, önce 100 veya 400 kHz gibi daha yavaş bir modda başlar. Master, özel bir "Master Code" (`00001XXXb`) göndererek hattaki HS-mode uyumlu Slave'lere yüksek hıza geçiş yapacağını bildirir. Bu işlemden sonra saat frekansı 3.4 MHz'e çıkarılır. Bu mod, geriye dönük uyumluluğu korurken yüksek hız sunar.
+
+*   **Ultra Fast Mode (UF-mode): 5 MHz**
+    Bu mod, I2C'nin geleneksel yapısından en çok sapan moddur. Temel özellikleri şunlardır:
+    *   **Tek Yönlü (Unidirectional):** Sadece Master'dan Slave'e veri yazma (write-only) işlemleri için tasarlanmıştır. Okuma operasyonunu desteklemez.
+    *   **Push-Pull Sürücüler:** Geleneksel açık-drain (open-drain) yapısı yerine, hatları aktif olarak süren push-pull sürücüler kullanır. Bu nedenle **pull-up dirençlerine ihtiyaç duymaz**.
+    *   **Multi-Master Yok:** Push-pull yapısı nedeniyle, bus üzerinde birden fazla Master bulunamaz.
+    Genellikle LED sürücüleri gibi hızlı ve sürekli veri akışı gerektiren uygulamalarda kullanılır.
+
+### 7.2 Performans Optimizasyonu
+
+I2C bus'ının kararlı ve spesifikasyonlara uygun çalışması, özellikle yüksek hız modlarında, dikkatli bir donanım tasarımına bağlıdır.
+
+#### Bus Loading ve Kapasitif Yük Etkileri
+
+I2C bus'ındaki her bir cihazın pini, PCB hatları ve konnektörler, SDA ve SCL hatlarına küçük bir miktar kapasitans ekler. Bu kapasitansların toplamına **bus kapasitansı ($C_{bus}$)** denir.
+Kapasitif yük, pull-up direnci ($R_p$) ile birlikte bir $RC$ zaman sabiti oluşturur. Bu sabit, sinyalin mantık '0' seviyesinden mantık '1' seviyesine yükselme süresini (rise time) doğrudan etkiler.
+*   **Problem:** Yüksek kapasitans, yükselme süresini uzatır. Eğer bu süre, I2C standardının belirlediği maksimum değeri aşarsa (örneğin Fast Mode için 300 ns), veri bozulmaları ve iletişim hataları meydana gelir.
+*   **Kural:** I2C standardı, toplam bus kapasitansının genellikle **400 pF**'yi aşmamasını tavsiye eder. HS-mode için bu sınır daha da düşüktür.
+
+#### Rise Time ve Fall Time Optimizasyonu
+
+Sinyalin kalitesini, yükselme ve düşme sürelerinin kontrolü belirler.
+
+*   **Fall Time (Düşme Zamanı):** Genellikle bir sorun teşkil etmez. Çünkü bir cihaz hattı '0'a çektiğinde, transistör aktif olarak hattaki kapasitansı toprağa deşarj eder. Bu hızlı bir işlemdir.
+*   **Rise Time (Yükselme Zamanı):** En kritik parametredir. Hat, cihaz tarafından serbest bırakıldığında, pasif bir şekilde **pull-up direnci üzerinden** VDD'ye doğru şarj olur. Bu sürecin hızı $\tau = R_p \cdot C_{bus}$ formülü ile belirlenir.
+
+**Optimizasyon:**
+Yükselme süresini kısaltmak için pull-up direncini ($R_p$) düşürmek gerekir. Daha düşük bir direnç, hattı şarj etmek için daha fazla akım sağlar.
+
+*   **Ancak bir alt limit vardır:** $R_p$ çok düşürülürse, hat '0'a çekildiğinde akan akım ($I = V_{DD} / R_p$) artar. Bu durum, cihazın çıkış transistörünün hattı standardın gerektirdiği mantık '0' seviyesine ($V_{OL}$ - Voltage Output Low) kadar çekememesine veya aşırı güç tüketimine neden olabilir.
+
+> **Sonuç:** Pull-up direnci seçimi, **yeterince hızlı bir rise time** ile **geçerli bir $V_{OL}$ seviyesi** arasında bir denge kurma sanatıdır.
+
+#### Noise Immunity ve Sinyal Bütünlüğü
+
+Yüksek hızlı dijital hatlar, gürültüye ve sinyal bozulmalarına karşı hassastır. I2C bus'ının sinyal bütünlüğünü korumak için şu tasarım pratikleri önerilir:
+
+*   **PCB Yerleşimi:**
+    *   SDA ve SCL hatlarını mümkün olduğunca kısa tutun.
+    *   Bu iki hattı birbirine paralel ve yakın bir şekilde yönlendirin.
+    *   Etrafını bir topraklama alanı (ground plane) ile çevreleyerek harici gürültüye karşı kalkanlama yapın.
+    *   Anahtarlamalı güç kaynakları (SMPS) veya yüksek frekanslı saat sinyalleri gibi gürültü kaynaklarından uzak tutun.
+*   **Filtreleme:**
+    *   Çok gürültülü ortamlarda, her bir hatta seri olarak eklenen düşük değerli dirençler ($22-100\,\Omega$) sinyaldeki çınlamayı (ringing) sönümleyebilir.
+    *   Pull-up dirençlerini cihazlara yakın yerleştirmek, gürültü toplama riskini azaltır.
+
+Bu optimizasyon teknikleri, özellikle 400 kHz ve üzeri hızlarda çalışan sistemlerde, veri bozulmalarını önleyerek güvenilir bir iletişim kanalı kurmanın temelini oluşturur.
+
+---
+
+## 8. Hata Yönetimi ve Debugging
+
+I2C, genel olarak güvenilir bir protokol olsa da, donanımsal ve yazılımsal faktörler nedeniyle hatalar meydana gelebilir. Başarılı bir gömülü sistem mühendisi, bu hataları öngörebilmeli, teşhis edebilmeli ve yönetebilmelidir. Bu bölümde, I2C iletişiminde karşılaşılan en yaygın hataları ve bu hataları ayıklamak için kullanılan temel teknikleri inceleyeceğiz.
+
+### 8.1 Yaygın Hatalar
+
+#### Bus Stuck (Bus'ın Takılı Kalması)
+
+Bu, en sinir bozucu I2C hatalarından biridir. SDA veya SCL hattının, genellikle mantık '0' (LOW) seviyesinde, süresiz olarak takılı kalması durumudur.
+*   **Neden Olur?** Genellikle bir Slave cihazın, veri transferinin ortasında (örneğin bir ACK gönderdikten sonra) beklenmedik bir şekilde resetlenmesi, gücünün kesilmesi veya dahili bir hata nedeniyle kilitlenmesi sonucu oluşur. Slave, hattı serbest bırakması gerektiğini asla anlayamaz.
+*   **Sonuç:** Bus kilitlenir. Master yeni bir START koşulu (SCL yüksekken SDA'yı düşürmek) oluşturamaz, çünkü hatlardan biri (genellikle SDA) zaten düşük seviyededir. Bu durum, tüm I2C bus'ını kullanılamaz hale getirir.
+
+#### Clock Stretching Problemleri
+
+Clock stretching, I2C protokolünün bir hatası değil, bir **özelliğidir**. Bir Slave cihaz, gelen bir veriyi işlemek veya bir sonraki veri byte'ını hazırlamak için ek zamana ihtiyaç duyduğunda, SCL hattını geçici olarak LOW seviyesine çekerek Master'ı bekletebilir.
+*   **Problem Nerede Başlar?** Sorun, Master'ın bu duruma hazırlıklı olmamasından kaynaklanır. Bazı I2C donanım çevre birimleri (peripheral), SCL'nin belirli bir süreden daha uzun süre düşük kalması durumunda bir **timeout hatası** üretir. Eğer yavaş bir Slave, Master'ın timeout süresinden daha uzun bir süre clock stretching yaparsa, Master iletişimin koptuğunu varsayarak işlemi iptal eder.
+
+#### ACK/NACK Hataları
+
+ACK ve NACK sinyalleri, I2C'nin temel geri bildirim mekanizmasıdır ve doğru yorumlanmaları kritik öneme sahiptir.
+*   **Adresleme Sonrası NACK:** Master bir adres ve R/W biti gönderdikten sonra ACK yerine NACK alıyorsa, bunun birkaç anlamı olabilir:
+    1.  Bus üzerinde o adrese sahip bir cihaz yoktur.
+    2.  Cihaz bus'a bağlıdır ancak gücü yoktur veya henüz açılmamıştır.
+    3.  Cihaz meşguldür ve şu anda iletişim kuramıyordur (bazı sensörler ölçüm sırasında I2C'ye cevap vermez).
+*   **Veri Transferi Sırasında NACK:** Master'ın gönderdiği bir veri byte'ından sonra Slave NACK gönderiyorsa, bu genellikle Slave'in veriyi kabul etmediğini gösterir. Nedenleri arasında geçersiz bir komut gönderilmesi veya Slave'in dahili yazma tamponunun (buffer) dolu olması sayılabilir.
+
+> **Önemli Not:** Master'ın bir okuma işleminin sonunda **NACK** göndermesi bir **hata değildir**. Bu, Master'ın Slave'e "daha fazla veri gönderme, okuma bitti" demesinin standart yoludur.
+
+#### Adres Çakışmaları
+
+Bu, aynı I2C bus'ı üzerinde iki veya daha fazla Slave cihazın aynı 7-bit adrese sahip olması durumudur.
+*   **Sonuç:** Master bu adresi gönderdiğinde, her iki Slave de aynı anda ACK göndermeye çalışır. Daha da kötüsü, bir okuma işlemi sırasında her iki cihaz da aynı anda SDA hattını sürmeye çalışır. Bu durum **bus contention** (bus çekişmesi) olarak adlandırılır ve veri bozulmasına, hatta potansiyel olarak cihazların donanımına zarar vermeye yol açabilir.
+*   **Çözüm:** Cihazların adres seçme pinlerini (A0, A1, A2) kullanarak farklı adresler atamak veya bir I2C multiplexer/switch kullanmaktır.
+
+### 8.2 Debug Teknikleri
+
+#### Logic Analyzer Kullanımı
+
+I2C hatalarını ayıklarken logic analyzer, en güçlü müttefikinizdir. Sadece 0 ve 1'leri göstermekle kalmaz, aynı zamanda I2C protokolünü çözerek (decode) size insan tarafından okunabilir bir formatta sunar.
+*   **Ne Aranmalı?**
+    *   START ve STOP koşullarının zamanlaması doğru mu?
+    *   Adres doğru gönderiliyor mu? R/W biti doğru mu?
+    *   Hangi cihaz ACK, hangisi NACK gönderiyor? Hatanın tam olarak hangi byte'tan sonra oluştuğunu görebilirsiniz.
+    *   Saat (SCL) frekansı beklenen değerde mi?
+
+
+
+
+
+
+import LogicAnalyzerView  from '@/components/i2c/LogicAnalyzerView.jsx';
+
+<LogicAnalyzerView client:load />
+
+
+
+#### Osiloskop ile Sinyal Analizi
+
+Logic analyzer protokol seviyesinde ne olduğunu söylerken, osiloskop **fiziksel katmanda (sinyal kalitesi)** ne olduğunu gösterir.
+*   **Ne Aranmalı?**
+    *   **Sinyal Seviyeleri:** Mantık '0' seviyesi ($V_{OL}$) yeterince düşük mü? Mantık '1' seviyesi ($V_{OH}$) VDD'ye ulaşıyor mu?
+    *   **Yükselme Zamanı (Rise Time):** Sinyal, yavaş bir şekilde mi yükseliyor? Bu, çok yüksek bir bus kapasitansı ($C_{bus}$) veya çok yüksek değerli bir pull-up direncine ($R_p$) işaret eder.
+    *   **Gürültü ve Çınlama (Ringing):** Sinyal kenarlarında aşırı çınlama veya hat üzerinde gürültü var mı? Bu, sinyal bütünlüğü (signal integrity) sorunlarına işaret eder.
+
+
+OscilloscopeView
+
+
+import OscilloscopeView  from '@/components/i2c/OscilloscopeView.jsx';
+
+<OscilloscopeView client:load />
+
+#### Yazılımsal Debug Yöntemleri
+
+Donanım araçları olmadan önce, yazılım seviyesinde kontrol edilmesi gerekenler vardır:
+*   **Dönüş Kodlarını Kontrol Etme:** Kullandığınız I2C sürücü fonksiyonları (örneğin `HAL_I2C_Master_Transmit`) genellikle `HAL_OK`, `HAL_ERROR`, `HAL_BUSY` gibi durum kodları döndürür. Bu kodları her zaman kontrol edin. Bir `HAL_ERROR` dönüşü, genellikle bir NACK alındığı anlamına gelir.
+*   **I2C Bus Tarayıcı (Scanner):** 1'den 127'ye kadar tüm olası adresleri tarayan ve ACK yanıtı veren adresleri listeleyen basit bir fonksiyon yazın. Bu, cihazınızın gerçekten bus üzerinde olup olmadığını ve doğru adrese sahip olup olmadığını doğrulamanın en hızlı yoludur.
+*   **Adım Adım Debugging:** Bir JTAG/SWD debugger kullanarak, I2C iletişim fonksiyonuna girmeden önce ve girdikten sonra değişkenleri ve sistem durumunu kontrol edin. Kodun nerede takıldığını veya hata verdiğini tespit edebilirsiniz.
+
+#### Bus Recovery (Bus Kurtarma)
+
+"Bus Stuck" durumundan kurtulmak için bir mekanizma gereklidir. Çoğu modern mikrokontrolcü sürücüsü bunu otomatik olarak yapmaya çalışsa da, manuel olarak uygulamak gerekebilir.
+1.  **Tespiti:** Yazılım, bir I2C işlemi başlatmadan önce SDA ve SCL hatlarının durumunu kontrol eder. Eğer hatlar belirli bir süreden uzun süre LOW seviyesinde ise bus'ın takılı kaldığı varsayılır.
+2.  **Kurtarma Prosedürü:**
+    *   Master, I2C donanımını geçici olarak devre dışı bırakır ve SCL/SDA pinlerini standart GPIO çıkışı olarak yapılandırır.
+    *   Master, SDA hattını serbest bırakır (HIGH) ve SCL hattına manuel olarak 9 adet saat darbesi gönderir.
+    *   Bu darbeler, hattı kilitleyen Slave'in mevcut byte transferini tamamladığını sanmasını ve 9. darbeden sonra SDA hattını serbest bırakmasını sağlar.
+    *   SDA hattı HIGH seviyesine döndükten sonra, Master pinleri tekrar GPIO olarak kullanarak bir STOP koşulu (SCL yüksekken SDA'yı yükseğe çekme) oluşturur.
+    *   Son olarak pinler tekrar I2C moduna alınır ve bus normale döner.
+
+---
+
+## 9. Pratik Uygulama Örnekleri
+
+Teori, bir protokolün "ne" olduğunu anlatır; pratik ise "nasıl" kullanıldığını gösterir. I2C, gömülü sistemlerin adeta bir iskeleti gibi, sayısız farklı bileşeni birbirine bağlar. Bu bölümde, en yaygın I2C cihazlarının çalışma mantığını inceleyecek ve popüler geliştirme platformlarında bu cihazları nasıl hayata geçirebileceğimizi adım adım göreceğiz.
+
+
+### 9.1 Popüler I2C Cihazları
+
+#### EEPROM Bellek Entegreleri (Örn: AT24Cxx Serisi)
+
+EEPROM (Electrically Erasable Programmable Read-Only Memory) entegreleri, güç kesildiğinde bile veriyi saklayabilen kalıcı belleklerdir. I²C protokolü üzerinden kolayca erişilebilir olmaları, onları sensör verilerini kaydetme, kalibrasyon değerlerini saklama veya cihaz ayarlarını depolama gibi uygulamalar için ideal kılar.
+
+Aşağıdaki Arduino kodu, bir BME280 sensöründen alınan sıcaklık, nem ve basınç verilerini periyodik olarak bir AT24C256 EEPROM'a kaydetmeyi ve ardından bu verileri okumayı göstermektedir. Bu örnek, I²C tabanlı iki farklı sensörün (BME280 ve AT24C256) aynı bus üzerinde nasıl birlikte kullanılabileceğini de sergilemektedir.
+
+```cpp
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
+#include <EEPROM.h> // Arduino'nun dahili EEPROM kütüphanesi, harici I2C EEPROM için Wire kütüphanesi kullanılacak
+
+// BME280 sensörü için I2C adresi (genellikle 0x76 veya 0x77)
+#define BME_ADDRESS 0x76 
+
+// AT24C256 EEPROM için I2C adresi (genellikle 0x50)
+#define EEPROM_ADDRESS 0x50 
+
+// EEPROM'da veri yazmaya başlanacak adres
+// AT24C256 32KB (32768 byte) kapasiteye sahiptir.
+// Her okuma 12 byte (3 float * 4 byte/float) yer kaplayacak.
+// Bu örnekte basitlik adına her kaydı ardışık adreslere yazacağız.
+// Gerçek uygulamalarda dairesel tampon (circular buffer) veya 
+// dosya sistemi benzeri yapılar kullanılabilir.
+int currentEEPROMAddress = 0; 
+
+Adafruit_BME280 bme; // I2C
+
+struct SensorData {
+  float temperature;
+  float humidity;
+  float pressure;
+};
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial); // Seri portun açılmasını bekle (sadece Leonardo ve türevleri için)
+
+  Serial.println(F("BME280 ve EEPROM Veri Kaydedici Başlatılıyor..."));
+
+  // BME280 sensörünü başlat
+  if (!bme.begin(BME_ADDRESS)) {
+    Serial.println("BME280 sensörü bulunamadı! Bağlantıları kontrol edin.");
+    while (1);
+  }
+  Serial.println("BME280 sensörü başarıyla başlatıldı.");
+
+  // EEPROM'u kontrol et (sadece varlığını doğrulamak için basit bir kontrol)
+  Wire.beginTransmission(EEPROM_ADDRESS);
+  if (Wire.endTransmission() == 0) {
+    Serial.println("AT24C256 EEPROM başarıyla bulundu.");
+  } else {
+    Serial.println("AT24C256 EEPROM bulunamadı! Bağlantıları kontrol edin.");
+    while (1);
+  }
+
+  // EEPROM'daki ilk 10 kaydı oku (varsa)
+  Serial.println("\nEEPROM'daki Mevcut Veriler:");
+  readAllEEPROMData();
+}
+
+void loop() {
+  // Her 5 saniyede bir veri oku ve kaydet
+  static unsigned long lastLogTime = 0;
+  if (millis() - lastLogTime > 5000) {
+    lastLogTime = millis();
+    logSensorData();
+  }
+
+  // Seri porttan 'r' veya 'R' gelirse tüm verileri oku
+  if (Serial.available()) {
+    char command = Serial.read();
+    if (command == 'r' || command == 'R') {
+      Serial.println("\nSeri Porttan Okuma İsteği Alındı. EEPROM Verileri:");
+      readAllEEPROMData();
+    } else if (command == 'c' || command == 'C') {
+      Serial.println("\nSeri Porttan Temizleme İsteği Alındı. EEPROM Temizleniyor...");
+      clearEEPROM();
+      Serial.println("EEPROM temizlendi. currentEEPROMAddress sıfırlandı.");
+    }
+  }
+}
+
+void logSensorData() {
+  SensorData data;
+  data.temperature = bme.readTemperature();
+  data.humidity = bme.readHumidity();
+  data.pressure = bme.readPressure() / 100.0F; // hPa olarak
+
+  Serial.print("Sıcaklık: ");
+  Serial.print(data.temperature);
+  Serial.print(" *C, Nem: ");
+  Serial.print(data.humidity);
+  Serial.print(" %, Basınç: ");
+  Serial.print(data.pressure);
+  Serial.println(" hPa");
+
+  // Veriyi EEPROM'a yaz
+  // Her float 4 byte yer kaplar. Toplam 3 float = 12 byte.
+  // EEPROM'a yazmadan önce adresin sınırları içinde olduğundan emin olun.
+  if (currentEEPROMAddress + sizeof(SensorData) <= 32768) { // AT24C256 için 32KB
+    writeEEPROM(EEPROM_ADDRESS, currentEEPROMAddress, (byte*)&data, sizeof(SensorData));
+    Serial.print("Veri EEPROM'a yazıldı, adres: ");
+    Serial.println(currentEEPROMAddress);
+    currentEEPROMAddress += sizeof(SensorData); // Sonraki kayıt için adresi güncelle
+  } else {
+    Serial.println("EEPROM dolu! Yeni veri kaydedilemiyor.");
+  }
+}
+
+void writeEEPROM(int deviceAddress, int eeAddress, byte* data, int len) {
+  Wire.beginTransmission(deviceAddress);
+  Wire.write((int)(eeAddress >> 8));   // Yüksek adres baytı
+  Wire.write((int)(eeAddress & 0xFF)); // Düşük adres baytı
+
+  for (int i = 0; i < len; i++) {
+    Wire.write(data[i]);
+  }
+  Wire.endTransmission();
+  delay(5); // EEPROM yazma döngüsü için kısa bir gecikme
+}
+
+void readEEPROM(int deviceAddress, int eeAddress, byte* data, int len) {
+  Wire.beginTransmission(deviceAddress);
+  Wire.write((int)(eeAddress >> 8));   // Yüksek adres baytı
+  Wire.write((int)(eeAddress & 0xFF)); // Düşük adres baytı
+  Wire.endTransmission();
+
+  Wire.requestFrom(deviceAddress, len); // Belirtilen uzunlukta veri iste
+  for (int i = 0; i < len; i++) {
+    if (Wire.available()) {
+      data[i] = Wire.read();
+    }
+  }
+}
+
+void readAllEEPROMData() {
+  SensorData readData;
+  int address = 0;
+  int recordCount = 0;
+
+  while (address + sizeof(SensorData) <= currentEEPROMAddress) {
+    readEEPROM(EEPROM_ADDRESS, address, (byte*)&readData, sizeof(SensorData));
+    Serial.print("Kayıt ");
+    Serial.print(recordCount++);
+    Serial.print(": Sıcaklık: ");
+    Serial.print(readData.temperature);
+    Serial.print(" *C, Nem: ");
+    Serial.print(readData.humidity);
+    Serial.print(" %, Basınç: ");
+    Serial.print(readData.pressure);
+    Serial.println(" hPa");
+    address += sizeof(SensorData);
+  }
+  if (recordCount == 0) {
+    Serial.println("EEPROM'da henüz kaydedilmiş veri yok.");
+  }
+}
+
+void clearEEPROM() {
+  // EEPROM'u tamamen temizlemek yerine, sadece yazma adresini sıfırlayalım.
+  // Gerçekten temizlemek isterseniz, her adrese 0xFF yazmanız gerekir.
+  // Bu işlem uzun sürebilir.
+  currentEEPROMAddress = 0; 
+  Serial.println("EEPROM yazma adresi sıfırlandı.");
+}
+```
+
+**Devre Bağlantıları:**
+
+*   **Arduino Uno/Nano:**
+    *   SDA (A4) -> BME280 SDA, AT24C256 SDA
+    *   SCL (A5) -> BME280 SCL, AT24C256 SCL
+    *   VCC (3.3V veya 5V, sensör ve EEPROM'un çalışma voltajına göre) -> BME280 VCC, AT24C256 VCC
+    *   GND -> BME280 GND, AT24C256 GND
+*   **Pull-up Dirençleri:** SDA ve SCL hatlarına 4.7kΩ pull-up dirençleri bağlamayı unutmayın (çoğu modülde dahili olarak bulunur, emin değilseniz ekleyin).
+
+**Kütüphane Kurulumu:**
+
+Bu kodu derleyebilmek için Arduino IDE Kütüphane Yöneticisi'nden aşağıdaki kütüphaneleri kurmanız gerekmektedir:
+
+1.  **Adafruit Unified Sensor**
+2.  **Adafruit BME280 Library**
+
+**Çalışma Mantığı:**
+
+1.  **Başlatma (`setup()`):**
+    *   Seri haberleşme başlatılır.
+    *   BME280 sensörü başlatılır ve bağlantısı kontrol edilir.
+    *   AT24C256 EEPROM'un I²C adresi üzerinden varlığı doğrulanır.
+    *   EEPROM'da daha önce kaydedilmiş veriler varsa, başlangıçta okunur ve seri portta gösterilir.
+2.  **Veri Kaydı (`loop()` ve `logSensorData()`):**
+    *   Her 5 saniyede bir BME280'den sıcaklık, nem ve basınç verileri okunur.
+    *   Okunan veriler `SensorData` yapısına dönüştürülür.
+    *   `writeEEPROM` fonksiyonu kullanılarak bu yapıdaki veriler EEPROM'a yazılır. `currentEEPROMAddress` değişkeni, bir sonraki kaydın yazılacağı adresi tutar ve her yazma işleminden sonra güncellenir.
+    *   EEPROM'un kapasitesi dolduğunda uyarı verilir.
+3.  **Veri Okuma (`readAllEEPROMData()`):**
+    *   Seri porttan 'r' veya 'R' karakteri gönderildiğinde, `readAllEEPROMData()` fonksiyonu çağrılır.
+    *   Bu fonksiyon, `currentEEPROMAddress`'e kadar olan tüm kayıtları EEPROM'dan okur ve seri portta görüntüler.
+4.  **EEPROM Temizleme (`clearEEPROM()`):**
+    *   Seri porttan 'c' veya 'C' karakteri gönderildiğinde, `clearEEPROM()` fonksiyonu çağrılır.
+    *   Bu fonksiyon, `currentEEPROMAddress`'i sıfırlayarak EEPROM'un başına dönülmesini sağlar. **Not:** Bu fonksiyon EEPROM'daki veriyi fiziksel olarak silmez, sadece yeni yazma işlemlerinin en baştan başlamasını sağlar. EEPROM'u tamamen silmek için her adrese 0xFF yazmak gerekir ki bu işlem büyük EEPROM'lar için uzun sürebilir.
+
+Bu örnek, I²C'nin çok yönlülüğünü ve EEPROM'ların kalıcı veri depolama yeteneklerini birleştirerek, gömülü sistem projelerinde sıkça karşılaşılan bir ihtiyaca çözüm sunmaktadır.
+
+EEPROM'lar (Electrically Erasable Programmable Read-Only Memory), gücü kesildiğinde bile veriyi saklayabilen, non-volatile (kalıcı) bellek yongalarıdır. I2C tabanlı EEPROM'lar, sadece iki pin kullanarak sisteme kalıcı depolama eklemenin en kolay yoludur.
+
+*   **Kullanım Alanları:** Cihaz konfigürasyon ayarları, kalibrasyon verileri, hata logları, kullanıcı tercihleri.
+*   **I2C Konsepti:** Bu cihazlar, **Random Access** ve **Sequential Read/Write** işlemlerinin en klasik örnekleridir. Veri yazmak veya okumak için önce 2 byte'lık bir bellek adresi (örneğin 16-bit adresleme için) gönderilir.
+*   **Tipik Yazma İşlemi (Page Write):**
+    1.  `START`
+    2.  `Cihaz Adresi + W` -> ACK
+    3.  `Bellek Adresi (Yüksek Byte)` -> ACK
+    4.  `Bellek Adresi (Düşük Byte)` -> ACK
+    5.  `Veri 1` -> ACK
+    6.  `Veri 2` -> ACK
+    7.  ... (Genellikle 64 byte'a kadar)
+    8.  `Veri N` -> ACK
+    9.  `STOP`
+*   **Tipik Okuma İşlemi (Random Read):**
+    Bu işlem, **Combined Format (Repeated START)** kullanımının zorunlu olduğu en güzel örnektir. Önce okunacak adres ayarlanır, ardından bus serbest bırakılmadan okuma moduna geçilir.
+
+
+
+import EEPROMRandomReadDiagramEnhanced  from '@/components/i2c/EEPROMRandomReadDiagramEnhanced.jsx';
+
+<EEPROMRandomReadDiagramEnhanced client:load />
+
+---
+
+#### RTC (Real-Time Clock) Modülleri (Örn: DS3231, PCF8523)
+
+RTC’ler (Gerçek Zaman Saatleri), sistemin gücü kapalıyken dahi küçük bir yedek pil ile zamanı ve tarihi saymaya devam eden özel entegrelerdir.
+
+* **Kullanım Alanları:** Veri kaydı sırasında zaman damgası ekleme, alarm sistemleri, dijital saatler, takvim uygulamaları gibi senaryolarda yaygın olarak kullanılır.
+* **I²C Konsepti:** RTC entegrelerinin içinde saniye, dakika, saat, gün, ay ve yıl gibi bilgiler için ayrı **register** alanları bulunur. Bu verilere erişmek için I²C üzerinden doğrudan bu register adreslerine ulaşılır. Özellikle **Sequential Read** yöntemi oldukça kullanışlıdır; çünkü tek bir okuma komutu ile tüm zaman verilerini blok olarak alabilirsiniz.
+* **Tipik Zaman Okuma İşlemi:**
+
+  1. Master, RTC’nin saniye register’ının adresini (genellikle `0x00`) yazar.
+  2. Repeated START ile iletişim kesilmeden okuma moduna geçer.
+  3. Ardından sırasıyla 7 byte’lık bir okuma yapılır: saniye, dakika, saat, gün, tarih, ay ve yıl. Her byte için ACK, son byte için NACK gönderilir.
+
+
+import RTCMemoryMapEnhanced  from '@/components/i2c/RTCMemoryMapEnhanced.jsx';
+
+<RTCMemoryMapEnhanced client:load />
+
+---
+
+#### Sensör Entegreleri (Örn: BME280 - Sıcaklık/Nem/Basınç, MPU-6050 - İvme/Gyro)
+
+Modern sensörlerin büyük çoğunluğu I2C (veya SPI) arayüzü kullanır. Bu, karmaşık ölçüm yeteneklerini sadece 2-4 pin ile bir mikrokontrolcüye bağlamayı sağlar.
+*   **Kullanım Alanları:** Hava durumu istasyonları, drone'lar ve robotlar (yönelim tespiti), akıllı cihazlar.
+*   **I2C Konsepti:** Sensörler, genellikle iki tür register seti içerir: **Kontrol Register'ları** ve **Veri Register'ları**.
+    1.  **Konfigürasyon:** Cihaz ilk açıldığında, Master kontrol register'larına yazarak sensörün çalışma modunu (örneğin ölçüm hassasiyeti, güç modu, filtre ayarları) belirler.
+    2.  **Okuma:** Master, veri register'larından ardışık bir okuma yaparak ölçüm sonuçlarını (örneğin ivme için X, Y, Z eksen verileri) alır.
+
+
+SensorBlockDiagram
+
+import SensorBlockDiagram  from '@/components/i2c/SensorBlockDiagram.jsx';
+
+<SensorBlockDiagram client:load />
+
+### Entegre Proje: BME280 Sensör Verilerini DS3231 Zaman Damgası ile EEPROM'a Kaydetme
+
+Bu bölümde, I²C protokolünün çok yönlülüğünü gösteren entegre bir proje sunulmaktadır. Bu proje, bir BME280 ortam sensöründen (sıcaklık, nem, basınç) alınan verileri, bir DS3231 Gerçek Zaman Saati (RTC) modülünden alınan zaman damgasıyla birlikte harici bir AT24C256 EEPROM belleğe kaydetmeyi amaçlamaktadır. Bu sayede, güç kesintilerinde bile sensör verilerinin ne zaman alındığı bilgisiyle birlikte kalıcı olarak saklanması sağlanır.
+
+Bu örnek, I²C bus üzerinde birden fazla cihazın (BME280, DS3231, AT24C256) nasıl sorunsuz bir şekilde birlikte çalışabileceğini göstermektedir.
+
+```cpp
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
+#include "RTClib.h" // Adafruit RTClib kütüphanesi
+
+// BME280 sensörü için I2C adresi (genellikle 0x76 veya 0x77)
+#define BME_ADDRESS 0x76 
+
+// AT24C256 EEPROM için I2C adresi (genellikle 0x50)
+#define EEPROM_ADDRESS 0x50 
+
+// EEPROM'da veri yazmaya başlanacak adres
+// AT24C256 32KB (32768 byte) kapasiteye sahiptir.
+// Her okuma yaklaşık 19 byte (3 float * 4 byte/float + 6 byte zaman) yer kaplayacak.
+// Bu örnekte basitlik adına her kaydı ardışık adreslere yazacağız.
+// Gerçek uygulamalarda dairesel tampon (circular buffer) veya 
+// dosya sistemi benzeri yapılar kullanılabilir.
+int currentEEPROMAddress = 0; 
+
+Adafruit_BME280 bme; // I2C
+RTC_DS3231 rtc; // DS3231 RTC objesi
+
+char daysOfTheWeek[7][12] = {"Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"};
+
+struct SensorData {
+  float temperature;
+  float humidity;
+  float pressure;
+  uint16_t year;
+  uint8_t month;
+  uint8_t day;
+  uint8_t hour;
+  uint8_t minute;
+  uint8_t second;
+};
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial); // Seri portun açılmasını bekle (sadece Leonardo ve türevleri için)
+
+  Serial.println(F("BME280, DS3231 ve EEPROM Entegre Veri Kaydedici Başlatılıyor..."));
+
+  // BME280 sensörünü başlat
+  if (!bme.begin(BME_ADDRESS)) {
+    Serial.println("BME280 sensörü bulunamadı! Bağlantıları kontrol edin.");
+    while (1);
+  }
+  Serial.println("BME280 sensörü başarıyla başlatıldı.");
+
+  // DS3231 RTC'yi başlat
+  if (! rtc.begin()) {
+    Serial.println("RTC bulunamadı! Bağlantıları kontrol edin veya pini değiştirin.");
+    Serial.flush();
+    abort();
+  }
+  Serial.println("DS3231 RTC başarıyla başlatıldı.");
+
+  if (rtc.lostPower()) {
+    Serial.println("RTC gücü kaybetti, zamanı derleme zamanına ayarlayalım!");
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  }
+
+  // EEPROM'u kontrol et (sadece varlığını doğrulamak için basit bir kontrol)
+  Wire.beginTransmission(EEPROM_ADDRESS);
+  if (Wire.endTransmission() == 0) {
+    Serial.println("AT24C256 EEPROM başarıyla bulundu.");
+  } else {
+    Serial.println("AT24C256 EEPROM bulunamadı! Bağlantıları kontrol edin.");
+    while (1);
+  }
+
+  // EEPROM'daki ilk 10 kaydı oku (varsa)
+  Serial.println("\nEEPROM'daki Mevcut Veriler:");
+  readAllEEPROMData();
+}
+
+void loop() {
+  // Her 5 saniyede bir veri oku ve kaydet
+  static unsigned long lastLogTime = 0;
+  if (millis() - lastLogTime > 5000) {
+    lastLogTime = millis();
+    logSensorData();
+  }
+
+  // Seri porttan 'r' veya 'R' gelirse tüm verileri oku
+  if (Serial.available()) {
+    char command = Serial.read();
+    if (command == 'r' || command == 'R') {
+      Serial.println("\nSeri Porttan Okuma İsteği Alındı. EEPROM Verileri:");
+      readAllEEPROMData();
+    } else if (command == 'c' || command == 'C') {
+      Serial.println("\nSeri Porttan Temizleme İsteği Alındı. EEPROM Temizleniyor...");
+      clearEEPROM();
+      Serial.println("EEPROM temizlendi. currentEEPROMAddress sıfırlandı.");
+    }
+  }
+}
+
+void logSensorData() {
+  SensorData data;
+  data.temperature = bme.readTemperature();
+  data.humidity = bme.readHumidity();
+  data.pressure = bme.readPressure() / 100.0F; // hPa olarak
+
+  DateTime now = rtc.now();
+  data.year = now.year();
+  data.month = now.month();
+  data.day = now.day();
+  data.hour = now.hour();
+  data.minute = now.minute();
+  data.second = now.second();
+
+  Serial.print("Zaman: ");
+  Serial.print(now.year(), DEC);
+  Serial.print("/");
+  Serial.print(now.month(), DEC);
+  Serial.print("/");
+  Serial.print(now.day(), DEC);
+  Serial.print(" (");
+  Serial.print(daysOfTheWeek[now.dayOfTheWeek()]);
+  Serial.print(") ");
+  Serial.print(now.hour(), DEC);
+  Serial.print(":");
+  Serial.print(now.minute(), DEC);
+  Serial.print(":");
+  Serial.print(now.second(), DEC);
+  Serial.print(", Sıcaklık: ");
+  Serial.print(data.temperature);
+  Serial.print(" *C, Nem: ");
+  Serial.print(data.humidity);
+  Serial.print(" %, Basınç: ");
+  Serial.print(data.pressure);
+  Serial.println(" hPa");
+
+  // Veriyi EEPROM'a yaz
+  // Her float 4 byte, her uint8_t 1 byte, uint16_t 2 byte. Toplam 3*4 + 5*1 + 1*2 = 12 + 5 + 2 = 19 byte.
+  // sizeof(SensorData) ile otomatik boyut hesaplanır.
+  if (currentEEPROMAddress + sizeof(SensorData) <= 32768) { // AT24C256 için 32KB
+    writeEEPROM(EEPROM_ADDRESS, currentEEPROMAddress, (byte*)&data, sizeof(SensorData));
+    Serial.print("Veri EEPROM'a yazıldı, adres: ");
+    Serial.println(currentEEPROMAddress);
+    currentEEPROMAddress += sizeof(SensorData); // Sonraki kayıt için adresi güncelle
+  } else {
+    Serial.println("EEPROM dolu! Yeni veri kaydedilemiyor.");
+  }
+}
+
+void writeEEPROM(int deviceAddress, int eeAddress, byte* data, int len) {
+  Wire.beginTransmission(deviceAddress);
+  Wire.write((int)(eeAddress >> 8));   // Yüksek adres baytı
+  Wire.write((int)(eeAddress & 0xFF)); // Düşük adres baytı
+
+  for (int i = 0; i < len; i++) {
+    Wire.write(data[i]);
+  }
+  Wire.endTransmission();
+  delay(5); // EEPROM yazma döngüsü için kısa bir gecikme
+}
+
+void readEEPROM(int deviceAddress, int eeAddress, byte* data, int len) {
+  Wire.beginTransmission(deviceAddress);
+  Wire.write((int)(eeAddress >> 8));   // Yüksek adres baytı
+  Wire.write((int)(eeAddress & 0xFF)); // Düşük adres baytı
+  Wire.endTransmission();
+
+  Wire.requestFrom(deviceAddress, len); // Belirtilen uzunlukta veri iste
+  for (int i = 0; i < len; i++) {
+    if (Wire.available()) {
+      data[i] = Wire.read();
+    }
+  }
+}
+
+void readAllEEPROMData() {
+  SensorData readData;
+  int address = 0;
+  int recordCount = 0;
+
+  while (address + sizeof(SensorData) <= currentEEPROMAddress) {
+    readEEPROM(EEPROM_ADDRESS, address, (byte*)&readData, sizeof(SensorData));
+    Serial.print("Kayıt ");
+    Serial.print(recordCount++);
+    Serial.print(": Zaman: ");
+    Serial.print(readData.year, DEC);
+    Serial.print("/");
+    Serial.print(readData.month, DEC);
+    Serial.print("/");
+    Serial.print(readData.day, DEC);
+    Serial.print(" ");
+    Serial.print(readData.hour, DEC);
+    Serial.print(":");
+    Serial.print(readData.minute, DEC);
+    Serial.print(":");
+    Serial.print(readData.second, DEC);
+    Serial.print(", Sıcaklık: ");
+    Serial.print(readData.temperature);
+    Serial.print(" *C, Nem: ");
+    Serial.print(readData.humidity);
+    Serial.print(" %, Basınç: ");
+    Serial.print(readData.pressure);
+    Serial.println(" hPa");
+    address += sizeof(SensorData);
+  }
+  if (recordCount == 0) {
+    Serial.println("EEPROM'da henüz kaydedilmiş veri yok.");
+  }
+}
+
+void clearEEPROM() {
+  // EEPROM'u tamamen temizlemek yerine, sadece yazma adresini sıfırlayalım.
+  // Gerçekten temizlemek isterseniz, her adrese 0xFF yazmanız gerekir.
+  // Bu işlem uzun sürebilir.
+  currentEEPROMAddress = 0; 
+  Serial.println("EEPROM yazma adresi sıfırlandı.");
+}
+```
+
+**Devre Bağlantıları:**
+
+*   **Arduino Uno/Nano:**
+    *   SDA (A4) -> BME280 SDA, DS3231 SDA, AT24C256 SDA
+    *   SCL (A5) -> BME280 SCL, DS3231 SCL, AT24C256 SCL
+    *   VCC (3.3V veya 5V, sensör ve EEPROM'un çalışma voltajına göre) -> BME280 VCC, DS3231 VCC, AT24C256 VCC
+    *   GND -> BME280 GND, DS3231 GND, AT24C256 GND
+*   **Pull-up Dirençleri:** BME280, DS3231 ve AT24C256 modüllerinde genellikle dahili pull-up dirençleri bulunur. Eğer modülünüzde yoksa, SDA ve SCL hatlarına 4.7kΩ pull-up dirençleri eklemeniz gerekebilir.
+
+**Kütüphane Kurulumu:**
+
+Bu kodu derleyebilmek için Arduino IDE Kütüphane Yöneticisi'nden aşağıdaki kütüphaneleri kurmanız gerekmektedir:
+
+1.  **Adafruit Unified Sensor**
+2.  **Adafruit BME280 Library**
+3.  **Adafruit RTClib**
+
+**Çalışma Mantığı:**
+
+1.  **Başlatma (`setup()`):**
+    *   Seri haberleşme başlatılır.
+    *   BME280 sensörü ve DS3231 RTC başlatılır ve bağlantıları kontrol edilir.
+    *   RTC gücü kaybetmişse, derleme zamanına ayarlanır.
+    *   AT24C256 EEPROM'un varlığı doğrulanır.
+    *   EEPROM'da daha önce kaydedilmiş veriler varsa, başlangıçta okunur ve seri portta gösterilir.
+2.  **Veri Kaydı (`loop()` ve `logSensorData()`):**
+    *   Her 5 saniyede bir BME280'den sıcaklık, nem ve basınç verileri ile DS3231'den güncel zaman bilgisi okunur.
+    *   Okunan veriler `SensorData` yapısına dönüştürülür.
+    *   `writeEEPROM` fonksiyonu kullanılarak bu yapıdaki veriler EEPROM'a yazılır. `currentEEPROMAddress` değişkeni, bir sonraki kaydın yazılacağı adresi tutar ve her yazma işleminden sonra güncellenir.
+    *   EEPROM'un kapasitesi dolduğunda uyarı verilir.
+3.  **Veri Okuma (`readAllEEPROMData()`):**
+    *   Seri porttan 'r' veya 'R' karakteri gönderildiğinde, `readAllEEPROMData()` fonksiyonu çağrılır.
+    *   Bu fonksiyon, `currentEEPROMAddress`'e kadar olan tüm kayıtları EEPROM'dan okur ve seri portta görüntüler.
+4.  **EEPROM Temizleme (`clearEEPROM()`):**
+    *   Seri porttan 'c' veya 'C' karakteri gönderildiğinde, `clearEEPROM()` fonksiyonu çağrılır.
+    *   Bu fonksiyon, `currentEEPROMAddress`'i sıfırlayarak EEPROM'un başına dönülmesini sağlar. **Not:** Bu fonksiyon EEPROM'daki veriyi fiziksel olarak silmez, sadece yeni yazma işlemlerinin en baştan başlamasını sağlar. EEPROM'u tamamen silmek için her adrese 0xFF yazmak gerekir ki bu işlem uzun sürebilir.
+
+Bu örnek, I²C'nin çok yönlülüğünü ve farklı sensörlerin, RTC'nin ve EEPROM'un kalıcı veri depolama yeteneklerini birleştirerek, gömülü sistem projelerinde sıkça karşılaşılan bir ihtiyaca çözüm sunmaktadır.
+
+
+### DS3231 Gerçek Zaman Saati (RTC) Entegresi
+
+DS3231, yüksek hassasiyetli bir I²C gerçek zaman saati (Real-Time Clock - RTC) entegresidir. Dahili sıcaklık kompanzasyonlu kristal osilatörü (TCXO) sayesinde çok doğru zaman tutma yeteneğine sahiptir. Genellikle projelerde tarih ve saat bilgilerini kaydetme, olayları zamanlama veya belirli zamanlarda görevleri tetiklemek için kullanılır.
+
+Aşağıdaki Arduino kodu, bir DS3231 RTC modülünden güncel tarih ve saat bilgisini okumayı ve seri portta görüntülemeyi göstermektedir.
+
+```cpp
+#include <Wire.h>
+#include "RTClib.h" // Adafruit RTClib kütüphanesi
+
+RTC_DS3231 rtc;
+
+char daysOfTheWeek[7][12] = {"Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"};
+
+void setup () {
+  Serial.begin(9600);
+  while (!Serial); // Seri portun açılmasını bekle (sadece Leonardo ve türevleri için)
+
+  Serial.println(F("DS3231 RTC Testi Başlatılıyor..."));
+
+  if (! rtc.begin()) {
+    Serial.println("RTC bulunamadı! Bağlantıları kontrol edin veya pini değiştirin.");
+    Serial.flush();
+    abort();
+  }
+
+  if (rtc.lostPower()) {
+    Serial.println("RTC gücü kaybetti, zamanı ayarlayalım!");
+    // RTC'yi derleme zamanına ayarla
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+    // Veya manuel olarak ayarla: rtc.adjust(DateTime(2025, 6, 30, 12, 0, 0));
+  }
+
+  // RTC zaten ayarlıysa ve doğruysa, bu satırı yorum satırı yapabilirsiniz.
+  // rtc.adjust(DateTime(F(__DATE__), F(__TIME__))); 
+}
+
+void loop () {
+  DateTime now = rtc.now();
+
+  Serial.print(now.year(), DEC);
+  Serial.print('/');
+  Serial.print(now.month(), DEC);
+  Serial.print('/');
+  Serial.print(now.day(), DEC);
+  Serial.print(" (");
+  Serial.print(daysOfTheWeek[now.dayOfTheWeek()]);
+  Serial.print(") ");
+  Serial.print(now.hour(), DEC);
+  Serial.print(':');
+  Serial.print(now.minute(), DEC);
+  Serial.print(':');
+  Serial.print(now.second(), DEC);
+  Serial.println();
+
+  // Her saniye bir kez oku
+  delay(1000);
+}
+```
+
+**Devre Bağlantıları:**
+
+*   **Arduino Uno/Nano:**
+    *   SDA (A4) -> DS3231 SDA
+    *   SCL (A5) -> DS3231 SCL
+    *   VCC (5V) -> DS3231 VCC
+    *   GND -> DS3231 GND
+*   **Pull-up Dirençleri:** DS3231 modüllerinde genellikle dahili pull-up dirençleri bulunur. Eğer modülünüzde yoksa, SDA ve SCL hatlarına 4.7kΩ pull-up dirençleri eklemeniz gerekebilir.
+
+**Kütüphane Kurulumu:**
+
+Bu kodu derleyebilmek için Arduino IDE Kütüphane Yöneticisi'nden aşağıdaki kütüphaneyi kurmanız gerekmektedir:
+
+1.  **Adafruit RTClib**
+
+**Çalışma Mantığı:**
+
+1.  **Başlatma (`setup()`):**
+    *   Seri haberleşme başlatılır.
+    *   DS3231 RTC modülü başlatılır. Eğer RTC bulunamazsa veya gücü kaybetmişse (pil bitmişse veya ilk kez çalıştırılıyorsa), RTC otomatik olarak Arduino'nun derleme zamanına ayarlanır. Bu, her program yüklendiğinde zamanın güncellenmesini sağlar.
+2.  **Zaman Okuma (`loop()`):**
+    *   Her saniye `rtc.now()` fonksiyonu ile güncel tarih ve saat bilgisi alınır.
+    *   Alınan bilgiler `DateTime` objesi olarak saklanır ve `Serial.print()` komutları ile seri portta okunabilir bir formatta görüntülenir.
+
+Bu örnek, I²C protokolünün zaman tabanlı uygulamalarda nasıl kullanılabileceğine dair temel bir anlayış sunar. DS3231 gibi RTC'ler, veri kaydı, zaman damgası ekleme veya belirli zamanlarda olayları tetikleme gibi birçok gömülü sistem projesinde kritik rol oynar.
+
+{/*
+#### LCD Kontrol Entegreleri (Örn: PCF8574 I/O Genişletici)
+
+Standart karakter LCD'ler (16x2, 20x4) normalde 6-11 adet GPIO pini gerektirir. I2C tabanlı LCD "backpack" modülleri, bu pin ihtiyacını 2'ye düşürür.
+*   **I2C Konsepti:** Burada I2C doğrudan LCD'yi kontrol etmez. Bir **I/O Genişletici** (örn: PCF8574) entegresi, I2C bus ile paralel LCD pinleri arasında bir **köprü** görevi görür. Siz I2C üzerinden PCF8574'ün 8 çıkış pininin durumunu (HIGH/LOW) ayarlarsınız. Bu pinler de LCD'nin `RS`, `R/W`, `E` ve veri pinlerine (`D4-D7`) bağlıdır. LCD'ye 'A' harfini göndermek, aslında LCD'nin 4-bit paralel protokolünü I2C üzerinden pinleri tek tek açıp kapatarak simüle etmek anlamına gelir.
+
+> **İmaj Tarifi 8: I2C LCD Adaptör Mimarisi**
+>
+> Solda bir "Mikroişlemci" kutusu, sağda bir "Karakter LCD" kutusu olsun. Arada "PCF8574 I2C I/O Genişletici" adlı bir köprü kutusu olsun.
+> *   Mikroişlemciden I2C Genişleticiye `SDA` ve `SCL` hatları gitsin.
+> *   I2C Genişleticiden LCD'ye `RS`, `E`, `D4`, `D5`, `D6`, `D7` gibi 8 ayrı hat gitsin.
+> Bu görsel, I2C'nin nasıl bir "pin kurtarıcı" olarak kullanıldığını mükemmel bir şekilde anlatır.
+
+
+#### 9.1.5 PWM Sürücüleri (LED & Servo Kontrolü - Örn: PCA9685)
+
+Bir veya iki PWM (Pulse Width Modulation) sinyali üretmek kolaydır, peki ya 16? Veya daha fazlası? PCA9685 gibi I2C PWM sürücüleri, tek bir I2C bus üzerinden çok sayıda kanalı hassas bir şekilde kontrol etmek için tasarlanmıştır.
+
+*   **Kullanım Alanları:** Çok kanallı robot kolları (servo kontrolü), pan-tilt kamera mekanizmaları, karmaşık RGB LED aydınlatma efektleri, fan hızı kontrolü.
+*   **I2C Konsepti:** Bu cihazlar, devasa bir **register haritasına** sahip olmalarıyla öne çıkar. Her bir PWM kanalı için, sinyalin ne zaman HIGH olacağını (`ON` zamanı) ve ne zaman LOW olacağını (`OFF` zamanı) belirleyen ayrı register'lar bulunur. Master, I2C üzerinden bu register'lara değerler yazarak her kanalın duty cycle'ını (görev döngüsünü) ve fazını bağımsız olarak ayarlar. Bu, "write-heavy" (yazma ağırlıklı) bir I2C uygulamasıdır.
+
+> **İmaj Tarifi 13: PCA9685 PWM Sürücü Mimarisi**
+>
+> Bir blok diyagramı çizin. Ortada büyük bir "PCA9685 - 16 Kanal PWM Sürücü" kutusu olsun.
+> *   Soldaki "Mikroişlemci" kutusundan `SDA/SCL` hatları PCA9685'e girsin.
+> *   PCA9685 kutusunun sağından yelpaze gibi açılan 16 ayrı hat çıksın.
+> *   Bu hatlardan birkaçını "Servo Motor" ikonlarına, birkaçını "LED" ikonlarına bağlayın.
+> *   Diyagramın başlığı "Tek I2C Bus ile 16 Kanal Kontrolü" olabilir. Bu, cihazın temel değer önerisini anında görselleştirir.
+
+#### 9.1.6 Yüksek Hassasiyetli ADC'ler (Analog-Dijital Çeviriciler - Örn: ADS1115)
+
+Mikroişlemcilerin dahili ADC'leri genellikle 10 veya 12 bit çözünürlüğe sahiptir ve gürültüye açıktır. Analog sinyalleri daha yüksek hassasiyetle (örneğin 16-bit) veya diferansiyel olarak okumak gerektiğinde, I2C tabanlı harici ADC'ler devreye girer.
+
+*   **Kullanım Alanları:** Yük hücrelerinden (load cell) ağırlık okuma, laboratuvar ekipmanları, hassas sensör arayüzleri, batarya voltajını hassas ölçme.
+*   **I2C Konsepti:** Bu, sensörlere benzer bir **"yapılandır ve oku"** modelidir.
+    1.  **Yapılandırma:** Master, ADC'nin `Config Register`'ına yazar. Bu register, hangi analog kanaldan okuma yapılacağını, kazanç (gain) seviyesini (PGA - Programmable Gain Amplifier) ve saniyedeki örnekleme sayısını (SPS - Samples Per Second) ayarlar.
+    2.  **Okuma:** Master, ADC'nin `Conversion Register`'ından okuma yapar. Bu register, en son tamamlanan analog-dijital çevrimin sonucunu tutar.
+
+> **İmaj Tarifi 14: Harici ADC ile Analog Dünya Köprüsü**
+>
+> Üç aşamalı bir akış diyagramı çizin.
+> *   **Sol Taraf (Analog Dünya):** Bir potansiyometre veya analog bir sensörden çıkan, sinüzoidal bir analog sinyal çizin.
+> *   **Orta Taraf (Çevrim):** Bu sinyalin "ADS1115 ADC" kutusuna girdiğini gösterin.
+> *   **Sağ Taraf (Dijital Dünya):** "Mikroişlemci" kutusunun, `SDA/SCL` hatları üzerinden ADS1115'ten veri okuduğunu gösterin. Mikroişlemciden çıkan bir konuşma balonunda "Değer: 54219" gibi dijital bir sayı olsun. Bu, analog bir büyüklüğün nasıl dijital bir veriye dönüştüğünü gösterir.
+
+#### 9.1.7 Kapasitif Dokunmatik Sensörler (Örn: MPR121)
+
+Modern arayüzler, mekanik butonlar yerine dokunmatik yüzeyler kullanır. MPR121 gibi entegreler, 12 adede kadar ayrı elektrotu (dokunmatik pedi) izleyerek karmaşık dokunmatik arayüzler oluşturmayı kolaylaştırır.
+
+*   **Kullanım Alanları:** Özel yapım klavyeler, interaktif sanat enstalasyonları, cihaz kontrol panelleri, sıvı seviyesi algılama (elektrotlar bir tankın dışına yerleştirildiğinde).
+*   **I2C Konsepti:** Bu cihaz, I2C'nin **kesme (interrupt)** yeteneğini kullanan mükemmel bir örnektir.
+    1.  **Sürekli Tarama:** MPR121, bağlı olduğu 12 elektrotun kapasitansını sürekli olarak kendisi ölçer.
+    2.  **Kesme Üretimi:** Bir dokunma veya bırakma olayı algıladığında, `IRQ` (Interrupt Request) pinini LOW'a çeker.
+    3.  **Master'ın Tepkisi:** Mikroişlemci, bu IRQ sinyalini bir kesme olarak algılar. Kesme servis rutini içinde, I2C üzerinden MPR121'in `Status Register`'ını okuyarak hangi tuşa basıldığını veya bırakıldığını öğrenir. Bu "olay-sürümlü" (event-driven) yaklaşım, Master'ın sürekli olarak sensörü sorgulamasını (polling) engelleyerek işlemci yükünü büyük ölçüde azaltır.
+
+> **İmaj Tarifi 15: Olay Sürümlü I2C İletişimi (Dokunmatik Sensör)**
+>
+> Bir blok diyagramı çizin.
+> *   Sağda "MPR121" kutusu olsun. Bu kutuya "12x Elektrot Pedi"nden hatlar girsin.
+> *   Solda "Mikroişlemci" kutusu olsun.
+> *   MPR121 ile Mikroişlemci arasında iki farklı bağlantı gösterin:
+>     1.  Standart `SDA/SCL` hatları (çift yönlü ok). Etiketi: "Veri Sorgulama".
+>     2.  MPR121'den Mikroişlemci'ye giden tek yönlü bir ok. Etiketi: "**IRQ** - Dikkat, bir olay oldu!".
+> Bu görsel, veri yolu ile sinyalizasyon/uyarı yolunun nasıl ayrıldığını ve verimli bir şekilde birlikte çalıştığını gösterir.
+
+#### 9.1.8 Yakıt Göstergeleri ve Batarya Monitörleri (Örn: MAX17043, BQ27421)
+
+Pil ile çalışan her cihazın en kritik bilgisi, kalan pil ömrüdür. Voltaj ölçmek bir başlangıçtır, ancak "yakıt göstergesi" (fuel gauge) IC'leri, bataryadan geçen akımı entegre ederek, sıcaklığı hesaba katarak ve batarya kimyasına özgü algoritmalar kullanarak çok daha doğru bir "State of Charge" (SoC - Şarj Durumu Yüzdesi) bilgisi sunar.
+
+*   **Kullanım Alanları:** Akıllı telefonlar, dronelar, taşınabilir medikal cihazlar, IoT cihazları.
+*   **I2C Konsepti:** Bu cihazlar, sistem yönetimi için I2C'nin kullanımına harika bir örnektir. Master, periyodik olarak (örneğin her saniyede bir) bu cihazı **sorgular (poll)**. Cihazın ilgili register'larından kalan yüzde (SoC), anlık voltaj, batarya sıcaklığı ve kalan kapasite (mAh) gibi kritik sistem verilerini okur. Bu veriler daha sonra kullanıcı arayüzünde gösterilir veya cihazın güç yönetimi kararlarını (örneğin düşük güç moduna geçme) etkiler.
+
+
+
+
+
+
+
+### 9.2 Mikroişlemci Platformları
+
+#### Arduino I2C Uygulamaları (`Wire` Kütüphanesi)
+
+Arduino, `Wire` kütüphanesi ile I2C kullanımını son derece basitleştirir. Soyutlama seviyesi yüksektir ve yeni başlayanlar için idealdir.
+*   **Temel Fonksiyonlar:**
+    *   `Wire.begin()`: I2C bus'ını başlatır (Master modunda).
+    *   `Wire.beginTransmission(adres)`: Belirtilen adrese veri göndermeye başlar.
+    *   `Wire.write(veri)`: Veriyi bir tampona yazar.
+    *   `Wire.endTransmission()`: Tampondaki veriyi gönderir ve `STOP` koşulu oluşturur.
+    *   `Wire.requestFrom(adres, byteSayisi)`: Bir cihazdan veri talep eder.
+    *   `Wire.read()`: Gelen veriyi okur.
+
+```cpp
+#include <Wire.h>
+
+void setup() {
+  Wire.begin(); // I2C bus'ını başlat
+  Serial.begin(9600);
+}
+
+void loop() {
+  // 0x68 adresindeki MPU-6050'den veri okuma
+  Wire.beginTransmission(0x68);
+  Wire.write(0x3B); // İvmeölçer X verisinin başlangıç register'ı
+  Wire.endTransmission(false); // Repeated start için 'false'
+  
+  Wire.requestFrom(0x68, 6, true); // 6 byte veri iste (AccX, Y, Z)
+
+  int16_t accX = (Wire.read() << 8) | Wire.read();
+  int16_t accY = (Wire.read() << 8) | Wire.read();
+  int16_t accZ = (Wire.read() << 8) | Wire.read();
+
+  Serial.print("AccX: "); Serial.println(accX);
+  delay(500);
+}
+```
+
+#### Raspberry Pi I2C Konfigürasyonu (`smbus` Kütüphanesi)
+
+Raspberry Pi gibi Linux tabanlı sistemlerde I2C, çekirdek (kernel) seviyesinde yönetilir. Python gibi dillerle bu sürücülere kolayca erişilebilir.
+1.  **Aktivasyon:** `sudo raspi-config` komutuyla `Interfacing Options` menüsünden I2C etkinleştirilir.
+2.  **Kütüphane:** Genellikle Python için `smbus2` kütüphanesi kullanılır.
+3.  **Kullanım:** Arduino'ya benzer şekilde, yüksek seviyeli fonksiyonlar mevcuttur.
+
+```python
+import smbus2
+import time
+
+# I2C bus 1'i aç (Raspberry Pi'nin genel I2C portu)
+bus = smbus2.SMBus(1)
+DEVICE_ADDRESS = 0x48 # Örnek bir sensör adresi
+
+while True:
+    # Cihazın 0x00 register'ından bir blok veri (2 byte) oku
+    try:
+        data = bus.read_i2c_block_data(DEVICE_ADDRESS, 0x00, 2)
+        # Gelen 2 byte'ı 16-bit bir sayıya çevir
+        value = (data[0] << 8) | data[1]
+        print(f"Okunan değer: {value}")
+    except IOError:
+        print("I2C cihazına erişilemedi.")
+    
+    time.sleep(1)
+```
+
+#### STM32 I2C HAL Kullanımı
+
+Profesyonel gömülü sistemlerde sıkça kullanılan STM32, HAL (Hardware Abstraction Layer) kütüphaneleri ile donanım üzerinde daha fazla kontrol sunar.
+*   **Temel Fonksiyonlar:** Fonksiyon isimleri, yapılan işi daha net belirtir.
+    *   `HAL_I2C_Master_Transmit()`: Sadece yazma işlemi yapar.
+    *   `HAL_I2C_Master_Receive()`: Sadece okuma işlemi yapar.
+    *   `HAL_I2C_Mem_Write()`: Bir cihazın belirli bir bellek/register adresine yazar.
+    *   `HAL_I2C_Mem_Read()`: Bir cihazın belirli bir bellek/register adresinden okur. Bu, **Combined Format** işlemini otomatik olarak gerçekleştirir.
+
+```c
+// STM32 HAL ile bir sensörün register'ını okuma
+I2C_HandleTypeDef hi2c1; // I2C handle, CubeMX tarafından oluşturulur
+uint8_t reg_addr = 0x2A; // Okunacak register adresi
+uint8_t data_buffer;
+uint16_t SENSOR_ADDR = 0x5C << 1; // 7-bit adresi sola kaydır
+
+// HAL_I2C_Mem_Read, arka planda bir Combined Format işlemi yapar.
+// Timeout değeri (100ms) ile clock stretching ve bus stuck hatalarına karşı koruma sağlar.
+HAL_StatusTypeDef status = HAL_I2C_Mem_Read(&hi2c1, SENSOR_ADDR, reg_addr, I2C_MEMADD_SIZE_8BIT, &data_buffer, 1, 100);
+
+if (status == HAL_OK) {
+  // Okuma başarılı
+} else {
+  // Hata oluştu (NACK, Timeout vb.)
+}
+```
+
+#### Linux `i2c-tools` ve Driver Geliştirme
+
+İleri seviye kullanıcılar ve sistem geliştiricileri için Linux, I2C bus'ını doğrudan komut satırından yönetme imkanı sunar.
+*   **`i2c-tools`:**
+    *   `i2cdetect -y [bus_num]`: Belirtilen I2C bus'ındaki tüm cihazları tarar ve adreslerini bir tablo halinde gösterir. Hangi cihazın bus üzerinde olduğunu doğrulamanın en hızlı yoludur.
+    *   `i2cget -y [bus_num] [chip_addr] [data_addr]`: Bir cihazın belirli bir register'ından bir byte okur.
+    *   `i2cset -y [bus_num] [chip_addr] [data_addr] [value]`: Bir cihazın belirli bir register'ına bir byte yazar.
+
+> **İmaj Tarifi 9: `i2cdetect` Komut Çıktısı**
+>
+> Bir terminal ekranı çiz. İçinde aşağıdaki gibi bir çıktı görünsün:
+> ```bash
+> $ i2cdetect -y 1
+>      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+> 00:                         -- -- -- -- -- -- -- --
+> 10: -- -- -- -- -- -- -- -- 18 -- -- -- -- -- -- --
+> 20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+> 30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+> 40: -- -- -- -- -- -- -- -- 48 -- -- -- -- -- -- --
+> 50: -- -- -- -- -- -- -- 57 -- -- -- -- -- -- -- --
+> 60: -- -- -- -- -- -- -- -- 68 -- -- -- -- -- -- --
+> 70: -- -- -- -- -- -- -- 77
+> ```
+> Bu görüntü, bus 1 üzerinde 0x18, 0x48, 0x57, 0x68 ve 0x77 adreslerinde cihazların olduğunu gösterir. "UU" işareti, bir sürücünün o cihaza bağlı olduğunu belirtir.
+
+*   **Kernel Driver Geliştirme:** En alt seviyede, bir Linux I2C cihaz sürücüsü yazılır. Bu sürücü, `i2c_driver` yapısını kullanarak kendini Linux I2C altyapısına kaydettirir. `probe` fonksiyonu, donanım bulunduğunda çağrılır ve cihazı kullanıma hazırlar. Bu yaklaşım, aygıtın `/dev` altında bir dosya gibi görünmesini sağlar ve uygulamaların standart `read()`, `write()`, `ioctl()` sistem çağrılarıyla cihaza erişmesine olanak tanır. Bu, profesyonel Linux gömülü sistemlerinin temelini oluşturur.
+
+*/}
+
+
+{/*
+
+## 10. Kod Örnekleri ve Implementasyon
+### 10.1 C/C++ Implementasyonu
+- Bit-banging yaklaşımı
+- Hardware I2C kullanımı
+- Interrupt-driven I2C işlemleri
+
+### 10.2 Python Örnekleri
+- smbus kütüphanesi kullanımı
+- Raspberry Pi üzerinde I2C
+- Sensör okuma örnekleri
+
+## 11. I2C vs Diğer Protokoller
+### 11.1 SPI ile Karşılaştırma
+- Avantajlar ve dezavantajlar
+- Hız ve pin sayısı karşılaştırması
+- Hangi durumlarda hangisini tercih etmeli
+
+### 11.2 UART ve Diğer Protokollerle Karşılaştırma
+- CAN, LIN, USB gibi alternatiflerin değerlendirilmesi
+- Uygulama alanlarına göre seçim kriterleri
+
+## 12. Gelişmiş Konular
+### 12.1 System Management Bus (SMBus)
+- I2C ile benzerlikler ve farklılıklar
+- Packet Error Checking (PEC)
+- SMBus-specific komutlar
+
+### 12.2 PMBus (Power Management Bus)
+- Güç yönetim uygulamaları
+- Digital power control
+- Telemetri ve monitoring
+
+## 13. Endüstriyel Uygulamalar ve Standartlar
+### 13.1 Otomotiv Uygulamaları
+- Body control modules
+- Infotainment sistemleri
+- Sensör networkleri
+
+### 13.2 IoT ve Embedded Sistemler
+- Sensor networks
+- Smart home uygulamaları
+- Wearable devices
+
+## 14. Güvenlik ve Güvenilirlik
+### 14.1 Bus Security
+- Eavesdropping riskleri
+- Man-in-the-middle saldırıları
+- Güvenlik önlemleri
+
+### 14.2 Fault Tolerance
+- Redundant bus yapıları
+- Error detection ve correction
+- System reliability artırma yöntemleri
+
+## 15. Gelecek ve Yeni Gelişmeler
+### 15.1 I3C (Improved Inter-Integrated Circuit)
+- I2C'nin geliştirilmiş versiyonu
+- Backward compatibility
+- Performans iyileştirmeleri
+
+### 15.2 Alternatif Teknolojiler
+- Single Wire protocols
+- Wireless alternatives
+- Trend'ler ve gelecek öngörüleri
+
+## 16. Sonuç ve Öneriler
+- I2C protokolünün günümüzdeki yeri
+- Embedded sistem geliştiricileri için tavsiyeler
+- Best practices özeti
+- Kaynaklar ve ileri okuma önerileri
+
+## Ekler
+### Ek A: I2C Komut Referansı
+### Ek B: Timing Parametreleri Tablosu
+### Ek C: Yaygın I2C Cihaz Adresleri
+### Ek D: Troubleshooting Checklist
+### Ek E: Kod Örnekleri Repository Linkleri
+*/}
+
+## **Referanslar**

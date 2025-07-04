@@ -103,68 +103,17 @@ if (!Astro.site && import.meta.env.PROD) {
                 text-decoration: underline;
             }
 
-            /* MOBIL TABLO SORUNU ÇÖZÜMÜ */
+            /* MOBIL TABLO ve DÜZEN SORUNLARINI ÇÖZEN "GÜVENLİK AĞI" CSS'i */
             @media (max-width: 768px) {
-                /* Tablo container'ını mobilde scroll yap */
-                .prose table, .prose-invert table {
-                    display: block !important;
-                    width: 100% !important;
-                    overflow-x: auto !important;
-                    white-space: nowrap !important;
-                    border-collapse: collapse !important;
-                }
-                
-                .prose tbody, .prose-invert tbody,
-                .prose thead, .prose-invert thead {
-                    display: block !important;
-                }
-                
-                .prose tr, .prose-invert tr {
-                    display: table !important;
-                    width: 100% !important;
-                    table-layout: fixed;
-                }
-                
-                .prose td, .prose-invert td,
-                .prose th, .prose-invert th {
-                    display: table-cell !important;
-                    padding: 8px !important;
-                    font-size: 0.875rem !important;
-                    word-wrap: break-word !important;
-                    min-width: 80px !important;
-                }
-                
-                /* Ana container için */
-                .prose, .prose-invert {
-                    max-width: 100% !important;
-                    width: 100% !important;
-                    overflow-x: hidden !important;
-                }
-                
-                /* Tüm elementlerin taşmaması için */
-                .prose *, .prose-invert * {
-                    max-width: 100% !important;
-                    box-sizing: border-box !important;
-                }
-                
-                /* Kod blokları için */
-                .prose pre, .prose-invert pre {
-                    overflow-x: auto !important;
-                    white-space: pre-wrap !important;
-                    word-break: break-all !important;
-                }
-                
-                /* Resimler için */
-                .prose img, .prose-invert img {
-                    max-width: 100% !important;
-                    height: auto !important;
-                }
-                
-                /* Inline kod parçaları */
-                .prose code, .prose-invert code {
-                    word-break: break-all !important;
-                    white-space: pre-wrap !important;
-                }
+                .prose table, .prose-invert table { display: block !important; width: 100% !important; overflow-x: auto !important; white-space: nowrap !important; border-collapse: collapse !important; }
+                .prose tbody, .prose-invert tbody, .prose thead, .prose-invert thead { display: block !important; }
+                .prose tr, .prose-invert tr { display: table !important; width: 100% !important; table-layout: fixed; }
+                .prose td, .prose-invert td, .prose th, .prose-invert th { display: table-cell !important; padding: 8px !important; font-size: 0.875rem !important; word-wrap: break-word !important; min-width: 80px !important; }
+                .prose, .prose-invert { max-width: 100% !important; width: 100% !important; overflow-x: hidden !important; }
+                .prose *, .prose-invert * { max-width: 100% !important; box-sizing: border-box !important; }
+                .prose pre, .prose-invert pre { overflow-x: auto !important; white-space: pre-wrap !important; word-break: break-all !important; }
+                .prose img, .prose-invert img { max-width: 100% !important; height: auto !important; }
+                .prose code, .prose-invert code { word-break: break-all !important; white-space: pre-wrap !important; }
             }
         </style>
     </head>
@@ -172,7 +121,6 @@ if (!Astro.site && import.meta.env.PROD) {
         <Header siteTitle={siteName} />
 
         <main class="px-4 py-8 flex-grow w-full overflow-x-hidden">
-            {/* Mobilde tablo taşması için wrapper */}
             <div class="max-w-full">
                 <article class="prose prose-invert w-full max-w-none">
                     <slot />
@@ -182,9 +130,61 @@ if (!Astro.site && import.meta.env.PROD) {
         
         <Footer />
 
-        {/* KOD KOPYALAMA SCRIPT'İ */}
+        {/* GEREKLİ SCRIPT GERİ EKLENDİ */}
         <script is:inline>
-            // Kopyalama butonu script'iniz burada
+            function addCopyButtons() {
+                document.querySelectorAll('pre:has(code)').forEach((block) => {
+                    if (block.querySelector('button.copy-button')) return;
+                    if (window.getComputedStyle(block).position === 'static') {
+                     	block.style.position = 'relative';
+                    }
+                    const copyButton = document.createElement('button');
+                    copyButton.className = 'copy-button';
+                    copyButton.textContent = 'Kopyala';
+                    copyButton.setAttribute('aria-label', 'Kodu kopyala');
+                    copyButton.type = 'button';
+                    block.appendChild(copyButton);
+                    copyButton.addEventListener('click', async () => {
+                        const codeElement = block.querySelector('code');
+                        const codeToCopy = codeElement ? codeElement.textContent : '';
+                        if (codeToCopy && navigator.clipboard) {
+                            try {
+                                await navigator.clipboard.writeText(codeToCopy);
+                                copyButton.textContent = 'Kopyalandı!';
+                                copyButton.classList.add('copied');
+                                copyButton.setAttribute('aria-label', 'Kod kopyalandı');
+                                setTimeout(() => {
+                                    copyButton.textContent = 'Kopyala';
+                                    copyButton.classList.remove('copied');
+                                    copyButton.setAttribute('aria-label', 'Kodu kopyala');
+                                }, 2000);
+                            } catch (err) {
+                                console.error('Kod kopyalanamadı:', err);
+                                copyButton.textContent = 'Hata';
+                                setTimeout(() => {
+                                    copyButton.textContent = 'Kopyala';
+                                    copyButton.setAttribute('aria-label', 'Kodu kopyala');
+                                }, 2000);
+                            }
+                        } else {
+                            console.warn('Pano API desteklenmiyor veya kopyalanacak kod bulunamadı.');
+                            copyButton.textContent = 'Hata!';
+                            copyButton.disabled = true;
+                            setTimeout(() => {
+                                copyButton.textContent = 'Kopyala';
+                                copyButton.disabled = false;
+                                copyButton.setAttribute('aria-label', 'Kodu kopyala');
+                            }, 2000);
+                        }
+                    });
+                });
+            }
+            const initCopyButtons = () => {
+                document.querySelectorAll('pre > button.copy-button').forEach(btn => btn.remove());
+                addCopyButtons();
+            };
+            if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initCopyButtons); } else { initCopyButtons(); }
+            document.addEventListener('astro:after-swap', initCopyButtons);
         </script>
     </body>
 </html>

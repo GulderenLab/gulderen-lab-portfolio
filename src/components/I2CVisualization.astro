@@ -1,0 +1,206 @@
+---
+// I2CVisualization.astro
+---
+
+<div class="i2c-container">
+  <div id="i2c-sketch-container"></div>
+  <p class="i2c-help">Animasyonu başlatmak/durdurmak için tuval üzerine tıklayın</p>
+</div>
+
+<style>
+  .i2c-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #f8fafc;
+  }
+  
+  #i2c-sketch-container canvas {
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .i2c-help {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+    font-style: italic;
+  }
+</style>
+
+<script>
+  // p5.js CDN'den yükleniyor
+  const script = document.createElement('script');
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js';
+  script.onload = () => {
+    new p5((p) => {
+      let isRunning = false;
+      let time = 0;
+      let clockPeriod = 80; // SCL periyodu (frame cinsinden)
+      let bitData = [1, 0, 1, 1, 0, 1, 0, 0]; // Örnek veri bitleri
+      
+      p.setup = () => {
+        p.createCanvas(800, 300);
+      };
+      
+      p.draw = () => {
+        p.background(255);
+        
+        // Grid çizgiler
+        p.stroke(240);
+        p.strokeWeight(1);
+        for (let i = 0; i < p.width; i += 40) {
+          p.line(i, 0, i, p.height);
+        }
+        for (let i = 0; i < p.height; i += 30) {
+          p.line(0, i, p.width, i);
+        }
+        
+        // Zaman eksenleri
+        let startX = 80;
+        let endX = p.width - 80;
+        let sclY = 80;  // SCL hattı Y konumu
+        let sdaY = 180; // SDA hattı Y konumu
+        
+        // Etiketler
+        p.fill(0);
+        p.noStroke();
+        p.textSize(16);
+        p.textAlign(p.RIGHT, p.CENTER);
+        p.text("SCL", startX - 10, sclY);
+        p.text("SDA", startX - 10, sdaY);
+        
+        // Ana hat çizgileri (referans)
+        p.stroke(200);
+        p.strokeWeight(1);
+        p.line(startX, sclY, endX, sclY);
+        p.line(startX, sdaY, endX, sdaY);
+        
+        if (isRunning) {
+          time += 0.3;
+        }
+        
+        // SCL sinyal çizimi (saat darbeleri - kare dalga)
+        p.stroke(0, 100, 255);
+        p.strokeWeight(3);
+        p.noFill();
+        
+        let prevSclY = sclY;
+        for (let x = startX; x <= endX; x += 3) {
+          let t = (x - startX) * 0.05 + time * 0.1;
+          let clockCycle = Math.floor(t) % 2;
+          let currentSclY = clockCycle === 0 ? sclY + 30 : sclY - 30;
+          
+          if (x === startX) {
+            prevSclY = currentSclY;
+          }
+          
+          // Dikey çizgiler (geçişler)
+          if (prevSclY !== currentSclY) {
+            p.line(x, prevSclY, x, currentSclY);
+          }
+          // Yatay çizgiler
+          p.line(x, currentSclY, x + 3, currentSclY);
+          
+          prevSclY = currentSclY;
+        }
+        
+        // SDA sinyal çizimi (veri bitleri - kare dalga)
+        p.stroke(255, 100, 0);
+        p.strokeWeight(3);
+        p.noFill();
+        
+        let prevSdaY = sdaY;
+        for (let x = startX; x <= endX; x += 3) {
+          let t = (x - startX) * 0.05 + time * 0.1;
+          let bitIndex = Math.floor(t / 2) % bitData.length;
+          let bit = bitData[bitIndex];
+          let currentSdaY = bit ? sdaY - 30 : sdaY + 30;
+          
+          if (x === startX) {
+            prevSdaY = currentSdaY;
+          }
+          
+          // SCL düşük olduğunda veri değişimi göster
+          let clockCycle = Math.floor(t) % 2;
+          if (clockCycle === 0 && prevSdaY !== currentSdaY) {
+            p.line(x, prevSdaY, x, currentSdaY);
+          }
+          // Yatay çizgiler
+          p.line(x, currentSdaY, x + 3, currentSdaY);
+          
+          prevSdaY = currentSdaY;
+        }
+        
+        // Veri geçerlilik pencerelerini vurgula (SCL yüksek olduğu zaman)
+        p.fill(100, 255, 100, 80);
+        p.noStroke();
+        for (let x = startX; x <= endX; x += 3) {
+          let t = (x - startX) * 0.05 + time * 0.1;
+          let clockCycle = Math.floor(t) % 2;
+          
+          if (clockCycle === 1) { // SCL yüksek
+            p.rect(x, 30, 3, 220);
+          }
+        }
+        
+        // "Veri Geçerli" etiketleri
+        p.fill(0, 150, 0);
+        p.textAlign(p.CENTER, p.CENTER);
+        p.textSize(12);
+        let labelShown = false;
+        for (let x = startX; x <= endX; x += 60) {
+          let t = (x - startX) * 0.05 + time * 0.1;
+          let clockCycle = Math.floor(t) % 2;
+          
+          if (clockCycle === 1 && !labelShown) { // SCL yüksek
+            p.text("Veri Geçerli", x + 30, 270);
+            labelShown = true;
+          }
+        }
+        
+        // Seviye etiketleri
+        p.fill(0);
+        p.textAlign(p.LEFT, p.CENTER);
+        p.textSize(10);
+        p.text("HIGH", endX + 5, sclY - 30);
+        p.text("LOW", endX + 5, sclY + 30);
+        p.text("HIGH", endX + 5, sdaY - 30);
+        p.text("LOW", endX + 5, sdaY + 30);
+        
+        // Durum göstergesi
+        p.fill(isRunning ? [0, 200, 0] : [200, 0, 0]);
+        p.noStroke();
+        p.circle(p.width - 30, 30, 20);
+        
+        p.fill(255);
+        p.textAlign(p.CENTER, p.CENTER);
+        p.textSize(10);
+        p.text(isRunning ? "ON" : "OFF", p.width - 30, 30);
+        
+        // Başlık
+        p.fill(0);
+        p.textAlign(p.CENTER, p.CENTER);
+        p.textSize(16);
+        p.text("I²C Bit Düzeyinde Veri Aktarımı", p.width / 2, 20);
+      };
+      
+      p.mousePressed = () => {
+        if (p.mouseX >= 0 && p.mouseX <= p.width && 
+            p.mouseY >= 0 && p.mouseY <= p.height) {
+          isRunning = !isRunning;
+          return false;
+        }
+      };
+      
+    }, 'i2c-sketch-container');
+  };
+  
+  document.head.appendChild(script);
+</script>

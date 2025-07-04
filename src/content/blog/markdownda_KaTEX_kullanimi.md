@@ -154,12 +154,22 @@ KaTeX’te bazı karakterler hem matematiksel anlam taşıdığı hem de Markdow
 
 Aşağıda sık karşılaşılan bazı özel durumlar:
 
-| Karakter                | Açıklama                               | Kullanımı                       |
-| ----------------------- | -------------------------------------- | ------------------------------- |
-| `\`                     | KaTeX komutlarının başında yer alır    | `\alpha`, `\sum`, `\frac{a}{b}` |
-| `{}`                    | Gruplama için kullanılır               | `\frac{a}{b}`                   |
-| `#`, `%`, `_`, `&`, `$` | Kaçış gerektirebilir                   | `\#`, `\%`, `\_`, `\&`, `\$`    |
-| `^`, `_`                | Üst simge ve alt simge için kullanılır | `x^2`, `a_{ij}`                 |
+**Backslash (`\`)**
+- Açıklama: KaTeX komutlarının başında yer alır
+- Kullanımı: `\alpha` `\sum` `\frac{a}{b}`
+
+**Süslü parantezler (`{}`)**
+- Açıklama: Gruplama için kullanılır
+- Kullanımı: `\frac{a}{b}`
+
+**Özel karakterler (`#`, `%`, `_`, `&`, `$`)**
+- Açıklama: Kaçış gerektirebilir
+- Kullanımı: `\#` `\%` `\_` `\&` `\$`
+
+**Üst/alt simge (`^`, `_`)**
+- Açıklama: Üst simge ve alt simge için kullanılır
+- Kullanımı: `x^2` `a_{ij}`
+
 
 Örnek:
 

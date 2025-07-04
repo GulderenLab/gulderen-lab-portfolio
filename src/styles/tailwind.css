@@ -1,23 +1,31 @@
-/* src/styles/tailwind.css */
+/* src/styles/tailwind.css (Nihai Temiz Versiyon) */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 
-  SİTENİN TAMAMI İÇİN GEÇERLİ GLOBAL DÜZELTMELER
-  Bu kurallar, `.prose` sınıfı olmasa bile çalışır ve 
-  mobil düzeni bozan taşmaları engeller.
-*/
+@layer base {
+  /* Linklerin ve başlıkların alt çizgisini kaldırır */
+  .prose a, .prose-invert a,
+  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    @apply no-underline;
+  }
+  .prose a:hover, .prose-invert a:hover {
+    @apply underline;
+  }
+  
+  /* 
+    MOBİL DÜZEN SORUNLARINI KÖKTEN ÇÖZEN 2 KURAL:
+  */
 
-/* Uzun kod bloklarının taşmasını engeller */
-pre {
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-
-/* Tabloların taşmasını engeller ve kaydırılabilir yapar */
-table {
-  display: block;
-  overflow-x: auto;
+  /* 1. Tüm kod bloklarının içindeki uzun metinlerin taşmasını engeller */
+  .prose pre, .prose-invert pre {
+    white-space: pre-wrap;       /* Metni koru ama gerektiğinde alt satıra geç */
+    word-break: break-all;       /* Çok uzun tek kelimeleri bile ortasından kır */
+  }
+  
+  /* 2. Tüm tabloların mobilde yatayda kaydırılabilir olmasını sağlar */
+  .prose table, .prose-invert table {
+    @apply block w-full overflow-x-auto;
+  }
 }

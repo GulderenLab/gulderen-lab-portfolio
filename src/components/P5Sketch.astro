@@ -1,0 +1,75 @@
+---
+// Dosya: src/components/P5Sketch.astro (En Sağlam Test Versiyonu)
+
+// Props'ları bileşenin en üstünde tanımlıyoruz.
+interface Props {
+  width?: number;
+  height?: number;
+}
+const { width = 400, height = 400 } = Astro.props;
+
+// Benzersiz ID'yi yine burada oluşturuyoruz.
+const sketchId = 'p5-container-' + Math.random().toString(36).substring(2, 9);
+---
+
+<!-- 
+  ID'yi ve boyutları div'e atıyoruz.
+  Ayrıca, script'in bu ID'yi okuyabilmesi için bir "data attribute" ekliyoruz.
+  Bu, `define:vars`'tan daha güvenilir bir yöntemdir.
+-->
+<div 
+  id={sketchId} 
+  data-container-id={sketchId} 
+  style={`width: 100%; max-width: ${width}px; height: ${height}px; margin: 1.5rem auto; border: 1px solid #888;`}
+>
+</div>
+
+<script>
+  // define:vars KULLANMIYORUZ. Script kendi başına çalışacak.
+
+  // 1. Sayfadaki tüm potansiyel p5 çizim konteynerlerini bul.
+  const p5Containers = document.querySelectorAll('[data-container-id]');
+
+  // 2. Eğer konteyner varsa, her biri için p5.js'i başlat.
+  if (p5Containers.length > 0) {
+    // Sadece henüz işlenmemiş konteynerler için çalıştır (opsiyonel ama iyi pratik).
+    p5Containers.forEach(container => {
+      if (container.dataset.initialized) return;
+      container.dataset.initialized = 'true';
+
+      // Dinamik olarak p5'i import ediyoruz.
+      import('p5').then(({ default: p5 }) => {
+        
+        const sketch = (p) => {
+          // --- TEMA TESPİT ETME MANTIĞI ---
+          const isDarkMode = document.documentElement.classList.contains('dark');
+          const themeColors = {
+            background: isDarkMode ? 30 : 240,
+            stroke: isDarkMode ? 255 : 0,
+          };
+
+          p.setup = () => {
+            const canvas = p.createCanvas(container.clientWidth, container.clientHeight);
+            canvas.parent(container); // Doğrudan bulunan 'container' elementini kullan.
+            p.background(themeColors.background);
+            p.strokeWeight(3);
+          };
+
+          p.draw = () => {
+            if (p.mouseIsPressed) {
+              p.stroke(themeColors.stroke);
+              p.line(p.mouseX, p.mouseY, p.pmouseX, p.pmouseY);
+            }
+          };
+
+          p.windowResized = () => {
+            p.resizeCanvas(container.clientWidth, container.clientHeight);
+            p.background(themeColors.background);
+          }
+        };
+
+        new p5(sketch);
+      });
+    });
+  }
+</script>

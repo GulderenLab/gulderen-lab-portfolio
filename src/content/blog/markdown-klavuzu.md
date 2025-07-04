@@ -1116,7 +1116,7 @@ Web-page-design/
 **Markdown Kodu (`markdown-klavuzu.md` içinde):**
 
 ```markdown
-![Denizden Gelen Huzur]((/images/Marmaris-dalgalar.jpg "Örnek bir fotoğraf")
+![Denizden Gelen Huzur](/images/Marmaris-dalgalar.jpg "Örnek bir fotoğraf")
 ```
 
 ![Denizden Gelen Huzur](/images/Marmaris-dalgalar.jpg "Örnek bir fotoğraf")

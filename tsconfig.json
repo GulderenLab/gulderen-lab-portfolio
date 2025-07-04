@@ -1,5 +1,19 @@
 {
   "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    // baseUrl, paths'ın doğru çalışması için gereklidir.
+    // Projenin kökünü referans alır.
+    "baseUrl": ".",
+    // Yol takma adlarını (aliases) burada tanımlıyoruz.
+    "paths": {
+      // "@/" ile başlayan her yolu "src/" klasörünün içinden ara.
+      "@/*": ["src/*"]
+    },
+    // JSX ayarlarını Astro'nun doğru çalışması için eklemek iyi bir pratiktir.
+    "jsx": "preserve",
+    "jsxImportSource": "astro"
+  },
+  // Bu kısımlar olduğu gibi kalabilir.
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"]
 }

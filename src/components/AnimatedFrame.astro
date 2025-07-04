@@ -1,0 +1,45 @@
+---
+const { images } = Astro.props;
+---
+
+<style>
+  @keyframes loopFrames {
+    0%, 25%   { opacity: 1; }
+    26%, 100% { opacity: 0; }
+  }
+  @keyframes loopFrames2 {
+    0%, 25%   { opacity: 0; }
+    26%, 50%  { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  @keyframes loopFrames3 {
+    0%, 50%   { opacity: 0; }
+    51%, 75%  { opacity: 1; }
+    76%, 100% { opacity: 0; }
+  }
+  @keyframes loopFrames4 {
+    0%, 75%   { opacity: 0; }
+    76%, 100% { opacity: 1; }
+  }
+
+  .animate-frame-1 { animation: loopFrames 4s infinite; }
+  .animate-frame-2 { animation: loopFrames2 4s infinite; }
+  .animate-frame-3 { animation: loopFrames3 4s infinite; }
+  .animate-frame-4 { animation: loopFrames4 4s infinite; }
+</style>
+
+<div class="flex justify-center my-8">
+  <div class="relative w-full">
+    <div class="relative w-full bg-white rounded-lg shadow-sm" style="aspect-ratio: 4 / 3;">
+      {
+        images.map((src, index) => (
+          <img
+            src={src}
+            alt={`Frame ${index + 1}`}
+            class={`absolute inset-0 w-full h-full object-contain animate-frame-${index + 1}`}
+          />
+        ))
+      }
+    </div>
+  </div>
+</div>
