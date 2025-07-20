@@ -1,0 +1,130 @@
+---
+// src/components/FAQ.astro
+// Interactive FAQ component with smooth animations
+---
+
+<div class="bg-gradient-to-br from-slate-800/30 to-slate-900/30 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-xl">
+  <div class="text-center mb-8">
+    <h3 class="text-2xl font-bold text-white mb-2">Sık Sorulan Sorular</h3>
+    <p class="text-gray-400">Merak ettiğiniz konular hakkında hızlı yanıtlar</p>
+  </div>
+
+  <div class="space-y-4">
+    <!-- FAQ Item 1 -->
+    <div class="faq-item border border-slate-700/50 rounded-lg overflow-hidden">
+      <button class="faq-question w-full text-left p-4 bg-slate-700/30 hover:bg-slate-700/50 transition-all duration-300 flex items-center justify-between">
+        <span class="text-white font-medium">Projeler hakkında detaylı bilgi alabilir miyim?</span>
+        <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div class="faq-answer overflow-hidden transition-all duration-300 max-h-0">
+        <div class="p-4 bg-slate-800/30 text-gray-300 leading-relaxed">
+          Tabii ki! Her projenin detaylı açıklaması, kullanılan teknolojiler, kaynak kodları ve dokümantasyon projeler sayfasında bulunmaktadır. Ek sorularınız için benimle iletişime geçebilirsiniz.
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Item 2 -->
+    <div class="faq-item border border-slate-700/50 rounded-lg overflow-hidden">
+      <button class="faq-question w-full text-left p-4 bg-slate-700/30 hover:bg-slate-700/50 transition-all duration-300 flex items-center justify-between">
+        <span class="text-white font-medium">İşbirliği teklifleri için nasıl iletişim kurabilirim?</span>
+        <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div class="faq-answer overflow-hidden transition-all duration-300 max-h-0">
+        <div class="p-4 bg-slate-800/30 text-gray-300 leading-relaxed">
+          İşbirliği teklifleri için yukarıdaki iletişim formunu kullanabilir veya doğrudan <a href="mailto:iletisim@gulderenlab.com" class="text-blue-400 hover:text-blue-300 underline">iletisim@gulderenlab.com</a> adresine e-posta gönderebilirsiniz. Projelerinizi detaylı bir şekilde açıklarsanız size daha iyi yardımcı olabilirim.
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Item 3 -->
+    <div class="faq-item border border-slate-700/50 rounded-lg overflow-hidden">
+      <button class="faq-question w-full text-left p-4 bg-slate-700/30 hover:bg-slate-700/50 transition-all duration-300 flex items-center justify-between">
+        <span class="text-white font-medium">Hangi teknolojiler konusunda uzmanım?</span>
+        <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div class="faq-answer overflow-hidden transition-all duration-300 max-h-0">
+        <div class="p-4 bg-slate-800/30 text-gray-300 leading-relaxed">
+          Elektronik, gömülü sistemler, web geliştirme, CAD tasarım, 3D modelleme, IoT projeleri ve yazılım geliştirme konularında deneyimim bulunmaktadır. Özellikle React, Astro, TypeScript, Python ve C++ dillerinde çalışıyorum.
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Item 4 -->
+    <div class="faq-item border border-slate-700/50 rounded-lg overflow-hidden">
+      <button class="faq-question w-full text-left p-4 bg-slate-700/30 hover:bg-slate-700/50 transition-all duration-300 flex items-center justify-between">
+        <span class="text-white font-medium">Blog yazılarımı nasıl takip edebilirim?</span>
+        <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div class="faq-answer overflow-hidden transition-all duration-300 max-h-0">
+        <div class="p-4 bg-slate-800/30 text-gray-300 leading-relaxed">
+          Blog sayfasından tüm yazılarıma ulaşabilirsiniz. Sosyal medya hesaplarımı takip ederek yeni yazılardan haberdar olabilir, RSS beslemesi ile de otomatik güncellemeler alabilirsiniz.
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Item 5 -->
+    <div class="faq-item border border-slate-700/50 rounded-lg overflow-hidden">
+      <button class="faq-question w-full text-left p-4 bg-slate-700/30 hover:bg-slate-700/50 transition-all duration-300 flex items-center justify-between">
+        <span class="text-white font-medium">Özel projeler için danışmanlık hizmeti veriyor musunuz?</span>
+        <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div class="faq-answer overflow-hidden transition-all duration-300 max-h-0">
+        <div class="p-4 bg-slate-800/30 text-gray-300 leading-relaxed">
+          Evet, özel projeler için danışmanlık hizmeti veriyorum. Elektronik tasarım, yazılım geliştirme, web uygulamaları ve teknik çözümler konularında size yardımcı olabilirim. Detaylar için lütfen benimle iletişime geçin.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const faqItems = document.querySelectorAll('.faq-item');
+  
+  faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    const answer = item.querySelector('.faq-answer');
+    const icon = item.querySelector('.faq-icon');
+    
+    question.addEventListener('click', function() {
+      const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+      
+      // Close all FAQ items
+      faqItems.forEach(otherItem => {
+        const otherAnswer = otherItem.querySelector('.faq-answer');
+        const otherIcon = otherItem.querySelector('.faq-icon');
+        otherAnswer.style.maxHeight = '0px';
+        otherIcon.style.transform = 'rotate(0deg)';
+      });
+      
+      // Open this FAQ item if it was closed
+      if (!isOpen) {
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+        icon.style.transform = 'rotate(180deg)';
+      }
+    });
+  });
+});
+</script>
+
+<style>
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+  
+  .faq-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+</style>

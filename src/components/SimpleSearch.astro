@@ -1,0 +1,248 @@
+---
+// src/components/SimpleSearch.astro
+// Simple, clean search component
+---
+
+<div class="simple-search">
+  <div class="search-input-wrapper">
+    <input 
+      id="simple-search-input"
+      type="text" 
+      placeholder="Blog yazıları ve projeler içinde ara..."
+      class="search-input"
+    />
+    <button id="simple-search-btn" class="search-btn">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+      </svg>
+    </button>
+  </div>
+  
+  <div id="simple-search-results" class="search-results" style="display: none;">
+    <div class="results-header">
+      <span id="results-count">0 sonuç</span>
+    </div>
+    <div id="results-container"></div>
+  </div>
+</div>
+
+<style>
+.simple-search {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 50px 12px 16px;
+  border: 2px solid #374151;
+  border-radius: 8px;
+  background-color: #1f2937;
+  color: #f9fafb;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #40e0d0;
+}
+
+.search-btn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.search-btn:hover {
+  color: #40e0d0;
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #1f2937;
+  border: 2px solid #374151;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 50;
+  margin-top: 2px;
+}
+
+.results-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #374151;
+  background-color: #111827;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.result-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #374151;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.result-item:hover {
+  background-color: #374151;
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.result-title {
+  color: #40e0d0;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-decoration: none;
+}
+
+.result-description {
+  color: #d1d5db;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.result-type {
+  color: #9ca3af;
+  font-size: 12px;
+  background-color: #374151;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.no-results {
+  padding: 20px;
+  text-align: center;
+  color: #9ca3af;
+}
+</style>
+
+<script>
+class SimpleSearch {
+  constructor() {
+    this.searchData = [];
+    this.searchTimeout = null;
+    
+    this.input = document.getElementById('simple-search-input');
+    this.button = document.getElementById('simple-search-btn');
+    this.results = document.getElementById('simple-search-results');
+    this.resultsContainer = document.getElementById('results-container');
+    this.resultsCount = document.getElementById('results-count');
+  }
+  
+  init() {
+    if (!this.input) return;
+    
+    this.loadData();
+    this.setupEvents();
+  }
+  
+  setupEvents() {
+    this.input.addEventListener('input', (e) => {
+      const query = e.target.value.trim();
+      
+      clearTimeout(this.searchTimeout);
+      
+      if (query.length >= 2) {
+        this.searchTimeout = setTimeout(() => {
+          this.search(query);
+        }, 300);
+      } else {
+        this.hideResults();
+      }
+    });
+    
+    this.button.addEventListener('click', () => {
+      const query = this.input.value.trim();
+      if (query.length >= 2) {
+        this.search(query);
+      }
+    });
+    
+    // Hide results when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.simple-search')) {
+        this.hideResults();
+      }
+    });
+  }
+  
+  async loadData() {
+    try {
+      const response = await fetch('/api/search-data.json');
+      if (response.ok) {
+        this.searchData = await response.json();
+      }
+    } catch (error) {
+      // Fallback data
+      this.searchData = [
+        {
+          title: 'ESP32 Tabanlı IoT Sensör Ağı',
+          description: 'ESP32 mikrodenetleyici kullanarak çoklu sensör verilerini WiFi üzerinden buluta gönderen IoT sensör ağı projesi.',
+          href: '/projeler/example-project/',
+          category: 'Proje'
+        }
+      ];
+    }
+  }
+  
+  search(query) {
+    if (!query) return;
+    
+    const results = this.searchData.filter(item =>
+      item.title.toLowerCase().includes(query.toLowerCase()) ||
+      item.description.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    this.displayResults(results);
+  }
+  
+  displayResults(results) {
+    this.resultsCount.textContent = `${results.length} sonuç`;
+    
+    if (results.length === 0) {
+      this.resultsContainer.innerHTML = '<div class="no-results">Sonuç bulunamadı</div>';
+    } else {
+      this.resultsContainer.innerHTML = results.map(result => `
+        <div class="result-item" onclick="window.location.href='${result.href}'">
+          <div class="result-title">${result.title}</div>
+          <div class="result-description">${result.description}</div>
+          <span class="result-type">${result.category}</span>
+        </div>
+      `).join('');
+    }
+    
+    this.results.style.display = 'block';
+  }
+  
+  hideResults() {
+    this.results.style.display = 'none';
+  }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  const search = new SimpleSearch();
+  search.init();
+});
+</script>

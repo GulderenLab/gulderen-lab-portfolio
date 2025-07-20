@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import tailwind from "@astrojs/tailwind";
+import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
@@ -9,6 +9,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+
 
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -26,17 +27,24 @@ export default defineConfig({
     }),
     sitemap(),
     react({
-      include: ['**/react/*', '**/*.jsx', '**/*.tsx']
+      include: ['**/react/*', '**/*.jsx', '**/*.tsx'],
     }),
   ],
 
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [
-      [rehypeKatex, {
-        strict: false,
-        trust: true,
-      }],
+      [
+        rehypeKatex,
+        {
+          strict: false,
+          trust: true,
+          // Türkçe karakter makrosu örneği
+          macros: {
+            '\\iç': '\\text{iç}',
+          },
+        },
+      ],
       rehypeSlug,
       [
         rehypeAutolinkHeadings,

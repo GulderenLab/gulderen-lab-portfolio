@@ -1,0 +1,253 @@
+---
+// src/components/SkillsSection.astro
+// Interactive skills and expertise section with progress bars and animations
+---
+
+<section class="py-20">
+  <div class="max-w-6xl mx-auto px-4">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <h2 class="text-4xl font-bold text-white mb-4">
+        Uzmanlık Alanlarım
+      </h2>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+        Yıllar içinde edindiğim deneyim ve sürekli öğrenme tutkumla geliştirdiğim teknik yeteneklerim
+      </p>
+    </div>
+
+    <!-- Skills Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <!-- Frontend Development -->
+      <div class="skill-card bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mr-4">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white">Frontend Geliştirme</h3>
+        </div>
+        <p class="text-gray-400 mb-4">Modern web teknolojileri ile kullanıcı dostu arayüzler tasarlıyorum.</p>
+        <div class="space-y-3">
+          <div class="skill-item">
+            <div class="flex justify-between mb-1">
+              <span class="text-sm text-gray-300">React & Astro</span>
+              <span class="text-sm text-cyan-400">95%</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2">
+              <div class="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full skill-bar" data-width="95"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1">
+              <span class="text-sm text-gray-300">TypeScript</span>
+              <span class="text-sm text-cyan-400">90%</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2">
+              <div class="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full skill-bar" data-width="90"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1">
+              <span class="text-sm text-gray-300">TailwindCSS</span>
+              <span class="text-sm text-cyan-400">92%</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2">
+              <div class="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full skill-bar" data-width="92"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Electronics & Hardware -->
+      <div class="skill-card bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center mr-4">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white">Elektronik & Donanım</h3>
+        </div>
+        <p class="text-gray-400 mb-4">Analog ve dijital devre tasarımı, gömülü sistemler geliştirme.</p>
+        <div class="space-y-3">
+          <div class="skill-item">
+            <div class="flex justify-between mb-1">
+              <span class="text-sm text-gray-300">PCB Tasarım</span>
+              <span class="text-sm text-emerald-400">88%</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2">
+              <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full skill-bar" data-width="88"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1">
+              <span class="text-sm text-gray-300">Arduino & ESP</span>
+              <span class="text-sm text-emerald-400">93%</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2">
+              <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full skill-bar" data-width="93"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1">
+              <span class="text-sm text-gray-300">FPGA</span>
+              <span class="text-sm text-emerald-400">75%</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2">
+              <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full skill-bar" data-width="75"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D Design & CAD -->
+      <div class="skill-card bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:transform hover:scale-105 transition-all duration-300">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-4">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-white">3D Tasarım & CAD</h3>
+        </div>
+        <p class="text-gray-400 mb-4">Mekanik parça tasarımı ve 3D modelleme konusunda deneyimliyim.</p>
+        <div class="space-y-3">
+          <div class="skill-item">
+            <div class="flex justify-between mb-1">
+              <span class="text-sm text-gray-300">CAD Query</span>
+              <span class="text-sm text-pink-400">85%</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2">
+              <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full skill-bar" data-width="85"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1">
+              <span class="text-sm text-gray-300">FreeCAD</span>
+              <span class="text-sm text-pink-400">80%</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2">
+              <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full skill-bar" data-width="80"></div>
+            </div>
+          </div>
+          <div class="skill-item">
+            <div class="flex justify-between mb-1">
+              <span class="text-sm text-gray-300">3D Printing</span>
+              <span class="text-sm text-pink-400">78%</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2">
+              <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full skill-bar" data-width="78"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="bg-gradient-to-br from-slate-800/30 to-slate-900/30 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8">
+      <h3 class="text-2xl font-bold text-white mb-6 text-center">Kullandığım Teknolojiler</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
+        <!-- Tech Icons -->
+        <div class="tech-icon flex flex-col items-center p-4 rounded-lg hover:bg-slate-700/30 transition-all duration-300 group">
+          <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+            <span class="text-white font-bold text-lg">JS</span>
+          </div>
+          <span class="text-gray-400 text-xs">JavaScript</span>
+        </div>
+        
+        <div class="tech-icon flex flex-col items-center p-4 rounded-lg hover:bg-slate-700/30 transition-all duration-300 group">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+            <span class="text-white font-bold text-lg">TS</span>
+          </div>
+          <span class="text-gray-400 text-xs">TypeScript</span>
+        </div>
+        
+        <div class="tech-icon flex flex-col items-center p-4 rounded-lg hover:bg-slate-700/30 transition-all duration-300 group">
+          <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+            <span class="text-white font-bold text-lg">R</span>
+          </div>
+          <span class="text-gray-400 text-xs">React</span>
+        </div>
+        
+        <div class="tech-icon flex flex-col items-center p-4 rounded-lg hover:bg-slate-700/30 transition-all duration-300 group">
+          <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+            <span class="text-white font-bold text-lg">A</span>
+          </div>
+          <span class="text-gray-400 text-xs">Astro</span>
+        </div>
+        
+        <div class="tech-icon flex flex-col items-center p-4 rounded-lg hover:bg-slate-700/30 transition-all duration-300 group">
+          <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+            <span class="text-white font-bold text-lg">N</span>
+          </div>
+          <span class="text-gray-400 text-xs">Node.js</span>
+        </div>
+        
+        <div class="tech-icon flex flex-col items-center p-4 rounded-lg hover:bg-slate-700/30 transition-all duration-300 group">
+          <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+            <span class="text-white font-bold text-lg">P</span>
+          </div>
+          <span class="text-gray-400 text-xs">Python</span>
+        </div>
+        
+        <div class="tech-icon flex flex-col items-center p-4 rounded-lg hover:bg-slate-700/30 transition-all duration-300 group">
+          <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+            <span class="text-white font-bold text-lg">C++</span>
+          </div>
+          <span class="text-gray-400 text-xs">C++</span>
+        </div>
+        
+        <div class="tech-icon flex flex-col items-center p-4 rounded-lg hover:bg-slate-700/30 transition-all duration-300 group">
+          <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-500 rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+            <span class="text-white font-bold text-lg">G</span>
+          </div>
+          <span class="text-gray-400 text-xs">Git</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Animate skill bars when they come into view
+  const observerOptions = {
+    threshold: 0.5,
+    rootMargin: '0px 0px -100px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const skillBars = entry.target.querySelectorAll('.skill-bar');
+        skillBars.forEach(bar => {
+          const width = bar.getAttribute('data-width');
+          setTimeout(() => {
+            bar.style.width = width + '%';
+          }, Math.random() * 500);
+        });
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.skill-card').forEach(card => {
+    observer.observe(card);
+  });
+});
+</script>
+
+<style>
+  .skill-bar {
+    width: 0%;
+    transition: width 2s ease-out;
+  }
+  
+  .skill-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+  
+  .tech-icon:hover {
+    transform: translateY(-4px);
+  }
+</style>

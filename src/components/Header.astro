@@ -2,35 +2,55 @@
 // src/components/Header.astro
 const { siteTitle = "Varsayılan Başlık" } = Astro.props;
 ---
-<header class="bg-gray-800 text-white shadow-md relative z-20"> {/* z-index ekledik */}
+<header class="backdrop-blur-md bg-slate-900/95 border-b border-slate-700/50 sticky top-0 z-50 transition-all duration-300">
+  <div class="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-cyan-600/5"></div>
+  
   {/* Ana Navigasyon Çubuğu */}
-  <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
-    {/* Site Başlığı Linki */}
-    <a href="/" class="text-xl font-bold hover:text-gray-300 transition-colors">
-      {siteTitle}
-    </a>
+  <nav class="relative container mx-auto px-6 py-4">
+    <div class="flex justify-between items-center">
+      {/* Logo ve Site Başlığı */}
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <a href="/" class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent hover:from-blue-300 hover:to-cyan-200 transition-all duration-300">
+          {siteTitle}
+        </a>
+      </div>
 
-    {/* === MOBİL MENÜ BUTONU (Hamburger İkonu) === */}
-    {/* Orta ekrandan ('md') itibaren gizlenecek */}
-    <button id="menu-toggle" class="md:hidden p-2 rounded hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
-      {/* Hamburger İkonu (SVG) */}
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-      </svg>
-      <span class="sr-only">Menüyü Aç/Kapat</span> {/* Ekran okuyucular için */}
-    </button>
-    {/* ========================================== */}
-
-    {/* === Masaüstü Navigasyon Linkleri === */}
-    {/* Başlangıçta mobilde gizli, orta ekrandan ('md') itibaren görünür */}
-    <ul class="hidden md:flex space-x-6">
-      <li><a href="/" class="hover:text-gray-300 transition-colors">Ana Sayfa</a></li>
-      <li><a href="/projeler" class="hover:text-gray-300 transition-colors">Projeler</a></li>
-      <li><a href="/blog" class="hover:text-gray-300 transition-colors">Blog</a></li>
-      <li><a href="/hakkimizda" class="hover:text-gray-300 transition-colors">Hakkımızda</a></li>
-      <li><a href="/iletisim" class="hover:text-gray-300 transition-colors">İletişim</a></li>
-    </ul>
-    {/* ================================= */}
+      {/* Professional Navigation */}
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="/" class="relative group px-3 py-2 text-gray-300 hover:text-white transition-all duration-300">
+          <span class="relative z-10">Ana Sayfa</span>
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </a>
+        <a href="/projeler" class="relative group px-3 py-2 text-gray-300 hover:text-white transition-all duration-300">
+          <span class="relative z-10">Projeler</span>
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </a>
+        <a href="/blog" class="relative group px-3 py-2 text-gray-300 hover:text-white transition-all duration-300">
+          <span class="relative z-10">Blog</span>
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </a>
+        <a href="/hakkimizda" class="relative group px-3 py-2 text-gray-300 hover:text-white transition-all duration-300">
+          <span class="relative z-10">Hakkımızda</span>
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </a>
+        <a href="/iletisim" class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 px-6 py-2 rounded-lg text-white font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+          İletişim
+        </a>
+      </div>
+      
+      {/* Mobile Menu Button */}
+      <button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+        <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+        <span class="sr-only">Menüyü Aç/Kapat</span>
+      </button>
+    </div>
   </nav>
 
   {/* === MOBİL MENÜ İÇERİĞİ === */}

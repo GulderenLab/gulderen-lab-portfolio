@@ -1,95 +1,81 @@
 ---
 // src/pages/iletisim.astro
 import Layout from '../layouts/Layout.astro';
+import ContactForm from '../components/ContactForm.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import FAQ from '../components/FAQ.astro';
+import ContactInfo from '../components/ContactInfo.astro';
 
 const pageTitle = "İletişim";
-const pageDescription = "Benimle iletişime geçmek için aşağıdaki formu kullanabilir veya doğrudan e-posta gönderebilirsiniz.";
-const contactEmail = "iletisim@gulderenlab.com"; // GERÇEK E-POSTA ADRESİNİZİ YAZIN!
+const pageDescription = "Benimle iletişime geçmek için modern ve kullanıcı dostu iletişim kanallarını kullanabilirsiniz.";
 ---
 <Layout title={pageTitle} description={pageDescription}>
+  <div class="relative min-h-screen">
+    {/* Background Decorative Elements */}
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+    </div>
 
-  <div class="max-w-2xl mx-auto"> {/* İçeriği ortala ve genişliği sınırla */}
-    {/* Sayfa Başlığı */}
-    <h1 class="text-4xl font-bold mb-6 text-center text-white">{pageTitle}</h1>
+    {/* Hero Section */}
+    <div class="relative z-10 text-center mb-16">
+      <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">
+        <span class="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+          İletişim
+        </span>
+      </h1>
+      <p class="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+        Projeleriniz, işbirliği teklifleri veya teknik sorularınız için benimle iletişime geçin. 
+        <span class="text-blue-400 font-medium">Her mesajınız önemli!</span>
+      </p>
+    </div>
 
-    {/* Açıklama */}
-    <p class="text-lg text-gray-400 mb-8 text-center leading-relaxed">
-      Aşağıdaki formu doldurarak veya <a href={`mailto:${contactEmail}`} class="text-brand hover:underline font-medium">doğrudan e-posta</a> göndererek bana ulaşabilirsiniz. Projeler, işbirliği teklifleri veya sadece merhaba demek için çekinmeyin!
-    </p>
-
-    {/* İletişim Formu */}
-    {/* 'mailto:' action'ı ve method='POST' enctype='text/plain' önemlidir */}
-    <form
-      action={`mailto:${contactEmail}?subject=Web Sitenizden Mesaj: Konu Başlığı`}
-      method="POST"
-      enctype="text/plain"
-      class="space-y-6" {/* Form elemanları arasına dikey boşluk */}
-    >
-      {/* İsim Alanı */}
-      <div>
-        <label for="name" class="block mb-2 text-sm font-medium text-gray-300">Adınız</label>
-        <input
-          type="text"
-          id="name"
-          name="Ad"  {/* E-postada görünecek etiket */}
-          required
-          class="block w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-md text-gray-200 placeholder-gray-500 focus:ring-brand focus:border-brand focus:outline-none text-base"
-          placeholder="Adınızı girin"
-        />
+    {/* Main Content */}
+    <div class="relative z-10 max-w-7xl mx-auto space-y-16">
+      <ContactInfo />
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <ContactForm />
+        <div class="space-y-8">
+          <SocialLinks />
+          <FAQ />
+        </div>
       </div>
+    </div>
 
-      {/* E-posta Alanı */}
-      <div>
-        <label for="email" class="block mb-2 text-sm font-medium text-gray-300">E-posta Adresiniz</label>
-        <input
-          type="email"
-          id="email"
-          name="E-posta" {/* E-postada görünecek etiket */}
-          required
-          class="block w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-md text-gray-200 placeholder-gray-500 focus:ring-brand focus:border-brand focus:outline-none text-base"
-          placeholder="eposta@adresiniz.com"
-        />
+    {/* Call to Action Section */}
+    <div class="relative z-10 mt-20 p-8 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 rounded-2xl border border-blue-700/30 backdrop-blur-sm">
+      <div class="text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">
+          Hemen İletişime Geçin
+        </h2>
+        <p class="text-gray-300 mb-6 max-w-2xl mx-auto">
+          Projelerinizi hayata geçirmek için bir adım uzağınızdayız. 
+          İster küçük bir soru, ister büyük bir proje olsun - her zaman yardımcı olmaya hazırım.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <a 
+            href="mailto:iletisim@gulderenlab.com" 
+            class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            Hemen E-posta Gönder
+          </a>
+          <a 
+            href="https://linkedin.com/in/abdullah-gülderen-31120b35b/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="inline-flex items-center px-8 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+          >
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+            LinkedIn'de Bağlantı Kur
+          </a>
+        </div>
       </div>
-
-       {/* Konu Alanı (Opsiyonel ama önerilir) */}
-       <div>
-        <label for="subject" class="block mb-2 text-sm font-medium text-gray-300">Konu</label>
-        <input
-          type="text"
-          id="subject"
-          name="Konu" {/* E-postada görünecek etiket */}
-          required
-          class="block w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-md text-gray-200 placeholder-gray-500 focus:ring-brand focus:border-brand focus:outline-none text-base"
-          placeholder="Mesajınızın konusu"
-        />
-      </div>
-
-      {/* Mesaj Alanı */}
-      <div>
-        <label for="message" class="block mb-2 text-sm font-medium text-gray-300">Mesajınız</label>
-        <textarea
-          id="message"
-          name="Mesaj" {/* E-postada görünecek etiket */}
-          rows={6}  {/* Satır sayısı */}
-          required
-          class="block w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-md text-gray-200 placeholder-gray-500 focus:ring-brand focus:border-brand focus:outline-none text-base resize-y" {/* resize-y: Dikeyde boyutlandırmaya izin ver */}
-          placeholder="Mesajınızı buraya yazın..."
-        ></textarea>
-      </div>
-
-      {/* Gönder Butonu */}
-      <div>
-        <button
-          type="submit"
-          class="w-full px-6 py-3 bg-brand text-gray-900 font-semibold rounded-md shadow-md hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-brand transition ease-in-out duration-150"
-        >
-          E-posta İstemcisi ile Gönder
-        </button>
-      </div>
-    </form>
-     {/* mailto: notu */}
-     <p class="text-xs text-gray-500 mt-4 text-center">
-       Not: Bu form, gönderme işlemi için cihazınızdaki varsayılan e-posta uygulamasını açacaktır.
-     </p>
+    </div>
   </div>
 </Layout>

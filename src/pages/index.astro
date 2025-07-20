@@ -21,14 +21,14 @@ const sonYazilar = (await getCollection('blog'))
     .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
     .slice(0, 2); // Son 2 taneyi al
 
-// Yetenek listesi (veya ikonlar)
+// Yetenek listesi (odaklanmış ve modern)
 const yetenekler = [
-    { name: "Gömülü Sistemler (ESP32, Arduino)", icon: "cpu-chip" }, // Örnek ikon isimleri (Heroicons vb. için)
-    { name: "PCB Tasarımı (KiCad, Eagle)", icon: "rectangle-group" },
-    { name: "Web Geliştirme (Astro, React, Node.js)", icon: "code-bracket" },
-    { name: "Python (Veri Analizi, Simülasyon)", icon: "variable" },
-    { name: "MQTT & IoT Protokolleri", icon: "signal" },
-    { name: "Teknik Yazarlık & Dökümantasyon", icon: "document-text" },
+    { name: "Gömülü Sistemler & IoT", icon: "cpu-chip", category: "Hardware", level: 92 },
+    { name: "Full-Stack Web Development", icon: "code-bracket", category: "Software", level: 88 },
+    { name: "PCB Tasarımı & Elektronik", icon: "rectangle-group", category: "Electronics", level: 85 },
+    { name: "Machine Learning & AI", icon: "brain", category: "AI/ML", level: 82 },
+    { name: "Mobile App Development", icon: "device-phone-mobile", category: "Mobile", level: 79 },
+    { name: "3D Tasarım & CAD", icon: "cube", category: "Design", level: 86 },
 ];
 
 // Heroicons (Örnek İkon Kütüphanesi)
@@ -38,97 +38,353 @@ const yetenekler = [
 ---
 <Layout title={pageTitle} description={pageDescription}>
 
-  {/* 1. BÖLÜM: ETKİLEYİCİ GİRİŞ (HERO) */}
-  <section class="relative text-center py-20 md:py-32 overflow-hidden min-h-[60vh] flex flex-col justify-center items-center">
-     {/* İsteğe Bağlı: Arka Plan Efekti (Örn: gradient, desen, düşük opaklıkta resim) */}
-     <div class="absolute inset-0 -z-10 bg-gradient-to-br from-gray-900 via-gray-800 to-accent-dark/30 opacity-70"></div>
-     {/* İsteğe Bağlı: Soyut şekiller */}
-     {/* <div class="absolute top-10 left-10 w-32 h-32 bg-brand/10 rounded-full blur-2xl -z-10"></div> */}
-     {/* <div class="absolute bottom-10 right-10 w-48 h-48 bg-accent/10 rounded-full blur-3xl -z-10"></div> */}
-
-    <div class="container mx-auto px-4 relative z-10">
-        {/* Belki küçük bir logo veya ikon */}
-        {/* <img src="/logo-ikon.svg" alt="Gulderen Lab Ikon" class="w-16 h-16 mx-auto mb-4 opacity-80" /> */}
-
-        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 leading-tight">
-            <span class="block text-white">Yaratıcılığı Kodlamak,</span>
-            <span class="block bg-gradient-to-r from-accent-light via-brand to-accent-light bg-clip-text text-transparent mt-2">
-                Elektroniği Hayata Geçirmek
-            </span>
-        </h1>
-        <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mt-6 mb-10">
-            Gulderen Lab'a hoş geldiniz. Gömülü sistemlerden modern web teknolojilerine uzanan projelerimi ve teknik yazılarımı keşfedin.
-        </p>
-        <div class="flex flex-wrap justify-center gap-4">
-            <a href="/projeler" class="px-8 py-3 bg-brand text-gray-900 font-semibold rounded-md shadow-lg hover:bg-opacity-85 transform hover:scale-105 transition duration-300 ease-in-out">
-                Projeleri Keşfet
-            </a>
-            <a href="/blog" class="px-8 py-3 bg-gray-700 text-white font-semibold rounded-md shadow-lg hover:bg-gray-600 transform hover:scale-105 transition duration-300 ease-in-out">
-                Blog Yazıları
-            </a>
-        </div>
+  {/* HERO SECTION - Professional Design */}
+  <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+    {/* Animated Background */}
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/20 to-cyan-900/20"></div>
+    <div class="absolute inset-0">
+      <div class="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-20 right-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-blue-500/5 to-cyan-500/5 rounded-full blur-3xl"></div>
+    </div>
+    
+    <div class="relative z-10 container mx-auto px-6 text-center">
+      {/* Professional Badge */}
+      <div class="inline-flex items-center px-4 py-2 mb-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full">
+        <div class="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></div>
+        <span class="text-sm text-gray-300">Yenilik ve Teknoloji Öncüsü</span>
+      </div>
+      
+      {/* Main Heading */}
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
+        <span class="block text-white mb-4">Geleceği</span>
+        <span class="block bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
+          Kodluyorum
+        </span>
+      </h1>
+      
+      {/* Subtitle */}
+      <p class="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto mb-12 leading-relaxed">
+        Elektronik, gömülü sistemler ve yazılım geliştirmede uzmanlaşmış bir mühendis olarak, 
+        <span class="text-cyan-300 font-semibold">yenilikçi çözümler</span> üretiyorum.
+      </p>
+      
+      {/* CTA Buttons */}
+      <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
+        <a href="/projeler" class="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl text-white font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25">
+          <span class="relative z-10">Projelerimi Keşfet</span>
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </a>
+        
+        <a href="/blog" class="group px-8 py-4 border-2 border-slate-600 hover:border-blue-400 rounded-xl text-gray-300 hover:text-white font-semibold text-lg transition-all duration-300 backdrop-blur-sm hover:bg-slate-800/50">
+          Teknik Yazılarım
+          <svg class="inline-block w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+      </div>
+      
+      {/* Tech Stack Pills */}
+      <div class="flex flex-wrap justify-center gap-3">
+        {['AI/ML', 'Blockchain', 'IoT', 'Cloud', 'Mobile', 'Unity', 'Security', 'Robotics'].map(tech => (
+          <span class="px-4 py-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full text-sm text-gray-300 hover:text-white hover:border-blue-400 transition-all duration-300">
+            {tech}
+          </span>
+        ))}
+      </div>
+    </div>
+    
+    {/* Scroll Indicator */}
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+      </svg>
     </div>
   </section>
 
-  {/* 2. BÖLÜM: ÖNE ÇIKAN PROJELER */}
+  {/* FEATURED PROJECTS - Professional Design */}
   {oneCikanProjeler.length > 0 && (
-    <section class="py-16 md:py-24 bg-gray-800/50"> {/* Hafif farklı arkaplan */}
-      <div class="container mx-auto px-4">
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">Öne Çıkan Projeler</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Proje Kartlarını Döngüyle Oluşturma */}
+    <section class="py-20 md:py-32 relative">
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/50 to-transparent"></div>
+      
+      <div class="relative container mx-auto px-6">
+        {/* Section Header */}
+        <div class="text-center mb-16">
+          <div class="inline-flex items-center px-4 py-2 mb-6 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full">
+            <span class="text-sm text-blue-400 font-medium">Öne Çıkan Çalışmalar</span>
+          </div>
+          <h2 class="text-4xl md:text-5xl font-bold mb-6">
+            <span class="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              Son Projelerim
+            </span>
+          </h2>
+          <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+            Teknoloji ve yenilikçilik odaklı projelerim
+          </p>
+        </div>
+        
+        {/* Projects Grid */}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {oneCikanProjeler.map((proje) => (
-            <a href={`/projeler/${proje.slug}/`} class="block bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 group">
-              <img src={proje.data.image.src} alt={proje.data.image.alt} loading="lazy" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"/>
-              <div class="p-5">
-                <h3 class="text-lg font-semibold mb-1 text-accent-light group-hover:text-brand transition-colors">{proje.data.title}</h3>
-                <p class="text-sm text-gray-400 mb-3 line-clamp-2">{proje.data.description}</p> {/* line-clamp-2: 2 satırla sınırla */}
-                <div class="text-xs text-gray-500">
-                  {proje.data.tags?.slice(0, 3).map(tag => <span class="mr-2">#{tag}</span>)} {/* İlk 3 etiket */}
+            <article class="group relative">
+              <a href={`/projeler/${proje.slug}/`} class="block bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden hover:border-blue-400/50 transition-all duration-500 hover:transform hover:scale-[1.02] cursor-pointer">
+                {/* Project Image */}
+                <div class="relative overflow-hidden">
+                  <img 
+                    src={proje.data.image.src} 
+                    alt={proje.data.image.alt} 
+                    loading="lazy" 
+                    class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  {/* Overlay Badge */}
+                  <div class="absolute top-4 right-4">
+                    <span class="px-3 py-1 bg-blue-600/90 backdrop-blur-sm text-white text-xs font-medium rounded-full">
+                      Proje
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </a>
+                
+                {/* Project Content */}
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-3 text-white group-hover:text-blue-300 transition-colors duration-300">
+                    {proje.data.title}
+                  </h3>
+                  
+                  <p class="text-gray-400 mb-4 line-clamp-2 leading-relaxed">
+                    {proje.data.description}
+                  </p>
+                  
+                  {/* Tags */}
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    {proje.data.tags?.slice(0, 3).map(tag => (
+                      <span class="px-2 py-1 bg-slate-700/50 text-blue-300 text-xs rounded-md border border-slate-600/50">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* Read More Link */}
+                  <div class="flex items-center text-blue-400 group-hover:text-blue-300 transition-colors">
+                    <span class="text-sm font-medium">Projeyi İncele</span>
+                    <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            </article>
           ))}
         </div>
-        <div class="text-center mt-12">
-          <a href="/projeler" class="text-brand hover:underline font-medium">Tüm Projeleri Gör →</a>
+        
+        {/* View All Projects CTA */}
+        <div class="text-center">
+          <a href="/projeler" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 rounded-xl text-white font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25">
+            Tüm Projeleri Keşfet
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
         </div>
       </div>
     </section>
   )}
 
-  {/* 3. BÖLÜM: YETENEKLER */}
-   <section class="py-16 md:py-24">
-       <div class="container mx-auto px-4">
-           <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">Yeteneklerim & Araçlarım</h2>
-           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
-               {yetenekler.map(yetenek => (
-                   <div class="bg-gray-800 p-4 rounded-lg flex items-center gap-3 shadow hover:bg-gray-700/50 transition-colors">
-                       {/* Buraya SVG ikonu gelebilir */}
-                       <span class="text-brand text-xl"> {/* Geçici ikon yerine */}•</span>
-                       <span class="text-gray-300 text-sm md:text-base">{yetenek.name}</span>
-                   </div>
-               ))}
-           </div>
-       </div>
-   </section>
+  {/* SKILLS SECTION - Professional Design */}
+  <section class="py-20 md:py-32 relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-slate-800/30 to-transparent"></div>
+    
+    <div class="relative container mx-auto px-6">
+      {/* Section Header */}
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center px-4 py-2 mb-6 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full">
+          <svg class="w-4 h-4 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9.5 16a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3M6.5 12a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3M12 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3"/>
+          </svg>
+          <span class="text-sm text-cyan-400 font-medium">Teknik Yetenekler</span>
+        </div>
+        
+        <h2 class="text-4xl md:text-5xl font-bold mb-6">
+          <span class="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            Uzmanlık Alanlarım
+          </span>
+        </h2>
+        
+        <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+          Çalıştığım teknolojiler ve kullandığım araçlar
+        </p>
+      </div>
+      
+      {/* Modern Skills Grid */}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {yetenekler.map((yetenek, index) => (
+          <div class="group relative">
+            {/* Modern Skill Card */}
+            <div class="relative bg-gradient-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-xl border border-slate-700/30 rounded-3xl p-8 hover:border-cyan-400/40 transition-all duration-700 hover:transform hover:scale-[1.05] hover:shadow-2xl hover:shadow-cyan-500/20">
+              
+              {/* Floating Icon */}
+              <div class="absolute -top-6 left-8">
+                <div class="w-16 h-16 bg-gradient-to-br from-cyan-400/20 to-blue-500/20 backdrop-blur-sm border border-cyan-400/30 rounded-2xl flex items-center justify-center group-hover:from-cyan-400/30 group-hover:to-blue-500/30 group-hover:border-cyan-400/50 transition-all duration-500 group-hover:rotate-6">
+                  <svg class="w-8 h-8 text-cyan-400 group-hover:text-cyan-300 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                    {index === 0 && <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>}
+                    {index === 1 && <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>}
+                    {index === 2 && <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>}
+                    {index === 3 && <path d="M9.5 16a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3M6.5 12a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3M12 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3"/>}
+                    {index === 4 && <path d="M7 1C5.9 1 5 1.9 5 3v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2H7zm0 3h10v16H7V4z"/>}
+                    {index === 5 && <path d="M12.7 2.3c-.4-.4-1-.4-1.4 0L8 5.6 4.7 2.3c-.4-.4-1-.4-1.4 0s-.4 1 0 1.4L6.6 7H2c-.6 0-1 .4-1 1s.4 1 1 1h4.6l-3.3 3.3c-.4.4-.4 1 0 1.4.2.2.5.3.7.3s.5-.1.7-.3L8 10.4l3.3 3.3c.2.2.5.3.7.3s.5-.1.7-.3c.4-.4.4-1 0-1.4L9.4 9H14c.6 0 1-.4 1-1s-.4-1-1-1H9.4l3.3-3.3c.4-.4.4-1 0-1.4z"/>}
+                  </svg>
+                </div>
+              </div>
+              
+              {/* Category Badge */}
+              <div class="absolute top-4 right-4">
+                <span class="px-3 py-1 bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-xs font-medium rounded-full backdrop-blur-sm">
+                  {yetenek.category}
+                </span>
+              </div>
+              
+              {/* Content */}
+              <div class="mt-8">
+                {/* Skill Name */}
+                <h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors duration-300">
+                  {yetenek.name}
+                </h3>
+                
+                
+                {/* Skill Description */}
+                <p class="text-gray-400 text-sm leading-relaxed">
+                  {index === 0 && "ESP32, Arduino, Raspberry Pi ile IoT sistemleri ve sensor entegrasyonu"}
+                  {index === 1 && "React, Next.js, Node.js, Python ile modern web uygulamaları geliştirme"}
+                  {index === 2 && "KiCad, Eagle ile PCB tasarımı, RF devre analizi ve EMC optimizasyonu"}
+                  {index === 3 && "TensorFlow, PyTorch ile derin öğrenme, veri analizi ve predictive modeling"}
+                  {index === 4 && "React Native, Flutter ile cross-platform mobil uygulama geliştirme"}
+                  {index === 5 && "SolidWorks, Fusion 360, Blender ile 3D modelleme ve prototyping"}
+                </p>
+              </div>
+              
+              {/* Animated Background Gradient */}
+              <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/0 via-blue-500/0 to-purple-500/0 group-hover:from-cyan-500/5 group-hover:via-blue-500/5 group-hover:to-purple-500/5 rounded-3xl transition-all duration-700 pointer-events-none"></div>
+              
+              {/* Glow Effect */}
+              <div class="absolute -inset-1 bg-gradient-to-br from-cyan-500/0 to-blue-500/0 group-hover:from-cyan-500/20 group-hover:to-blue-500/20 rounded-3xl blur-xl transition-all duration-700 -z-10 opacity-0 group-hover:opacity-100"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {/* Call to Action */}
+      <div class="text-center mt-16">
+        <p class="text-gray-400 mb-6">Projelerimde bu teknolojileri nasıl kullandığımı görmek ister misiniz?</p>
+        <a href="/projeler" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 rounded-xl text-white font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/25">
+          Projelerimi İncele
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
 
-  {/* 4. BÖLÜM: SON BLOG YAZILARI (Opsiyonel) */}
+  {/* LATEST BLOG POSTS - Professional Design */}
   {sonYazilar.length > 0 && (
-    <section class="py-16 md:py-24 bg-gray-800/50">
-      <div class="container mx-auto px-4">
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">Son Yazılar</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {sonYazilar.map((post) => (
-            <a href={`/blog/${post.slug}/`} class="block bg-gray-800 rounded-lg shadow-md p-5 transition hover:shadow-lg group">
-              <h3 class="text-lg font-semibold mb-1 text-accent-light group-hover:text-brand transition-colors">{post.data.title}</h3>
-              <p class="text-sm text-gray-400 mb-3 line-clamp-3">{post.data.description}</p> {/* 3 satırla sınırla */}
-              <span class="text-xs text-brand group-hover:underline">Devamını Oku →</span>
-            </a>
+    <section class="py-20 md:py-32 relative">
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent"></div>
+      
+      <div class="relative container mx-auto px-6">
+        {/* Section Header */}
+        <div class="text-center mb-16">
+          <div class="inline-flex items-center px-4 py-2 mb-6 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full">
+            <svg class="w-4 h-4 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+            </svg>
+            <span class="text-sm text-purple-400 font-medium">Teknik İçerikler</span>
+          </div>
+          
+          <h2 class="text-4xl md:text-5xl font-bold mb-6">
+            <span class="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              Son Yazılarım
+            </span>
+          </h2>
+          
+          <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+            Teknoloji, mühendislik ve yenilikçilik üzerine düşüncelerim
+          </p>
+        </div>
+        
+        {/* Blog Posts Grid */}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-16">
+          {sonYazilar.map((post, index) => (
+            <article class="group relative">
+              <a href={`/blog/${post.slug}/`} class="block bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden hover:border-purple-400/50 transition-all duration-500 hover:transform hover:scale-[1.02] cursor-pointer">
+                {/* Blog Post Header */}
+                <div class="relative p-6 pb-4">
+                  {/* Category Badge */}
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="px-3 py-1 bg-purple-600/20 text-purple-300 text-xs font-medium rounded-full border border-purple-500/30">
+                      Blog
+                    </span>
+                    
+                    {/* Date */}
+                    <time class="text-sm text-gray-400">
+                      {post.data.publishDate.toLocaleDateString('tr-TR', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}
+                    </time>
+                  </div>
+                  
+                  {/* Title */}
+                  <h3 class="text-xl font-bold mb-3 text-white group-hover:text-purple-300 transition-colors duration-300 line-clamp-2">
+                    {post.data.title}
+                  </h3>
+                  
+                  {/* Description */}
+                  <p class="text-gray-400 mb-4 line-clamp-3 leading-relaxed">
+                    {post.data.description}
+                  </p>
+                  
+                  {/* Tags */}
+                  {post.data.tags && post.data.tags.length > 0 && (
+                    <div class="flex flex-wrap gap-2 mb-4">
+                      {post.data.tags.slice(0, 3).map(tag => (
+                        <span class="px-2 py-1 bg-slate-700/50 text-purple-300 text-xs rounded-md border border-slate-600/50">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Read More Link */}
+                  <div class="flex items-center text-purple-400 group-hover:text-purple-300 transition-colors">
+                    <span class="text-sm font-medium">Devamını Oku</span>
+                    <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                  </div>
+                </div>
+                
+                {/* Hover Effect */}
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                
+                {/* Reading Time Indicator */}
+                <div class="absolute top-6 right-6 bg-slate-900/80 backdrop-blur-sm px-2 py-1 rounded-md">
+                  <span class="text-xs text-gray-400">~{Math.ceil(post.data.description.length / 200)} dk</span>
+                </div>
+              </a>
+            </article>
           ))}
         </div>
-         <div class="text-center mt-12">
-          <a href="/blog" class="text-brand hover:underline font-medium">Tüm Yazıları Gör →</a>
+        
+        {/* View All Blog Posts CTA */}
+        <div class="text-center">
+          <a href="/blog" class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl text-white font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25">
+            Tüm Yazılarımı Keşfet
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
         </div>
       </div>
     </section>

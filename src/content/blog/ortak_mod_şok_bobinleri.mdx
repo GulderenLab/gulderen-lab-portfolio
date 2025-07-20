@@ -1,0 +1,932 @@
+---
+title: "Ortak Mod Şok Bobinleri: Teorisi, Uygulamaları ve Tasarımı"
+description: "Ortak Mod Şok Bobinleri üzerine kapsamlı bir rehber. Elektromanyetik girişimin (EMI) teorisinden başlayarak, etkili gürültü filtreleme için tasarım prensiplerine ve güç kaynaklarından veri hatlarına kadar pratik uygulamalarına kadar her şeyi öğrenin."
+publishDate: 2025-07-20 # Yazıyı yayınlayacağın tarih
+tags: [
+  'ortak mod şok bobini',
+  'common mode choke',
+  'emi',
+  'emc',
+  'elektromanyetik girişim',
+  'elektromanyetik uyumluluk',
+  'gürültü filtreleme',
+  'sinyal bütünlüğü',
+  'signal integrity',
+  'parazit önleme',
+  'emi filtresi',
+  'diferansiyel mod',
+  'ortak mod',
+  'empedans',
+  'ferrit',
+  'ferrit nüve',
+  'toroid bobin',
+  'smd bobin',
+  'kaçak endüktans',
+  'leakage inductance',
+  'doyma akımı',
+  'saturation current',
+  'pcb tasarımı',
+  'hardware design',
+  'güç kaynağı tasarımı',
+  'smps',
+  'güç elektroniği',
+  'lc filtresi',
+  'ferrite bead',
+  'elektronik devreler',
+  'usb filter',
+  'hdmi filter',
+  'ethernet filter',
+  'can bus',
+  'power line filter',
+  'data line filter',
+  'otomotiv elektroniği',
+  'endüstriyel elektronik',
+  'tüketici elektroniği',
+  'troubleshooting',
+  'test ve ölçüm',
+  'spektrum analizörü',
+  'osiloskop'
+]
+image:
+  src: '/images/OrtakModBobinleri/ortak_mod_sok_bobini_calisma_prensibi_diyagrami.png' # Bu yazı için özel bir kapak görseli
+  alt: 'Ortak mod şok bobininin çalışma prensibini gösteren teknik diyagram. Diferansiyel mod akımının geçişi ve ortak mod gürültü akımının yüksek empedans ile engellenmesi.'
+isDraft: false
+---
+
+import { ImageWithCaption } from '@/components/i2c/ImageWithCaption.jsx';
+// YENİ: Tekrar kullanılabilir animasyon bileşenimizi import ediyoruz.
+import { SvgAnimationContainer } from '@/components/i2c/SvgAnimationContainer.jsx';
+
+import { gsap } from 'gsap';
+
+
+<style jsx>{`
+  /* YENİ: Her şeyi saran ana kapsayıcı */
+  .animation-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Görsel ile kontroller arasına boşluk */
+  }
+
+  /* YENİ: Animasyon başlığı için stil */
+  .animation-caption {
+    text-align: center;
+    font-size: 0.9em;
+    color: #ccc; /* Koyu temada iyi görünen açık gri bir renk */
+    padding: 0.5rem 0;
+  }
+
+  /* GÜNCELLENDİ: Artık sadece slaytları barındırıyor */
+  .svg-animation-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 783 / 469;
+    max-height: 80vh;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    /* margin kaldırıldı, ana kapsayıcıya taşınabilir */
+  }
+  
+  .svg-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+    box-sizing: border-box;
+  }
+  
+  .svg-slide.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  
+  .svg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
+    transform: scale(1); 
+    transition: transform 0.3s ease;
+  }
+  
+  .svg-image:hover {
+    transform: scale(1); 
+  }
+  
+  /* YENİ: Tüm kontrolleri içeren panel */
+  .animation-controls-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+  }
+  
+  /* YENİ: Sayaç ve ilerleme çubuğunu yan yana getirmek için */
+  .progress-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  /* GÜNCELLENDİ: position: absolute kaldırıldı */
+  .progress-container {
+    flex-grow: 1; /* Kalan boşluğu doldur */
+    height: 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+    width: 0%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  
+  /* GÜNCELLENDİ: position: absolute kaldırıldı */
+  .controls {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+  
+  .btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+  }
+  
+  /* GÜNCELLENDİ: position: absolute kaldırıldı */
+  .slide-indicator {
+    color: white;
+    font-size: 14px;
+    background: rgba(0,0,0,0.3);
+    padding: 5px 10px;
+    border-radius: 15px;
+    white-space: nowrap; /* "1 / 4" yazısının tek satırda kalmasını sağlar */
+  }
+`}</style>
+
+<script>
+{`
+  // Animasyon ayarları (bunlar sabit kalabilir)
+  const SLIDE_DURATION = 3000;
+  const TRANSITION_DURATION = 800;
+
+  /**
+   * Belirli bir animasyon kapsayıcısı için yeni bir animasyon örneği oluşturur.
+   * @param {HTMLElement} containerElement - Animasyonun ana kapsayıcısı (.animation-wrapper)
+   */
+  function createAnimationInstance(containerElement) {
+    // === 1. Her Örneğe Özel Değişkenler ===
+    // Bu değişkenler artık global değil, her animasyonun kendi içinde saklanıyor.
+    let currentSlide = 0;
+    let isPlaying = false;
+    let intervalId = null;
+
+    // === 2. Her Örneğe Özel DOM Elemanları ===
+    // Seçiciler artık tüm belge (document) yerine, sadece bu animasyonun kapsayıcısını arar.
+    const slides = containerElement.querySelectorAll('.svg-slide');
+    const progressBar = containerElement.querySelector('.progress-bar');
+    const indicator = containerElement.querySelector('.slide-indicator');
+    const playBtn = containerElement.querySelector('.play-btn');
+    const pauseBtn = containerElement.querySelector('.pause-btn');
+    const resetBtn = containerElement.querySelector('.reset-btn');
+    const nextBtn = containerElement.querySelector('.next-btn');
+    const prevBtn = containerElement.querySelector('.prev-btn');
+    
+    // Toplam slayt sayısını dinamik olarak alalım.
+    const totalSlides = slides.length;
+    if (totalSlides === 0) return; // Slayt yoksa hiçbir şey yapma
+
+    // === 3. Her Örneğe Özel Fonksiyonlar ===
+    // Bu fonksiyonlar, yukarıdaki yerel değişkenler ve DOM elemanları üzerinde çalışır.
+
+    function updateIndicator() {
+      if (indicator) {
+        indicator.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+      }
+    }
+
+    function updateProgressBar() {
+      if (progressBar) {
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        progressBar.style.width = progress + '%';
+      }
+    }
+    
+    function showSlide(index) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      if (slides[index]) {
+        slides[index].classList.add('active');
+      }
+      currentSlide = index;
+      updateIndicator();
+      updateProgressBar();
+    }
+
+    function startSequence() {
+      if (isPlaying) return;
+      isPlaying = true;
+      intervalId = setInterval(() => {
+        const nextIndex = (currentSlide + 1) % totalSlides;
+        showSlide(nextIndex);
+      }, SLIDE_DURATION);
+    }
+
+    function pauseSequence() {
+      isPlaying = false;
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    }
+
+    function resetSequence() {
+      pauseSequence();
+      showSlide(0);
+    }
+
+    function nextSlide() {
+      pauseSequence();
+      const nextIndex = (currentSlide + 1) % totalSlides;
+      showSlide(nextIndex);
+    }
+
+    function prevSlide() {
+      pauseSequence();
+      const prevIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+      showSlide(prevIndex);
+    }
+
+    function setupEventListeners() {
+      if (playBtn) playBtn.addEventListener('click', startSequence);
+      if (pauseBtn) pauseBtn.addEventListener('click', pauseSequence);
+      if (resetBtn) resetBtn.addEventListener('click', resetSequence);
+      if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+      if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+    }
+
+    // === 4. Bu Örneği Başlat ===
+    showSlide(0);
+    setupEventListeners();
+  }
+
+  // === Sayfa Yüklendiğinde Tüm Animasyonları Başlatıcı ===
+  function initAllAnimations() {
+    if (typeof window === 'undefined') return;
+    // Sayfadaki tüm animasyon sarmalayıcılarını bul
+    const animationWrappers = document.querySelectorAll('.animation-wrapper');
+    // Her biri için bağımsız bir animasyon örneği oluştur
+    animationWrappers.forEach(createAnimationInstance);
+  }
+
+  // DOM yüklendiğinde başlat
+  if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAllAnimations);
+    } else {
+      initAllAnimations();
+    }
+  }
+`}
+</script>
+
+# Ortak Mod Şok Bobinleri: Teorisi, Uygulamaları ve Tasarımı
+
+
+##  **1. Ortak Mod Şok Bobini Nedir?**
+
+Ortak mod şok bobini, iki ya da daha fazla güç ve veri hattı üzerinde aynı yönde akan (**ortak mod**) parazit sinyalleri baskılarken; doğru akımın, düşük frekanslı bileşenlerin veya verinin geçişine izin veren bir **elektromanyetik girişim (EMI)** filtresi bileşenidir.
+
+---
+
+## **2. Nasıl Çalışır?**
+
+Ortak mod bobininde:
+
+- Güç hattında faz (L) ve nötr (N) aynı manyetik çekirdekten birlikte geçirilir. Veri hattında ise veriyi taşıyan hat ile referans hat (topraklama hattı) benzer şekilde manyetik çekirdekten birlikte geçirlir. 
+
+- Eğer sinyal **diferansiyelse** yani sinyal bir hattan gidip diğer hattan dönüyorsa veya bu hat güç hattıysa sinüzoidal gerilim fazdan nötüre doğru ilerliyorsa birlikte geçtikleri manyetik çekirdekte oluşturdukları manyetik akılar birbirlerini sıfırlar ve böylece herhangi bir **empedans etkisi oluşmaz**. 
+
+- Eğer sinyal **ortak modda** ise yani manyetik çekirdek içinden geçen her iki telden aynı yönde sinyal geçerse, manyetik çekirdek içinde oluşan manyetik akı aynı yönde olur ve bir **bobin (empedans) etkisi** oluşturur. Oluşan **yüksek empedans nedeniyle gürültü geçemez** ve bastırılmış olur. 
+
+- Şekil 1.1'de ortak ve diferansiyel modda akım yönleri ile oluşan akıların yönleri gösterilmiştir. Dikkat ederseniz normal çalışma modunda (**diferansiyel modda**) yani bir telden akım giderken diğer telden akım gelirse manyetik akılar ters yönde oluşur ve bu **akılar birbirlerini etkisiz hale getirir**. Böylece bir **empedans etkisi oluşmamış olur** akım herhangi bir engelle karşılaşmadan ilerler. Ancak **ortak modda** işler değişir. Dışarıdan bir etki her iki hattı benzer şekilde etkileyecektir. Yani **akımlar aynı yönde** olacaktır. **Ortak mod durumunda** akımlar aynı yönde **manyetik akılar da aynı yönde oluşacaktır**. Manyetik akının etkisi ile akıma karşı bir zorluk oluşacaktır. Buna empedans diyoruz. Dolayısıyla aynı yönde hareket eden akımlar zorlukla karşılaşıp yük tarafına direkt olarak geçemeyecektir. **Zaten ortak mod şok bobinlerinin tam olarak amacı da budur**. 
+
+<ImageWithCaption
+  src="/images/OrtakModBobinleri/ortak_mod_şok_bobini_akıları.svg"
+  alt="Ortak mod şok bobininin ortak modda ve diferansiyel modda çalışması."
+>
+  <strong>Şekil 1.1:</strong> Ortak mod şok bobininin ortak modda ve diferansiyel modda çalışması.
+</ImageWithCaption>
+
+{/*
+
+\documentclass[border=10pt]{standalone}
+
+% --- Font Ayarları ---
+\usepackage[T1]{fontenc}      % Modern font kodlaması için önemli
+\usepackage{tgheros}            % Fira Sans font ailesini yükle
+
+
+\usepackage[siunitx]{circuitikz}
+\usepackage{etoolbox} 
+\usetikzlibrary{arrows.meta}
+
+\usepackage[svgnames]{xcolor}
+\pagecolor{white}
+
+\begin{document}
+
+\begin{tikzpicture}[
+    font=\sffamily,
+    % Ok stillerini tanımla
+    arrow_style/.style={-Stealth, thick},
+    % Ana başlık stili
+    title_style/.style={font=\Large\bfseries, text depth=0.5ex},
+    % Açıklama stili
+    desc_style/.style={text width=11cm, text centered}
+]
+
+% --- BÖLÜM 1: COMMON MODE ---
+\begin{scope}[yshift=-5cm]
+    % Başlık ve açıklama
+    \node[title_style] at (3.5, 2.5) {Ortak mod};
+    \node[desc_style] at (3.5, 1.8) {Ortak mod durumunda, her iki iletkenden geçen akım aynı yönde manyetik akı oluşturur ve bu akılar birbirini güçlendirir.};
+
+    % --- Şematik Gösterim (Solda) ---
+    \begin{scope}[xshift=0.5cm]
+
+        % Bobinlerin yanına siyah nokta ekle
+        \node[circ] at (-0.5, 0.6) {};
+        \node[circ] at (-0.5, -0.6) {};
+        
+        % Üst indüktör (noktalı)
+        \draw (-1.5, 0.4) to[inductor, l={}, mirror] (1.5, 0.4);
+        % Alt indüktör (noktalı)
+        \draw (-1.5, -0.4) to[inductor, l={}] (1.5, -0.4);
+        
+        % Manyetik çekirdek çizgileri (iki çizgi)
+        \draw[thick] (-0.3, 0.09) -- (0.3, 0.09);
+        \draw[thick] (-0.3, -0.09) -- (0.3, -0.09);
+        
+        % Terminaller
+        \draw (-2.5, 0.4) node[anchor=east] {1} -- (-1.5, 0.4);
+        \draw (-2.5, -0.4) node[anchor=east] {2} -- (-1.5, -0.4);
+        \draw (1.5, 0.4) -- (2.5, 0.4) node[anchor=west] {4};
+        \draw (1.5, -0.4) -- (2.5, -0.4) node[anchor=west] {3};
+        
+        % Akım okları ve etiketleri
+        \draw[arrow_style, red] (-1, 0.8) -- (0, 0.8);
+        \draw[arrow_style, blue] (-1, -0.8) -- (0, -0.8);
+        \node[below=2pt] at (-0.5, -1.1) {Akım};
+    \end{scope}
+
+    % Fiziksel (Toroid) Gösterim (Sağda)
+    \begin{scope}[xshift=6cm, yshift=-0.15cm]
+        \def\rInner{0.6}
+        \def\rOuter{1.0}
+        
+        \draw[thick] (0,0) circle (\rOuter);
+        \draw[thick] (0,0) circle (\rInner);
+        
+        \foreach \ang in {135,129,...,45}{\draw[red] (\ang:\rInner) -- (\ang:\rOuter);}
+        \foreach \ang in {-45,-51,...,-135}{\draw[blue] (\ang:\rInner) -- (\ang:\rOuter);}
+        
+        \draw[arrow_style, red, rotate=45] (120:{\rInner+0.2}) arc (120:60:{\rInner+0.2});
+        \draw[arrow_style, blue, rotate=45] (-60:{\rInner+0.2}) arc (-60:-120:{\rInner+0.2});
+        
+        \draw (135:\rOuter) -- ++(-1,0) node[anchor=east]{1};
+        \draw (-135:\rOuter) -- ++(-1,0) node[anchor=east]{2};
+        \draw (45:\rOuter) -- ++(1,0) node[anchor=west]{4};
+        \draw (-45:\rOuter) -- ++(1,0) node[anchor=west]{3};
+        
+        \node[below=1.2cm] at (0,0) {Akı};
+    \end{scope}
+\end{scope}
+
+
+% --- BÖLÜM 2: DIFFERENTIAL MODE ---
+\begin{scope}
+    % Başlık ve açıklama
+    \node[title_style] at (3.5, 2.5) {Diferansiyel Mod};
+    \node[desc_style] at (3.5, 1.8) {Zıt yönlerde akan diferansiyel akımların oluşturduğu manyetik akılar, çekirdek içinde birbirini sıfırlar};
+    
+    % --- Şematik Gösterim (Solda) ---
+    \begin{scope}[xshift=0.5cm]
+        % Bobinlerin yanına siyah nokta ekle
+        \node[circ] at (-0.5, 0.6) {};
+        \node[circ] at (-0.5, -0.6) {};
+    
+        \draw (-1.5, 0.4) to[inductor, l={}, mirror] (1.5, 0.4);
+        \draw (-1.5, -0.4) to[inductor, l={}] (1.5, -0.4);
+        
+        % Manyetik çekirdek çizgileri (iki çizgi)
+        \draw[thick] (-0.3, 0.09) -- (0.3, 0.09);
+        \draw[thick] (-0.3, -0.09) -- (0.3, -0.09);
+
+        \draw (-2.5, 0.4) node[anchor=east] {1} -- (-1.5, 0.4);
+        \draw (-2.5, -0.4) node[anchor=east] {2} -- (-1.5, -0.4);
+        \draw (1.5, 0.4) -- (2.5, 0.4) node[anchor=west] {4};
+        \draw (1.5, -0.4) -- (2.5, -0.4) node[anchor=west] {3};
+        
+        \draw[arrow_style, red] (-1, 0.8) -- (0, 0.8);
+        \draw[arrow_style, blue] (0, -0.8) -- (-1, -0.8);
+        \node[below=2pt] at (-0.5, -1.1) {Akım};
+    \end{scope}
+    
+    % Fiziksel (Toroid) Gösterim (Sağda)
+    \begin{scope}[xshift=6cm, yshift=-0.15cm]
+        \def\rInner{0.6}
+        \def\rOuter{1.0}
+        
+        \draw[thick] (0,0) circle (\rOuter);
+        \draw[thick] (0,0) circle (\rInner);
+        
+        \foreach \ang in {135,129,...,45}{\draw[red] (\ang:\rInner) -- (\ang:\rOuter);}
+        \foreach \ang in {-45,-51,...,-135}{\draw[blue] (\ang:\rInner) -- (\ang:\rOuter);}
+        
+        \draw[arrow_style, red, rotate=45] (120:{\rInner+0.2}) arc (120:60:{\rInner+0.2});
+        \draw[arrow_style, blue, rotate=45] (-120:{\rInner+0.2}) arc (-120:-60:{\rInner+0.2});
+        
+        \draw (135:\rOuter) -- ++(-1,0) node[anchor=east]{1};
+        \draw (-135:\rOuter) -- ++(-1,0) node[anchor=east]{2};
+        \draw (45:\rOuter) -- ++(1,0) node[anchor=west]{4};
+        \draw (-45:\rOuter) -- ++(1,0) node[anchor=west]{3};
+        
+        \node[below=1.2cm] at (0,0) {Akı};
+
+    \end{scope}
+\end{scope}
+
+\end{tikzpicture}
+
+\end{document}
+
+*/}
+
+- Olayı daha iyi anlamak için önce normal çalışma modunu aşağıdaki animasyon ile birlikte inceleyelim. 
+    - Normal çalışma modunda akımlar bir telden akım yüke doğru akarken, diğer telden de akım kaynağa doğru ilerler.
+    - Akımların manyetik çekirdek üzerinde oluşturduğu manyetik akılar ters yöndedir. Dolayısıyla toplamı sıfır olur. 
+    - Böylece akıma karşı bir zorluk yoktur, sistem normal çalışır. 
+
+
+import AkimAnimasyonu from '@/components/OrtakModBobinleri/AkimAnimasyonu.jsx';
+
+<AkimAnimasyonu client:load />
+
+- Şimdi de ortak modda nasıl çalışıyor ona bakalım:
+    - Aşağıdaki animasyonda gösterildiği gibi bu modda dışarıdan etki ile oluşan akımlar aynı yöndedir.  
+    - Akımların oluşturduğu manyetik akılar da aynı yöndedir. 
+    - Bu akılar birbiri üzerine eklenerek daha büyük bir manyetik akı oluşturur. 
+    - Peki nasıl oluyor da manyetik akı akıma karşı zorluk oluşturan empedans etkisine neden oluyor? Bunu matematiksel olarak şöyle gösterebiliriz:
+
+Manyetik akı ($$\Phi$$) şu şekilde ifade edilir:
+
+$$
+\Phi = N \cdot B \cdot A
+$$
+
+*   $N$: Sarım sayısı
+*   $B$: Manyetik alan yoğunluğu
+*   $A$: Çekirdek kesit alanı
+
+Ve endüktans da akı ile doğrudan ilişkilidir:
+
+$$
+L = \frac{N \cdot \Phi}{I}
+$$
+
+Yani:
+
+> *   Manyetik akı arttıkça (örneğin ferrit çekirdek, daha çok sarım, daha büyük alan), **endüktans artar**.
+> *   Endüktans arttıkça, **empedans da artar**.
+> *   Bu da devreye karşı daha fazla **direnç (tepki)** anlamına gelir — özellikle yüksek frekanslarda.
+
+    - Sonuç olarak ortak modda empedans etkisi ile gürültü sinyallerinin (akımlarının) yüke geçmesi engellenir. 
+
+import OrtakModAnimasyon from '@/components/OrtakModBobinleri/OrtakModAnimasyon.jsx';
+
+<OrtakModAnimasyon client:load />
+
+---
+
+## 3. Uygulama Alanları
+
+Ortak mod şok bobinleri (Common Mode Choke - CMC), diferansiyel sinyalleri etkilemeden, her iki hatta da aynı yönde akan ortak mod gürültüsünü bastırmak için tasarlanmıştır. Temel uygulama alanları şunlardır:
+
+*   **Güç Hattı Filtrelemesi (AC/DC ve DC/DC):** Anahtarlamalı güç kaynaklarından (SMPS) yayılan veya şebekeden gelen yüksek frekanslı gürültünün sisteme girişini/çıkışını engeller. Elektromanyetik Uyumluluk (EMC) testlerinden geçmek için kritik bileşenlerdir.
+*   **Yüksek Hızlı Diferansiyel Sinyal Hatları:** USB, Ethernet, CAN-Bus, LVDS ve HDMI gibi veri yollarında, sinyal bütünlüğünü korurken dış kaynaklı elektromanyetik girişimi (EMI) etkin bir şekilde filtrelerler.
+*   **Telekomünikasyon ve RF Devreleri:** İletişim hatlarında ve RF alıcı-verici devrelerinde, istenmeyen ortak mod akımlarının hassas devre elemanlarını etkilemesini önler.
+*   **Otomotiv Elektroniği (CAN, LIN, FlexRay):** Araç içi ağlarda (in-vehicle networks), motor, ateşleme sistemi gibi gürültü kaynaklarının neden olduğu parazitleri bastırarak güvenilir veri iletişimini temin eder.
+
+## 4. Yapısal ve Tiplere Göre Sınıflandırma
+
+Ortak mod şok bobinleri, çekirdek geometrisi, sarım tekniği ve montaj tipine göre sınıflandırılır:
+
+*   **Toroidal Çekirdekli Bobinler:** Kapalı manyetik devre yapısı sayesinde yüksek manyetik kuplaj ve düşük kaçak akı (leakage flux) sunarlar. Genellikle güç hattı filtrelemesinde tercih edilirler.
+*   **E-Tipi veya Karkaslı Çekirdekli Bobinler:** Montaj kolaylığı ve sarım için bölümlendirilmiş yapıları sayesinde esneklik sağlarlar. Hem güç hem de sinyal uygulamalarında kullanılırlar.
+*   **Çok Katmanlı (Chip) CMC'ler:** Yüzey montaj (SMD) teknolojisi için tasarlanmış, minyatür ve kompakt çözümlerdir. Yüksek yoğunluklu PCB tasarımları ve yüksek hızlı veri hatları için idealdirler.
+*   **Düz Tel veya Sektörel Sarımlı Bobinler:** Özellikle yüksek akım uygulamaları için tasarlanmış, düşük DC direncine (DCR) sahip ve yüksek frekanslarda "skin effect" etkisini minimize eden özel yapılardır.
+
+## 5. Teknik Seçim Parametreleri
+
+Doğru CMC seçimi, devrenin elektriksel gereksinimlerine göre şu parametrelerin analizini gerektirir:
+
+*   **Ortak Mod Empedansı (vs. Frekans):** En kritik parametredir. Bastırılması hedeflenen gürültü frekans aralığında maksimum empedans değerini sunmalıdır. Bu karakteristik, datasheet'lerde bir grafik olarak verilir.
+*   **Anma Akımı (Rated Current):** Bobinin manyetik doyuma uğramadan veya aşırı ısınmadan güvenle taşıyabileceği maksimum diferansiyel akım değeridir.
+*   **Diferansiyel Mod Empedansı:** Faydalı sinyalin geçtiği diferansiyel mod için bobinin sunduğu empedanstır. Sinyal bütünlüğünü korumak için bu değerin mümkün olduğunca düşük olması istenir.
+*   **DC Direnci (DCR):** Sarımların omik direncidir. Güç kaybını ve voltaj düşümünü minimize etmek için düşük DCR tercih edilir.
+*   **Anma Gerilimi (Rated Voltage):** Özellikle AC güç hatlarında, sargılar arasındaki yalıtımın dayanabileceği maksimum gerilimdir ve güvenlik açısından kritiktir.
+
+## 6. Montaj ve Tasarım Optimizasyonu
+
+CMC'nin performansı, PCB yerleşim (layout) stratejisine doğrudan bağlıdır:
+
+*   **Giriş/Çıkış Noktasına Konumlandırma:** Maksimum etkinlik için CMC, gürültünün devreye girdiği veya çıktığı noktaya (örneğin konnektörün hemen arkasına) yerleştirilmelidir.
+*   **Simetrik Hat Tasarımı:** CMC'nin giriş ve çıkışındaki iletken yolların uzunlukları ve geometrileri tamamen simetrik olmalıdır. Asimetri, ortak mod gürültüsünün diferansiyel mod gürültüsüne dönüşmesine neden olarak bobinin etkinliğini azaltır.
+*   **Topraklama Stratejisi:** CMC genellikle, filtrelenen gürültüyü şasi toprağına yönlendiren Y-kapasitörleri ile birlikte kullanılır. Bu kapasitörlerin toprak bağlantıları kısa ve düşük empedanslı olmalıdır.
+*   **Bileşen Altında Toprak Düzlemi Boşluğu:** CMC'nin altına bir toprak düzlemi (ground plane) yerleştirmek, sargılar arasında parazitik kapasitans oluşturur. Bu kapasitans, yüksek frekanslarda bobini by-pass ederek filtreleme performansını düşürür. Bu nedenle bileşen altında toprak düzlemi boş bırakılmalıdır.
+
+## 7. Sık Karşılaşılan Problemler ve Çözümleri
+
+Uygulamada karşılaşılan tipik sorunlar ve mühendislik çözümleri şunlardır:
+
+*   **Problem: Yetersiz Gürültü Bastırma**
+    *   **Neden:** Seçilen CMC'nin empedans tepe noktası, devredeki dominant gürültü frekansıyla eşleşmiyordur.
+    *   **Çözüm:** Spektrum analizörü ile gürültü profili çıkarılmalı ve bu frekansta en yüksek ortak mod empedansını sağlayan bir CMC seçilmelidir.
+*   **Problem: Sinyal Bütünlüğünün Bozulması (Göz Diyagramının Kapanması)**
+    *   **Neden:** CMC'nin diferansiyel mod empedansı, yüksek hızlı sinyalin frekans bileşenlerini zayıflatacak kadar yüksektir veya sargılar arası kapasitans sinyali bozuyordur.
+    *   **Çözüm:** USB 3.0, HDMI 2.1 gibi standartlar için özel olarak tasarlanmış, düşük ve kontrollü diferansiyel empedansa sahip yüksek hızlı CMC'ler kullanılmalıdır.
+*   **Problem: Manyetik Doyum (Saturasyon)**
+    *   **Neden:** Devreden geçen DC veya düşük frekanslı AC akımı, bobinin anma akımını aşıyor ve ferrit çekirdeği doyuma ulaştırıyordur. Doyuma ulaşan çekirdeğin permeabilitesi düşer ve ortak mod empedansı dramatik şekilde azalır.
+    *   **Çözüm:** Devrenin maksimum çalışma akımı hesaplanmalı ve bu değerden daha yüksek bir anma akımına (saturation current) sahip bir CMC seçilmelidir.
+
+## **8. Güç Faktörü Düzeltme Devresi İçin Ortak Mod Şok Bobini Tasarımı**
+
+Tasarım adımlarını aşağıda sıralayalım:
+
+### Adım 1: Tasarım Parametrelerinin Tanımlanması
+
+  - $f_{gürültü} = 1 \; MHz $, hedef gürültü frekansı.
+  - $Z_{hedef} = 1000 \; \Omega $, $f_{gürültü}$ frekansında olmasını istediğimiz empedans değeri [$\Omega$].
+  - $I_{CA_{rms}} = 16 \; A_{rms}$, sargılardan geçecek maksimum çalışma akımı [$A_{rms}$].
+  - $n_{hat} = 2$, sarılacak hat sayısı. Tek faz için 2, üç faz için 3, eternet için 4 hat seçilir. Tasarımımızı iki fazlı sistem için tasarladığımız için iki seçtik. 
+  - $V_{CA_{rms}} = 220 \; V_{rms}$, hatlar arası veya hat-toprak arası maksimum çalışma gerilimi [$V_{rms}$]
+  - $\Delta T _ {maks} = 50\;°C$, izin verilen maksimum sargı sıcaklık artışı [°C] (Tipik: 40°C - 55°C)
+  - $T_{ort_{maks}} = 40\;°C $, maksimum ortam sıcaklığı [°C]
+
+Tasarım parametrelerimiz aşağıdaki tabloda özetlenmiştir.
+
+| **Parametre** | **Değer** | **Birim** |
+|:---|:---:|:---:|
+| **$f_{gürültü}$** | $1$ | $MHz$ |
+| **$Z_{hedef}$** | $1000$ | $Ω$ |
+| **$I_{CA_{rms}}$** | $16$ | $A_{rms}$ |
+| **$n_{hat}$** | $2$ | - |
+| **$V_{CA_{rms}}$** | $220$ | $V_{rms}$ |
+| **$\Delta T_{maks}$** | $50$ | $°C$ |
+| **$T_{ort_{maks}}$** | $40$ | $°C$ |
+
+### Adım 2: Nüve Seçimi ve Parametrelerinin Alınması
+  - Nüve Malzemesi Seçimi:
+
+
+    - $f_{gürültü} < 2 MHz $ ise: Nanokristal veya yüksek µ'lü MnZn Ferrit.
+
+
+    - $f_{gürültü} > 2 MHz $ ise: NiZn Ferrit.
+
+Bizim tasarımımızda çalışma frekansı 2 MHz'den küçük olduğu için (1 MHz - 2 MHz) yüksek µ'lü MnZn malzeme içeren ferrit seçelim. 
+Seçim yapmanın belirli net bir yolu yok. Çünkü çok fazla ürün var ancak ülkemizde bu ürünlerin hepsine erişimimiz yok. Dolayısıyla bir ferrit çekirdek belirleyip, o çekirdeğin ulaşılabilir olup olmadığına bakmalıyız. Kolaylık olsun diye dünyada hangi ürünler var onları aşağıdaki tabloda görebiliriz.
+
+<ImageWithCaption
+  src="/images/OrtakModBobinleri/ferrit_karşılaştırma_tablosu.svg"
+  alt="Ortak mod şok bobininin ortak modda ve diferansiyel modda çalışması."
+>
+  <strong>Tablo 1.1:</strong> Cosmo firmasının ferrit çekirdekleri karşılaştırdığı tablo [^1].
+</ImageWithCaption>
+
+
+[^1]: https://www.cosmoferrites.com/Downloads/Downloads/CFRCrossReferenceChart2011.pdf
+
+CF139 toroid ferrit $AL = 2200 \;nH/N^2$ değeri ile projemiz için uygun görünmektedir. Toroid şeklinde seçim yapıp kalın telleri rahatlıkla sarabileceğimiz bir boyut olan 45 mm dış çapa sahip toroidi seçelim. Bu ferrit çekirdeğin veri sayfasını şuradan inceleyebilirsiniz:
+<a href="/images/OrtakModBobinleri/CF139 T4511 Toroid Çekirdek.pdf" target="_blank" rel="noopener noreferrer">
+  ↗️ CF139 T4511 Toroid Çekirdek
+</a>
+
+Seçtiğimiz bu çekirdeğin parametrelerini veri sayfasından çıkaralım.
+
+  - $A_L$: 2200 nH/N² (İndüktans faktörü)
+  - $A_e$: 91 mm² (Nüvenin etkin kesit alanı )
+  - $l_e$: 110 mm (Nüvenin etkin manyetik yol uzunluğu)
+  - $A_w$: 615 mm² (Nüvenin pencere alanı (iç boşluk alanı))
+  - OD, ID, Ht: 45, 28, 11 mm (Dış çap, iç çap ve yükseklik)
+
+
+### Adım 3: Gerekli Endüktansın Hesaplanması ($L_{req}$)
+
+Hedef empedansı sağlamak için gereken teorik endüktansı hesaplayalım. Bu formül, empedansın tamamen endüktif reaktanstan geldiğini varsayar, bu bir başlangıç noktasıdır.
+
+$$L_{req} = \frac{Z_{hedef}}{2\pi f_{gürültü}} = \frac{1000}{2\pi \times 1000000} = \frac{1000}{6283185.31} = 1.59 \times 10^{-4} \quad H = 0.159 \quad mH$$
+
+Hesaplanan $L_{req}$ değerini nanoHenry'e (nH) çevirelim:
+
+$$L_{req_{nH}} = L_{req} \times 10^9 = 1.59 \times 10^{-4} \times 10^9 = 1.59 \times 10^5 \quad nH$$
+
+
+### 7.4: Sarım Sayısının Hesaplanması (N)
+
+Seçilen nüvenin $A_L$ değerini kullanarak gerekli sarım sayısını hesaplayalım:
+
+$$N_{calc} = \sqrt{\frac{1.59 \times 10^5}{2200}} = \sqrt{72.27} = 8.5$$
+
+Sarım sayısı tam sayı olmalıdır. Her zaman yukarıya yuvarlanır:
+
+N  = 9
+
+Gerçekleşecek endüktansı tekrar hesaplayalım:
+
+$$L_{actual} = A_L \times N^2 = 2200 \times 9^2 = 2200 \times 81 = 178200 \quad nH = 0.178 \quad mH$$
+
+
+
+### Adım 5: Sargı Telinin Seçilmesi
+
+Telin, $I_{CA_{rms}} = 16 \; A$ akımını $\Delta T_{max} = 40°C$ sıcaklık artışını aşmadan taşıyabilmesi gerekir.
+
+#### Akım Yoğunluğu (J) Seçimi:
+$J = 4$ ila $6 \; A/mm^2$ (Genel amaçlı, doğal soğutmalı tasarımlar için güvenli bir aralıktır). Daha yüksek yoğunluklar daha fazla ısınmaya neden olur.
+
+#### Gerekli Tel Kesit Alanı ($A_{wire\_req}$):
+$$A_{wire\_req} = \frac{I_{CA_{rms}}}{J} = \frac{16}{4} = 4 \quad mm^2$$
+
+#### Standart Tel Seçimi:
+AWG veya SWG tel tablolarından, kesit alanı ($A_{wire\_actual}$) $A_{wire\_req} = 4 \; mm^2$ değerine eşit veya ondan büyük olan en yakın standart teli seçmeliyiz. Aşağıdaki bağlantıdan dönüşüm tablosunu inceleyebilirsiniz. 
+
+<a href="/images/OrtakModBobinleri/AWG - Metrik Dönüşüm Tablosu.pdf" target="_blank" rel="noopener noreferrer">
+  ↗️ AWG - Metrik Dönüşüm Tablosu
+</a>
+
+Tablodan da görüleceği üzere en yakın kesit alanı 4.17 $mm^2$ seçebiliriz. Bunu 2.3 mm çapa sahip bobin teli ile sağlayabiliriz. Ancak bu tel çapı sarım yapmak için zor olacağından daha küçük çapa sahip bobin telleri ile sarım yapmak bizim için daha iyi olacaktır.
+
+Bu projemiz için 1.4 mm çapa sahip bobin teli seçelim ve bunlardan birkaç adet paralel bağlayarak uygun kesit alanı elde edelim:
+
+#### Seçilen Telin Parametrelerini Not Alalım:
+- $A_{wire\_actual}$: 1.4 $mm^2$ ( Seçilen telin bakır kesit alanı $mm^2$)
+- $d_{overall}$: 1.5 $mm^2$ (Yalıtım dahil telin toplam dış çapı $mm$ )
+
+Telin kesit alanını matematiksel olarak hesaplayalım:
+
+$$
+A_{wire} = \pi \left(\frac{d}{2}\right)^2
+$$
+
+Burada $d$ telin çapıdır. $d = 1.4 \; mm$ için:
+
+$$
+A_{wire} = \pi \left(\frac{1.4}{2}\right)^2 = \pi \times (0.7)^2 = \pi \times 0.49 \approx 1.54 \; mm^2
+$$
+
+Gerekli en az $4 \;mm^2$ toplam kesit alanına ulaşmak için 1.4 mm çapındaki teli 3 adet paralel olarak kullanmamız gerekir. Böylece toplam kesit alanı:
+
+$$A_{wire\_total} = 3 \times A_{wire} \approx 3 \times 1.54 = 4.62 \; mm^2$$
+
+olacaktır. Bu değer, ihtiyacımız olan minimum kesit alanını karşılar.
+
+
+
+### Adım 6: Fiziksel Uyumluluk Kontrolü (Pencere Doluluk Oranı)
+
+Sargıların nüvenin penceresine fiziksel olarak sığıp sığmayacağını doğrulamak için pencere doluluk oranı ($K_u$) hesaplanmalıdır.
+
+Ortak mod şok bobinlerinde, her hat için ayrı bir sarım yapılır. Yani toplamda $n_{hat}$ (hat sayısı) kadar sarım grubu olur. Her bir hatta, paralel tel kullanılıyorsa, bu da hesaba katılır. Bu nedenle toplam sargı alanı hesabında, hem paralel tel sayısı ($n_{lines}$), hem toplam sarım sayısı ($N$), hem de hat sayısı ($n_{hat}$) çarpılır:
+
+#### Toplam Sargı Alanı ($A_{winding}$):
+
+$$
+A_{winding} = n_{hat} \times n_{lines} \times N \times \left[ \pi \left( \frac{d_{overall}}{2} \right)^2 \right]
+$$
+
+Burada:
+- $n_{hat}$: Hat sayısı (Bu tasarımda 2)
+- $n_{lines}$: Paralel tel sayısı (Bu tasarımda 3)
+- $N$: Her hat için toplam sarım sayısı (Bu tasarımda 9)
+- $d_{overall}$: Telin yalıtımla birlikte toplam çapı (Bu tasarımda 1.5 mm)
+
+Hesaplayalım:
+
+$$
+A_{winding} = 2 \times 3 \times 9 \times \left[ \pi \left( \frac{1.5}{2} \right)^2 \right] = 54 \times \left[ \pi \times (0.75)^2 \right] = 54 \times \left[ \pi \times 0.5625 \right] \approx 54 \times 1.767 = 95.4 \; mm^2
+$$
+
+#### Pencere Alanı ($A_w$):
+
+Nüve veri sayfasından alınan pencere alanı ($A_w$) değerini kullanmalıyız. Bizim nüvemizin pencere alanı, $A_w = 615 \; mm^2$ verilmiştir.
+
+#### Pencere Doluluk Oranı ($K_u$):
+
+$$
+K_u = \frac{A_{winding}}{A_w} = \frac{95.4}{615} \approx 0.155
+$$
+
+#### Değerlendirme:
+
+- $K_u < 0.4$ (veya %40): **İdeal.** Sarım kolay ve soğutma etkilidir.
+- $0.4 < K_u < 0.6$: **Mümkün**, ancak sarım zorlaşabilir. Otomatik sarım için genellikle çok yüksektir.
+- $K_u > 0.6$: **Pratik değil.** Daha büyük bir nüve seçin (Adım 1'e dönün) veya daha ince yalıtımlı bir tel kullanın (gerilim izolasyonunu tehlikeye atmadan).
+
+Not: Yukarıdaki hesaplamaya göre $K_u \approx 0.155$ bulunmuştur. Bu nedenle, seçilen tel ve nüve kombinasyonu fiziksel olarak uygundur ve sarım işlemi kolay olacaktır.
+
+
+
+
+### Adım 7: Kapsamlı Termal Analiz ve Kayıp Hesaplanması
+
+Bu tasarımda, bobin 50 Hz'de saf diferansiyel modda çalışmaktadır. Bu çalışma modunda, zıt yönlü akımların manyetik alanları birbirini iptal ettiği için **anlamlı bir çekirdek kaybı ($P_{core}$) oluşmaz.** Ayrıca, 50 Hz gibi düşük bir frekansta, AC sargı kayıpları (derinlik ve yakınlık etkileri) de DC kayıplarına kıyasla ihmal edilebilir düzeydedir.
+
+Bu nedenle, bu özel uygulama için toplam güç kaybı ($P_{total}$), neredeyse tamamen DC sargı kayıplarına ($P_{dc}$) eşit olacaktır:
+
+**$P_{total} \approx P_{dc} = I^2R$**
+
+Bu durumu göz önünde bulundurarak, sadece DC sargı kaybını hassas bir şekilde hesaplamak, bobinin termal performansını doğru bir şekilde değerlendirmek için yeterlidir.
+
+---
+
+### 7.1: DC Sargı Kaybının Hesaplanması ($P_{dc}$)
+
+Bu bölümde, tasarlanan toroid indüktörün DC sargı direncinden kaynaklanan güç kaybı, telin gerçek uzunluğu ve kesit alanı dikkate alınarak hassas şekilde hesaplanacaktır.
+
+**Tasarım Parametreleri:**
+- **Sargı Yapısı:** 6 tel paralel demet (her yönde 3 tel)
+- **Tur Sayısı ($N$):** 9
+- **Hat Akımı ($I_{hat}$):** 16 A
+- **Bakır Tel Çapı ($d_{cu}$):** 1.4 mm (direnç hesabı için)
+- **Yalıtımlı Tel Çapı ($d_{overall}$):** 1.5 mm (fiziksel yerleşim ve uzunluk hesabı için)
+- **Toroid Boyutları:** OD = 45 mm, ID = 28 mm, Ht = 11 mm
+
+---
+
+#### 1. Ortalama Sarım Uzunluğunun (MLT) Hassas Hesaplanması [^2]
+
+[^2]: https://www.how2power.com/pdf_view.php?url=/newsletters/1309/H2PowerToday1309_FocusOnMagnetics.pdf
+
+Az sayıda turda, telin gerçek uzunluğunu doğru hesaplamak için basit formüller yerine, toroid penceresindeki telin konumunu dikkate alan hassas bir yöntem kullanılır.
+
+**a) Geometrik Parametreler:**
+- İç yarıçap ($r_i$): $28\,\mathrm{mm} / 2 = 14\,\mathrm{mm}$
+- Toroid genişliği ($w$): $(45 - 28) / 2 = 8.5\,\mathrm{mm}$
+- Toroid yüksekliği ($h$): $11\,\mathrm{mm}$
+- Yalıtımlı tel yarıçapı ($r_{cw}$): $1.5\,\mathrm{mm} / 2 = 0.75\,\mathrm{mm}$
+
+**b) Ara Hesaplamalar:**
+- **Maksimum Katman Sayısı ($L$):**
+  $L = \frac{r_i}{2 \cdot r_{cw}} = \frac{14}{1.5} = 9.333$
+- **Maksimum Sarım Sayısı ($N_w$):**
+  $N_w = \pi \cdot L^2 = \pi \cdot (9.333)^2 \approx 273.7$
+- **Etkin Katman Sayısı ($M$):**
+  $M = L - \sqrt{\frac{N_w - N}{\pi}} = 9.333 - \sqrt{\frac{273.7 - 9}{\pi}} \approx 0.155$
+  <br/>(Not: $M$'nin küçük olması, 9 turun pencerenin çok küçük bir kısmını doldurduğunu gösterir.)
+
+**c) Toplam Tel Uzunluğu ($l_w$):**
+- $l_w \approx 360.9\,\mathrm{mm} = \mathbf{0.361\,\mathrm{m}}$
+
+**d) Ortalama Sarım Uzunluğu (MLT):**
+- $MLT = \frac{l_w}{N} = \frac{360.9\,\mathrm{mm}}{9} = \mathbf{40.1\,\mathrm{mm}}$
+
+---
+
+#### 2. Telin Kesit Alanı ($A_{wire}$)
+
+Direnç hesabı için yalıtımsız bakır telin kesit alanı kullanılır:
+- $d_{cu} = 1.4\,\mathrm{mm} = 0.0014\,\mathrm{m}$
+- $A_{wire} = \pi \left(\frac{d_{cu}}{2}\right)^2 = \pi \cdot (0.7\,\mathrm{mm})^2 \approx 1.54\,\mathrm{mm}^2 = 1.54 \times 10^{-6}\,\mathrm{m}^2$
+
+---
+
+#### 3. Tek Bir Telin DC Direnci ($R_{single\_wire}$)
+
+- $\rho_{cu,25} = 1.724 \times 10^{-8}\,\Omega\cdot\mathrm{m}$
+- $R_{single\_wire} = \rho_{cu,25} \cdot \frac{l_w}{A_{wire}} = 1.724 \times 10^{-8} \cdot \frac{0.361}{1.54 \times 10^{-6}} \approx \mathbf{0.00404\,\Omega}$
+
+---
+
+#### 4. Hat Direnci ve Toplam DC Güç Kaybı ($P_{dc}$)
+
+Sargı, her biri 3 paralel telden oluşan iki hattan oluşur.
+
+**a) Bir Hattın Eşdeğer Direnci ($R_{hat}$):**
+- $R_{hat} = \frac{R_{single\_wire}}{3} = \frac{0.00404\,\Omega}{3} \approx \mathbf{0.00135\,\Omega}$
+
+**b) Toplam DC Güç Kaybı ($P_{dc}$):**
+- $P_{dc} = 2 \cdot (I_{hat})^2 \cdot R_{hat}$
+- $P_{dc} = 2 \cdot (16\,\mathrm{A})^2 \cdot 0.00135\,\Omega = 2 \cdot 256 \cdot 0.00135 = \mathbf{0.691\,\mathrm{W}}$
+
+---
+
+### **Sonuç:**
+
+25°C ortam sıcaklığında elde edilen değerler:
+- **Tek bir telin DC direnci:** $4.04\,\mathrm{m}\Omega$
+- **Bir hattın (3 paralel tel) DC direnci:** $1.35\,\mathrm{m}\Omega$
+- **Toplam DC sargı kaybı:** **$\approx 0.69\,\mathrm{W}$**
+
+---
+
+### 7.2: Nihai Termal Değerlendirme
+
+
+*   **Toplam Güç Kaybı ($P_{total}$):**
+    $P_{total} \approx P_{dc} = 0.69\,\mathrm{Watt}$
+
+*   **Sıcaklık Artışı Tahmini:**
+    Bu boyuttaki (45x28x11 mm) bir nüvenin termal direnci ($R_{th}$) genellikle **10 - 15 $^\circ$C/W** aralığındadır (üretici veri föyünden kontrol edilmelidir). Ortalamadan $R_{th} = 12\,^\circ$C/W alalım.
+
+    $\Delta T_{surface} = P_{total} \times R_{th}$
+    $\Delta T_{surface} = 0.69\,\mathrm{W} \times 12\,^\circ\mathrm{C}/\mathrm{W} = 8.28\,^\circ\mathrm{C}$
+
+*   **Final Kontrol:**
+    *   Hesaplanan sıcaklık artışı ($\sim8.3\,^\circ$C), başlangıçta belirlediğimiz maksimum izin verilen sınırdan ($\Delta T_{max} = 55\,^\circ$C) oldukça düşüktür.
+    *   Maksimum ortam sıcaklığı 60$^\circ$C olsa bile, bobinin yüzey sıcaklığı $60^\circ$C $+$ $8.3^\circ$C $=$ $68.3^\circ$C civarında olacaktır. Bu değer, hem tel yalıtımı hem de nüve malzemesi için tamamen güvenli bir çalışma sıcaklığıdır.
+
+> **Bilgi:** Kullanılan bobin telinin yalıtım sınıfı **200°C**’dir. Hesaplanan maksimum sıcaklıklar bu sınırın oldukça altındadır; bu nedenle termal açıdan güvenli bir tasarım elde edilmiştir.
+
+**Sonuç:** Tasarım, 50 Hz diferansiyel mod çalışma koşulları altında **sadece 0.69 Watt** güç kaybına uğrayacaktır. Bu düşük kayıp, bobinin aşırı ısınmadan, yüksek verimlilikle ve güvenilir bir şekilde çalışacağını doğrulamaktadır.
+
+### Adım 8: Tasarım Özeti ve Sarım
+
+| **Parametre** | **Değer** | **Birim** | **Not** |
+|:---|:---:|:---:|:---|
+| **Girdiler** ||||
+| $f_{noise}$ | 1,000,000 | Hz | Gürültü frekansı |
+| $Z_{target}$ | 1000 | $\Omega$ | Hedef empedans |
+| $I_{op,rms}$ | 16 | A | Çalışma akımı (RMS) |
+| **Nüve** ||||
+| Parça No | CF139 T4511 |  | Nüve parça numarası |
+| $A_L$ | 2200 | nH/N² | İndüktans faktörü |
+| **Hesaplamalar** ||||
+| $L_{req}$ | 0.159 | mH | Gerekli endüktans |
+| $N$ | 9 | tur | Sarım sayısı |
+| $L_{actual}$ | 0.178 | mH | Gerçekleşen endüktans |
+| **Tel** ||||
+| Çap (mm) | 1.4 | mm | Tel çıplak çapı |
+| $d_{overall}$ | 1.5 | mm | Yalıtımlı tel çapı |
+| **Doğrulama** ||||
+| $K_u$ | 0.155 | (oran) | $<$ 0.4 olmalı (doldurma faktörü) |
+| $P_{dc}$ | 0.69 | W | DC sargı kaybı (25°C bakır) |
+| $\Delta T_{calc}$ | 8.3 | $^\circ$C | $< \Delta T_{max}$ olmalı (sıcaklık artışı) |
+
+## **Referanslar**
+
+#### CF139 Ferrit Çekirdeği Üretici Parametreleri
+
+| Özellik | Koşullar | Sembol | Değer | Birim |
+|:---|:---|:---:|:---:|:---:|
+| Başlangıç Geçirgenlik | 25°C, 10kHz, ≤0.25mT | $\mu_i$ | 2100 ±20% | - |
+| Akı Yoğunluğu (25°C) | 10kHz, 1200A/m | $B_S$ | 490 | mT |
+| Akı Yoğunluğu (100°C) | 10kHz, 1200A/m | $B_S$ | 390 | mT |
+| Zorlayıcı Alan Şiddeti (25°C) | 10kHz | $H_C$ | 21 | A/m |
+| Zorlayıcı Alan Şiddeti (100°C) | 10kHz | $H_C$ | 13 | A/m |
+| Histerezis Malzeme Sabiti | 25°C, $\eta_B < 1.0$ | - | $10^{-6}$ | mT |
+| Curie Sıcaklığı | 10kHz, ≤0.25mT | $T_C$ | >210 | °C |
+| Yoğunluk | 25°C | $\rho$ | $4.8 \times 10^3$ | kg/m³ |
+| Özdirenç | 25°C | $\rho_{DC}$ | 10 | $\Omega$m |
+| Rölatif Çekirdek Kayıpları (100°C) | 100kHz, 100mT | - | ≤60 | kW/m³ |
+| Rölatif Çekirdek Kayıpları (100°C) | 100kHz, 200mT | - | ≤375 | kW/m³ |
+
+Daha fazla teknik detay ve güncel değerler için üretici veri sayfasını inceleyebilirsiniz:
+
+<a href="/images/OrtakModBobinleri/CF139.pdf" target="_blank" rel="noopener noreferrer">
+  ↗️ CF139 Ferrit Çekirdek Veri Sayfası
+</a>
+
+
+

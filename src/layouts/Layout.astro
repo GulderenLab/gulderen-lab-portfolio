@@ -103,6 +103,40 @@ if (!Astro.site && import.meta.env.PROD) {
                 text-decoration: underline;
             }
 
+            /* EQUATION NUMBERING STYLES */
+            .katex .tag {
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #64748b;
+                font-weight: 500;
+                background: rgba(148, 163, 184, 0.1);
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 0.9em;
+            }
+            
+            .katex-display {
+                position: relative;
+                padding-right: 4rem; /* Make space for equation numbers */
+            }
+            
+            /* Make equation references clickable and styled */
+            a[href^="#eq:"] {
+                color: #3b82f6;
+                text-decoration: none;
+                padding: 1px 4px;
+                border-radius: 3px;
+                background: rgba(59, 130, 246, 0.1);
+                transition: all 0.2s ease;
+            }
+            
+            a[href^="#eq:"]:hover {
+                background: rgba(59, 130, 246, 0.2);
+                text-decoration: none;
+            }
+
             /* MOBIL TABLO ve DÜZEN SORUNLARINI ÇÖZEN "GÜVENLİK AĞI" CSS'i */
             @media (max-width: 768px) {
                 .prose table, .prose-invert table { display: block !important; width: 100% !important; overflow-x: auto !important; white-space: nowrap !important; border-collapse: collapse !important; }
@@ -117,7 +151,7 @@ if (!Astro.site && import.meta.env.PROD) {
             }
         </style>
     </head>
-    <body class="bg-gray-900 text-gray-200 flex flex-col min-h-screen font-sans">
+    <body class="bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 text-gray-100 flex flex-col min-h-screen font-sans antialiased">
         <Header siteTitle={siteName} />
 
         <main class="px-4 py-8 flex-grow w-full overflow-x-hidden">
@@ -127,6 +161,7 @@ if (!Astro.site && import.meta.env.PROD) {
                 </article>
             </div>
         </main>
+
         
         <Footer />
 
@@ -186,5 +221,6 @@ if (!Astro.site && import.meta.env.PROD) {
             if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initCopyButtons); } else { initCopyButtons(); }
             document.addEventListener('astro:after-swap', initCopyButtons);
         </script>
+
     </body>
 </html>

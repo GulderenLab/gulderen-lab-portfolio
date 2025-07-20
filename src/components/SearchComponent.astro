@@ -1,0 +1,738 @@
+---
+// src/components/SearchComponent.astro
+// Enhanced search component with advanced features
+export interface Props {
+  placeholder?: string;
+  maxResults?: number;
+  searchTypes?: ('blog' | 'project')[];
+}
+
+const { 
+  placeholder = "Blog yazıları ve projeler içinde ara...",
+  maxResults = 10,
+  searchTypes = ['blog', 'project']
+} = Astro.props;
+---
+
+<div class="search-container" data-search-types={JSON.stringify(searchTypes)} data-max-results={maxResults}>
+  <div class="search-wrapper">
+    <!-- Search Input -->
+    <input 
+      id="search-input"
+      type="text" 
+      placeholder={placeholder}
+      class="search-input"
+      aria-label="İçerik ara"
+      aria-describedby="search-help"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    
+    <!-- Search Button -->
+    <button 
+      id="search-button"
+      class="search-button"
+      aria-label="Ara"
+      type="button"
+    >
+      <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+      </svg>
+    </button>
+    
+    <!-- Clear Button -->
+    <button 
+      id="search-clear"
+      class="search-clear hidden"
+      aria-label="Aramayı temizle"
+      type="button"
+    >
+      <svg class="clear-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+  
+  <!-- Search Help Text -->
+  <div id="search-help" class="search-help">
+    <span class="search-shortcut">Arama için <kbd>Ctrl</kbd> + <kbd>K</kbd> tuşlarını kullanabilirsiniz</span>
+  </div>
+  
+  <!-- Loading Indicator -->
+  <div id="search-loading" class="search-loading hidden">
+    <div class="loading-spinner"></div>
+    <span>Aranıyor...</span>
+  </div>
+  
+  <!-- Search Results -->
+  <div id="search-results" class="search-results hidden">
+    <div class="search-results-header">
+      <span id="search-count">0 sonuç bulundu</span>
+      <div class="search-filters">
+        <button class="filter-btn active" data-filter="all">Tümü</button>
+        <button class="filter-btn" data-filter="blog">Blog</button>
+        <button class="filter-btn" data-filter="project">Proje</button>
+      </div>
+    </div>
+    <div id="search-results-content"></div>
+    <div id="search-no-results" class="no-results hidden">
+      <div class="no-results-icon">🔍</div>
+      <h3>Sonuç bulunamadı</h3>
+      <p>Farklı anahtar kelimeler deneyebilirsiniz.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .search-container {
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 14px 80px 14px 16px;
+    border: 2px solid #374151;
+    border-radius: 12px;
+    background-color: #1f2937;
+    color: #f9fafb;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: #40e0d0;
+    box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.1), 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+  
+  .search-button {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+  
+  .search-button:hover {
+    color: #40e0d0;
+    background-color: rgba(64, 224, 208, 0.1);
+  }
+  
+  .search-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+  
+  .search-clear:hover {
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+  
+  .search-icon, .clear-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .search-help {
+    margin-top: 8px;
+    text-align: center;
+  }
+  
+  .search-shortcut {
+    font-size: 12px;
+    color: #6b7280;
+  }
+  
+  .search-shortcut kbd {
+    background-color: #374151;
+    color: #d1d5db;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid #4b5563;
+  }
+  
+  .search-loading {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #1f2937;
+    border: 2px solid #374151;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    z-index: 50;
+    color: #9ca3af;
+  }
+  
+  .loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #374151;
+    border-top: 2px solid #40e0d0;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #1f2937;
+    border: 2px solid #374151;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    max-height: 500px;
+    overflow-y: auto;
+    z-index: 50;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    margin-top: 2px;
+  }
+  
+  .search-results.hidden {
+    display: none;
+  }
+  
+  .search-results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #374151;
+    background-color: #111827;
+  }
+  
+  .search-filters {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .filter-btn {
+    padding: 4px 12px;
+    border: 1px solid #374151;
+    background-color: #1f2937;
+    color: #9ca3af;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .filter-btn:hover {
+    background-color: #374151;
+    color: #d1d5db;
+  }
+  
+  .filter-btn.active {
+    background-color: #40e0d0;
+    color: #1f2937;
+    border-color: #40e0d0;
+  }
+  
+  .search-result-item {
+    padding: 16px;
+    border-bottom: 1px solid #374151;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .search-result-item:hover {
+    background-color: #374151;
+    transform: translateX(4px);
+  }
+  
+  .search-result-item:last-child {
+    border-bottom: none;
+  }
+  
+  .search-result-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #40e0d0;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 6px;
+    transition: color 0.3s ease;
+  }
+  
+  .search-result-title:hover {
+    color: #5eead4;
+  }
+  
+  .search-result-description {
+    font-size: 14px;
+    color: #d1d5db;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  
+  .search-result-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .search-result-type {
+    display: inline-block;
+    font-size: 11px;
+    color: #9ca3af;
+    background-color: #374151;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .search-result-date {
+    font-size: 12px;
+    color: #6b7280;
+  }
+  
+  .no-results {
+    padding: 40px 20px;
+    text-align: center;
+    color: #9ca3af;
+  }
+  
+  .no-results-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+  
+  .no-results h3 {
+    color: #d1d5db;
+    margin-bottom: 8px;
+    font-size: 18px;
+  }
+  
+  .no-results p {
+    color: #9ca3af;
+    font-size: 14px;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .search-container {
+      max-width: 100%;
+      margin: 0 16px;
+    }
+    
+    .search-input {
+      padding: 12px 70px 12px 12px;
+      font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .search-results {
+      max-height: 60vh;
+    }
+    
+    .search-results-header {
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    
+    .search-filters {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  class EnhancedSearch {
+    constructor() {
+      this.searchData = [];
+      this.searchTimeout = null;
+      this.currentFilter = 'all';
+      this.maxResults = 10;
+      this.isLoading = false;
+      
+      this.elements = {
+        input: null,
+        button: null,
+        clear: null,
+        loading: null,
+        results: null,
+        resultsContent: null,
+        noResults: null,
+        count: null,
+        filters: null
+      };
+    }
+    
+    async init() {
+      this.bindElements();
+      this.setupEventListeners();
+      await this.loadSearchData();
+      this.setupKeyboardShortcuts();
+    }
+    
+    bindElements() {
+      this.elements.input = document.getElementById('search-input');
+      this.elements.button = document.getElementById('search-button');
+      this.elements.clear = document.getElementById('search-clear');
+      this.elements.loading = document.getElementById('search-loading');
+      this.elements.results = document.getElementById('search-results');
+      this.elements.resultsContent = document.getElementById('search-results-content');
+      this.elements.noResults = document.getElementById('search-no-results');
+      this.elements.count = document.getElementById('search-count');
+      this.elements.filters = document.querySelectorAll('.filter-btn');
+    }
+    
+    setupEventListeners() {
+      // Input events
+      this.elements.input?.addEventListener('input', (e) => this.handleInput(e));
+      this.elements.input?.addEventListener('focus', () => this.handleFocus());
+      this.elements.input?.addEventListener('blur', () => this.handleBlur());
+      
+      // Button events
+      this.elements.button?.addEventListener('click', () => this.handleSearch());
+      this.elements.clear?.addEventListener('click', () => this.clearSearch());
+      
+      // Filter events
+      this.elements.filters?.forEach(btn => {
+        btn.addEventListener('click', (e) => this.handleFilter(e));
+      });
+      
+      // Global events
+      document.addEventListener('click', (e) => this.handleOutsideClick(e));
+      document.addEventListener('keydown', (e) => this.handleKeydown(e));
+    }
+    
+    setupKeyboardShortcuts() {
+      document.addEventListener('keydown', (e) => {
+        // Ctrl+K or Cmd+K to focus search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          this.elements.input?.focus();
+        }
+      });
+    }
+    
+    async loadSearchData() {
+      try {
+        // Don't show loading on initial load
+        // this.showLoading(true);
+        
+        // Try to fetch from API first
+        const response = await fetch('/api/search-data.json');
+        if (response.ok) {
+          this.searchData = await response.json();
+        } else {
+          throw new Error('API not available');
+        }
+      } catch (error) {
+        console.log('Using fallback search data');
+        this.searchData = this.createFallbackSearchData();
+      } finally {
+        // this.showLoading(false);
+      }
+    }
+    
+    createFallbackSearchData() {
+      const data = [];
+      
+      // Get blog posts from current page
+      const blogElements = document.querySelectorAll('article');
+      blogElements.forEach((article, index) => {
+        const titleElement = article.querySelector('h2 a, h3 a, .search-result-title');
+        const descElement = article.querySelector('p, .search-result-description');
+        
+        if (titleElement) {
+          const title = titleElement.textContent?.trim();
+          const href = titleElement.getAttribute('href');
+          const description = descElement?.textContent?.trim() || 'Blog yazısı';
+          
+          if (title && href) {
+            data.push({
+              id: `blog-${index}`,
+              title,
+              href,
+              description: description.substring(0, 150) + '...',
+              type: 'blog',
+              category: 'Blog',
+              date: new Date().toISOString(),
+              tags: this.extractTags(article)
+            });
+          }
+        }
+      });
+      
+      // Add some sample project data
+      const sampleProjects = [
+        {
+          id: 'project-1',
+          title: 'ESP32 Tabanlı IoT Sensör Ağı',
+          href: '/projeler/example-project/',
+          description: 'ESP32 mikrodenetleyici kullanarak çoklu sensör verilerini WiFi üzerinden buluta gönderen IoT sensör ağı projesi.',
+          type: 'project',
+          category: 'Proje',
+          date: '2025-07-01',
+          tags: ['esp32', 'iot', 'sensör', 'wifi', 'mqtt']
+        }
+      ];
+      
+      return [...data, ...sampleProjects];
+    }
+    
+    extractTags(element) {
+      const tagElements = element.querySelectorAll('.tag, [class*="tag"]');
+      return Array.from(tagElements).map(el => el.textContent?.trim()).filter(Boolean);
+    }
+    
+    handleInput(e) {
+      const query = e.target.value;
+      
+      // Show/hide clear button
+      if (query.length > 0) {
+        this.elements.clear?.classList.remove('hidden');
+      } else {
+        this.elements.clear?.classList.add('hidden');
+        this.hideResults();
+        return;
+      }
+      
+      // Debounced search
+      clearTimeout(this.searchTimeout);
+      
+      if (query.trim().length >= 2) { // Only search if 2+ characters
+        this.searchTimeout = setTimeout(() => {
+          this.performSearch(query);
+        }, 300);
+      } else {
+        this.hideResults();
+      }
+    }
+    
+    handleFocus() {
+      const query = this.elements.input?.value.trim();
+      if (query && query.length >= 2) {
+        this.performSearch(query);
+      }
+    }
+    
+    handleBlur() {
+      // Small delay to allow clicking on results
+      setTimeout(() => {
+        if (!this.elements.results?.matches(':hover')) {
+          this.hideResults();
+        }
+      }, 150);
+    }
+    
+    handleSearch() {
+      const query = this.elements.input?.value;
+      if (query?.trim()) {
+        this.performSearch(query);
+      }
+    }
+    
+    clearSearch() {
+      if (this.elements.input) {
+        this.elements.input.value = '';
+        this.elements.input.focus();
+      }
+      this.elements.clear?.classList.add('hidden');
+      this.hideResults();
+    }
+    
+    handleFilter(e) {
+      const filter = e.target.getAttribute('data-filter');
+      this.currentFilter = filter;
+      
+      // Update active filter
+      this.elements.filters?.forEach(btn => btn.classList.remove('active'));
+      e.target.classList.add('active');
+      
+      // Re-run search with current query
+      const query = this.elements.input?.value;
+      if (query?.trim()) {
+        this.performSearch(query);
+      }
+    }
+    
+    handleOutsideClick(e) {
+      if (!e.target.closest('.search-container')) {
+        this.hideResults();
+      }
+    }
+    
+    handleKeydown(e) {
+      if (e.key === 'Escape') {
+        this.hideResults();
+        this.elements.input?.blur();
+      }
+    }
+    
+    performSearch(query) {
+      if (!query.trim()) {
+        this.hideResults();
+        return;
+      }
+      
+      this.showLoading(true);
+      
+      // Simulate async search
+      setTimeout(() => {
+        const results = this.searchItems(query);
+        const filteredResults = this.filterResults(results);
+        const limitedResults = filteredResults.slice(0, this.maxResults);
+        
+        this.displayResults(limitedResults, filteredResults.length);
+        this.showLoading(false);
+      }, 100);
+    }
+    
+    searchItems(query) {
+      const lowerQuery = query.toLowerCase();
+      const words = lowerQuery.split(' ').filter(word => word.length > 1);
+      
+      return this.searchData.filter(item => {
+        const searchText = `${item.title} ${item.description} ${item.tags?.join(' ') || ''}`.toLowerCase();
+        
+        // Score based matching
+        let score = 0;
+        
+        // Exact title match gets highest score
+        if (item.title.toLowerCase().includes(lowerQuery)) {
+          score += 10;
+        }
+        
+        // Word matches in title
+        words.forEach(word => {
+          if (item.title.toLowerCase().includes(word)) {
+            score += 5;
+          }
+          if (item.description.toLowerCase().includes(word)) {
+            score += 2;
+          }
+          if (item.tags?.some(tag => tag.toLowerCase().includes(word))) {
+            score += 3;
+          }
+        });
+        
+        return score > 0;
+      }).sort((a, b) => {
+        // Sort by relevance (this is a simple implementation)
+        const aScore = a.title.toLowerCase().includes(lowerQuery) ? 10 : 1;
+        const bScore = b.title.toLowerCase().includes(lowerQuery) ? 10 : 1;
+        return bScore - aScore;
+      });
+    }
+    
+    filterResults(results) {
+      if (this.currentFilter === 'all') {
+        return results;
+      }
+      return results.filter(item => item.type === this.currentFilter);
+    }
+    
+    displayResults(results, totalCount) {
+      if (!this.elements.results || !this.elements.resultsContent) return;
+      
+      // Update count
+      if (this.elements.count) {
+        this.elements.count.textContent = `${totalCount} sonuç bulundu`;
+      }
+      
+      if (results.length === 0) {
+        this.elements.resultsContent.innerHTML = '';
+        this.elements.noResults?.classList.remove('hidden');
+      } else {
+        this.elements.noResults?.classList.add('hidden');
+        this.elements.resultsContent.innerHTML = results.map(result => this.renderResultItem(result)).join('');
+      }
+      
+      this.elements.results.classList.remove('hidden');
+    }
+    
+    renderResultItem(result) {
+      const date = result.date ? new Date(result.date).toLocaleDateString('tr-TR') : '';
+      
+      return `
+        <div class="search-result-item" onclick="window.location.href='${result.href}'">
+          <a href="${result.href}" class="search-result-title">${this.escapeHtml(result.title)}</a>
+          <div class="search-result-description">${this.escapeHtml(result.description)}</div>
+          <div class="search-result-meta">
+            <span class="search-result-type">${result.category}</span>
+            ${date ? `<span class="search-result-date">${date}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+    
+    escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    showLoading(show) {
+      this.isLoading = show;
+      if (this.elements.loading) {
+        if (show) {
+          this.elements.loading.classList.remove('hidden');
+          this.elements.results?.classList.add('hidden');
+        } else {
+          this.elements.loading.classList.add('hidden');
+        }
+      }
+    }
+    
+    hideResults() {
+      this.elements.results?.classList.add('hidden');
+      this.elements.loading?.classList.add('hidden');
+    }
+  }
+  
+  // Initialize search when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      const search = new EnhancedSearch();
+      search.init();
+    });
+  } else {
+    const search = new EnhancedSearch();
+    search.init();
+  }
+</script>

@@ -1,72 +1,120 @@
 ---
 // src/pages/projeler/[slug].astro
 import { type CollectionEntry, getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro'; // Layout dosyasının yolu doğru mu kontrol edin (genellikle doğrudur)
+import Layout from '../../layouts/Layout.astro'; // Layout yolu doğru varsayıldı
+import TableOfContents from '../../components/TableOfContents.astro'; // ToC bileşenini import et
 
-// 1. getStaticPaths: Hangi sayfaların oluşturulacağını Astro'ya bildirir (Değişiklik yok)
+// getStaticPaths: Hangi proje sayfalarının oluşturulacağını bildirir
 export async function getStaticPaths() {
   const projeler = await getCollection('projeler', ({data}) => {
      return !data.isDraft;
   });
   return projeler.map(proje => ({
     params: { slug: proje.slug },
-    props: { proje },
+    props: { proje }, // Prop adı 'proje'
   }));
 }
 
-// 2. Sayfa Bileşeni: (Değişiklik yok)
+// Sayfa Bileşeni:
 type Props = {
-  proje: CollectionEntry<'projeler'>;
+  proje: CollectionEntry<'projeler'>; // Prop tipi 'projeler'
 }
-const { proje } = Astro.props;
-const { Content } = await proje.render();
+const { proje } = Astro.props; // Prop adı 'proje'
+
+// proje.render() çağrısından hem Content hem de headings'i al
+const { Content, headings } = await proje.render();
+
+// --- YENİ: Bölüm Navigasyonu için Verileri Al ---
+const { part, totalPages, prevPageSlug, nextPageSlug } = proje.data;
+// --- BİTİŞ: Bölüm Navigasyonu için Verileri Al ---
 ---
-{/* === LAYOUT VE HTML KISMINA TAILWIND SINIFLARI EKLENDİ === */}
-<Layout title={proje.data.title} description={proje.data.description} image={proje.data.image.src}>
+{/* Layout'a proje verilerini geçiyoruz */}
+<Layout title={proje.data.title} description={proje.data.description} image={proje.data.image?.src}>
   {/* Ana Article Konteyneri */}
   <article class="max-w-3xl mx-auto py-8 px-4"> {/* Maksimum genişlik, ortalama, dikey/yatay padding */}
 
-    {/* Kapak Resmi */}
-    <img
-      src={proje.data.image.src}
-      alt={proje.data.image.alt}
-      class="w-full rounded-lg shadow-md mb-8" {/* Tam genişlik, köşeler, gölge, alt boşluk */}
-    />
+    {/* Opsiyonel Kapak Resmi */}
+    {proje.data.image && (
+        <img
+        src={proje.data.image.src}
+        alt={proje.data.image.alt}
+        class="w-full rounded-lg shadow-md mb-8 max-h-96 object-cover"
+        />
+    )}
 
-    {/* Başlık */}
-    <h1 class="text-4xl md:text-5xl font-bold mb-4 text-accent-light"> {/* Boyut (responsive), kalınlık, boşluk, renk */}
+    {/* Başlık - YENİ: Bölüm bilgisi eklendi */}
+    <h1 class="text-4xl md:text-5xl font-bold mb-4 text-accent-light">
       {proje.data.title}
+      {/* Eğer part ve totalPages bilgisi varsa başlığa ekle */}
+      {part && totalPages && (
+        <span class="block text-2xl text-gray-400 mt-1">Bölüm {part} / {totalPages}</span>
+        // Veya aynı satırda: ` (${part}/${totalPages})` şeklinde de ekleyebilirsiniz.
+      )}
     </h1>
 
-    {/* Meta Bilgiler */}
-    <div class="text-sm text-gray-400 mb-6 border-b border-gray-700 pb-4"> {/* Boyut, renk, boşluk, alt kenarlık */}
-      {/* Yayın Tarihi */}
-      <span class="block mb-2"> {/* Alt alta gelmesi için block, boşluk */}
-        Yayınlanma Tarihi: {proje.data.publishDate.toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}
-      </span>
-      {/* Etiketler */}
-      {proje.data.tags && proje.data.tags.length > 0 && (
-        <div> {/* Etiketleri sarmalayan div */}
-          <span class="mr-2">Etiketler:</span> {/* "Etiketler:" yazısı */}
-          {proje.data.tags.map(tag => (
-            <span class="inline-block bg-gray-700 text-gray-300 text-xs font-medium mr-2 mb-1 px-2.5 py-0.5 rounded-full"> {/* Etiket stili */}
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
+    {/* Meta Bilgiler: Tarih ve Yazar */}
+    <div class="text-sm text-gray-400 mb-6 border-b border-gray-700 pb-4">
+        <span class="block mb-1">Yayınlanma Tarihi: {proje.data.publishDate.toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        {/* Yazar bilgisi varsa göster (opsiyonel) */}
+        {proje.data.author && <span class="block">Yazar: {proje.data.author}</span>}
+         {/* Etiketler */}
+         {proje.data.tags && proje.data.tags.length > 0 && (
+            <div class="mt-3">
+              <span class="mr-2">Etiketler:</span>
+              {proje.data.tags.map(tag => (
+                <span class="inline-block bg-gray-700 text-gray-300 text-xs font-medium mr-2 mb-1 px-2.5 py-0.5 rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
+        )}
     </div>
 
-    {/* Markdown İçeriği Alanı (Typography Eklentisi ile Stilleme) */}
+    {/* İçerik Tablosu */}
+    {/* Sadece birden fazla başlık varsa ToC'yi göster (TableOfContents içinde zaten bu kontrol var ama burada da yapılabilir) */}
+    {headings && headings.length > 1 && <TableOfContents headings={headings} />}
+
+
+    {/* Markdown İçeriği Alanı */}
     <div class="prose prose-lg prose-invert
-                *prose-headings:text-accent-light prose-a:text-brand hover:prose-a:text-accent-light
+                prose-headings:text-accent-light prose-a:text-brand hover:prose-a:text-accent-light
                 prose-code:text-accent-light prose-pre:bg-gray-800
-                max-w-none"> {/* prose sınıfları, renk/stil özelleştirmeleri, max-width sıfırlama */}
-      <Content /> {/* Markdown içeriği buraya render edilecek ve 'prose' stilleri uygulanacak */}
+                max-w-none mt-8">
+      <Content />
     </div>
+
+    {/* --- YENİ: Bölüm Navigasyon Linkleri --- */}
+    {(prevPageSlug || nextPageSlug) && ( // Sadece en az bir link varsa bu bölümü göster
+      <div class="flex justify-between items-center mt-12 border-t border-gray-700 pt-6">
+        <div>
+          {prevPageSlug && (
+            <a href={`/projeler/${prevPageSlug}/`} class="inline-flex items-center text-accent-light hover:underline font-semibold">
+              {/* İkon ekleyebilirsiniz (opsiyonel) */}
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Önceki Proje
+            </a>
+          )}
+        </div>
+        <div>
+          {nextPageSlug && (
+            <a href={`/projeler/${nextPageSlug}/`} class="inline-flex items-center text-accent-light hover:underline font-semibold">
+              Sonraki Proje
+               {/* İkon ekleyebilirsiniz (opsiyonel) */}
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
+    )}
+    {/* --- BİTİŞ: Bölüm Navigasyon Linkleri --- */}
+
 
     {/* Geri Dön Linki */}
-    <a href="/projeler/" class="inline-block mt-12 text-accent-light hover:underline font-semibold">
+    <a href="/projeler/" class="inline-block mt-8 text-accent-light hover:underline font-semibold">
       ← Tüm Projelere Geri Dön
     </a>
   </article>

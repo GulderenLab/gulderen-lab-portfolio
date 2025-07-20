@@ -1,0 +1,918 @@
+---
+title: "Yüksek Hassasiyetli STM32G431 Tabanlı LCR Metre: Teori, Tasarım ve Uygulama"
+description: "Auto-Balancing Bridge tekniğiyle, geniş frekans aralığında endüktans, kapasitans ve direnç ölçümü yapabilen yüksek hassasiyetli LCR metre projesinin teorisi, donanım/yazılım tasarımı ve pratik uygulamaları."
+publishDate: 2025-07-15
+tags: [
+  'lcr metre',
+  'STM32G431',
+  'auto-balancing bridge',
+  'empedans ölçümü',
+  'endüktans',
+  'kapasitans',
+  'direnç',
+  'dijital sinyal işleme',
+  'dft',
+  'goertzel',
+  'adc',
+  'ad9833',
+  'ad7606',
+  'LT3042',
+  'LT3094',
+  'kicad',
+  'pcb tasarımı',
+  'kalibrasyon',
+  'open short load',
+  'kelvin bağlantı',
+  'analog elektronik',
+  'gömülü sistemler',
+  'python gui',
+  'pyqt',
+  'tkinter',
+  'usb iletişim',
+  'frekans tarama',
+  'q faktörü',
+  'd faktörü',
+  'empedans spektroskopisi',
+  'test ve ölçüm',
+  'profesyonel ölçüm',
+  'sinyal bütünlüğü',
+  'hardware design',
+  'elektronik devreler',
+  'gürültü azaltma',
+  'spektrum analizörü',
+  'osiloskop'
+]
+image:
+  src: '/images/LCR/LCR_metre_blok_diyagrami.svg'
+  alt: 'STM32G431 tabanlı LCR metre projesinin kapak görseli, ölçüm devresi ve cihaz prototipi.'
+isDraft: false
+---
+
+import { ImageWithCaption } from '@/components/i2c/ImageWithCaption.jsx';
+// YENİ: Tekrar kullanılabilir animasyon bileşenimizi import ediyoruz.
+import { SvgAnimationContainer } from '@/components/i2c/SvgAnimationContainer.jsx';
+
+import { gsap } from 'gsap';
+
+
+<style jsx>{`
+  /* YENİ: Her şeyi saran ana kapsayıcı */
+  .animation-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Görsel ile kontroller arasına boşluk */
+  }
+
+  /* YENİ: Animasyon başlığı için stil */
+  .animation-caption {
+    text-align: center;
+    font-size: 0.9em;
+    color: #ccc; /* Koyu temada iyi görünen açık gri bir renk */
+    padding: 0.5rem 0;
+  }
+
+  /* GÜNCELLENDİ: Artık sadece slaytları barındırıyor */
+  .svg-animation-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 783 / 469;
+    max-height: 80vh;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    /* margin kaldırıldı, ana kapsayıcıya taşınabilir */
+  }
+  
+  .svg-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+    box-sizing: border-box;
+  }
+  
+  .svg-slide.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  
+  .svg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
+    transform: scale(1); 
+    transition: transform 0.3s ease;
+  }
+  
+  .svg-image:hover {
+    transform: scale(1); 
+  }
+  
+  /* YENİ: Tüm kontrolleri içeren panel */
+  .animation-controls-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+  }
+  
+  /* YENİ: Sayaç ve ilerleme çubuğunu yan yana getirmek için */
+  .progress-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  /* GÜNCELLENDİ: position: absolute kaldırıldı */
+  .progress-container {
+    flex-grow: 1; /* Kalan boşluğu doldur */
+    height: 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+    width: 0%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  
+  /* GÜNCELLENDİ: position: absolute kaldırıldı */
+  .controls {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+  
+  .btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+  }
+  
+  /* GÜNCELLENDİ: position: absolute kaldırıldı */
+  .slide-indicator {
+    color: white;
+    font-size: 14px;
+    background: rgba(0,0,0,0.3);
+    padding: 5px 10px;
+    border-radius: 15px;
+    white-space: nowrap; /* "1 / 4" yazısının tek satırda kalmasını sağlar */
+  }
+`}</style>
+
+<script>
+{`
+  // Animasyon ayarları (bunlar sabit kalabilir)
+  const SLIDE_DURATION = 3000;
+  const TRANSITION_DURATION = 800;
+
+  /**
+   * Belirli bir animasyon kapsayıcısı için yeni bir animasyon örneği oluşturur.
+   * @param {HTMLElement} containerElement - Animasyonun ana kapsayıcısı (.animation-wrapper)
+   */
+  function createAnimationInstance(containerElement) {
+    // === 1. Her Örneğe Özel Değişkenler ===
+    // Bu değişkenler artık global değil, her animasyonun kendi içinde saklanıyor.
+    let currentSlide = 0;
+    let isPlaying = false;
+    let intervalId = null;
+
+    // === 2. Her Örneğe Özel DOM Elemanları ===
+    // Seçiciler artık tüm belge (document) yerine, sadece bu animasyonun kapsayıcısını arar.
+    const slides = containerElement.querySelectorAll('.svg-slide');
+    const progressBar = containerElement.querySelector('.progress-bar');
+    const indicator = containerElement.querySelector('.slide-indicator');
+    const playBtn = containerElement.querySelector('.play-btn');
+    const pauseBtn = containerElement.querySelector('.pause-btn');
+    const resetBtn = containerElement.querySelector('.reset-btn');
+    const nextBtn = containerElement.querySelector('.next-btn');
+    const prevBtn = containerElement.querySelector('.prev-btn');
+    
+    // Toplam slayt sayısını dinamik olarak alalım.
+    const totalSlides = slides.length;
+    if (totalSlides === 0) return; // Slayt yoksa hiçbir şey yapma
+
+    // === 3. Her Örneğe Özel Fonksiyonlar ===
+    // Bu fonksiyonlar, yukarıdaki yerel değişkenler ve DOM elemanları üzerinde çalışır.
+
+    function updateIndicator() {
+      if (indicator) {
+        indicator.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+      }
+    }
+
+    function updateProgressBar() {
+      if (progressBar) {
+        const progress = ((currentSlide + 1) / totalSlides) * 100;
+        progressBar.style.width = progress + '%';
+      }
+    }
+    
+    function showSlide(index) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      if (slides[index]) {
+        slides[index].classList.add('active');
+      }
+      currentSlide = index;
+      updateIndicator();
+      updateProgressBar();
+    }
+
+    function startSequence() {
+      if (isPlaying) return;
+      isPlaying = true;
+      intervalId = setInterval(() => {
+        const nextIndex = (currentSlide + 1) % totalSlides;
+        showSlide(nextIndex);
+      }, SLIDE_DURATION);
+    }
+
+    function pauseSequence() {
+      isPlaying = false;
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    }
+
+    function resetSequence() {
+      pauseSequence();
+      showSlide(0);
+    }
+
+    function nextSlide() {
+      pauseSequence();
+      const nextIndex = (currentSlide + 1) % totalSlides;
+      showSlide(nextIndex);
+    }
+
+    function prevSlide() {
+      pauseSequence();
+      const prevIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+      showSlide(prevIndex);
+    }
+
+    function setupEventListeners() {
+      if (playBtn) playBtn.addEventListener('click', startSequence);
+      if (pauseBtn) pauseBtn.addEventListener('click', pauseSequence);
+      if (resetBtn) resetBtn.addEventListener('click', resetSequence);
+      if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+      if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+    }
+
+    // === 4. Bu Örneği Başlat ===
+    showSlide(0);
+    setupEventListeners();
+  }
+
+  // === Sayfa Yüklendiğinde Tüm Animasyonları Başlatıcı ===
+  function initAllAnimations() {
+    if (typeof window === 'undefined') return;
+    // Sayfadaki tüm animasyon sarmalayıcılarını bul
+    const animationWrappers = document.querySelectorAll('.animation-wrapper');
+    // Her biri için bağımsız bir animasyon örneği oluştur
+    animationWrappers.forEach(createAnimationInstance);
+  }
+
+  // DOM yüklendiğinde başlat
+  if (typeof window !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAllAnimations);
+    } else {
+      initAllAnimations();
+    }
+  }
+`}
+</script>
+
+# Yüksek Hassasiyetli STM32G431 Tabanlı LCR Metre Tasarımı ve Uygulaması
+
+Bu projede, **Auto-Balancing Bridge** (Otomatik Dengeleme Köprüsü) tekniği kullanılarak, geniş bir frekans aralığında endüktans (L), kapasitans (C) ve direnç (R) ölçümü yapabilen yüksek hassasiyetli bir LCR metre tasarlanmıştır.
+
+## Proje Özellikleri
+
+- **Yüksek Hassasiyet**: Auto-Balancing Bridge tekniği ile %0.1 doğruluk
+- **Geniş Frekans Aralığı**: 10Hz - 1MHz arası ölçüm kapasitesi
+- **Çoklu Parametre Ölçümü**: R, L, C, Q faktörü, D faktörü
+- **Gerçek Zamanlı Görselleştirme**: Python GUI ile anlık sonuçlar
+- **Profesyonel Kalibrasyon**: Open/Short/Load kalibrasyon sistemi
+- **USB Bağlantısı**: Hızlı veri aktarımı
+
+## Kullanılan Teknolojiler
+
+### Donanım
+- **STM32G431**: Yüksek hızlı ADC, dijital filtre, OPAMP ve gelişmiş zamanlayıcılar içeren ARM Cortex-M4 tabanlı, hassas analog ve motor kontrol uygulamaları için optimize edilmiş bir mikrodenetleyicidir.
+- **AD9833**: DDS sinyal jeneratörü 
+- **AD7606**: 16-bit eş zamanlı ADC
+- **OPA1632**: ADC Sürücü
+- **OPA192/OPA810**: Hassas işlemsel yükselteçler
+- **BUF634A**: Yüksek akım buffer
+- **LT3042 - LT3094**:  Çok düşük gürültülü pozitif ve negatif gerilim düzenleyicileri
+- ****
+
+### Yazılım
+- **STM32CubeIDE**: Firmware geliştirme
+- **Python**: Masaüstü arayüzü (PyQt/Tkinter)
+- **DSP Algoritmaları**: DFT/Goertzel algoritması
+- **LTspice**: Devre simülasyonu
+
+## Sistem Mimarisi
+
+### Blok Diyagramı
+
+<ImageWithCaption
+  src="/images/LCR/LCR_metre_blok_diyagrami.svg"
+  alt="LCR metre blok diagramı"
+>
+  <strong>Şekil 1.:</strong> Tasarlanan LCR metre blok diyagramı
+</ImageWithCaption>
+
+{/* 
+
+\documentclass[border=10pt]{standalone}
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usepackage{circuitikz}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{decorations.markings, arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shadows} % Gölgeler için kütüphane
+
+% Modern ve Uyumlu Renk Paleti Tanımlamaları
+\definecolor{techBlue}{RGB}{14,165,233}      % Sinyal Jen. (Sky 500)
+\definecolor{techGreen}{RGB}{16,185,129}     % Uyarma Katı (Emerald 500)
+\definecolor{techOrange}{RGB}{245,158,11}    % Ölçüm Katı (Amber 500)
+\definecolor{techPurple}{RGB}{124,58,237}    % FDA (Violet 600)
+\definecolor{techRed}{RGB}{244,63,94}        % ADC (Rose 500)
+\definecolor{techSlate}{RGB}{71,85,105}      % Güç Katı (Slate 600)
+\definecolor{techZinc}{RGB}{63,63,70}        % Mikrodenetleyici (Zinc 700)
+\usetikzlibrary{fit, backgrounds, patterns} % KUTUCUKLAR İÇİN GEREKLİ KÜTÜPHANELER
+
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+
+\begin{document}
+\begin{circuitikz}
+\ctikzset{tripoles/mos style=arrows}
+
+% --- ANA DEVRE ÇİZİMİ (ORİJİNAL KODUNUZ) ---
+% --- 
+\begin{scope}[xshift=0 cm]
+
+%---Sinyal Jeneratörü---
+% Başlangıç noktası
+\coordinate (start_sinyal_jenerator) at (-5, 4);
+
+% Şekli çiz ve koordinatları tanımla (global isimlerle)
+\path (start_sinyal_jenerator) coordinate (SJ_A)
+ -- ++(0, 1) coordinate (SJ_B)      % yukarı 1 birim
+-- ++(1, 0) coordinate (SJ_C)       % sağa 1 birim  
+-- ++(1, 0) coordinate (SJ_D)       % sağa 1 birim daha (toplam 2)
+-- ++(0, -1) coordinate (SJ_E)      % aşağı 1 birim
+-- ++(0, -1) coordinate (SJ_F)      % aşağı 1 birim daha (toplam 2)
+-- ++(-1, 0) coordinate (SJ_G)      % sola 1 birim
+-- ++(-1, 0) coordinate (SJ_H)      % sola 1 birim daha (toplam 2)
+-- ++(0, 1) coordinate (SJ_J)       % yukarı 1 birim (başlangıca dön)
+-- cycle;
+
+% Şekli çiz
+\draw (SJ_A) -- (SJ_B) -- (SJ_C) -- (SJ_D) -- (SJ_E) -- (SJ_F) -- (SJ_G)-- (SJ_H) -- (SJ_J) -- cycle;
+
+% AD9833 yazısını çokgenin gerçek ortasına yerleştir
+\coordinate (SJ_center) at ($(SJ_A)!0.5!(SJ_E)$);
+\node at (SJ_center) {\textbf{AD9833}};
+
+% GLOBAL Giriş pinleri (sol taraf)
+\coordinate (SJ_in_internal) at ($(SJ_B)!0.5!(SJ_H)$);
+
+% GLOBAL Giriş çizgileri ve pin koordinatları
+\draw [<-] (SJ_in_internal) -- ++(-0.5,0) coordinate (SJ_in);
+
+% GLOBAL Çıkış pini (sağ taraf)
+\coordinate (SJ_out_internal) at ($(SJ_D)!0.5!(SJ_F)$);
+\draw (SJ_out_internal) -- ++(0.5,0) coordinate (SJ_out);
+\node[left] at (SJ_in) {\small STM32};
+
+%---opa810_1---
+\draw
+(0,4.49) node[op amp] (opa_810_1) {opa810}
+(opa_810_1.down) ++(0,-0.5) node[below] (opa1_vcc_neg_label) {$-V_{CC}$} -- (opa_810_1.down) % İSİM VERİLDİ
+(opa_810_1.up)   ++(0,0.5) node[above] (opa1_vcc_pos_label) {$+V_{CC}$} -- (opa_810_1.up)   % İSİM VERİLDİ
+% AD9833'ten opa810 girişine bağlantı
+(SJ_out) -- (opa_810_1.+)
+;
+%---BUF634_1---
+\draw
+% plain mono amplifier (amplifier bloğu)
+(3.5,4.49) node[plain mono amp] (BUF634_1) {BUF634}
+(BUF634_1.down) ++(0,-0.5) node[below] (buf1_vcc_neg_label) {$-V_{CC}$} -- (BUF634_1.down) % İSİM VERİLDİ
+(BUF634_1.up)   ++(0,0.5) node[above] (buf1_vcc_pos_label) {$+V_{CC}$} -- (BUF634_1.up)   % İSİM VERİLDİ
+;
+
+% OPA810_1 çıkış ucu --> BUF634_1 giriş ucu
+\draw (opa_810_1.out) -- (BUF634_1.in);
+
+% BUF634_1 çıkışı -> yatay direnç (üst hizadan) -> OPA810_1 eksi giriş
+\draw 
+(BUF634_1.out) -- ++(0,3) coordinate (temp1) 
+(temp1) to[R, l=$R_F$] (temp1 -| opa_810_1.-) 
+(temp1 -| opa_810_1.-) -- (opa_810_1.-);
+
+% --- Zx (DUT) Bloğu - Opak bir düğüm olarak ana katmanda yeniden tanımlandı ---
+\node[draw, thick, rounded corners, fill=teal!20, 
+      minimum width=2cm, minimum height=1.2cm, align=center] (dut_box) at (8, 4.5) 
+      {\small\bfseries DUT \\ ($Z_x$)};
+
+% BU İKİ SATIRI YUKARIDAKİ KODUN ALTINA EKLEYİN:
+\draw (dut_box.west) -- ++(-0.3, 0) coordinate (dut_pin_in);  % Sol pini çiz ve ucuna 'dut_pin_in' adını ver
+\draw (dut_box.east) -- ++(0.3, 0) coordinate (dut_pin_out); % Sağ pini çiz ve ucuna 'dut_pin_out' adını ver
+      
+% Empedansın giriş bağlantısını yapalım (yeni opak kutuya)
+\draw (BUF634_1.out)--(dut_pin_in);
+
+%---opa810_2---
+\draw
+(12,4) node[op amp] (opa_810_2) {opa810}
+(opa_810_2.down) ++(0,-0.5) node[below] (opa2_vcc_neg_label) {$-V_{CC}$} -- (opa_810_2.down) % İSİM VERİLDİ
+(opa_810_2.up)   ++(0,0.5) node[above] (opa2_vcc_pos_label) {$+V_{CC}$} -- (opa_810_2.up)   % İSİM VERİLDİ
+(opa_810_2.+) node[ground] {}
+;
+
+% Zx ile opa810_2 bağlantısını yapalım (yeni opak kutuya)
+\draw (dut_box.east) -- (opa_810_2.-);
+
+%---BUF634_2---
+\draw
+% plain mono amplifier (amplifier bloğu)
+(15.5,4) node[plain mono amp] (BUF634_2) {BUF634}
+(BUF634_2.down) ++(0,-0.5) node[below] (buf2_vcc_neg_label) {$-V_{CC}$} -- (BUF634_2.down) % İSİM VERİLDİ
+(BUF634_2.up)   ++(0,0.5) node[above] (buf2_vcc_pos_label) {$+V_{CC}$} -- (BUF634_2.up)   % İSİM VERİLDİ
+;
+
+% opa_810_2 ile BUF634_2 arasındaki bağlantıyı yazalım
+\draw (opa_810_2.out) -- (BUF634_2.in);
+
+% BUF634_2 çıkışı -> yatay direnç (üst hizadan) -> OPA810_2 eksi giriş
+\draw 
+(BUF634_2.out) -- ++(0,3) coordinate (temp2) 
+(temp2) to[R, l=$R_F$] (temp2 -| opa_810_2.-) 
+(temp2 -| opa_810_2.-) -- (opa_810_2.-);
+
+
+%---opa810_3---
+\draw
+(12,-1.75) node[op amp] (opa_810_3) {opa810}
+(opa_810_3.down) ++(0,-0.5) node[below] (opa3_vcc_neg_label) {$-V_{CC}$} -- (opa_810_3.down) % İSİM VERİLDİ
+(opa_810_3.up)   ++(0,0.5) node[above] (opa3_vcc_pos_label) {$+V_{CC}$} -- (opa_810_3.up)   % İSİM VERİLDİ
+(opa_810_3.out) -- ++(0,1.75) coordinate (temp3)
+(temp3) -- (temp3 -| opa_810_3.-) 
+(temp3 -| opa_810_3.-) -- (opa_810_3.-)
+% Zx çıkışından opa_810_3 + girişine tel bağlayalım (yeni opak kutuya)
+(dut_pin_out) |- (opa_810_3.+);
+
+
+%---opa810_4---
+\draw
+(12,-7.24) node[op amp] (opa_810_4) {opa810}
+(opa_810_4.down) ++(0,-0.5) node[below] (opa4_vcc_neg_label) {$-V_{CC}$} -- (opa_810_4.down) % İSİM VERİLDİ
+(opa_810_4.up)   ++(0,0.5) node[above] (opa4_vcc_pos_label) {$+V_{CC}$} -- (opa_810_4.up)   % İSİM VERİLDİ
+(opa_810_4.out) -- ++(0,1.75) coordinate (temp4)
+(temp4) -- (temp4 -| opa_810_4.-) 
+(temp4 -| opa_810_4.-) -- (opa_810_4.-)
+% Zx girişinden opa_810_4 + girişine tel bağlayalım (yeni opak kutuya)
+(dut_pin_in) |- (opa_810_4.+);
+
+
+
+%---FDA_1---
+%---opa1632_1---
+\draw
+(22,1.75) node[fd op amp] (opa1632_1) {\small opa1632}
+(opa1632_1.down) ++(0,-0.5) node[below] (fda1_vcc_neg_label) {$-V_{CC}$} -- (opa1632_1.down) % İSİM VERİLDİ
+(opa1632_1.up)   ++(0,0.5) node[above] (fda1_vcc_pos_label) {$+V_{CC}$} -- (opa1632_1.up)   % İSİM VERİLDİ
+% RF dirençleri
+(opa1632_1.out +) -- ++(0,1.75) coordinate (temp_pos_1)
+(temp_pos_1) to[R, l=$R_F$] (temp_pos_1 -| opa1632_1.-) 
+(temp_pos_1 -| opa1632_1.-) -- (opa1632_1.-)
+(opa1632_1.out -) -- ++(0,-1.75) coordinate (temp_neg_1)
+(temp_neg_1) to[R, l_=$R_F$] (temp_neg_1 -| opa1632_1.+) 
+(temp_neg_1 -| opa1632_1.+) -- (opa1632_1.+)
+% RG dirençleri (RF dirençleriyle aynı hizada, sola doğru)
+(temp_pos_1 -| opa1632_1.-) to[R, l=$R_G$] ++(-3,0) coordinate (rg_pos_left_1)
+(temp_neg_1 -| opa1632_1.+) to[R, l_=$R_G$] ++(-3,0) coordinate (rg_neg_left_1)
+% BUF634_2 çıkışından üst RG direncinin soluna bağlantı
+(BUF634_2.out) -- (rg_pos_left_1)
+% opa810_3 çıkışından alt RG direncinin soluna bağlantı
+(opa_810_3.out) -| (rg_neg_left_1);
+
+%---FDA_2---
+%---opa1632_2---
+\draw
+(22,-5) node[fd op amp] (opa1632_2) {\small opa1632}
+(opa1632_2.down) ++(0,-0.5) node[below] (fda2_vcc_neg_label) {$-V_{CC}$} -- (opa1632_2.down) % İSİM VERİLDİ
+(opa1632_2.up)   ++(0,0.5) node[above] (fda2_vcc_pos_label) {$+V_{CC}$} -- (opa1632_2.up)   % İSİM VERİLDİ
+% RF dirençleri
+(opa1632_2.out +) -- ++(0,1.75) coordinate (temp_pos_2)
+(temp_pos_2) to[R, l=$R_F$] (temp_pos_2 -| opa1632_2.-) 
+(temp_pos_2 -| opa1632_2.-) -- (opa1632_2.-)
+(opa1632_2.out -) -- ++(0,-1.75) coordinate (temp_neg_2)
+(temp_neg_2) to[R, l_=$R_F$] (temp_neg_2 -| opa1632_2.+) 
+(temp_neg_2 -| opa1632_2.+) -- (opa1632_2.+)
+% RG dirençleri (RF dirençleriyle aynı hizada, sola doğru)
+(temp_pos_2 -| opa1632_2.-) to[R, l=$R_G$] ++(-3,0) coordinate (rg_pos_left_2)
+(temp_neg_2 -| opa1632_2.+) to[R, l_=$R_G$] ++(-3,0) coordinate (rg_neg_left_2)
+% opa810_3 çıkışından üst RG direncinin soluna bağlantı
+(opa_810_3.out) -| (rg_pos_left_2)
+% opa810_4 çıkışından alt RG direncinin soluna bağlantı
+(opa_810_4.out) -| (rg_neg_left_2);
+
+
+
+
+% --- ADC Bloğu (K1) ---
+% Başlangıç noktası
+\coordinate (start_adc_k1) at (24, 1.75);
+
+% Şekli çiz ve koordinatları tanımla (global isimlerle)
+\path (start_adc_k1) coordinate (adc_k1_A)
+ -- ++(0.75, 0.75) coordinate (adc_k1_B)
+-- ++(2,0) coordinate (adc_k1_C)
+-- ++(0, -0.75) coordinate (adc_k1_D)
+-- ++(0,-0.75) coordinate (adc_k1_E)
+-- ++(-2,0) coordinate (adc_k1_F)
+-- ++(-0.75,0.75) coordinate (adc_k1_G)
+-- cycle;
+
+% Şekli çiz
+\draw (adc_k1_A) -- (adc_k1_B) -- (adc_k1_C) -- (adc_k1_D) -- (adc_k1_E) -- (adc_k1_F) -- (adc_k1_G) -- cycle;
+
+% ADC yazısını çokgenin gerçek ortasına yerleştir
+\coordinate (adc_k1_center) at ($(adc_k1_A)!0.6!(adc_k1_D)$);
+\node at (adc_k1_center) {\textbf{AD7606}};
+
+% GLOBAL Giriş pinleri (sol taraf)
+\coordinate (adc_k1_in_pos_internal) at ($(adc_k1_A)!0.653!(adc_k1_B)$);
+\coordinate (adc_k1_in_neg_internal) at ($(adc_k1_A)!0.653!(adc_k1_F)$);
+
+% GLOBAL Giriş çizgileri ve pin koordinatları
+\draw (adc_k1_in_pos_internal) -- ++(-0.5,0) coordinate (adc_k1_in_plus);
+\draw (adc_k1_in_neg_internal) -- ++(-0.5,0) coordinate (adc_k1_in_minus);
+
+% GLOBAL Çıkış pini (sağ taraf)
+\coordinate (adc_k1_out_internal) at ($(adc_k1_C)!0.5!(adc_k1_E)$);
+\draw (adc_k1_out_internal) -- ++(0.5,0) coordinate (adc_k1_out);
+
+% opa1632'den ADC-K1 girişine bağlantı
+\draw (opa1632_1.out +) -| (adc_k1_in_plus);
+\draw (opa1632_1.out -) -| (adc_k1_in_minus);
+
+
+% --- ADC Bloğu (K2) ---
+% Başlangıç noktası
+\coordinate (start_adc_k2) at (24, -5);
+
+% Şekli çiz ve koordinatları tanımla (global isimlerle)
+\path (start_adc_k2) coordinate (adc_k2_A)
+ -- ++(0.75, 0.75) coordinate (adc_k2_B)
+-- ++(2,0) coordinate (adc_k2_C)
+-- ++(0, -0.75) coordinate (adc_k2_D)
+-- ++(0,-0.75) coordinate (adc_k2_E)
+-- ++(-2,0) coordinate (adc_k2_F)
+-- ++(-0.75,0.75) coordinate (adc_k2_G)
+-- cycle;
+
+% Şekli çiz
+\draw (adc_k2_A) -- (adc_k2_B) -- (adc_k2_C) -- (adc_k2_D) -- (adc_k2_E) -- (adc_k2_F) -- (adc_k2_G) -- cycle;
+
+% ADC yazısını çokgenin gerçek ortasına yerleştir
+\coordinate (adc_k2_center) at ($(adc_k2_A)!0.6!(adc_k2_D)$);
+\node at (adc_k2_center) {\textbf{AD7606}};
+
+% GLOBAL Giriş pinleri (sol taraf)
+\coordinate (adc_k2_in_pos_internal) at ($(adc_k2_A)!0.653!(adc_k2_B)$);
+\coordinate (adc_k2_in_neg_internal) at ($(adc_k2_A)!0.653!(adc_k2_F)$);
+
+% GLOBAL Giriş çizgileri ve pin koordinatları
+\draw (adc_k2_in_pos_internal) -- ++(-0.5,0) coordinate (adc_k2_in_plus);
+\draw (adc_k2_in_neg_internal) -- ++(-0.5,0) coordinate (adc_k2_in_minus);
+
+% GLOBAL Çıkış pini (sağ taraf)
+\coordinate (adc_k2_out_internal) at ($(adc_k2_C)!0.5!(adc_k2_E)$);
+\draw (adc_k2_out_internal) -- ++(0.5,0) coordinate (adc_k2_out);
+
+% opa1632'den ADC-K2 girişine bağlantı
+\draw (opa1632_2.out +) -| (adc_k2_in_plus);
+\draw (opa1632_2.out -) -| (adc_k2_in_minus);
+
+
+% --- STM32G431 Bloğu (Daha Esnek ve Otomatik Boyutlandırmalı) ---
+% Metne göre kendini boyutlandıran bir düğüm (node) oluşturuyoruz
+\node[draw, thick, minimum size=3cm, inner sep=5pt] (stm_node) at (29.5, -1.5) {\textbf{STM32G431}};
+
+% Giriş pinleri (sol taraf) - Anchor'lar ile daha temiz bir tanım
+\draw ($(stm_node.north west)!.33!(stm_node.south west)$) -- ++(-0.5,0) coordinate (GPIO_1);
+\draw ($(stm_node.north west)!.66!(stm_node.south west)$) -- ++(-0.5,0) coordinate (GPIO_2);
+
+% ADC çıkışlarından STM32 girişlerine bağlantı (bu kısım aynı kalıyor)
+\draw (adc_k2_out) |- (GPIO_2);
+\draw (adc_k1_out) |- (GPIO_1);
+
+% Çıkış pini (üst taraf) - Anchor kullanıldı ve etikete isim verildi
+\draw [->] (stm_node.north) -- ++(0,0.5) coordinate (GPIO_3);
+\node[above] (pc_label) at (GPIO_3) {\small PC}; % İSİM VERİLDİ
+
+% Çıkış pini (alt taraf) - Anchor kullanıldı ve etikete isim verildi
+\draw [->] (stm_node.south) -- ++(0,-0.5) coordinate (GPIO_4);
+\node[below] (ad_ctrl_label) at (GPIO_4) {\small AD9833-Kontrol}; % İSİM VERİLDİ
+
+
+
+
+% --- Güç katı blok diyagramı (METİN ETİKETLERİNE İSİM VERİLDİ) ---
+
+% LR1 Bloğu
+\coordinate (start_LR1) at (-2, 0.5);
+% ... (iç kısımlar aynı)
+\path (start_LR1) coordinate (LR1_A) -- ++(0, 0.5) coordinate (LR1_B) -- ++(1, 0) coordinate (LR1_C) -- ++(1, 0) coordinate (LR1_D) -- ++(0, -0.5) coordinate (LR1_E) -- ++(0, -0.5) coordinate (LR1_F) -- ++(-1, 0) coordinate (LR1_G) -- ++(-1, 0) coordinate (LR1_H) -- ++(0, 0.5) coordinate (LR1_J) -- cycle;
+\draw (LR1_A) -- (LR1_B) -- (LR1_C) -- (LR1_D) -- (LR1_E) -- (LR1_F) -- (LR1_G)-- (LR1_H) -- (LR1_J) -- cycle;
+\node at ($(LR1_A)!0.5!(LR1_E)$) {\textbf{LT3042}};
+\coordinate (LR1_in_internal) at ($(LR1_B)!0.5!(LR1_H)$);
+\draw [<-] (LR1_in_internal) -- ++(-0.5,0) coordinate (LR1_in);
+\coordinate (LR1_out_internal) at ($(LR1_D)!0.5!(LR1_F)$);
+\draw [->] (LR1_out_internal) -- ++(0.5,0) coordinate (LR1_out);
+\node[left]  (lr1_in_label) at (LR1_in) {$V_{P}$}; % İSİM VERİLDİ
+\node[right] (lr1_out_label) at (LR1_out) {$+V_{CC}$}; % İSİM VERİLDİ
+\coordinate (LR1_gnd_internal) at ($(LR1_F)!0.5!(LR1_H)$);
+\draw (LR1_gnd_internal) -- ++(0,-0.1) node[ground] {};
+
+% LR2 Bloğu
+\coordinate (start_LR2) at (-2, -2);
+% ... (iç kısımlar aynı)
+\path (start_LR2) coordinate (LR2_A) -- ++(0, 0.5) coordinate (LR2_B) -- ++(1, 0) coordinate (LR2_C) -- ++(1, 0) coordinate (LR2_D) -- ++(0, -0.5) coordinate (LR2_E) -- ++(0, -0.5) coordinate (LR2_F) -- ++(-1, 0) coordinate (LR2_G) -- ++(-1, 0) coordinate (LR2_H) -- ++(0, 0.5) coordinate (LR2_J) -- cycle;
+\draw (LR2_A) -- (LR2_B) -- (LR2_C) -- (LR2_D) -- (LR2_E) -- (LR2_F) -- (LR2_G)-- (LR2_H) -- (LR2_J) -- cycle;
+\node at ($(LR2_A)!0.5!(LR2_E)$) {\textbf{LT3042}};
+\coordinate (LR2_in_internal) at ($(LR2_B)!0.5!(LR2_H)$);
+\draw [<-] (LR2_in_internal) -- ++(-0.5,0) coordinate (LR2_in);
+\coordinate (LR2_out_internal) at ($(LR2_D)!0.5!(LR2_F)$);
+\draw [->] (LR2_out_internal) -- ++(0.5,0) coordinate (LR2_out);
+\node[left] at (LR2_in) {$V_{P}$};
+\node[right] (lr2_out_label) at (LR2_out) {$+5V$ (AD9833)}; % İSİM VERİLDİ
+\coordinate (LR2_gnd_internal) at ($(LR2_F)!0.5!(LR2_H)$);
+\draw (LR2_gnd_internal) -- ++(0,-0.1) node[ground] {};
+
+% LR3 Bloğu
+\coordinate (start_LR3) at (-2, -4.5);
+% ... (iç kısımlar aynı)
+\path (start_LR3) coordinate (LR3_A) -- ++(0, 0.5) coordinate (LR3_B) -- ++(1, 0) coordinate (LR3_C) -- ++(1, 0) coordinate (LR3_D) -- ++(0, -0.5) coordinate (LR3_E) -- ++(0, -0.5) coordinate (LR3_F) -- ++(-1, 0) coordinate (LR3_G) -- ++(-1, 0) coordinate (LR3_H) -- ++(0, 0.5) coordinate (LR3_J) -- cycle;
+\draw (LR3_A) -- (LR3_B) -- (LR3_C) -- (LR3_D) -- (LR3_E) -- (LR3_F) -- (LR3_G)-- (LR3_H) -- (LR3_J) -- cycle;
+\node at ($(LR3_A)!0.5!(LR3_E)$) {\textbf{LT3042}};
+\coordinate (LR3_in_internal) at ($(LR3_B)!0.5!(LR3_H)$);
+\draw [<-] (LR3_in_internal) -- ++(-0.5,0) coordinate (LR3_in);
+\coordinate (LR3_out_internal) at ($(LR3_D)!0.5!(LR3_F)$);
+\draw [->] (LR3_out_internal) -- ++(0.5,0) coordinate (LR3_out);
+\node[left] at (LR3_in) {$V_{P}$};
+\node[right] (lr3_out_label) at (LR3_out) {$+3.3V$ (AD7606)}; % İSİM VERİLDİ
+\coordinate (LR3_gnd_internal) at ($(LR3_F)!0.5!(LR3_H)$);
+\draw (LR3_gnd_internal) -- ++(0,-0.1) node[ground] {};
+
+% LR4 Bloğu
+\coordinate (start_LR4) at (-2, -7);
+% ... (iç kısımlar aynı)
+\path (start_LR4) coordinate (LR4_A) -- ++(0, 0.5) coordinate (LR4_B) -- ++(1, 0) coordinate (LR4_C) -- ++(1, 0) coordinate (LR4_D) -- ++(0, -0.5) coordinate (LR4_E) -- ++(0, -0.5) coordinate (LR4_F) -- ++(-1, 0) coordinate (LR4_G) -- ++(-1, 0) coordinate (LR4_H) -- ++(0, 0.5) coordinate (LR4_J) -- cycle;
+\draw (LR4_A) -- (LR4_B) -- (LR4_C) -- (LR4_D) -- (LR4_E) -- (LR4_F) -- (LR4_G)-- (LR4_H) -- (LR4_J) -- cycle;
+\node at ($(LR4_A)!0.5!(LR4_E)$) {\textbf{MIC5205}};
+\coordinate (LR4_in_internal) at ($(LR4_B)!0.5!(LR4_H)$);
+\draw [<-] (LR4_in_internal) -- ++(-0.5,0) coordinate (LR4_in);
+\coordinate (LR4_out_internal) at ($(LR4_D)!0.5!(LR4_F)$);
+\draw [->] (LR4_out_internal) -- ++(0.5,0) coordinate (LR4_out);
+\node[left] at (LR4_in) {$V_{P}$};
+\node[right] (lr4_out_label) at (LR4_out) {$+5V$ (STM32G431)}; % İSİM VERİLDİ
+\coordinate (LR4_gnd_internal) at ($(LR4_F)!0.5!(LR4_H)$);
+\draw (LR4_gnd_internal) -- ++(0,-0.1) node[ground] {};
+
+% LR5 Bloğu
+\coordinate (start_LR5) at (-2, -9.5);
+% ... (iç kısımlar aynı)
+\path (start_LR5) coordinate (LR5_A) -- ++(0, 0.5) coordinate (LR5_B) -- ++(1, 0) coordinate (LR5_C) -- ++(1, 0) coordinate (LR5_D) -- ++(0, -0.5) coordinate (LR5_E) -- ++(0, -0.5) coordinate (LR5_F) -- ++(-1, 0) coordinate (LR5_G) -- ++(-1, 0) coordinate (LR5_H) -- ++(0, 0.5) coordinate (LR5_J) -- cycle;
+\draw (LR5_A) -- (LR5_B) -- (LR5_C) -- (LR5_D) -- (LR5_E) -- (LR5_F) -- (LR5_G)-- (LR5_H) -- (LR5_J) -- cycle;
+\node at ($(LR5_A)!0.5!(LR5_E)$) {\textbf{LT3094}};
+\coordinate (LR5_in_internal) at ($(LR5_B)!0.5!(LR5_H)$);
+\draw [<-] (LR5_in_internal) -- ++(-0.5,0) coordinate (LR5_in);
+\coordinate (LR5_out_internal) at ($(LR5_D)!0.5!(LR5_F)$);
+\draw [->] (LR5_out_internal) -- ++(0.5,0) coordinate (LR5_out);
+\node[left]  (lr5_in_label) at (LR5_in) {$-V_{P}$}; % İSİM VERİLDİ
+\node[right] (lr5_out_label) at (LR5_out) {$-V_{CC}$}; % İSİM VERİLDİ
+\coordinate (LR5_gnd_internal) at ($(LR5_F)!0.5!(LR5_H)$);
+\draw (LR5_gnd_internal) -- ++(0,-0.1) node[ground] {};
+
+
+\end{scope}
+
+\begin{scope}[on background layer]
+    % --- Net ve Profesyonel Yeni Stil Tanımlamaları (Gölgesiz) ---
+    \tikzset{
+        blockbox/.style={
+            % draw rengi artık her kutu için ayrı tanımlanacak
+            line width=1pt, 
+            rounded corners=5pt, 
+            inner sep=12pt
+        },
+        blocklabel/.style={
+            anchor=north,
+            fill=white,
+            draw=gray!50, % Etikete ince bir çerçeve
+            line width=0.5pt,
+            inner sep=3pt,
+            font=\small\bfseries,
+            text=black,
+            rounded corners=3pt
+        }
+    }
+    
+    % --- Renkleri ve Yeni Stili Uygulanan Kutular ---
+    
+    % Sinyal Jeneratörü Kutusu
+    \node[blockbox, fit=(SJ_A)(SJ_D)(SJ_F)(SJ_H), fill=techBlue!20, draw=techBlue!80!black,
+          label={[blocklabel, anchor=south ]Sinyal Jeneratörü}] {};
+          
+    % Güç Katı Kutusu
+    \node[blockbox, fit=(LR1_B)(LR1_D)(LR5_G)(LR5_F) (lr1_in_label) (lr1_out_label) (lr2_out_label) (lr3_out_label) (lr4_out_label) (lr5_in_label) (lr5_out_label), fill=ForestGreen!40, draw=ForestGreen!80!black,
+          label={[blocklabel, anchor=south ]Güç Katı}] {};
+          
+    % Uyarma Katı (Buffer) Kutusu
+    \node[blockbox, fit=(opa_810_1)(BUF634_1)(temp1) (opa1_vcc_pos_label) (opa1_vcc_neg_label) (buf1_vcc_pos_label) (buf1_vcc_neg_label), fill=techGreen!40, draw=techGreen!80!black,
+          label={[blocklabel, anchor=south ]Uyarma Katı (Buffer)}] {};
+          
+    % Ölçüm Katı Kutusu
+    \node[blockbox, fit=(BUF634_2)(opa_810_3)(opa_810_4)(temp2) (opa2_vcc_pos_label) (opa2_vcc_neg_label) (buf2_vcc_pos_label) (buf2_vcc_neg_label) (opa3_vcc_pos_label) (opa3_vcc_neg_label) (opa4_vcc_pos_label) (opa4_vcc_neg_label), fill=techOrange!20, draw=techOrange!80!black,
+          label={[blocklabel, anchor=south ]Ölçüm Katı (Bufferlar)}] {};
+          
+    % FDA (Sinyal Koşullandırma) Kutusu
+    \node[blockbox, fit=(opa1632_1.north east)(opa1632_2.south west)(rg_pos_left_1)(rg_neg_left_2) (fda1_vcc_pos_label) (fda1_vcc_neg_label) (fda2_vcc_pos_label) (fda2_vcc_neg_label), fill=techPurple!20, draw=techPurple!100!black,
+          label={[blocklabel, anchor=south ]FDA (Sinyal Koşullandırma)}] {};
+          
+    % ADC Kutusu
+    \node[blockbox, fit=(adc_k1_A)(adc_k1_B)(adc_k1_C)(adc_k2_F)(adc_k2_E), fill=techRed!10, draw=techRed!80!black,
+          label={[blocklabel, anchor=south ]ADC}] {};
+          
+    % Mikrodenetleyici Kutusu
+    \node[blockbox, fit=(stm_node) (pc_label) (ad_ctrl_label), fill=yellow!20, draw=yellow!80!black,
+          label={[blocklabel, anchor=south ]Mikrodenetleyici}] {};     
+\end{scope}
+
+\end{circuitikz}
+\end{document}
+
+*/}
+
+### Auto-Balancing Bridge Prensibi
+
+Bu yöntemi açıklamadan önce empedansın basit olarak nasıl ölçüldüğüne bakalım. Aşağıdaki şekilde temel bir ölçüm devresi verilmiştir. 
+
+<ImageWithCaption
+  src="/images/LCR/Auto_Balancing_Bridge_Circuit_temel_yöntem.svg"
+  alt="Empedans ölçümünde temel yöntem"
+>
+  <strong>Şekil 2:</strong> Temel empedans ölçüm devresi
+</ImageWithCaption>
+
+Bu devrede ölçülmek istenen devre elemanının uçları arasındaki potansiyel fark $v_x$, içinden geçen akım ise $i_x$ olduğundan, bu elemanın empedansını aşağıdaki eşitlikten bulabiliriz.
+
+$$
+\begin{equation}
+Z_x = \frac{v_x}{i_x} \tag{1}
+\end{equation}
+$$ 
+
+
+
+{/*
+\documentclass[border=10pt]{standalone}
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usepackage{circuitikz}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{decorations.markings, arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit, backgrounds, patterns} % KUTUCUKLAR İÇİN GEREKLİ KÜTÜPHANELER
+
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+
+\begin{document}
+\begin{circuitikz}[american]
+\draw (-2, 0) to[sinusoidal voltage source, l_ = $v_s$] (-2, -2)
+node[ground]{};
+\draw (-2,0) -- (0,0);
+\draw (0,0) -- ++(1,0) to[european resistor, l = $Z_x$] ++(2,0) -- ++(1,0)
+to [rmeter, t=A, i=$i_x$] ++(0,-2) node[ground]{};
+\draw (0,0) to[rmeter, t=V, v=$v_x$] ++(0,-2)
+node[ground]{};
+\draw node[ocirc] at (1, 0) {};
+\draw node[ocirc] at (3, 0) {};
+\end{circuitikz}
+\end{document}
+*/}
+
+Auto-Balancing Bridge yöntemi, işlemsel yükseltecin **sanal toprak** (virtual ground) ilkesini kullanarak bilinmeyen empedansı ölçer. Temel devre yapısı aşağıdaki gibidir. 
+
+<ImageWithCaption
+  src="/images/LCR/Auto_Balancing_Bridge_Circuit_Opamp.svg"
+  alt="Auto balancing bridge yöntemi opamp ile"
+>
+  <strong>Şekil 3:</strong> İşlemsel yükselteç kullanarak empedans ölçüm yöntemi
+</ImageWithCaption>
+
+Bu devreyi açıklamadan önce op-ampın mükemmel bir özelliği olan sanal toprak ilkesini ve diğer bazı özelliklerini açıklayalım. 
+  - Op-amp'ın pozitif ve negatif girişlerinin empedansı çok yüksektir. Teorik olarak sonsuzdur ve akım akmaz. Ancak gerçek dünya uygulamalarda çok küçük kutuplama akımları akabilir.
+  - Op-amp'ın pozitif ve negatif girişlerinden birine herhangi bir gerilim uygulandığında diğeri de o gerilim seviyesine yükselir. Bizim uygulamamızda pozitif giriş $0V$ olduğundan negatif giriş de $0V$ potansiyelinde olacaktır. 
+  - Opamplar geri besleme dirençleri olmadığında ($R_F$) teorik olarak sonsuz kazanca sahiptirler. 
+
+Devremize dönüp analize devam edelim. Opampın negatif girişinin $0V$ olacağını ve bu negatif girişten akım akmayacağını biliyoruz. Negatif pine bağlı düğümde Kirchhoff akım yasasını kullanırsak:
+
+$$
+
+i_x + i_F = 0
+
+$$
+
+$$
+
+\begin{equation}
+i_x = -i_F \tag{2}
+\end{equation}
+$$
+
+
+
+elde ederiz. Opampın negatif girişinin bağlı olduğu düğümün potansiyeli $0V$ olduğundan Ohm yasasını kullanarak aşağıdaki ifadeleri elde ederiz.
+
+$$
+\begin{align}
+Z_x &= \frac{v_x}{i_x} \tag{3} \\
+i_F &= \frac{v_F}{R_F} \tag{4}
+\end{align}
+$$
+
+Denklem (2) ve (3)'ü birleştirerek $Z_x$'i $i_F$ cinsinden yazabiliriz:
+
+$$
+\begin{equation}
+Z_x = \frac{v_x}{-i_F} \tag{5}
+\end{equation}
+$$
+
+Şimdi, denklem (4)'teki $i_F$ ifadesini bu eşitlikte yerine koyarsak:
+
+$$
+\begin{equation}
+Z_x = \frac{v_x}{-\frac{v_F}{R_F}} = -\frac{v_x}{v_F} \cdot R_F \tag{6}
+\end{equation}
+$$
+
+Yani, bilinmeyen empedans $Z_x$, ölçülen $v_x$ ve $v_F$ gerilimleri ile geri besleme direnci $R_F$ üzerinden kolayca hesaplanabilir.
+
+
+Bu yöntemin avantajları:
+- Yüksek doğruluk ve tekrarlanabilirlik
+- Prob parazitik etkilerini minimize etme
+- Geniş empedans ve frekans aralığı
+
+---
+
+Bu noktada şunu vurgulamak gerekir: Teorisini detaylıca incelediğimiz ve matematiksel temelini ortaya koyduğumuz LCR metrenin, artık her bir alt bloğunu adım adım tasarlayıp uygulama aşamasına geçiyoruz. Yani, gerçek bir cihaz üretmek için gerekli olan tüm donanım ve yazılım bileşenlerini, pratikte karşılaşılabilecek sorunları da göz önünde bulundurarak tek tek ele alacağız.
+
+İlk adım olarak, ölçüm hassasiyetini ve doğruluğunu doğrudan etkileyen **düşük gürültülü güç kaynağı** tasarımıyla başlayacağız. Güç katı, hem analog hem de dijital devrelerin kararlı ve temiz bir şekilde çalışabilmesi için kritik öneme sahiptir. Bu nedenle, bir sonraki bölümde LCR metrenin güç katını (pozitif/negatif regülatörler, filtreler ve dağıtım topolojisi dahil) ayrıntılı olarak ele alacağız.
+
+Bir sonraki projede görüşmek üzere!  
+Elektroniğin büyülü dünyasında, teoriden uygulamaya birlikte ilerlemeye devam edeceğiz. 👋

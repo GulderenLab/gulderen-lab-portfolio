@@ -1,19 +1,19 @@
 ---
-// src/pages/blog/index.astro
-import Layout from '../../layouts/Layout.astro'; // Layout yolu ../../ oldu
+// src/pages/projeler/index.astro
+import Layout from '../../layouts/Layout.astro';
 import SimpleSearch from '../../components/SimpleSearch.astro';
 import { getCollection } from 'astro:content';
 
-const pageTitle = "Blog";
-const pageDescription = "Web geliştirme, elektronik ve diğer konulardaki yazılarım.";
+const pageTitle = "Projeler";
+const pageDescription = "Elektornik, yazılım geliştirme ve diğer alanlardaki projelerim.";
 
-// Blog yazılarını al, taslak olmayanları filtrele ve tarihe göre sırala
-const posts = (await getCollection('blog'))
-    .filter(post => !post.data.isDraft)
+// Projeleri al, taslak olmayanları filtrele ve tarihe göre sırala
+const projeler = (await getCollection('projeler'))
+    .filter(proje => !proje.data.isDraft)
     .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 ---
 <Layout title={pageTitle} description={pageDescription}>
-  {/* Professional Blog Header */}
+{/* Professional Projects Header */}
   <section class="relative py-20 md:py-32 overflow-hidden">
     <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/10 to-cyan-900/10"></div>
     <div class="absolute inset-0">
@@ -32,13 +32,12 @@ const posts = (await getCollection('blog'))
       
       <h1 class="text-5xl md:text-6xl font-bold mb-6">
         <span class="bg-gradient-to-r from-white via-blue-100 to-cyan-100 bg-clip-text text-transparent">
-          Blog Yazılarım
+          Projelerim
         </span>
       </h1>
       
       <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-12 leading-relaxed">
-        Elektronik, yazılım geliştirme ve teknoloji dünyasından derinlemesine analizler, 
-        <span class="text-cyan-300 font-semibold">pratik rehberler</span> ve deneyimlerim.
+        Elektronik, yazılım ve teknoloji proje örneklerim.
       </p>
       
       {/* Enhanced Search Component */}
@@ -48,21 +47,21 @@ const posts = (await getCollection('blog'))
     </div>
   </section>
 
-  {/* Professional Blog Posts Grid */}
+{/* Professional Projects Grid */}
   <section class="py-16 md:py-24">
     <div class="container mx-auto px-6">
       <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        {posts.map((post) => (
-          <article class="group relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden hover:border-blue-400/50 transition-all duration-500 hover:transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/10">
+{projeler.map((proje) => (
+          <article class="group relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden hover:border-purple-400/50 transition-all duration-500 hover:transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10">
             {/* Make entire card clickable */}
-            <a href={`/blog/${post.slug}/`} class="absolute inset-0 z-10" aria-label={`Read: ${post.data.title}`}></a>
+            <a href={`/projeler/${proje.slug}/`} class="absolute inset-0 z-10" aria-label={`View project: ${proje.data.title}`}></a>
             
-            {/* Professional Post Image */}
-            {post.data.image && (
+            {/* Professional Project Image */}
+            {proje.data.image && (
               <div class="relative overflow-hidden">
                 <img
-                  src={post.data.image.src}
-                  alt={post.data.image.alt}
+                  src={proje.data.image.src}
+                  alt={proje.data.image.alt}
                   loading="lazy"
                   class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -70,22 +69,22 @@ const posts = (await getCollection('blog'))
                 
                 {/* Category Badge */}
                 <div class="absolute top-4 right-4 relative z-20">
-                  <span class="px-3 py-1 bg-blue-600/90 backdrop-blur-sm text-white text-xs font-medium rounded-full">
-                    Blog
+                  <span class="px-3 py-1 bg-purple-600/90 backdrop-blur-sm text-white text-xs font-medium rounded-full">
+                    Proje
                   </span>
                 </div>
               </div>
             )}
             
-            {/* Post Content */}
+            {/* Project Content */}
             <div class="p-6">
-              {/* Post Meta */}
+              {/* Project Meta */}
               <div class="flex items-center gap-4 mb-4">
                 <div class="flex items-center text-gray-400 text-sm">
                   <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                   </svg>
-                  {post.data.publishDate.toLocaleDateString('tr-TR', { 
+                  {proje.data.publishDate.toLocaleDateString('tr-TR', { 
                     year: 'numeric', 
                     month: 'short', 
                     day: 'numeric' 
@@ -95,31 +94,31 @@ const posts = (await getCollection('blog'))
                   <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                   </svg>
-                  {post.data.author}
+                  {proje.data.author}
                 </div>
               </div>
               
               {/* Post Title */}
               <h2 class="text-xl font-bold mb-3 text-white group-hover:text-blue-300 transition-colors duration-300 line-clamp-2">
-                {post.data.title}
+                {proje.data.title}
               </h2>
               
               {/* Post Description */}
               <p class="text-gray-400 mb-4 line-clamp-3 leading-relaxed">
-                {post.data.description}
+                {proje.data.description}
               </p>
               
               {/* Tags */}
-              {post.data.tags && post.data.tags.length > 0 && (
+              {proje.data.tags && proje.data.tags.length > 0 && (
                 <div class="flex flex-wrap gap-2 mb-4">
-                  {post.data.tags.slice(0, 3).map(tag => (
+                  {proje.data.tags.slice(0, 3).map(tag => (
                     <span class="px-2 py-1 bg-slate-700/50 text-blue-300 text-xs rounded-md border border-slate-600/50 hover:bg-slate-600/50 transition-colors relative z-20">
                       {tag}
                     </span>
                   ))}
-                  {post.data.tags.length > 3 && (
+                  {proje.data.tags.length > 3 && (
                     <span class="px-2 py-1 text-gray-400 text-xs">
-                      +{post.data.tags.length - 3} more
+                      +{proje.data.tags.length - 3} more
                     </span>
                   )}
                 </div>
@@ -136,20 +135,20 @@ const posts = (await getCollection('blog'))
                 
                 {/* Reading Time Estimate */}
                 <div class="text-gray-500 text-xs">
-                  {Math.ceil(post.data.description.length / 200)} dk okuma
+                  {Math.ceil(proje.data.description.length / 200)} dk okuma
                 </div>
               </div>
             </div>
           </article>
         ))}
-        {posts.length === 0 && (
+{projeler.length === 0 && (
           <div class="col-span-full text-center py-20">
             <div class="mx-auto max-w-md">
               <svg class="w-16 h-16 mx-auto mb-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
               </svg>
-              <h3 class="text-xl font-semibold text-gray-300 mb-2">Henüz İçerik Yok</h3>
-              <p class="text-gray-500">Blog yazıları yayınlandıkça burada görüntülenecek.</p>
+              <h3 class="text-xl font-semibold text-gray-300 mb-2">Henüz Proje Yok</h3>
+              <p class="text-gray-500">Projeler yayınlandıkça burada görüntülenecek.</p>
             </div>
           </div>
         )}
