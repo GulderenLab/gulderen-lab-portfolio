@@ -1,0 +1,224 @@
+---
+title: "Klinik Uygulayıcılar İçin Girişimsel Radyoloji Teknik Rehberi"
+description: "Girişimsel radyoloji prosedürleri için adım adım teknik kılavuz. Endikasyonlar, malzeme seçimi, komplikasyon yönetimi ve klinik incelikler."
+author: "Abdullah Gülderen"
+publishDate: 2025-08-17
+category: "Girişimsel Radyoloji"
+readingTime: "30 dk"
+tags: ["girişimsel radyoloji kılavuzu", "seldinger tekniği", "french nedir", "gauge nedir", "port kateter", "santral venöz kateter", "embolizasyon ajanları", "perkütan biyopsi", "ablasyon tekniği", "klinik rehber"]
+isDraft: false
+---
+
+import { ImageWithCaption } from '@/components/ImageWithCaption.jsx';
+
+# Klinik Uygulayıcılar İçin Girişimsel Radyoloji Teknik Rehberi
+Girişimsel radyoloji (GR), görüntüleme rehberliğinde gerçekleştirilen invaziv prosedürleri içeren bir tıbbi disiplindir. GR, tanı koyma, tedavi etme ve hastalık yönetimi için minimal invaziv teknikler sunar. Bu rehber, girişimsel radyoloji pratiğine yeni başlayan hekimler için tasarlanmış, prosedürel adımları, teknik seçimlerin arkasındaki mantığı ve yaygın senaryolarda komplikasyon yönetimini detaylandıran didaktik bir kaynaktır.  
+Amaç, "nasıl yapılır" sorusunun ötesine geçerek, "neden bu şekilde yapılır" sorusuna odaklanmaktır. Bu rehberde, temel prensiplerden başlayarak, vasküler ve non-vasküler prosedürlere kadar geniş bir yelpazede teknikler ele alınacaktır. Ayrıca, kullanılan malzemelerin özellikleri ve klinik ipuçları da detaylandırılacaktır. Rehberin amacı, girişimsel radyoloji pratiğini daha erişilebilir ve anlaşılır hale getirmektir.
+
+## Bölüm 1: Temel Prensipler ve Prosedür Öncesi Hazırlık
+
+### 1.1. Prosedür Öncesi Kontrol Listesi (Zorunlu)
+
+- **Onam (Aydınlatılmış Rıza):** Standart risklere (kanama, enfeksiyon, komşu organ hasarı, anestezi/kontrast reaksiyonları) ek olarak, prosedüre özgü riskler (ör. TIPS için ensefalopati, embolizasyon için non-target embolizasyon) detaylıca açıklanmalıdır.
+- **Laboratuvar Değerleri:**
+  - **Pıhtılaşma Profili:** Yüksek riskli işlemler için hedef INR < 1.5, aPTT normal sınırlarda. Trombosit sayısı > 50,000/μL. Gerekirse Taze Donmuş Plazma (TDP) veya trombosit süspansiyonu ile düzeltme planlanmalıdır.
+  - **Böbrek Fonksiyonları:** Kontrast madde kullanılacaksa güncel eGFR değeri bilinmelidir. eGFR < 30 mL/dk/1.73m² olan hastalarda risk/fayda değerlendirilmeli, alternatif görüntüleme (CO2 anjiyografi) veya profilaksi (hidrasyon) düşünülmelidir.
+- **İlaç Yönetimi:**
+  - **Antikoagülanlar/Antiplateletler:** Prosedürün kanama riskine göre kesilme süreleri belirlenmelidir (örn. Aspirin 3-5 gün, Clopidogrel 5-7 gün, Warfarin 5 gün, DOAC'lar 48-72 saat). Köprüleme tedavisi (düşük molekül ağırlıklı heparin) gerekip gerekmediği değerlendirilmelidir.
+- **Antibiyotik Profilaksisi:** Özellikle enfeksiyon riski yüksek prosedürlerde (örn. Biliyer girişimler, abse drenajı, immünsüprese hastada yapılan tümör ablasyonu, venöz port yerleştirme) işlemden 30-60 dakika önce geniş spektrumlu IV antibiyotik uygulanmalıdır.
+- **Açlık Durumu (NPO):** Sedasyon veya genel anestezi planlanan tüm hastalar için en az 6-8 saat açlık sağlanmalıdır.
+
+
+### 1.2. Alet Çantası: Temel Malzemeler ve Ölçü Birimleri
+
+- **Ölçü Birimleri:**
+  - **French (F veya Fr):** Kateterlerin, kılıfların (sheath) ve dilatörlerin **dış çapını** ölçer. Basit bir formülü vardır: `3 F = 1 mm`. Yani, 6F bir kılıfın dış çapı 2 mm'dir. French boyutu arttıkça, malzemenin çapı da artar.
+  - **Gauge (G):** İğnelerin **dış çapını** ölçer. French'in aksine, Gauge **ters orantılıdır**. Yani, **Gauge değeri büyüdükçe, iğnenin çapı küçülür**. Örneğin, 18G bir iğne, 22G bir iğneden daha kalındır.
+  - **İnç ("):** Kılavuz tellerin (guidewire) çapını belirtmek için kullanılır. En yaygın boyutlar `0.035"` (standart), `0.018"` (mikroponksiyon) ve `0.014"` (özellikle koroner ve periferik arter darlıklarında kullanılır).
+
+- **Temel Malzemeler:**
+  - **İğneler:**
+    - *Seldinger İğnesi:* Genellikle 18G, içinden `0.035"` tel geçebilen standart ponksiyon iğnesidir.
+    - *Mikroponksiyon İğnesi:* Genellikle 21G, içinden `0.018"` tel geçen, daha az travmatik bir giriş sağlayan iğnedir. Özellikle riskli veya küçük damarlarda tercih edilir.
+    - *Biyopsi İğneleri:* `FNA` (İnce İğne Aspirasyon) için 22-25G, `Core` (Kalın İğne) biyopsi için 14-20G arasında değişen özel kesici iğnelerdir.
+  - **Kılavuz Teller (Guidewires):**
+    - *Amacı:* Kateterler ve diğer cihazlar için bir "ray" görevi görürler. Damar içinde güvenli bir yol oluştururlar.
+    - *Tipleri:* `J-ucu` (damar duvarını daha az travmatize eder), `hidrofilik` (ıslandığında çok kayganlaşır, dar lezyonları geçmek için idealdir), `sert teller` (stent gibi büyük cihazları taşımak için ekstra destek sağlar, örn. Amplatz Super Stiff).
+  - **Kılıflar (Sheaths / Introducers):**
+    - *Amacı:* Damara veya bir boşluğa yerleştirildikten sonra, işlem boyunca tekrar tekrar ponksiyon yapmadan malzeme değiştirmek için güvenli bir kapı (port) sağlarlar. Üzerlerindeki hemostatik valf, kan sızıntısını önler.
+    - *Peel-Away Kılıf:* Özellikle port veya tünelli kateter gibi, proksimal ucu kılıfın valfinden geçemeyecek kadar geniş olan cihazları yerleştirmek için kullanılır. Cihaz yerleştirildikten sonra kılıf ikiye ayrılarak kolayca çıkarılır.
+  - **Kateterler:**
+    - *Amacı:* Kontrast madde enjekte etmek (tanı) veya bir cihazı hedefe ulaştırmak (tedavi).
+    - *Şekilleri:* Farklı damar anatomilerine uyum sağlamak için yüzlerce farklı şekli vardır. `Pigtail` (kıvrık domuz kuyruğu ucu, yüksek akımlı enjeksiyonlar için), `Cobra`, `Simmons`, `Vertebral` (selektif organ damarlarını bulmak için) en yaygın olanlardandır.
+    - *Mikrokateterler:* Standart kateterlerin içinden geçen, `~2.0-2.8F` boyutlarında çok ince kateterlerdir. Süper-selektif embolizasyon gibi hassas işlemler için kullanılırlar.
+  - **Dilatörler:** Kılıfın yerleştirilmesi için cilt ve cilt altı dokuyu genişletmek amacıyla kullanılır. Genellikle `0.035"` veya `0.018"` kılavuz tellerle birlikte kullanılır.
+  - **Enjektörler:** Kontrast madde enjekte etmek için kullanılır. Otomatik enjektörler, belirli bir hız ve volümde kontrast madde enjekte ederken, manuel enjektörler daha az hassasiyetle kullanılabilir.
+- **Ablasyon Prob ve Jeneratörleri:**
+  - *Radyofrekans Ablasyon (RFA) Prob:* Tümörleri ısı ile yok etmek için kullanılır. Genellikle `17G` veya `14G` boyutlarındadır.
+  - *Mikrodalga Ablasyon (MWA) Prob:* RFA'ya göre daha hızlı ve daha büyük ablasyon zonları oluşturur.
+  - *Jeneratörler:* RFA ve MWA probuna enerji sağlayan cihazlardır. RFA için genellikle 200-300 W, MWA için 300-500 W güçte çalışırlar. 
+- **Embolizasyon Ajanları:**
+  - *Mekanik Tıkaçlar:* Koiller, pluglar gibi, genellikle tek bir besleyici damarı olan anevrizma veya fistüller için kullanılır.
+  - *Partiküller:* PVA (polivinil alkol), mikroküreler gibi, tümör devaskülarizasyonu için kullanılır. Boyutları, hedeflenen damar çapına göre seçilir (örn. miyom için 500-900 mikron).
+  - *Sıvı Ajanlar:* NBCA (n-butyl cyanoacrylate), Onyx gibi, hızlı polimerize olurlar ve yüksek akımlı AVM'ler veya acil kanamalar için uygundurlar. Kullanımları yüksek tecrübe gerektirir, çünkü katetere yapışma veya non-target embolizasyon riski yüksektir.   
+- **Drenaj Kateterleri:** Pigtail drenaj kateterleri, genellikle `8-14F` boyutlarındadır ve sıvı koleksiyonları boşaltmak için kullanılır. Drenaj sonrası, kateterin ucunun koleksiyonun merkezine yerleştirilmesi önemlidir.           
+- **Port Kateterleri:** Uzun süreli venöz erişim için kullanılır. Genellikle `7-9F` boyutlarındadır ve cilt altına tamamen gömülür. Port rezervuarı, kateterin ven içine girmesini sağlar.    
+### 1.3. Klinik İpuçları ve En İyi Uygulamalar
+- **Görüntüleme Kılavuzu:** Prosedür öncesi ve sırasında görüntüleme (US, BT) kullanmak, anatomiyi netleştirir ve komplikasyon riskini azaltır. Özellikle damar anatomisi karmaşık olan hastalarda (örn. yaşlı, aterosklerotik hastalar) US kılavuzu kullanmak, arteriyel ponksiyon riskini azaltır.
+- **Steril Teknik:** Tüm prosedürlerde aseptik teknikler (steril örtüler, eldiven, maske) kullanılmalıdır.
+- **Hastanın Konforu:** Prosedür öncesi ve sırasında hastanın konforu sağlanmalıdır. Sedasyon gerekliyse, anestezi uzmanı ile işbirliği yapılmalıdır.
+- **Komplikasyon Yönetimi:** Prosedür sırasında komplikasyon riskleri göz önünde bulundurulmalı ve anında müdahale planları yapılmalıdır.   
+- **Ekip Çalışması:** Girişimsel radyoloji, multidisipliner bir yaklaşımdır. Hemşireler, teknisyenler ve diğer sağlık profesyonelleri ile etkili iletişim ve işbirliği önemlidir. 
+- **Kayıt ve Dokümantasyon:** Tüm prosedürler, kullanılan malzemeler, komplikasyonlar ve hastanın durumu detaylı bir şekilde kaydedilmelidir. Bu, hem yasal hem de klinik açıdan önemlidir.   
+- **Eğitim ve Sürekli Gelişim:** Girişimsel radyoloji sürekli gelişen bir alandır. Yeni teknikler, malzemeler ve prosedürler hakkında sürekli eğitim alınmalıdır. Konferanslar, seminerler ve online kurslar takip edilmelidir. 
+- **Malzeme Seçimi:** Prosedür için en uygun malzeme ve cihazları seçmek, komplikasyon riskini azaltır. Örneğin, tortiyöz (kıvrımlı) anatomili hastalarda hidrofilik kılavuz teller ve destekleyici kateterler kullanmak, damar duvarına zarar vermeden ilerlemeyi kolaylaştırır.
+- **Hastanın Bilgilendirilmesi:** Prosedür öncesi hastaya detaylı bilgi verilmeli, endişeleri dinlenmeli ve aydınlatılmış rızası alınmalıdır. Bu, hem hasta memnuniyetini artırır hem de komplikasyon riskini azaltır.
+---
+
+<ImageWithCaption
+  src="/images/GR/GR_Malzeme_Kalınlık_Karşılaştırması.svg"
+  alt="Girişimsel Radyolojide Kullanılan Malzemelerin Kalınlık Karşılaştırması"
+  className="mx-auto"
+>
+  <strong>Şekil 1.:</strong> Girişimsel Radyolojide Kullanılan Malzemelerin Kalınlık Karşılaştırması
+</ImageWithCaption>
+
+---
+
+### 1.4. Temel Erişim Tekniği: Seldinger Tekniği
+
+1.  **Ponksiyon:** Hedef (damar veya koleksiyon) görüntüleme (genellikle US) altında belirlenir. 18G veya 21G ponksiyon iğnesi ile 45-60 derecelik bir açıyla hedefe girilir. Arteriyel ponksiyonda kanın pulsatil ve parlak kırmızı, venöz ponksiyonda ise sürekli ve koyu renkli akışı gözlenir.
+2.  **Kılavuz Tel (Guidewire) Yerleştirme:** İğnenin lümeninden `0.018"` veya `0.035"` kılavuz telin J ucu önde olacak şekilde ilerletilir. Tel, doku içinde rahatça ilerlemeli, dirençle karşılaşılmamalıdır. Floroskopi altında telin doğru lümende olduğu teyit edilir.
+3.  **Dilatasyon:** Tel sabit tutulurken iğne çıkarılır. Cilt ve cilt altı doku, kılıf (sheath) boyutundan 1F daha büyük bir dilatör ile genişletilebilir (isteğe bağlı). Ardından, kılıfın kendisi, içindeki dilatör ile birlikte tel üzerinden kaydırılarak damara yerleştirilir.
+4.  **Kılıf (Sheath) ve Kateter Yerleştirme:** Dilatör ve tel çıkarılır. Artık işlem için stabil bir kapı görevi gören kılıf yerindedir. Tüm kateter ve cihazlar bu kılıfın hemostatik valfi aracılığıyla kullanılır.
+5.  **İşlem:** Kılavuz tel üzerinden kateter, mikrokateter veya diğer cihazlar ilerletilir. İşlem tamamlandıktan sonra, kılıf çıkarılır ve giriş yeri baskı ile kapatılır.  
+
+<ImageWithCaption
+  src="/images/GR/girişimsel_işlem_adımları.svg"
+  alt="Girişimsel Radyoloji İşlem Adımları"
+  className="mx-auto"
+>
+  <strong>Şekil 1.:</strong> Girişimsel Radyoloji İşlem Adımları
+</ImageWithCaption>
+
+### 1.5. Komplikasyon Yönetimi
+- **Kanama:** Ponksiyon sonrası kanama, genellikle baskı ile kontrol altına alınabilir. Ancak, büyük damarlar veya arteriyel ponksiyonlarda kanama devam ederse, hemostatik manevralar (balon oklüzyonu, embolizasyon) gerekebilir. 
+- **Enfeksiyon:** Aseptik teknikler kullanılarak enfeksiyon riski azaltılmalıdır. Enfeksiyon gelişirse, antibiyotik tedavisi ve drenaj gerekebilir. 
+- **Arteriyel Diseksiyon:** Kılavuz tel veya kateterin yanlış yerleştirilmesi sonucu arter duvarının ayrılmasıdır. Diseksiyonun proksimaldeki akımı engellemediği durumlarda, balon anjiyoplasti veya stentleme ile düzeltilebilir. 
+- **Non-target Embolizasyon:** Embolizasyon sırasında yanlışlıkla sağlıklı dokuların tıkanmasıdır. Bu durumda işlem derhal durdurulmalı, vazodilatörler (örn. nitrogliserin) denenmelidir. Non-target embolizasyon riski, süper-selektif kateterizasyon ile azaltılabilir.  
+- **Pnömotoraks:** Akciğer biyopsisi veya drenaj işlemlerinde en sık görülen komplikasyondur. Ponksiyon sonrası göğüs tüpü yerleştirilmesi gerekebilir. Pnömotoraks riski, iğne açısının dik tutulması ve plevrayı tek bir kez geçmekle azaltılabilir.  
+- **Alerjik Reaksiyon:** Kontrast madde kullanımı sonrası alerjik reaksiyonlar gelişebilir. Bu durumda, antihistaminikler ve kortikosteroidler ile tedavi gerekebilir. Alerji riski yüksek hastalarda, önceden profilaktik tedavi uygulanabilir.  
+- **Damar Spazmı:** Kontrast madde enjeksiyonu sonrası damar spazmı gelişebilir. Bu durumda, vazodilatörler (örn. nitrogliserin) kullanılabilir. Damar spazmı riski, hidrofilik kılavuz teller ve uygun kontrast madde seçimi ile azaltılabilir.  
+---
+
+
+
+## Bölüm 2: Vasküler (Endovasküler) Prosedürler
+
+### 2.1. Dijital Subtraksiyon Anjiyografi (DSA)
+- **Endikasyonlar:** Aterosklerotik damar hastalığı haritalaması, anevrizma/AVM/diseksiyon tanısı, kanama odağının tespiti, tümör vaskülaritesinin değerlendirilmesi.
+- **Adım Adım Teknik Uygulama:**
+    1.  **Erişim:** Genellikle 4-5F kılıf, common femoral arter (CFA) veya radial arterden yerleştirilir.
+    2.  **Kateter Seçimi ve Navigasyon:**
+        - **Non-selektif Anjiyografi:** Aort veya ana damarların genel görüntüsü için **Pigtail** kateter kullanılır. Uç tasarımı, yüksek akımlı enjeksiyonlarda damar duvarına zarar vermeden stabil kalmasını ve kontrastın homojen dağılmasını sağlar.
+        - **Selektif Anjiyografi:** Belirli bir organ damarını (renal, mezenterik, karotid) kateterize etmek için **Cobra (C2), Simmons (SIM), veya Vertebral** gibi uçları açılı kateterler kullanılır. Kateter seçimi, aortik ark ve damar çıkış açısına göre yapılır. `0.035"` bir Bentson veya J-tipi kılavuz tel ile birlikte kullanılır.
+    3.  **Görüntüleme:** Kateter hedef damarın ostiumuna yerleştirildikten sonra, otomatik enjektör ile belirlenen akış hızı ve volümde kontrast madde verilirken, floroskopik seri çekimler (genellikle 2-4 frame/saniye) yapılır. **Roadmapping** (yol haritalama) özelliği, kılavuz tel ve mikrokateter ilerletilirken canlı bir damar haritası üzerinde çalışmayı sağlar.
+- **Klinik İpucu:** Tortiyöz (kıvrımlı) anatomiye sahip yaşlı hastalarda veya keskin açılı damarlarda, hidrofilik (kaygan) bir kılavuz tel (örn. Glidewire) ve destekleyici bir kateter (örn. Simmons) hayat kurtarıcıdır.
+- **Kontrast Madde Seçimi:** Genellikle iyotlu kontrast maddeler kullanılır. Böbrek fonksiyonları bozuk hastalarda, düşük osmolaliteli (LOCM) kontrastlar tercih edilmelidir. Alternatif olarak, CO2 anjiyografi veya gadolinyum bazlı kontrastlar kullanılabilir.  
+- **Komplikasyon Yönetimi:** En yaygın komplikasyonlar arasında arteriyel diseksiyon, kanama ve non-target embolizasyon bulunur. Diseksiyon durumunda, kılavuz tel ve balon anjiyoplasti ile lezyonun düzeltilmesi veya stentleme gerekebilir. Non-target embolizasyon şüphesi varsa, işlem derhal durdurulmalı ve vazodilatörler (örn. nitrogliserin) denenmelidir.
+- **Sonuç Değerlendirme:** Anjiyografi sonrası, lezyonun anatomik özellikleri, darlık derecesi ve tedavi seçenekleri (PTA, stentleme, embolizasyon) belirlenir. DSA sonrası hastanın hemodinamik durumu ve kanama riski izlenmelidir.
+
+### 2.2. Perkütan Transluminal Anjiyoplasti (PTA) ve Stentleme
+- **Endikasyonlar:** Semptomatik (`>50%`) veya kritik (`>70%`) darlıklar.
+- **Adım Adım Teknik Uygulama:**
+    1.  **Lezyonu Geçme:** Darlığı geçmek için genellikle `0.014"` veya `0.018"` bir kılavuz tel kullanılır. Bu teller, darlığın distalindeki damarda güvenli bir pozisyon alana kadar dikkatlice ilerletilir.
+    2.  **Balon Anjiyoplasti:** Tel üzerinden, darlığın çapına ve uzunluğuna uygun bir PTA balon kateteri ilerletilir. Balon, darlık seviyesinde pozisyonlandırılır ve bir endeflatör cihazı ile nominal basınca (genellikle 8-12 atm) kadar yavaşça şişirilir. Balon üzerinde darlığın neden olduğu "bel verme" (waisting) kaybolana kadar beklenir (genellikle 60-180 saniye). Sonra balon indirilir.
+    3.  **Stentleme Kararı ve Uygulama:** Anjiyoplasti sonrası kontrol anjiyografide `>30%`'dan fazla rezidüel darlık, akımı kısıtlayan bir diseksiyon veya elastik geri çekilme (recoil) varsa stentleme endikedir.
+        - **Balonla Genişleyen (Balloon-expandable) Stentler:** Ostial (damar çıkış ağzı) lezyonlar gibi hassas yerleşim gerektiren yerlerde tercih edilir. Yüksek radyal (dışa doğru) güce sahiptirler.
+        - **Kendiliğinden Genişleyen (Self-expanding) Stentler:** Yüzeyel femoral arter (SFA) gibi dış basıya ve bükülmeye maruz kalabilecek damarlarda kullanılırlar. Daha esnektirler.
+    Stent, lezyonu tam kaplayacak şekilde yerleştirilir ve açılır. Sonrasında stent içinde tam açılmayı sağlamak için tekrar balonlama (post-dilatasyon) yapılabilir.
+- **Malzeme Seçimi:** İlave destek için `0.035"` kılavuz teller ve 6-7F guiding sheath'ler kullanılabilir. Diz altı lezyonlar için özel uzun, düşük profilli `0.014"` sistemler tercih edilir.
+- **Sonuç Değerlendirme:** PTA sonrası kontrol anjiyografi ile lezyonun tamamen açıldığı ve akımın normalleştiği teyit edilir. Stent yerleşimi ve açılması da kontrol edilir. 
+- **Komplikasyon Yönetimi:** En yaygın komplikasyonlar arasında arteriyel diseksiyon, kanama ve stent trombozu bulunur. Diseksiyon durumunda, balon anjiyoplasti veya stentleme ile lezyonun düzeltilmesi gerekebilir. Stent trombozu riski, antiplatelet tedavi ile azaltılmalıdır (örn. Aspirin + Clopidogrel). 
+
+### 2.3. Embolizasyon
+- **Endikasyonlar:** Akut kanama (travma, GİS, postpartum), tümör devaskülarizasyonu (TACE, miyom), anevrizma/AVM tedavisi.
+- **Teknik Prensipler:** Amaç, hedef damarı tıkarken, proksimaldeki ve distaldeki sağlıklı dokuların kanlanmasını korumaktır. Bu, **süper-selektif kateterizasyon** gerektirir.
+- **Adım Adım Teknik Uygulama:**
+    1.  **Haritalama:** Tanısal anjiyografi ile kanama odağı veya tümörü besleyen damar(lar) net olarak belirlenir.
+    2.  **Mikrokateterizasyon:** Ana kateterin içinden, genellikle `2.0-2.8F` boyutunda bir mikrokateter, `0.014"` veya `0.016"` bir mikrotel yardımıyla hedef damarın içine, mümkün olan en distal (uç) noktaya kadar ilerletilir.
+    3.  **Embolik Ajan Seçimi ve Uygulaması:**
+        - **Mekanik Tıkaçlar (Koiller, Pluglar):** Tek bir besleyici damarı olan anevrizma veya fistüller için idealdir. Damar çapına uygun boyutta seçilirler.
+        - **Partiküller (PVA, Mikroküreler):** Geniş bir vasküler yatağı olan tümörler (miyom, HCC) için kullanılır. Partikül boyutu, hedeflenen damar çapına göre seçilir (örn. miyom için 500-900 mikron). Yavaşça, antegrad (ileri yönlü) akımla, geri kaçışı (reflü) önleyerek enjekte edilir.
+        - **Sıvı Ajanlar (NBCA-glue, Onyx):** Hızlı polimerize olurlar ve yüksek akımlı AVM'ler veya acil kanamalar için uygundurlar. Kullanımları yüksek tecrübe gerektirir, çünkü katetere yapışma veya non-target embolizasyon riski yüksektir.
+    4.  **Sonuç Değerlendirme:** Embolizasyon sonrası, proksimalden yapılan kontrol anjiyografi ile hedefin tamamen tıkandığı (staz) ve sağlıklı dallara geri kaçış olmadığı teyit edilir.
+- **Komplikasyon Yönetimi:** En korkulan komplikasyon **non-target embolizasyon**dur. Şüphelenildiğinde işlem derhal durdurulmalı, vazodilatörler (nitrogliserin) denenebilir, ancak hasar genellikle kalıcıdır. Bu nedenle proksimalde balon oklüzyonu gibi koruyucu manevralar planlanabilir.
+
+---
+
+## Bölüm 3: Damar Dışı (Non-Vasküler) Prosedürler
+
+### 3.1. Görüntüleme Eşliğinde Biyopsi
+- **Teknik Prensipler:** En kısa ve en güvenli yolu seç. Yol üzerinde barsak, büyük damar, plevra gibi kritik yapılardan kaçın. Mümkünse, potansiyel bir kanama yolunu tıkayabilecek solid bir organ (karaciğer, böbrek) içinden geç.
+- **Adım Adım Teknik Uygulama (Koaksiyel Sistem ile):**
+    1.  **Planlama:** BT veya US ile lezyon, giriş noktası ve iğne yolu belirlenir. Cilt işaretlenir.
+    2.  **Anestezi ve İnsizyon:** Lokal anestezi sonrası 11 numara bistüri ile küçük bir cilt kesisi yapılır.
+    3.  **Koaksiyel İğne Yerleştirme:** Genellikle 17G veya 19G olan koaksiyel (rehber) iğne, planlanan yoldan lezyonun kenarına kadar ilerletilir. Pozisyonu görüntüleme ile doğrulanır.
+    4.  **Örnekleme:** 18G veya 20G olan kesici (tru-cut) biyopsi iğnesi, koaksiyel iğnenin içinden ilerletilerek lezyondan birden fazla (genellikle 2-4) örnek alınır. Bu yöntem, her örnek için organın tekrar tekrar delinmesini önler.
+    5.  **Kapanış:** İğneler çekildikten sonra, kanama kontrolü için giriş yoluna Gelfoam (absorbe olabilen jelatin sünger) enjekte edilebilir (embolizasyon traktı).
+- **Klinik İpucu:** Akciğer biyopsilerinde, plevrayı tek bir kez geçmek ve mümkün olduğunca dik bir açı kullanmak pnömotoraks riskini azaltır. Hastaya nefesini tutması (inspiryum veya ekspiryumda) söylenerek hareket artefaktı önlenir.
+
+### 3.2. Perkütan Drenaj
+- **Teknik Prensipler:** En büyük sıvı cebini, en bağımlı (yerçekimine göre en alçak) noktadan hedefle. Kateterin ucu koleksiyonun merkezine yerleştirilmelidir.
+- **Adım Adım Teknik Uygulama (Seldinger Tekniği ile):**
+    1.  **Ponksiyon ve Tel Yerleştirme:** US veya BT ile koleksiyon hedeflenir, 18G iğne ile girilir ve pürülan materyal aspire edilerek doğrulama yapılır. `0.035"` kılavuz tel koleksiyonun içine kıvrılacak şekilde yerleştirilir.
+    2.  **Trakt Dilatasyonu:** Tel üzerinden seri dilatatörler kullanılarak giriş yolu, yerleştirilecek kateterin çapına (genellikle 8-14F) kadar genişletilir.
+    3.  **Kateter Yerleştirme:** Pigtail drenaj kateteri, sertleştirici kanülü (stiffener) içindeyken tel üzerinden ilerletilir. Koleksiyonun içinde olduğu doğrulandıktan sonra, kateter sabit tutulurken tel ve sertleştirici kanül geri çekilir. Kateterin pigtail ucu, ipi çekilerek kilitlenir.
+    4.  **Fiksasyon ve Bağlantı:** Kateter cilde dikişle veya statik fiksasyon bandı ile sabitlenir ve drenaj torbasına bağlanır.
+- **Dren Yönetimi:** Kateterin tıkanmasını önlemek için günde 2-3 kez 10 mL steril salin ile yıkanmalıdır. Dren çekilme kriterleri: Klinik düzelme, günlük drenajın `<20 mL`'ye düşmesi ve kontrol görüntülemede koleksiyonun rezorbe olması.
+
+### 3.3. Tümör Ablasyonu (RFA/MWA)
+- **Teknik Prensipler:** Hedef, tümörü ve etrafında `0.5-1.0 cm`'lik bir güvenlik marjını içeren bir ablasyon zonu oluşturmaktır.
+- **Adım Adım Teknik Uygulama:**
+    1.  **Planlama ve Hedefleme:** Tümörün boyutu, şekli ve komşu yapılarla (barsak, safra kesesi, diyafram) ilişkisi değerlendirilir. Gerekirse birden fazla probun üst üste binen ablasyonlar yapması planlanır.
+    2.  **Hidrodiseksiyon:** Tümör, ısı hasarı riski taşıyan bir yapıya (örn. barsak) 5 mm'den daha yakınsa, araya bir iğne ile girilerek Dekstroz veya Salin enjekte edilir. Bu sıvı, iki yapı arasında güvenli bir yastık oluşturur.
+    3.  **Prob Yerleştirme ve Ablasyon:** Ablasyon probu/probları US veya BT ile tümörün içine yerleştirilir. Jeneratör çalıştırılır ve planlanan süre ve güçte enerji verilir. MWA, RFA'ya göre daha hızlı ve daha büyük ablasyon zonları oluşturur ve damar yanındaki "ısı emici" (heat sink) etkisinden daha az etkilenir.
+    4.  **Doğrulama:** İşlem sonunda, kontrastlı BT veya MR ile ablasyon zonunun tümörü tamamen kapladığı ve hiç canlı (kontrast tutan) doku kalmadığı doğrulanır.
+
+--- 
+
+## Bölüm 4: Santral Venöz Erişim Prosedürleri
+
+Bu prosedürler, uzun süreli IV tedavi, kemoterapi, TPN veya hemodiyaliz için güvenilir ve kalıcı bir damar yolu sağlamayı amaçlar. Altın standart, ultrason (US) kılavuzluğunda ponksiyon ve floroskopi ile kateter ucu pozisyonunun doğrulanmasıdır.
+
+### 4.1. Tünelli Port Kateter Yerleştirilmesi
+- **Endikasyonlar:** Aralıklı, uzun süreli tedaviler (örn. 3 haftada bir kemoterapi). Cilt altına tamamen gömülü olması sayesinde enfeksiyon riski daha düşüktür ve hastanın yaşam kalitesini artırır.
+- **Adım Adım Teknik Uygulama:**
+    1.  **Planlama ve Erişim Yeri Seçimi:** Öncelikli tercih sağ internal juguler ven (IJV)’dir; çünkü superior vena kava (SVC)’ya daha düz bir yol sunar. Alternatifler subklavyen ven veya femoral venlerdir. US ile venin patent (açık) ve kompresibl olduğu, içinde trombüs olmadığı doğrulanır.
+    2.  **Cep (Pocket) Hazırlığı:** Genellikle subklaviküler bölgede, klavikulanın 2-3 cm altından 3-4 cm’lik horizontal bir cilt kesisi yapılır. Cilt altı doku, port rezervuarının rahatça sığacağı bir cep oluşturacak şekilde künt diseksiyonla hazırlanır.
+    3.  **Venöz Erişim ve Kılavuz Tel Yerleştirme:** US kılavuzluğunda IJV’ye ponksiyon yapılır (Seldinger tekniği). `0.035"` J-tipi kılavuz tel, floroskopi altında SVC’nin alt kısmına veya sağ atriuma ilerletilir.
+    4.  **Tünelizasyon:** Port cebinden ven giriş noktasına doğru cilt altından bir tünel oluşturulur. Port kateteri, bir tünelleyici (tunneler) yardımıyla bu tünelden geçirilir. Kateterin ven giriş noktasından çıkması sağlanır.
+    5.  **Kateterin Boyutlandırılması ve Yerleştirilmesi:** Kılavuz tel üzerinden “peel-away” (ayrılabilir) bir kılıf vene yerleştirilir. Kateterin ucu, floroskopi altında kavoatriyal bileşke (SVC’nin sağ atriuma girdiği yer) seviyesinde olacak şekilde kesilir. Kesilen kateter, peel-away kılıf aracılığıyla vene yerleştirilir ve kılıf ayrılarak çıkarılır.
+    6.  **Bağlantı ve Kapanış:** Kateter, port rezervuarına bağlanır ve kilitlenir. Portun cebe düzgün oturduğu kontrol edilir. Sistem heparinli serum ile yıkanarak test edilir. Cep, emilebilir sütürlerle katmanlar halinde kapatılır, cilt ise subkutiküler dikiş veya striplerle kapatılır.
+
+### 4.2. Tünelsiz ve Tünelli Santral Venöz Kateterler (Juguler/Femoral)
+- **Endikasyonlar:**
+    - **Tünelsiz Kateterler:** Kısa süreli (genellikle < 2 hafta) acil veya yoğun bakım ihtiyaçları için kullanılır.
+    - **Tünelli Kateterler (Hickman, Broviac):** Uzun süreli, sürekli erişim gerektiren durumlar (TPN, kemik iliği transplantasyonu) için tercih edilir. Cilt altı tünel ve Dacron manşet (cuff), enfeksiyonun kana karışmasını önleyen bir bariyer görevi görür.
+- **Adım Adım Teknik Uygulama (Tünelli Juguler Kateter Örneği):**
+    1.  **Erişim ve Tel Yerleştirme:** IJV ponksiyonu ve kılavuz telin yerleştirilmesi port prosedürü ile aynıdır.
+    2.  **Çıkış Yeri (Exit Site) Belirleme:** Kateterin ciltten çıkacağı nokta, genellikle klavikulanın altında, ven giriş yerinden birkaç cm uzakta belirlenir.
+    3.  **Tünelizasyon:** Ven giriş yerinden (venotomi) çıkış yerine doğru bir tünel oluşturulur. Kateter, bu tünelden geçirilir. Dacron manşetin, çıkış yerinden en az 2 cm içeride, cilt altında kalmasına dikkat edilir.
+    4.  **Peel-Away Kılıf ve Kateter Yerleştirme:** Venotomi noktasından tel üzerinden peel-away kılıf yerleştirilir. Kateterin ucu kavoatriyal bileşkede olacak şekilde ayarlanır ve kılıf içinden ilerletilir. Kılıf çıkarılır.
+    5.  **Fiksasyon ve Kapanış:** Venotomi yeri sütürle kapatılır. Kateter, çıkış yerinde cilde sütürle sabitlenir. Lümenler heparinli serum ile doldurulur ve kapatılır.
+- **Femoral Yaklaşım:** Genellikle son çare olarak düşünülür, çünkü daha yüksek enfeksiyon ve tromboz riski taşır. Teknik adımlar benzerdir, ancak tünel genellikle karın ön duvarına doğru oluşturulur.
+
+### 4.3. Komplikasyon Yönetimi
+- **Pnömotoraks:** Özellikle subklavyen ven denemelerinde veya US kılavuzluğu olmadan yapılan IJV ponksiyonlarında görülür. Şüphelenildiğinde hemen akciğer grafisi çekilmeli ve gerekirse göğüs tüpü takılmalıdır.
+- **Arteriyel Ponksiyon:** US kılavuzluğu ile nadirdir. Fark edildiğinde iğne/kılıf hemen çekilmeli ve en az 10 dakika boyunca kompresyon uygulanmalıdır.
+- **Kateter Malpozisyonu:** Kateter ucunun karşı brakiyosefalik ven, internal mammarian ven veya azigos venine girmesi durumudur. Floroskopi ile fark edilir ve genellikle kılavuz tel ile manevra yapılarak düzeltilir.
+- **Hava Embolisi:** Kılıf veya ven içindeyken hastanın derin nefes almasıyla oluşabilir. Hastayı Trendelenburg pozisyonuna getirmek ve sol lateral dekübit pozisyonda yatırmak, havanın sağ ventrikül çıkışını tıkamasını önler.
+
+---
+
+Bu rehber, temel prosedürlere bir giriş niteliğindedir. Girişimsel radyolojide yetkinlik, tekrarlayan pratik, sürekli eğitim ve her vakayı bireysel olarak değerlendirme yeteneği ile kazanılır.

@@ -1,0 +1,99 @@
+/* Optimized Design System - Only Essential Variables */
+:root {
+  /* Core Colors - Only what we use */
+  --primary-400: #60a5fa;
+  --primary-500: #3b82f6;
+  --primary-600: #2563eb;
+  
+  --secondary-400: #2dd4bf;
+  --secondary-500: #14b8a6;
+  --secondary-600: #0d9488;
+  
+  /* Dark Theme - Essential only */
+  --dark-bg-primary: #0f172a;
+  --dark-bg-secondary: #1e293b;
+  --dark-text-primary: #f8fafc;
+  --dark-text-secondary: #cbd5e1;
+  
+  /* Gradients - Optimized */
+  --gradient-primary: linear-gradient(135deg, var(--primary-600), var(--secondary-500));
+  --gradient-secondary: linear-gradient(135deg, var(--secondary-600), var(--primary-500));
+}
+
+/* Essential Utility Classes Only */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  transition: all 300ms;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 10px 15px -3px rgb(59 130 246 / 0.25);
+}
+
+.btn-outline {
+  border: 2px solid rgb(71 85 105);
+  color: rgb(203 213 225);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  transition: all 300ms;
+  backdrop-filter: blur(4px);
+}
+
+.btn-outline:hover {
+  border-color: var(--primary-400);
+  color: white;
+  background: rgb(51 65 85 / 0.5);
+}
+
+.card-modern {
+  background: rgb(51 65 85 / 0.5);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgb(71 85 105 / 0.5);
+  border-radius: 1rem;
+  transition: all 500ms;
+}
+
+.card-modern:hover {
+  border-color: rgb(96 165 250 / 0.5);
+  transform: scale(1.02);
+}
+
+/* Performance Optimized Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .respect-motion-preference,
+  .respect-motion-preference::before,
+  .respect-motion-preference::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* For testing - force enable animations */
+.force-animations * {
+  animation-duration: initial !important;
+  animation-iteration-count: initial !important;
+  transition-duration: initial !important;
+}

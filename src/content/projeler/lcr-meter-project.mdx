@@ -48,9 +48,9 @@ image:
 isDraft: false
 ---
 
-import { ImageWithCaption } from '@/components/i2c/ImageWithCaption.jsx';
+import { ImageWithCaption } from '@/components/ImageWithCaption.jsx';
 // YENİ: Tekrar kullanılabilir animasyon bileşenimizi import ediyoruz.
-import { SvgAnimationContainer } from '@/components/i2c/SvgAnimationContainer.jsx';
+import { SvgAnimationContainer } from '@/components/SvgAnimationContainer.jsx';
 
 import { gsap } from 'gsap';
 
@@ -852,6 +852,42 @@ Auto-Balancing Bridge yöntemi, işlemsel yükseltecin **sanal toprak** (virtual
 >
   <strong>Şekil 3:</strong> İşlemsel yükselteç kullanarak empedans ölçüm yöntemi
 </ImageWithCaption>
+
+{/*
+\documentclass[border=10pt]{standalone}
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usepackage{circuitikz}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{decorations.markings, arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit, backgrounds, patterns} % KUTUCUKLAR İÇİN GEREKLİ KÜTÜPHANELER
+
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+
+\begin{document}
+\begin{circuitikz}[american]
+
+\ctikzset{amplifiers/scale=0.75}
+\draw (-2, 0) to[sinusoidal voltage source, l_ = $v_s$] (-2, -2)
+node[ground]{};
+\draw (-2,0) -- (0,0);
+\draw (0,0) -- ++(1,0) to[european resistor, l = $Z_x$, i=$i_x$] ++(2,0) -- ++(1,0);
+\draw (4,0) to [american resistor, l = $R_F$, i<=$i_F$](6,0) -- ++ (1.5,0);
+\draw (5,-1.5) node[op amp](opamp_1){};
+\draw (4,0) |- (opamp_1.-);
+\draw (opamp_1.out) -| (6, 0);
+\draw (opamp_1.+) -- ++(0,-0.125) node[ground]{};
+\draw (0,0) to[rmeter, t=V, v=$v_x$] ++(0,-2)
+node[ground]{};
+\draw (7.5,0) to[rmeter, t=V, v=$v_F$] ++(0,-2)
+node[ground]{};
+\draw node[ocirc] at (1, 0) {};
+\draw node[ocirc] at (3, 0) {};
+\end{circuitikz}
+\end{document}
+*/}
 
 Bu devreyi açıklamadan önce op-ampın mükemmel bir özelliği olan sanal toprak ilkesini ve diğer bazı özelliklerini açıklayalım. 
   - Op-amp'ın pozitif ve negatif girişlerinin empedansı çok yüksektir. Teorik olarak sonsuzdur ve akım akmaz. Ancak gerçek dünya uygulamalarda çok küçük kutuplama akımları akabilir.

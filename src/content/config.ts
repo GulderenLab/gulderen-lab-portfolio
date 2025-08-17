@@ -47,8 +47,29 @@ const blogCollection = defineCollection({
 });
 // ==========================================
 
+// === RADYOLOJİ KOLEKSİYONU TANIMI ===
+const radyolojiCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    author: z.string().default('Abdullah Gülderen'),
+    publishDate: z.date(),
+    category: z.string(),
+    tags: z.array(z.string()).optional(),
+    readingTime: z.string().optional(),
+    image: z.object({
+        src: z.string(),
+        alt: z.string()
+    }).optional(),
+    isDraft: z.boolean().optional().default(false),
+  }),
+});
+// =======================================
+
 // Koleksiyonları dışa aktarıyoruz
 export const collections = {
   'projeler': projelerCollection,
   'blog': blogCollection, // Blog koleksiyonu zaten ekliydi
+  'radyoloji': radyolojiCollection,
 };

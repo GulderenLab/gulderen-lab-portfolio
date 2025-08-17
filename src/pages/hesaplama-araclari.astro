@@ -1,0 +1,3117 @@
+---
+// src/pages/hesaplama-araclari.astro
+import Layout from '../layouts/Layout.astro';
+
+const pageTitle = "Hesaplama Araçları";
+const pageDescription = "Elektronik, mühendislik ve yazılım geliştirme için pratik hesaplama araçları. Ohm Kanunu, güç hesaplamaları, frekans dönüştürücüleri ve daha fazlası.";
+
+// Calculator categories
+const calculatorCategories = [
+    {
+        title: "Elektronik Hesaplamaları",
+        icon: "cpu-chip",
+        description: "Temel elektronik devre hesaplamaları",
+        calculators: [
+            { name: "Ohm Kanunu", id: "ohm", description: "Voltaj, akım ve direnç hesaplamaları" },
+            { name: "Güç Hesaplama", id: "power", description: "Elektrik güç hesaplamaları" },
+            { name: "RC Zaman Sabiti", id: "rc-time", description: "RC devre zaman sabiti hesaplama" },
+            { name: "LED Direnç", id: "led-resistor", description: "LED için gerekli direnç hesaplama" },
+            { name: "LT3045/LT3094 VPGF", id: "lt3045-vpgf", description: "Linear Technology regülatör gerilim bölücü hesaplama" },
+            { name: "AWG Dönüşüm Hesaplayıcı", id: "awg", description: "AWG ölçü birimleri arasındaki dönüşüm hesaplamaları" },
+            { name: "Direnç Seri/Paralel", id: "resistor-combine", description: "Seri ve paralel eşdeğer direnç" },
+            { name: "Reaktif Empedans", id: "reactive", description: "Xc ve Xl hesaplama" }
+        ]
+    },
+    {
+        title: "Frekans & Sinyal",
+        icon: "wave",
+        description: "Sinyal işleme ve frekans hesaplamaları",
+        calculators: [
+            { name: "Frekans Dönüştürücü", id: "frequency", description: "Hz, kHz, MHz arası dönüşüm" },
+            { name: "Periyot Hesaplama", id: "period", description: "Frekans-periyot dönüşümü" },
+            { name: "dB Hesaplama", id: "decibel", description: "Desibel dönüşümleri" },
+            { name: "Dalga Boyu", id: "wavelength", description: "Frekans-dalga boyu hesaplama" },
+            { name: "PWM Zaman Çözünürlüğü", id: "pwm", description: "Frekans, duty ve timer çözünürlüğü" },
+            { name: "RF Friis Bağlantı", id: "rf-friis", description: "Serbest uzay bağlantı bütçesi" }
+        ]
+    },
+    {
+        title: "Veri & Programlama",
+        icon: "code",
+        description: "Yazılım geliştirme hesaplamaları",
+        calculators: [
+            { name: "Sayı Sistemi", id: "number-base", description: "Binary, decimal, hex dönüşüm" },
+            { name: "Veri Boyutu", id: "data-size", description: "Byte, KB, MB, GB dönüşümleri" },
+            { name: "CRC Hesaplama", id: "crc", description: "Cyclic Redundancy Check" },
+            { name: "Hash Hesaplama", id: "hash", description: "MD5, SHA hash hesaplama" }
+        ]
+    },
+    {
+        title: "IoT & Sensörler",
+        icon: "sensor",
+        description: "IoT projeleri için hesaplamaları",
+        calculators: [
+            { name: "ADC Çözünürlük", id: "adc", description: "Analog-dijital dönüştürücü hesaplamaları" },
+            { name: "Pil Ömrü", id: "battery", description: "IoT cihaz pil ömrü tahmini (gelişmiş model)" },
+            { name: "WiFi Mesafe", id: "wifi-range", description: "WiFi serbest uzay + hassasiyet + marj" },
+            { name: "Sıcaklık Dönüşüm", id: "temperature", description: "Celsius, Fahrenheit, Kelvin" },
+            { name: "Voltaj Bölücü ve Yük", id: "divider-load", description: "Yük etkisiyle bölücü" },
+            { name: "I2C Pull-up Direnci", id: "i2c-pullup", description: "Cbus ve yükselme zamanına göre Rp önerisi" },
+            { name: "UART Baud Hatası", id: "uart-baud", description: "Saatten baud hata yüzdesi" }
+        ]
+    }
+];
+// UI Enhancements: search, filters, counts derived from data
+const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(calc => ({ ...calc, category: c.title })));
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+    
+    {/* HERO SECTION */}
+    <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden mb-8">
+        {/* Animated Background */}
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-blue-900/20"></div>
+        <div class="absolute inset-0">
+            <div class="absolute top-20 left-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/5 to-blue-500/5 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div class="relative z-10 container mx-auto px-6 text-center">
+            {/* Professional Badge */}
+            <div class="inline-flex items-center px-4 py-2 mb-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full">
+                <svg class="w-5 h-5 mr-3 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19.5 3.2l-1.6-1.6c-.4-.4-1-.4-1.4 0L4.8 13.3c-.2.2-.3.4-.3.7v3c0 .6.4 1 1 1h3c.3 0 .5-.1.7-.3L21 5.9c.4-.4.4-1 0-1.4zM5.5 16v-1.5L15.3 4.7l1.5 1.5L6.9 16H5.5zm11.3-11.3L15.3 3.2l1.4-1.4 1.5 1.5-1.4 1.4z"/>
+                </svg>
+                <span class="text-sm text-purple-400 font-medium">Mühendislik Araçları</span>
+            </div>
+            
+            {/* Main Heading */}
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+                <span class="block text-white mb-4">Hesaplama</span>
+                <span class="block bg-gradient-to-r from-purple-400 via-blue-300 to-cyan-400 bg-clip-text text-transparent">
+                    Araçları
+                </span>
+            </h1>
+            
+            {/* Subtitle */}
+            <p class="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto mb-12 leading-relaxed">
+                Elektronik, mühendislik ve yazılım geliştirme projeleriniz için 
+                <span class="text-purple-300 font-semibold">pratik hesaplama araçları</span> ve dönüştürücüler.
+            </p>
+            
+            {/* Quick Stats + Search */}
+            <div class="flex flex-col items-center gap-6">
+                <div class="flex flex-wrap justify-center gap-8 text-center">
+                    <div class="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl px-6 py-4">
+                        <div class="text-2xl font-bold text-purple-400">{allCalculatorsFlat.length}</div>
+                        <div class="text-sm text-gray-400">Hesaplama Aracı</div>
+                    </div>
+                    <div class="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl px-6 py-4">
+                        <div class="text-2xl font-bold text-blue-400">{calculatorCategories.length}</div>
+                        <div class="text-sm text-gray-400">Kategori</div>
+                    </div>
+                    <div class="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl px-6 py-4">
+                        <div class="text-2xl font-bold text-cyan-400">∞</div>
+                        <div class="text-sm text-gray-400">Kullanım</div>
+                    </div>
+                </div>
+
+                <div class="w-full max-w-3xl">
+                    <label for="calc-search" class="sr-only">Ara</label>
+                    <div class="relative">
+                        <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="7" stroke-width="2"></circle>
+                            <path d="M21 21l-4.3-4.3" stroke-width="2" stroke-linecap="round"></path>
+                        </svg>
+                        <input id="calc-search" type="text" placeholder="Araç adı veya kategori ara (örn: Ohm, AWG, Elektronik)..."
+                               class="w-full pl-10 pr-12 py-3 bg-slate-800/60 border border-slate-700/60 rounded-xl text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                        <button id="clear-search" class="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 text-sm text-gray-300 hover:text-white bg-slate-700/60 rounded-lg hidden">Temizle</button>
+                    </div>
+                    <div id="active-filters" class="mt-3 flex flex-wrap gap-2"></div>
+                    <div class="mt-4 flex flex-wrap items-center justify-center gap-3">
+                        <button id="toggle-view-cards" class="px-3 py-1.5 rounded-lg text-sm bg-slate-800/60 border border-slate-700/60 text-gray-200 hover:bg-slate-700/60 transition">Kart Görünümü</button>
+                        <button id="toggle-view-list" class="px-3 py-1.5 rounded-lg text-sm bg-slate-800/40 border border-slate-700/60 text-gray-300 hover:bg-slate-700/60 transition">Liste Görünümü</button>
+                        <span class="text-xs text-gray-400">•</span>
+                        <button id="expand-all" class="px-3 py-1.5 rounded-lg text-sm bg-slate-800/40 border border-slate-700/60 text-gray-300 hover:bg-slate-700/60 transition">Tüm Kategorileri Aç</button>
+                        <button id="collapse-all" class="px-3 py-1.5 rounded-lg text-sm bg-slate-800/40 border border-slate-700/60 text-gray-300 hover:bg-slate-700/60 transition">Tümünü Kapat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {/* CALCULATOR CATEGORIES */}
+    <section class="py-16">
+        <div class="container mx-auto px-6">
+            
+            {/* Section Header */}
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center px-4 py-2 mb-6 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full">
+                    <span class="text-sm text-blue-400 font-medium">Hesaplama Kategorileri</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                    <span class="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                        Mühendislik Araçları
+                    </span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    Projelerinizde ihtiyaç duyacağınız tüm hesaplama araçları
+                </p>
+            </div>
+
+            {/* Categories Grid with filterable items + collapse + list view */}
+            <div id="categories-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                {calculatorCategories.map((category, categoryIndex) => (
+                    <div class="group relative category-card" data-category={category.title}>
+                        <div class="bg-gradient-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-xl border border-slate-700/30 rounded-3xl p-6 md:p-8 hover:border-purple-400/40 transition-all duration-700 hover:transform hover:scale-[1.01] hover:shadow-2xl hover:shadow-purple-500/20">
+                            <button class="w-full text-left flex items-center justify-between gap-4 mb-4 md:mb-6 toggle-category" aria-expanded="true">
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-400/20 to-blue-500/20 backdrop-blur-sm border border-purple-400/30 rounded-2xl flex items-center justify-center mr-3 md:mr-4 group-hover:from-purple-400/30 group-hover:to-blue-500/30 group-hover:border-purple-400/50 transition-all duration-500">
+                                        <svg class="w-7 h-7 md:w-8 md:h-8 text-purple-400 group-hover:text-purple-300 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                                            {categoryIndex === 0 && <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>}
+                                            {categoryIndex === 1 && <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>}
+                                            {categoryIndex === 2 && <path d="M9.5 16a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3M6.5 12a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3M12 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3"/>}
+                                            {categoryIndex === 3 && <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>}
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="text-lg md:text-xl font-bold text-white group-hover:text-purple-300 transition-colors duration-300">{category.title}</h3>
+                                        <p class="text-gray-400 text-sm">{category.description}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <span class="text-xs text-gray-400 bg-slate-800/60 border border-slate-700/60 rounded-full px-3 py-1 category-count">{category.calculators.length} araç</span>
+                                    <svg class="w-5 h-5 text-gray-400 chevron transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                            </button>
+
+                            <div class="space-y-3 category-items">
+                                {category.calculators.map((calc) => (
+                                    <div class="calculator-item bg-slate-700/30 hover:bg-slate-700/50 border border-slate-600/30 hover:border-purple-400/50 rounded-xl p-4 transition-all duration-300 cursor-pointer"
+                                         data-calculator={calc.id} data-name={calc.name.toLowerCase()} data-category={category.title.toLowerCase()}>
+                                        <div class="flex items-center justify-between gap-3">
+                                            <div class="min-w-0">
+                                                <h4 class="font-semibold text-white mb-1 truncate">{calc.name}</h4>
+                                                <p class="text-sm text-gray-400 line-clamp-1">{calc.description}</p>
+                                            </div>
+                                            <div class="flex items-center gap-2 shrink-0">
+                                                <span class="hidden md:inline-block text-xs text-blue-300 bg-blue-900/30 border border-blue-500/30 rounded-full px-2 py-0.5">{category.title}</span>
+                                                <svg class="w-5 h-5 text-purple-400 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-blue-500/0 to-cyan-500/0 group-hover:from-purple-500/5 group-hover:via-blue-500/5 group-hover:to-cyan-500/5 rounded-3xl transition-all duration-700 pointer-events-none"></div>
+                            <div class="absolute -inset-1 bg-gradient-to-br from-purple-500/0 to-blue-500/0 group-hover:from-purple-500/20 group-hover:to-blue-500/20 rounded-3xl blur-xl transition-all duration-700 -z-10 opacity-0 group-hover:opacity-100"></div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    {/* CALCULATOR MODAL */}
+    {/* CALCULATOR MODAL (sticky header, better spacing) */}
+    <div id="calculator-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+      <div class="bg-slate-900/95 border border-slate-700/70 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div class="sticky top-0 z-10 bg-slate-900/95 border-b border-slate-700/60 px-6 py-4 flex items-center justify-between">
+          <h3 id="modal-title" class="text-lg md:text-xl font-bold text-white">Hesaplama Aracı</h3>
+          <button id="close-modal" class="p-2 hover:bg-slate-800 rounded-lg transition-colors" aria-label="Kapat">
+            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div id="calculator-content" class="p-6 space-y-6">
+          <!-- İçerik JS ile yüklenecek -->
+        </div>
+      </div>
+    </div>
+
+</Layout>
+
+{/* Enhanced CSS for Perfect Calculator Design */}
+<style is:global>
+    /* Enhanced Calculator Styles */
+    .calculator-container {
+        opacity: 0;
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    .calculator-header {
+        position: relative;
+        z-index: 10;
+    }
+
+    .calculator-title {
+        background: linear-gradient(135deg, #ffffff, #e2e8f0);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+    }
+
+    .calculator-description {
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .calculator-input-group {
+        position: relative;
+    }
+
+    .calculator-label {
+        display: flex;
+        align-items: center;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #e2e8f0;
+        margin-bottom: 0.75rem;
+        transition: color 0.3s ease;
+    }
+
+    .calculator-label:hover {
+        color: #a855f7;
+    }
+
+    .calculator-input {
+        width: 100%;
+        padding: 0.875rem 3rem 0.875rem 0.875rem;
+        background: rgba(51, 65, 85, 0.6);
+        border: 1px solid rgba(71, 85, 105, 0.5);
+        border-radius: 0.75rem;
+        color: white;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        outline: none;
+    }
+
+    .calculator-input:focus {
+        border-color: #a855f7;
+        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+        background: rgba(51, 65, 85, 0.8);
+        transform: translateY(-1px);
+    }
+
+    .calculator-input:valid {
+        border-color: #10b981;
+    }
+
+    .calculator-input:invalid:not(:placeholder-shown) {
+        border-color: #ef4444;
+    }
+
+    .calculator-input::placeholder {
+        color: #9ca3af;
+        opacity: 0.7;
+    }
+
+    .calculator-button-container {
+        display: flex;
+        justify-content: center;
+        position: relative;
+    }
+
+    .calculator-button {
+        background: linear-gradient(135deg, #a855f7, #3b82f6);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .calculator-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s;
+    }
+
+    .calculator-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(168, 85, 247, 0.3);
+        background: linear-gradient(135deg, #9333ea, #2563eb);
+    }
+
+    .calculator-button:hover::before {
+        left: 100%;
+    }
+
+    .calculator-button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(168, 85, 247, 0.4);
+    }
+
+    .calculator-loading {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .calculator-loading-spinner {
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    .calculator-result {
+        background: linear-gradient(135deg, rgba(51, 65, 85, 0.6), rgba(71, 85, 105, 0.6));
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(71, 85, 105, 0.5);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .calculator-result::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5), transparent);
+    }
+
+    .calculator-result-title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #e2e8f0;
+        margin-bottom: 1rem;
+    }
+
+    .calculator-result-title svg {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .calculator-result-value {
+        color: #10b981;
+        text-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .calculator-result-description {
+        color: #9ca3af;
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+
+    .calculator-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+
+    .calculator-badge-primary {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(59, 130, 246, 0.2));
+        color: #a855f7;
+        border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .calculator-badge-secondary {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(251, 191, 36, 0.2));
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .calculator-formula {
+        position: relative;
+    }
+
+    .calculator-formula-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #e2e8f0;
+    }
+
+    .formula-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .formula-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(transparent, rgba(255, 255, 255, 0.1), transparent);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        animation: rotate 10s linear infinite;
+        pointer-events: none;
+    }
+
+    .formula-card:hover::before {
+        opacity: 1;
+    }
+
+    .calculator-info {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 1rem;
+        padding: 1.5rem;
+    }
+
+    .calculator-info-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #60a5fa;
+        margin-bottom: 1rem;
+    }
+
+    .calculator-info-content {
+        color: #d1d5db;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes rotate {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .calculator-fade-in {
+        opacity: 0;
+        animation: fadeIn 0.5s ease-out 0.2s forwards;
+    }
+
+    .calculator-result-appear {
+        animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    /* Input status indicators */
+    .input-status {
+        transition: all 0.3s ease;
+    }
+
+    .calculator-input:focus ~ .input-status,
+    .calculator-input:valid ~ .input-status {
+        display: block !important;
+    }
+
+    /* Responsive improvements */
+    @media (max-width: 768px) {
+        .calculator-input {
+            padding: 0.75rem 2.5rem 0.75rem 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .calculator-button {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .calculator-result {
+            padding: 1.5rem;
+        }
+
+        .calculator-result-value {
+            font-size: 1.5rem;
+        }
+    }
+
+    /* Enhanced focus states for accessibility */
+    .calculator-button:focus-visible {
+        outline: 2px solid #a855f7;
+        outline-offset: 2px;
+    }
+
+    .calculator-input:focus-visible {
+        outline: 2px solid #a855f7;
+        outline-offset: 2px;
+    }
+
+    /* Loading state */
+    .calculator-loading {
+        display: none !important;
+    }
+
+    .calculator-button:disabled .calculate-text {
+        opacity: 0;
+    }
+
+    .calculator-button:disabled .calculator-loading {
+        display: flex !important;
+    }
+
+    /* Smooth transitions */
+    * {
+        scroll-behavior: smooth;
+    }
+</style>
+
+{/* Calculator JavaScript */}
+<script is:inline>
+    // Plain JS (no TS annotations) to avoid Astro's type checker errors.
+    document.addEventListener('DOMContentLoaded', function() {
+        var modal = document.getElementById('calculator-modal');
+        var searchInput = document.getElementById('calc-search');
+        var clearSearchBtn = document.getElementById('clear-search');
+        var activeFilters = document.getElementById('active-filters');
+        var categoriesGrid = document.getElementById('categories-grid');
+        var toggleCards = document.getElementById('toggle-view-cards');
+        var toggleList = document.getElementById('toggle-view-list');
+        var expandAllBtn = document.getElementById('expand-all');
+        var collapseAllBtn = document.getElementById('collapse-all');
+        var closeModal = document.getElementById('close-modal');
+        var modalTitle = document.getElementById('modal-title');
+        var calculatorContent = document.getElementById('calculator-content');
+        var calculatorItems = document.querySelectorAll('.calculator-item');
+        var categoryCards = document.querySelectorAll('.category-card');
+        // Build simple category filter chips
+        var categories = Array.from(categoryCards).map(function(card){ return card.getAttribute('data-category'); });
+        // Deduplicate
+        categories = categories.filter(function(value, index, self){ return self.indexOf(value) === index; });
+        // Create chips
+        categories.forEach(function(cat){
+            var chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'filter-chip text-xs md:text-sm px-3 py-1 rounded-full border border-slate-700/60 text-gray-300 hover:text-white bg-slate-800/40 hover:bg-slate-700/50 transition-colors';
+            chip.textContent = cat;
+            chip.setAttribute('data-filter', cat.toLowerCase());
+            activeFilters.appendChild(chip);
+        });
+
+        // Calculator configurations
+        var calculators = {
+            'ohm': {
+                title: 'Ohm Kanunu Hesaplayıcısı',
+                content: `
+                    <div class="calculator-container space-y-8">
+                        <!-- Enhanced Header -->
+                        <div class="calculator-header text-center">
+                            <div class="flex justify-center mb-4">
+                                <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-2xl flex items-center justify-center border border-purple-400/30">
+                                    <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="calculator-title text-2xl font-bold text-white mb-3">Ohm Kanunu Hesaplayıcısı</h3>
+                            <p class="calculator-description text-gray-400">Voltaj, akım veya direnç değerlerinden ikisini girerek üçüncüsünü hesaplayın. Güç hesaplaması otomatik olarak yapılır.</p>
+                            <div class="inline-flex items-center px-4 py-2 mt-4 bg-slate-800/40 border border-slate-700/50 rounded-full text-sm text-gray-300">
+                                <svg class="w-4 h-4 mr-2 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                İki değer girmeniz yeterli
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Input Fields with Visual Indicators -->
+                        <div class="calculator-input-group grid md:grid-cols-3 gap-6">
+                            <div class="relative">
+                                <label class="calculator-label flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    Voltaj (V)
+                                </label>
+                                <div class="relative">
+                                    <input type="number" id="voltage" 
+                                           class="calculator-input peer" 
+                                           placeholder="örn: 12.0" 
+                                           step="any"
+                                           oninput="validateOhmInput(this)"
+                                           onchange="autoCalculateOhm()">
+                                    <div class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none">V</div>
+                                    <div class="input-status absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-slate-900 hidden peer-valid:block peer-valid:bg-green-400 peer-invalid:bg-red-400"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="relative">
+                                <label class="calculator-label flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                    </svg>
+                                    Akım (A)
+                                </label>
+                                <div class="relative">
+                                    <input type="number" id="current" 
+                                           class="calculator-input peer" 
+                                           placeholder="örn: 0.5" 
+                                           step="any"
+                                           oninput="validateOhmInput(this)"
+                                           onchange="autoCalculateOhm()">
+                                    <div class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none">A</div>
+                                    <div class="input-status absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-slate-900 hidden peer-valid:block peer-valid:bg-green-400 peer-invalid:bg-red-400"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="relative">
+                                <label class="calculator-label flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                    </svg>
+                                    Direnç (Ω)
+                                </label>
+                                <div class="relative">
+                                    <input type="number" id="resistance" 
+                                           class="calculator-input peer" 
+                                           placeholder="örn: 24.0" 
+                                           step="any"
+                                           oninput="validateOhmInput(this)"
+                                           onchange="autoCalculateOhm()">
+                                    <div class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none">Ω</div>
+                                    <div class="input-status absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-slate-900 hidden peer-valid:block peer-valid:bg-green-400 peer-invalid:bg-red-400"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Calculate Button with Loading State -->
+                        <div class="calculator-button-container">
+                            <button id="ohm-calculate-btn" onclick="calculateOhmEnhanced()" 
+                                    class="calculator-button px-8 py-3 text-base font-semibold rounded-xl min-w-[140px] disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span class="calculate-text">Hesapla</span>
+                                <div class="calculator-loading hidden">
+                                    <div class="calculator-loading-spinner"></div>
+                                </div>
+                            </button>
+                        </div>
+                        
+                        <!-- Clear All Button -->
+                        <div class="flex justify-center">
+                            <button onclick="clearOhmInputs()" class="text-sm text-gray-400 hover:text-white transition-colors underline decoration-dotted underline-offset-4">
+                                Tüm Değerleri Temizle
+                            </button>
+                        </div>
+                        
+                        <!-- Enhanced Results with Animations -->
+                        <div id="ohm-result-enhanced" class="hidden">
+                            <!-- Results will be populated by JavaScript -->
+                        </div>
+                        
+                        <!-- Enhanced Formula Reference with Interactive Elements -->
+                        <div class="calculator-formula bg-gradient-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6">
+                            <h4 class="calculator-formula-title mb-4">
+                                <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                </svg>
+                                Ohm Kanunu Formülleri
+                            </h4>
+                            
+                            <div class="grid md:grid-cols-3 gap-4 mb-6">
+                                <div class="formula-card group bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-400/30 rounded-xl p-4 text-center hover:from-purple-500/20 hover:to-purple-600/20 transition-all duration-300 cursor-pointer"
+                                     onclick="highlightFormula('voltage')">
+                                    <div class="font-mono text-lg font-bold text-purple-300 mb-2 group-hover:text-purple-200">V = I × R</div>
+                                    <div class="text-gray-400 text-sm group-hover:text-gray-300">Voltaj Hesaplama</div>
+                                    <div class="text-xs text-purple-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Tıklayın</div>
+                                </div>
+                                
+                                <div class="formula-card group bg-gradient-to-br from-blue-500/10 to-blue-600/10 border border-blue-400/30 rounded-xl p-4 text-center hover:from-blue-500/20 hover:to-blue-600/20 transition-all duration-300 cursor-pointer"
+                                     onclick="highlightFormula('current')">
+                                    <div class="font-mono text-lg font-bold text-blue-300 mb-2 group-hover:text-blue-200">I = V ÷ R</div>
+                                    <div class="text-gray-400 text-sm group-hover:text-gray-300">Akım Hesaplama</div>
+                                    <div class="text-xs text-blue-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Tıklayın</div>
+                                </div>
+                                
+                                <div class="formula-card group bg-gradient-to-br from-cyan-500/10 to-cyan-600/10 border border-cyan-400/30 rounded-xl p-4 text-center hover:from-cyan-500/20 hover:to-cyan-600/20 transition-all duration-300 cursor-pointer"
+                                     onclick="highlightFormula('resistance')">
+                                    <div class="font-mono text-lg font-bold text-cyan-300 mb-2 group-hover:text-cyan-200">R = V ÷ I</div>
+                                    <div class="text-gray-400 text-sm group-hover:text-gray-300">Direnç Hesaplama</div>
+                                    <div class="text-xs text-cyan-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Tıklayın</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Power Formulas -->
+                            <div class="border-t border-slate-700/50 pt-4">
+                                <h5 class="text-sm font-semibold text-gray-300 mb-3 flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                    Güç Formülleri (Otomatik Hesaplanır)
+                                </h5>
+                                <div class="grid md:grid-cols-4 gap-3 text-sm">
+                                    <div class="bg-slate-700/40 rounded-lg p-3 text-center">
+                                        <div class="font-mono text-yellow-300 font-semibold text-sm">P = V × I</div>
+                                        <div class="text-gray-400 text-xs mt-1">Temel</div>
+                                    </div>
+                                    <div class="bg-slate-700/40 rounded-lg p-3 text-center">
+                                        <div class="font-mono text-yellow-300 font-semibold text-sm">P = V² ÷ R</div>
+                                        <div class="text-gray-400 text-xs mt-1">Voltaj</div>
+                                    </div>
+                                    <div class="bg-slate-700/40 rounded-lg p-3 text-center">
+                                        <div class="font-mono text-yellow-300 font-semibold text-sm">P = I² × R</div>
+                                        <div class="text-gray-400 text-xs mt-1">Akım</div>
+                                    </div>
+                                    <div class="bg-slate-700/40 rounded-lg p-3 text-center">
+                                        <div class="font-mono text-green-300 font-semibold text-sm">E = P × t</div>
+                                        <div class="text-gray-400 text-xs mt-1">Enerji</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Tips -->
+                        <div class="calculator-info">
+                            <div class="calculator-info-title">
+                                <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                                Hızlı İpuçları
+                            </div>
+                            <div class="calculator-info-content">
+                                <ul class="space-y-2 text-sm">
+                                    <li class="flex items-start">
+                                        <span class="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span>Herhangi iki değeri girin, üçüncüsü otomatik hesaplanacaktır</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span>Formül kartlarına tıklayarak ilgili alanları vurgulayabilirsiniz</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span>Güç değeri tüm hesaplamalarda otomatik olarak gösterilir</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            'power': {
+                title: 'Güç Hesaplayıcısı (Kapsamlı)',
+                content: `
+                    <div class="calculator-container space-y-8">
+                        <!-- Enhanced Header -->
+                        <div class="calculator-header text-center">
+                            <div class="flex justify-center mb-4">
+                                <div class="w-16 h-16 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl flex items-center justify-center border border-yellow-400/30">
+                                    <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M13 3h-2v10h2V3zM17.83 5.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.59-5.41L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 class="calculator-title text-2xl font-bold text-white mb-3">Güç Hesaplayıcısı</h3>
+                            <p class="calculator-description text-gray-400">DC, AC tek faz, AC üç faz güç hesaplamaları ve verimlilik analizi. Kapsamlı elektrik güç hesaplama aracı.</p>
+                        </div>
+                        
+                        <!-- DC Basic -->
+                        <div class="bg-gradient-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6 space-y-6">
+                            <h4 class="calculator-formula-title text-lg font-semibold text-white flex items-center">
+                                <svg class="w-5 h-5 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                                DC Temel Güç Hesaplama
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div class="relative">
+                                    <label class="calculator-label flex items-center">
+                                        <svg class="w-4 h-4 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                        </svg>
+                                        V (Volt)
+                                    </label>
+                                    <input type="number" id="pdc-v" class="calculator-input" step="any" placeholder="örn: 12">
+                                </div>
+                                <div class="relative">
+                                    <label class="calculator-label flex items-center">
+                                        <svg class="w-4 h-4 mr-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                        </svg>
+                                        I (Ampere)
+                                    </label>
+                                    <input type="number" id="pdc-i" class="calculator-input" step="any" placeholder="örn: 0.5">
+                                </div>
+                                <div class="relative">
+                                    <label class="calculator-label flex items-center">
+                                        <svg class="w-4 h-4 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                        </svg>
+                                        R (Ohm)
+                                    </label>
+                                    <input type="number" id="pdc-r" class="calculator-input" step="any" placeholder="opsiyonel">
+                                </div>
+                                <div class="flex items-end">
+                                    <button onclick="calcPowerDC()" class="calculator-button w-full px-6 py-3 text-base font-semibold rounded-xl">
+                                        <span class="calculate-text">Hesapla</span>
+                                        <div class="calculator-loading hidden">
+                                            <div class="calculator-loading-spinner"></div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="pdc-out" class="calculator-result hidden"></div>
+                        </div>
+
+                        <!-- AC Single-Phase -->
+                        <div class="bg-gradient-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6 space-y-6">
+                            <h4 class="calculator-formula-title text-lg font-semibold text-white flex items-center">
+                                <svg class="w-5 h-5 text-green-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L9 7V9L15 15L21 9Z"/>
+                                </svg>
+                                AC Tek Faz Güç Hesaplama
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                                <div>
+                                    <label class="calculator-label flex items-center">
+                                        <svg class="w-4 h-4 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                        </svg>
+                                        V<sub>RMS</sub> (V)
+                                    </label>
+                                    <input type="number" id="pac1-v" class="calculator-input" step="any">
+                                </div>
+                                <div>
+                                    <label class="calculator-label flex items-center">
+                                        <svg class="w-4 h-4 mr-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                        </svg>
+                                        I<sub>RMS</sub> (A)
+                                    </label>
+                                    <input type="number" id="pac1-i" class="calculator-input" step="any">
+                                </div>
+                                <div>
+                                    <label class="calculator-label flex items-center">
+                                        <svg class="w-4 h-4 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                        </svg>
+                                        Güç Faktörü (PF)
+                                    </label>
+                                    <input type="number" id="pac1-pf" class="calculator-input" value="0.9" step="any" min="0" max="1">
+                                </div>
+                                <div>
+                                    <label class="calculator-label flex items-center">
+                                        <svg class="w-4 h-4 mr-2 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                        </svg>
+                                        Cosφ türü
+                                    </label>
+                                    <select id="pac1-type" class="calculator-input">
+                                        <option value="lagging">Endüktif (lagging)</option>
+                                        <option value="leading">Kapasitif (leading)</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2 flex items-end">
+                                    <button onclick="calcPowerAC1()" class="calculator-button w-full px-6 py-3 text-base font-semibold rounded-xl">
+                                        <span class="calculate-text">Hesapla</span>
+                                        <div class="calculator-loading hidden">
+                                            <div class="calculator-loading-spinner"></div>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="pac1-out" class="calculator-result hidden"></div>
+                        </div>
+
+                        <!-- AC Three-Phase -->
+                        <div class="bg-slate-700/30 rounded-lg p-4 space-y-4">
+                            <h4 class="text-white font-semibold">AC Üç Faz (Dengeli)</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">V<sub>L-L</sub> (V)</label>
+                                    <input type="number" id="pac3-vll" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="Hat-hat" step="any">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">I<sub>faz</sub> (A)</label>
+                                    <input type="number" id="pac3-i" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">PF</label>
+                                    <input type="number" id="pac3-pf" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="0.9" step="any" min="0" max="1">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Bağlantı</label>
+                                    <select id="pac3-conn" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                                        <option value="wye">Yıldız (Wye)</option>
+                                        <option value="delta">Üçgen (Delta)</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2 flex items-end">
+                                    <button onclick="calcPowerAC3()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                                </div>
+                            </div>
+                            <div id="pac3-out" class="text-sm text-green-300"></div>
+                        </div>
+
+                        <!-- Efficiency + Dissipation -->
+                        <div class="bg-slate-700/30 rounded-lg p-4 space-y-4">
+                            <h4 class="text-white font-semibold">Verimlilik ve Isı Dağılımı</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">P<sub>in</sub> (W)</label>
+                                    <input type="number" id="peff-pin" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Verim (%)</label>
+                                    <input type="number" id="peff-eff" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="85" step="any">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Linear Reg. (Vin, Vout, Iout)</label>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <input type="number" id="lin-vin" class="px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="Vin" step="any">
+                                        <input type="number" id="lin-vout" class="px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="Vout" step="any">
+                                        <input type="number" id="lin-iout" class="px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="Iout (A)" step="any">
+                                    </div>
+                                </div>
+                                <div class="md:col-span-2 flex items-end">
+                                    <button onclick="calcPowerEfficiency()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                                </div>
+                            </div>
+                            <div id="peff-out" class="text-sm text-green-300"></div>
+                        </div>
+
+                        <div class="bg-slate-700/50 rounded-lg p-4">
+                            <h4 class="font-semibold text-white mb-2">Formüller:</h4>
+                            <p class="text-gray-300">DC: P = V × I; P = V²/R; P = I² × R</p>
+                            <p class="text-gray-300">AC Tek Faz: S = V<sub>rms</sub>I<sub>rms</sub> (VA), P = S·PF (W), Q = √(S²−P²) (var)</p>
+                            <p class="text-gray-300">AC Üç Faz: S = √3·V<sub>L-L</sub>·I<sub>faz</sub> (VA), P = S·PF</p>
+                            <p class="text-gray-300">Linear Reg: P<sub>diss</sub> = (V<sub>in</sub>−V<sub>out</sub>)·I<sub>out</sub></p>
+                        </div>
+                    </div>
+                `
+            },
+            'frequency': {
+                title: 'Frekans Dönüştürücü',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Değer</label>
+                                <input type="number" id="freq-value" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Frekans değeri">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Birim</label>
+                                <select id="freq-unit" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="hz">Hz</option>
+                                    <option value="khz">kHz</option>
+                                    <option value="mhz">MHz</option>
+                                    <option value="ghz">GHz</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex justify-center">
+                            <button onclick="convertFrequency()" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-6 py-2 rounded-lg text-white font-medium transition-all duration-300">
+                                Dönüştür
+                            </button>
+                        </div>
+                        <div id="frequency-results" class="space-y-2"></div>
+                    </div>
+                `
+            },
+            'period': {
+                title: 'Periyot Hesaplayıcı',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Frekans (Hz)</label>
+                                <input type="number" id="period-f" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 1000">
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="calcPeriod()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                            </div>
+                        </div>
+                        <div id="period-result" class="text-center text-lg font-semibold text-green-400"></div>
+                    </div>
+                `
+            },
+            'decibel': {
+                title: 'dB Hesaplayıcı',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Oran Türü</label>
+                                <select id="db-type" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                                    <option value="power">Güç Oranı</option>
+                                    <option value="amplitude">Genlik/Voltaj Oranı</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Giriş 1</label>
+                                <input type="number" id="db-a" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Giriş 2</label>
+                                <input type="number" id="db-b" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                        </div>
+                        <div class="flex justify-center">
+                            <button onclick="calcDb()" class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                        </div>
+                        <div id="db-result" class="text-center text-lg font-semibold text-green-400"></div>
+                    </div>
+                `
+            },
+            'wavelength': {
+                title: 'Dalga Boyu',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Frekans (Hz)</label>
+                                <input type="number" id="wl-f" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Işık Hızı (m/s)</label>
+                                <input type="number" id="wl-c" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="299792458" step="any">
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="calcWavelength()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                            </div>
+                        </div>
+                        <div id="wl-result" class="text-center text-lg font-semibold text-green-400"></div>
+                    </div>
+                `
+            },
+            'number-base': {
+                title: 'Sayı Sistemi Dönüştürücü',
+                content: `
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Değer</label>
+                            <input type="text" id="number-input" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Sayı girin">
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button onclick="convertFromBase(10)" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-white transition-colors">Decimal</button>
+                            <button onclick="convertFromBase(2)" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-white transition-colors">Binary</button>
+                            <button onclick="convertFromBase(16)" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-white transition-colors">Hex</button>
+                            <button onclick="convertFromBase(8)" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-white transition-colors">Octal</button>
+                        </div>
+                        <div id="number-results" class="space-y-2"></div>
+                    </div>
+                `
+            },
+            'data-size': {
+                title: 'Veri Boyutu Dönüştürücü',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Değer</label>
+                                <input type="number" id="ds-value" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Birim</label>
+                                <select id="ds-unit" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                                    <option value="B">Byte</option>
+                                    <option value="KB">KB</option>
+                                    <option value="MB">MB</option>
+                                    <option value="GB">GB</option>
+                                    <option value="TB">TB</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="convertDataSize()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Dönüştür</button>
+                            </div>
+                        </div>
+                        <div id="ds-result" class="space-y-1"></div>
+                    </div>
+                `
+            },
+            'wifi-range': {
+                title: 'WiFi Mesafe (Serbest Uzay + Rx Hassasiyet + Marj)',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">P<sub>t</sub> (dBm)</label>
+                                <input type="number" id="wifi-pt" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="0" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">G<sub>t</sub> (dBi)</label>
+                                <input type="number" id="wifi-gt" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="2" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">G<sub>r</sub> (dBi)</label>
+                                <input type="number" id="wifi-gr" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="2" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Bant</label>
+                                <select id="wifi-band" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                                    <option value="2400">2.4 GHz</option>
+                                    <option value="5200">5 GHz (ör: 5.2)</option>
+                                    <option value="5800">5.8 GHz</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Rx Hass. (dBm)</label>
+                                <input type="number" id="wifi-sens" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="-90" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Ek Marj (dB)</label>
+                                <input type="number" id="wifi-margin" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="10" step="any">
+                            </div>
+                        </div>
+                        <div class="flex justify-center gap-3">
+                            <button onclick="calcWifiRange()" class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                        </div>
+                        <div id="wifi-result" class="text-center text-lg font-semibold text-green-400"></div>
+                        <div class="text-xs text-gray-400 text-center">Model: Serbest uzay FSPL + marj. Yansımalar/duvarlar için marj (dB) girin.</div>
+                    </div>
+                `
+            },
+            'rf-friis': {
+                title: 'RF Friis Bağlantı (Serbest Uzay)',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">P<sub>t</sub> (dBm)</label>
+                                <input type="number" id="friis-pt" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="örn: 0">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">G<sub>t</sub> (dBi)</label>
+                                <input type="number" id="friis-gt" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="örn: 2">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">G<sub>r</sub> (dBi)</label>
+                                <input type="number" id="friis-gr" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="örn: 2">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">f (MHz)</label>
+                                <input type="number" id="friis-fmhz" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="örn: 2400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">d (km)</label>
+                                <input type="number" id="friis-dkm" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="örn: 0.1">
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="calcFriis()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                            </div>
+                        </div>
+                        <div id="friis-result" class="text-center text-lg font-semibold text-green-400"></div>
+                        <div class="text-xs text-gray-400 text-center">FSPL(dB) ≈ 32.44 + 20log₁₀(f[MHz]) + 20log₁₀(d[km])</div>
+                    </div>
+                `
+            },
+            'crc': {
+                title: 'CRC Hesaplama (CRC-8/CRC-16/CRC-32)',
+                content: `
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Girdi (Hex veya ASCII)</label>
+                            <input type="text" id="crc-input" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 01 A0 FF veya TEXT">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">CRC Türü</label>
+                                <select id="crc-type" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                                    <option value="crc8">CRC-8 (poly 0x07)</option>
+                                    <option value="crc16">CRC-16-IBM (poly 0xA001)</option>
+                                    <option value="crc32">CRC-32 (poly 0xEDB88320)</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="calcCRC()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                            </div>
+                        </div>
+                        <div id="crc-result" class="text-center text-lg font-semibold text-green-400"></div>
+                    </div>
+                `
+            },
+            'hash': {
+                title: 'Hash Hesaplama (MD5 / SHA-1 / SHA-256)',
+                content: `
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Metin</label>
+                            <textarea id="hash-input" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" rows="4" placeholder="Hash alınacak metni girin"></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <button onclick="calcHash('MD5')" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-white">MD5</button>
+                            <button onclick="calcHash('SHA-1')" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-white">SHA-1</button>
+                            <button onclick="calcHash('SHA-256')" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-white">SHA-256</button>
+                            <button onclick="calcHash('SHA-512')" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-white">SHA-512</button>
+                        </div>
+                        <div id="hash-result" class="break-all text-xs md:text-sm text-green-300 bg-slate-800/50 p-3 rounded-lg border border-slate-700/60"></div>
+                        <div class="text-xs text-gray-400">Tarayıcı destekli Web Crypto API kullanılır; MD5 için fallback JS uygulanır.</div>
+                    </div>
+                `
+            },
+            'temperature': {
+                title: 'Sıcaklık Dönüştürücü',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Değer</label>
+                                <input type="number" id="temp-value" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Sıcaklık değeri">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Kaynak Birim</label>
+                                <select id="temp-from" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                    <option value="celsius">Celsius (°C)</option>
+                                    <option value="fahrenheit">Fahrenheit (°F)</option>
+                                    <option value="kelvin">Kelvin (K)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex justify-center">
+                            <button onclick="convertTemperature()" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-6 py-2 rounded-lg text-white font-medium transition-all duration-300">
+                                Dönüştür
+                            </button>
+                        </div>
+                        <div id="temperature-results" class="space-y-2"></div>
+                    </div>
+                `
+            },
+            'awg': {
+                title: 'AWG Dönüşüm Hesaplayıcısı',
+                content: `
+                    <div class="space-y-6">
+                        <div class="bg-orange-900/20 border border-orange-500/30 rounded-lg p-4 mb-6">
+                            <div class="flex items-center mb-3">
+                                <svg class="w-5 h-5 text-orange-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                                <h4 class="text-orange-300 font-medium">American Wire Gauge (AWG) Dönüştürücü</h4>
+                            </div>
+                            <p class="text-orange-200 text-sm">
+                                AWG numaraları, çap (mm/mil), kesit alanı (mm²/kcmil) ve akım taşıma kapasitesi arasında dönüşüm yapın.
+                            </p>
+                        </div>
+                        
+                        <!-- Input Section -->
+                        <div class="bg-slate-700/30 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-white mb-4">Giriş Parametreleri</h3>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Giriş Türü</label>
+                                    <select id="awg-input-type" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        <option value="awg">AWG Numarası</option>
+                                        <option value="diameter-mm">Çap (mm)</option>
+                                        <option value="diameter-mil">Çap (mil)</option>
+                                        <option value="area-mm2">Kesit Alanı (mm²)</option>
+                                        <option value="area-kcmil">Kesit Alanı (kcmil)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Değer</label>
+                                    <input type="number" id="awg-input-value" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Değer girin" step="any">
+                                </div>
+                            </div>
+                            <div class="flex justify-center mt-6">
+                                <button onclick="calculateAWG()" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-8 py-3 rounded-lg text-white font-semibold transition-all duration-300">
+                                    Hesapla
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Results Section -->
+                        <div id="awg-results" class="hidden">
+                            <div class="bg-slate-700/30 rounded-lg p-6">
+                                <h3 class="text-lg font-semibold text-white mb-4">Dönüşüm Sonuçları</h3>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="bg-blue-800/20 border border-blue-500/30 rounded-lg p-4">
+                                        <h4 class="font-medium text-blue-300 mb-3">Temel Özellikler</h4>
+                                        <div id="awg-basic-results" class="text-sm text-blue-200"></div>
+                                    </div>
+                                    <div class="bg-green-800/20 border border-green-500/30 rounded-lg p-4">
+                                        <h4 class="font-medium text-green-300 mb-3">Akım Kapasitesi</h4>
+                                        <div id="awg-current-results" class="text-sm text-green-200"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-700/30 rounded-lg p-4">
+                            <h4 class="font-semibold text-white mb-3">AWG Hakkında:</h4>
+                            <ul class="text-gray-300 text-sm space-y-1 list-disc list-inside">
+                                <li>AWG (American Wire Gauge) Amerikan tel ölçü sistemidir</li>
+                                <li>Numara arttıkça tel çapı azalır (ters orantılı)</li>
+                                <li>Her 3 AWG numarasında çap yaklaşık 2 kat değişir</li>
+                                <li>Akım kapasitesi sıcaklık ve kurulum koşullarına bağlıdır</li>
+                                <li>Verilen akım değerleri 30°C ortam sıcaklığı içindir</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            'i2c-pullup': {
+                title: 'I2C Pull-up Direnci Önerisi',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Toplam Kapasitans (pF)</label>
+                                <input type="number" id="i2c-cpf" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 100" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Rise Time Limit (ns)</label>
+                                <input type="number" id="i2c-tr" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 300" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Vlogic (V)</label>
+                                <input type="number" id="i2c-v" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="3.3" step="any">
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="calcI2CPullup()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                            </div>
+                        </div>
+                        <div id="i2c-result" class="text-center text-lg font-semibold text-green-400"></div>
+                        <div class="text-xs text-gray-400 text-center">Yaklaşık: Rmax ≈ Tr / (0.8473 · C). EMI ve akım sınırları için Rmin de göz önünde bulundurulmalıdır.</div>
+                    </div>
+                `
+            },
+            'uart-baud': {
+                title: 'UART Baud Hatası',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Saat (Hz)</label>
+                                <input type="number" id="uart-clk" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 16000000">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">İstenen Baud</label>
+                                <input type="number" id="uart-baud" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 115200">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Örnekleme (oversample)</label>
+                                <input type="number" id="uart-ovs" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="16">
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="calcUartError()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                            </div>
+                        </div>
+                        <div id="uart-result" class="text-center text-lg font-semibold text-green-400"></div>
+                        <div class="text-xs text-gray-400 text-center">Bağlı donanıma göre baud toleransı değişir (±%2–3 tipik).</div>
+                    </div>
+                `
+            },
+            'rc-time': {
+                title: 'RC Zaman Sabiti',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">R (Ω)</label>
+                                <input type="number" id="rc-r" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">C (F)</label>
+                                <input type="number" id="rc-c" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="calcRCTime()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                            </div>
+                        </div>
+                        <div id="rc-result" class="text-center text-lg font-semibold text-green-400"></div>
+                        <div class="text-sm text-gray-300 bg-slate-700/50 rounded-lg p-4">
+                            τ = R × C; %63 (1τ), %86 (2τ), %95 (3τ), %98 (4τ), %99.3 (5τ)
+                        </div>
+                    </div>
+                `
+            },
+            'led-resistor': {
+                title: 'LED Direnç Hesaplama',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">V<sub>kaynak</sub> (V)</label>
+                                <input type="number" id="led-vs" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">V<sub>f</sub> (V)</label>
+                                <input type="number" id="led-vf" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="örn: 2.0">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">I (mA)</label>
+                                <input type="number" id="led-i" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="örn: 10">
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="calcLedRes()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                            </div>
+                        </div>
+                        <div id="led-result" class="text-center text-lg font-semibold text-green-400"></div>
+                    </div>
+                `
+            },
+            'resistor-combine': {
+                title: 'Direnç Seri/Paralel',
+                content: `
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Değerler (Ω) - virgülle ayırın</label>
+                            <input type="text" id="res-list" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 1000, 2200, 4700">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="calcResSeries()" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-white">Seri</button>
+                            <button onclick="calcResParallel()" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-white">Paralel</button>
+                        </div>
+                        <div id="res-combine-result" class="text-center text-lg font-semibold text-green-400"></div>
+                    </div>
+                `
+            },
+            'reactive': {
+                title: 'Reaktif Empedans (Xc, Xl)',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Frekans (Hz)</label>
+                                <input type="number" id="rx-f" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">C (F)</label>
+                                <input type="number" id="rx-c" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">L (H)</label>
+                                <input type="number" id="rx-l" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                        </div>
+                        <div class="flex justify-center">
+                            <button onclick="calcReactive()" class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                        </div>
+                        <div id="rx-result" class="text-center text-lg font-semibold text-green-400"></div>
+                    </div>
+                `
+            },
+            'divider-load': {
+                title: 'Voltaj Bölücü (Yük Etkisiyle)',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Vin (V)</label>
+                                <input type="number" id="vd-vin" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">R1 (Ω)</label>
+                                <input type="number" id="vd-r1" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="üstteki">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">R2 (Ω)</label>
+                                <input type="number" id="vd-r2" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="alttaki">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">R<sub>yük</sub> (Ω)</label>
+                                <input type="number" id="vd-rl" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="opsiyonel">
+                            </div>
+                        </div>
+                        <div class="flex justify-center">
+                            <button onclick="calcDividerLoad()" class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                        </div>
+                        <div id="vd-result" class="text-center text-lg font-semibold text-green-400"></div>
+                        <div class="text-sm text-gray-300 bg-slate-700/50 rounded-lg p-4">
+                            Vout = Vin * R2 / (R1 + R2) (yük yokken). Yük varsa R2 // R<sub>yük</sub> alınır.
+                        </div>
+                    </div>
+                `
+            },
+            'pwm': {
+                title: 'PWM Zaman Çözünürlüğü',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Timer Saat (Hz)</label>
+                                <input type="number" id="pwm-fclk" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 72e6">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Prescaler</label>
+                                <input type="number" id="pwm-psc" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="1">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Sayım Üst Sınırı (ARR)</label>
+                                <input type="number" id="pwm-arr" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="calcPwm()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                            </div>
+                        </div>
+                        <div id="pwm-result" class="text-center text-lg font-semibold text-green-400"></div>
+                        <div class="text-sm text-gray-300 bg-slate-700/50 rounded-lg p-4">
+                            f<sub>PWM</sub> = f<sub>clk</sub> / (PSC × (ARR+1)); Duty çözünürlüğü ≈ 1/(ARR+1)
+                        </div>
+                    </div>
+                `
+            },
+            'adc': {
+                title: 'ADC Çözünürlük',
+                content: `
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Bit Sayısı (N)</label>
+                                <input type="number" id="adc-n" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="12">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Vref (V)</label>
+                                <input type="number" id="adc-vref" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="3.3" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Giriş (V)</label>
+                                <input type="number" id="adc-vin" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="calcAdc()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                            </div>
+                        </div>
+                        <div id="adc-result" class="text-center text-lg font-semibold text-green-400"></div>
+                    </div>
+                `
+            },
+            'battery': {
+                title: 'Pil Ömrü Tahmini (Gelişmiş)',
+                content: `
+                    <div class="space-y-6">
+                        <div class="bg-slate-700/30 rounded-lg p-4">
+                            <h4 class="text-white font-semibold mb-2">Model</h4>
+                            <p class="text-gray-300 text-sm">
+                                Periyodik iş döngüsü: her periyotta T<sub>on</sub> süresince I<sub>on</sub>, T<sub>sleep</sub> süresince I<sub>sleep</sub> çekilir.
+                                Ortalama akım Ī = (I<sub>on</sub>·T<sub>on</sub> + I<sub>sleep</sub>·T<sub>sleep</sub>)/(T<sub>on</sub>+T<sub>sleep</sub>).
+                                DC/DC verimliliği η ile pil akımı Ī/η olur. Güvenlik payı s% ile efektif kapasite C<sub>eff</sub>=C·(1−s/100).
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Kapasite (mAh)</label>
+                                <input type="number" id="bat-cap" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 2400">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">I<sub>on</sub> (mA)</label>
+                                <input type="number" id="bat-ion" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 80" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">T<sub>on</sub> (s)</label>
+                                <input type="number" id="bat-ton" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 0.2" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">I<sub>sleep</sub> (µA)</label>
+                                <input type="number" id="bat-isleep-ua" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 50" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">T<sub>sleep</sub> (s)</label>
+                                <input type="number" id="bat-tsleep" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 59.8" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">η (Verim, %)</label>
+                                <input type="number" id="bat-eff" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="90" step="any">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Güvenlik Payı (%)</label>
+                                <input type="number" id="bat-safety" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="20" step="any">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Paralel Hücre</label>
+                                <input type="number" id="bat-npar" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="1" step="1" min="1">
+                            </div>
+                            <div class="md:col-span-4 flex items-end">
+                                <button onclick="calcBatteryAdvanced()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                            </div>
+                        </div>
+                        <div id="bat-result" class="text-center text-lg font-semibold text-green-400"></div>
+                        <div class="text-xs text-gray-400 text-center">Not: Gerçek pil ömrü sıcaklık, deşarj oranı (Peukert), kesme gerilimi ve yaşlanmaya bağlıdır.</div>
+                    </div>
+                `
+            },
+            'lt3045-vpgf': {
+                title: 'LT3045/LT3094 VPGF Hesaplayıcısı',
+                content: `
+                    <div class="space-y-6">
+                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-6">
+                            <div class="flex items-center mb-3">
+                                <svg class="w-5 h-5 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                                <h4 class="text-blue-300 font-medium">Profesyonel Gerilim Bölücü Hesaplayıcısı</h4>
+                            </div>
+                            <p class="text-blue-200 text-sm">
+                                Bu araç Linear Technology LT3045 ve LT3094 regülatörleri için VPGF pininin gerilim bölücü hesaplamalarını yapar. 
+                                Standart direnç değerleri (E24 serisi) önerir ve gerçek voltaj sapmaları gösterir.
+                            </p>
+                        </div>
+                        
+                        <!-- Input Section -->
+                        <div class="bg-slate-700/30 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-white mb-4">Giriş Parametreleri</h3>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">Çıkış Gerilimi (Vout) [V]</label>
+                                        <input type="number" id="lt3045-vout" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="örn: 12">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">Bilinen Direnç Değeri</label>
+                                        <div class="space-y-4">
+                                            <!-- Resistor Selection Row -->
+                                            <div class="grid grid-cols-12 gap-3 items-center">
+                                                <div class="col-span-4">
+                                                    <select id="lt3045-known-resistor" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                                        <option value="R1">R1</option>
+                                                        <option value="R2">R2</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-span-4">
+                                                    <input type="number" id="lt3045-known-value" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="10" step="0.1" style="color: white !important;">
+                                                </div>
+                                                <div class="col-span-4">
+                                                    <select id="lt3045-known-unit" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                                        <option value="ohm">Ω (Ohm)</option>
+                                                        <option value="kohm" selected>kΩ (Kilo-ohm)</option>
+                                                        <option value="Mohm">MΩ (Mega-ohm)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Mobile-friendly stacked version -->
+                                            <div class="sm:hidden space-y-3">
+                                                <div class="flex items-center gap-2">
+                                                    <label class="text-sm text-gray-400 min-w-[60px]">Direnç:</label>
+                                                    <select id="lt3045-known-resistor-mobile" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                                        <option value="R1">R1</option>
+                                                        <option value="R2">R2</option>
+                                                    </select>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <label class="text-sm text-gray-400 min-w-[60px]">Değer:</label>
+                                                    <input type="number" id="lt3045-known-value-mobile" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="10" step="0.1" style="color: white !important;">
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <label class="text-sm text-gray-400 min-w-[60px]">Birim:</label>
+                                                    <select id="lt3045-known-unit-mobile" class="flex-1 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                                        <option value="ohm">Ω (Ohm)</option>
+                                                        <option value="kohm" selected>kΩ (Kilo-ohm)</option>
+                                                        <option value="Mohm">MΩ (Mega-ohm)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">V<sub>PGFB</sub> Minimum [V]</label>
+                                        <input type="number" id="lt3045-vpgfb-min" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="örn: 0.301">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">V<sub>PGFB</sub> Maksimum [V]</label>
+                                        <input type="number" id="lt3045-vpgfb-max" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="örn: 0.311">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-center mt-6">
+                                <button onclick="calculateLT3045()" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-8 py-3 rounded-lg text-white font-semibold transition-all duration-300">
+                                    Hesapla
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Results Section -->
+                        <div id="lt3045-results" class="hidden">
+                            <div class="bg-slate-700/30 rounded-lg p-6">
+                                <h3 class="text-lg font-semibold text-white mb-4">Hesaplama Sonuçları</h3>
+                                
+                                <!-- Theoretical Results -->
+                                <div class="mb-6">
+                                    <h4 class="font-medium text-gray-300 mb-3">Teorik Değerler</h4>
+                                    <div class="grid md:grid-cols-2 gap-4">
+                                        <div class="bg-blue-800/20 border border-blue-500/30 rounded-lg p-4">
+                                            <h5 class="font-medium text-blue-300 mb-2">Minimum Durum</h5>
+                                            <div id="lt3045-theoretical-min" class="text-sm text-blue-200"></div>
+                                        </div>
+                                        <div class="bg-purple-800/20 border border-purple-500/30 rounded-lg p-4">
+                                            <h5 class="font-medium text-purple-300 mb-2">Maksimum Durum</h5>
+                                            <div id="lt3045-theoretical-max" class="text-sm text-purple-200"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Standard Resistor Recommendations -->
+                                <div class="mb-6">
+                                    <h4 class="font-medium text-gray-300 mb-3">Standart Direnç Önerileri (E24 Serisi)</h4>
+                                    <div class="grid md:grid-cols-2 gap-4">
+                                        <div class="bg-green-800/20 border border-green-500/30 rounded-lg p-4">
+                                            <h5 class="font-medium text-green-300 mb-2">Minimum Konfigürasyon</h5>
+                                            <div id="lt3045-standard-min" class="text-sm text-green-200"></div>
+                                        </div>
+                                        <div class="bg-orange-800/20 border border-orange-500/30 rounded-lg p-4">
+                                            <h5 class="font-medium text-orange-300 mb-2">Maksimum Konfigürasyon</h5>
+                                            <div id="lt3045-standard-max" class="text-sm text-orange-200"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Circuit Diagram -->
+                                <div class="bg-slate-800/50 rounded-lg p-4">
+                                    <h4 class="font-medium text-gray-300 mb-3">Devre Şeması</h4>
+                                    <div class="text-center">
+                                        <div class="inline-block bg-slate-700 p-4 rounded-lg border border-slate-600">
+                                            <div class="text-sm font-mono text-gray-300 space-y-1">
+                                                <div id="lt3045-circuit-diagram"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-700/30 rounded-lg p-4">
+                            <h4 class="font-semibold text-white mb-3">Kullanım Talimatları:</h4>
+                            <ul class="text-gray-300 text-sm space-y-1 list-disc list-inside">
+                                <li>Hedef çıkış gerilimini (Vout) girin</li>
+                                <li>Bilinen direnç değerini (R1 veya R2) seçin ve değerini girin</li>
+                                <li>VPGFB minimum ve maksimum gerilim değerlerini girin</li>
+                                <li>Hesapla butonuna tıklayın</li>
+                                <li>Sistem size teorik ve standart direnç öneriler verecektir</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // Calculator functions
+        window.calculateOhm = function() {
+            var voltageEl = document.getElementById('voltage');
+            var currentEl = document.getElementById('current');
+            var resistanceEl = document.getElementById('resistance');
+            var result = document.getElementById('ohm-result');
+            if (!voltageEl || !currentEl || !resistanceEl || !result) return;
+            var voltage = parseFloat(voltageEl.value);
+            var current = parseFloat(currentEl.value);
+            var resistance = parseFloat(resistanceEl.value);
+
+            let message = '';
+            
+            if (!isNaN(voltage) && !isNaN(current)) {
+                const calculatedR = voltage / current;
+                message += `Direnç: ${calculatedR.toFixed(3)} Ω<br>`;
+            }
+            if (!isNaN(voltage) && !isNaN(resistance)) {
+                const calculatedI = voltage / resistance;
+                message += `Akım: ${calculatedI.toFixed(3)} A<br>`;
+            }
+            if (!isNaN(current) && !isNaN(resistance)) {
+                const calculatedV = current * resistance;
+                message += `Voltaj: ${calculatedV.toFixed(3)} V<br>`;
+            }
+            
+            result.innerHTML = message || 'Lütfen en az iki değer girin.';
+        };
+
+        // Enhanced Ohm calculator with modern UI
+        window.calculateOhmEnhanced = function() {
+            var voltageEl = document.getElementById('voltage');
+            var currentEl = document.getElementById('current');
+            var resistanceEl = document.getElementById('resistance');
+            var result = document.getElementById('ohm-result-enhanced');
+            if (!voltageEl || !currentEl || !resistanceEl || !result) return;
+            
+            var voltage = parseFloat(voltageEl.value);
+            var current = parseFloat(currentEl.value);
+            var resistance = parseFloat(resistanceEl.value);
+            
+            var validInputs = 0;
+            var calculations = [];
+            
+            if (!isNaN(voltage)) validInputs++;
+            if (!isNaN(current)) validInputs++;
+            if (!isNaN(resistance)) validInputs++;
+            
+            if (validInputs < 2) {
+                result.style.display = 'none';
+                return;
+            }
+            
+            // Calculate missing values
+            if (!isNaN(voltage) && !isNaN(current)) {
+                const calculatedR = voltage / current;
+                const power = voltage * current;
+                calculations.push({
+                    title: 'Hesaplanan Direnç',
+                    value: `${calculatedR.toFixed(4)} Ω`,
+                    formula: 'R = V ÷ I',
+                    power: `Güç: ${power.toFixed(3)} W`
+                });
+            }
+            if (!isNaN(voltage) && !isNaN(resistance)) {
+                const calculatedI = voltage / resistance;
+                const power = voltage * calculatedI;
+                calculations.push({
+                    title: 'Hesaplanan Akım',
+                    value: `${calculatedI.toFixed(6)} A`,
+                    formula: 'I = V ÷ R',
+                    power: `Güç: ${power.toFixed(3)} W`
+                });
+            }
+            if (!isNaN(current) && !isNaN(resistance)) {
+                const calculatedV = current * resistance;
+                const power = calculatedV * current;
+                calculations.push({
+                    title: 'Hesaplanan Voltaj',
+                    value: `${calculatedV.toFixed(4)} V`,
+                    formula: 'V = I × R',
+                    power: `Güç: ${power.toFixed(3)} W`
+                });
+            }
+            
+            if (calculations.length === 0) {
+                result.style.display = 'none';
+                return;
+            }
+            
+            // Generate result HTML with proper styling
+            var html = calculations.map(function(calc, index) {
+                return `
+                    <div class="calculator-result mb-4 calculator-fade-in">
+                        <div class="calculator-result-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="text-green-400">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            ${calc.title}
+                        </div>
+                        <div class="calculator-result-value text-2xl font-bold mb-2">${calc.value}</div>
+                        <div class="calculator-result-description">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="calculator-badge calculator-badge-primary">Formül</span>
+                                <span class="font-mono text-sm">${calc.formula}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="calculator-badge calculator-badge-secondary">Güç</span>
+                                <span class="text-yellow-400 font-semibold">${calc.power}</span>
+                            </div>
+                        </div>
+                    </div>
+                    ${index < calculations.length - 1 ? '<div class="border-t border-slate-600/50 my-4"></div>' : ''}
+                `;
+            }).join('');
+            
+            result.innerHTML = html;
+            result.style.display = 'block';
+            result.classList.add('active', 'calculator-result-appear');
+        };
+
+        // Power calculators
+        window.calcPowerDC = function() {
+            var V = parseFloat((document.getElementById('pdc-v') && document.getElementById('pdc-v').value) || '');
+            var I = parseFloat((document.getElementById('pdc-i') && document.getElementById('pdc-i').value) || '');
+            var R = parseFloat((document.getElementById('pdc-r') && document.getElementById('pdc-r').value) || '');
+            var out = document.getElementById('pdc-out');
+            if (!out) return;
+            var lines = [];
+            if (!isNaN(V) && !isNaN(I)) lines.push(`P = V·I = ${(V*I).toFixed(4)} W`);
+            if (!isNaN(V) && !isNaN(R) && R>0) lines.push(`I = V/R = ${(V/R).toFixed(6)} A, P = V²/R = ${((V*V)/R).toFixed(4)} W`);
+            if (!isNaN(I) && !isNaN(R) && R>0) lines.push(`V = I·R = ${(I*R).toFixed(6)} V, P = I²·R = ${((I*I)*R).toFixed(4)} W`);
+            out.innerHTML = lines.length ? lines.map(l=>`<div>${l}</div>`).join('') : 'En az iki değişken girin (V, I, R).';
+        };
+
+        window.calcPowerAC1 = function() {
+            var V = parseFloat((document.getElementById('pac1-v') && document.getElementById('pac1-v').value) || '');
+            var I = parseFloat((document.getElementById('pac1-i') && document.getElementById('pac1-i').value) || '');
+            var PF = parseFloat((document.getElementById('pac1-pf') && document.getElementById('pac1-pf').value) || '');
+            var type = (document.getElementById('pac1-type') && document.getElementById('pac1-type').value) || 'lagging';
+            var out = document.getElementById('pac1-out');
+            if (!out) return;
+            if ([V,I,PF].some(function(x){return isNaN(x)||x<=0;}) || PF>1) { out.textContent='Geçerli V, I, PF girin.'; return; }
+            var S = V*I; // VA
+            var P = S*PF; // W
+            var Q = Math.sqrt(Math.max(0, S*S - P*P)); // var
+            var sign = type==='leading' ? '-' : '+';
+            out.innerHTML = `S ≈ ${S.toFixed(3)} VA<br>P ≈ ${P.toFixed(3)} W<br>Q ≈ ${sign}${Q.toFixed(3)} var`;
+        };
+
+        window.calcPowerAC3 = function() {
+            var VLL = parseFloat((document.getElementById('pac3-vll') && document.getElementById('pac3-vll').value) || '');
+            var I = parseFloat((document.getElementById('pac3-i') && document.getElementById('pac3-i').value) || '');
+            var PF = parseFloat((document.getElementById('pac3-pf') && document.getElementById('pac3-pf').value) || '');
+            var conn = (document.getElementById('pac3-conn') && document.getElementById('pac3-conn').value) || 'wye';
+            var out = document.getElementById('pac3-out');
+            if (!out) return;
+            if ([VLL,I,PF].some(function(x){return isNaN(x)||x<=0;}) || PF>1) { out.textContent='Geçerli VLL, I, PF girin.'; return; }
+            var S = Math.sqrt(3) * VLL * I; // VA
+            var P = S * PF; // W
+            var Q = Math.sqrt(Math.max(0, S*S - P*P)); // var
+            // Bilgi: bağlantıya göre faz gerilimi/akımı değişir fakat toplam görünür güç formülü S=√3·VLL·IL dengeli sistemde geçerlidir.
+            out.innerHTML = `S ≈ ${S.toFixed(3)} VA<br>P ≈ ${P.toFixed(3)} W<br>Q ≈ ${Q.toFixed(3)} var<br><span class="text-xs text-gray-300">Bağlantı: ${conn.toUpperCase()}</span>`;
+        };
+
+        window.calcPowerEfficiency = function() {
+            var Pin = parseFloat((document.getElementById('peff-pin') && document.getElementById('peff-pin').value) || '');
+            var Eff = parseFloat((document.getElementById('peff-eff') && document.getElementById('peff-eff').value) || '');
+            var Vin = parseFloat((document.getElementById('lin-vin') && document.getElementById('lin-vin').value) || '');
+            var Vout = parseFloat((document.getElementById('lin-vout') && document.getElementById('lin-vout').value) || '');
+            var Iout = parseFloat((document.getElementById('lin-iout') && document.getElementById('lin-iout').value) || '');
+            var out = document.getElementById('peff-out');
+            if (!out) return;
+            var lines = [];
+
+            if (!isNaN(Pin) && !isNaN(Eff) && Eff>0) {
+                var eta = Math.max(0.01, Math.min(1, Eff/100));
+                var Pout = Pin * eta;
+                var Pdiss = Pin - Pout;
+                lines.push(`P_out ≈ ${Pout.toFixed(3)} W, P_diss ≈ ${Pdiss.toFixed(3)} W (η=${(eta*100).toFixed(1)}%)`);
+            }
+            if (!isNaN(Vin) && !isNaN(Vout) && !isNaN(Iout) && Iout>=0 && Vin>Vout) {
+                var Pd_lin = (Vin - Vout) * Iout;
+                lines.push(`Linear Reg. kayıp ≈ ${Pd_lin.toFixed(3)} W`);
+            }
+
+            out.innerHTML = lines.length ? lines.map(function(l){return `<div>${l}</div>`;}).join('') : 'Verim için Pin & verim, Linear için Vin/Vout/Iout girin.';
+        };
+
+        window.convertFrequency = function() {
+            var valueEl = document.getElementById('freq-value');
+            var unitEl = document.getElementById('freq-unit');
+            var results = document.getElementById('frequency-results');
+            if (!valueEl || !unitEl || !results) return;
+            var value = parseFloat(valueEl.value);
+            var unit = unitEl.value;
+
+            if (isNaN(value)) {
+                results.innerHTML = '<p class="text-red-400">Lütfen geçerli bir değer girin.</p>';
+                return;
+            }
+
+            // Convert to Hz first
+            var hz;
+            switch(unit) {
+                case 'hz': hz = value; break;
+                case 'khz': hz = value * 1000; break;
+                case 'mhz': hz = value * 1000000; break;
+                case 'ghz': hz = value * 1000000000; break;
+                default: hz = value;
+            }
+
+            results.innerHTML = `
+                <div class="bg-slate-700/50 rounded-lg p-4 space-y-2">
+                    <p class="text-white"><span class="font-medium">Hz:</span> ${hz.toLocaleString()}</p>
+                    <p class="text-white"><span class="font-medium">kHz:</span> ${(hz/1000).toLocaleString()}</p>
+                    <p class="text-white"><span class="font-medium">MHz:</span> ${(hz/1000000).toLocaleString()}</p>
+                    <p class="text-white"><span class="font-medium">GHz:</span> ${(hz/1000000000).toLocaleString()}</p>
+                    <p class="text-white"><span class="font-medium">Periyot:</span> ${(1/hz).toExponential(3)} s</p>
+                </div>
+            `;
+        };
+
+        window.convertFromBase = function(fromBase) {
+            var inputEl = document.getElementById('number-input');
+            var results = document.getElementById('number-results');
+            if (!inputEl || !results) return;
+            var input = inputEl.value.trim();
+
+            if (!input) {
+                results.innerHTML = '<p class="text-red-400">Lütfen bir sayı girin.</p>';
+                return;
+            }
+
+            try {
+                const decimal = parseInt(input, fromBase);
+                if (isNaN(decimal)) {
+                    results.innerHTML = '<p class="text-red-400">Geçersiz sayı formatı.</p>';
+                    return;
+                }
+
+                results.innerHTML = `
+                    <div class="bg-slate-700/50 rounded-lg p-4 space-y-2">
+                        <p class="text-white"><span class="font-medium">Decimal:</span> ${decimal}</p>
+                        <p class="text-white"><span class="font-medium">Binary:</span> ${decimal.toString(2)}</p>
+                        <p class="text-white"><span class="font-medium">Hexadecimal:</span> ${decimal.toString(16).toUpperCase()}</p>
+                        <p class="text-white"><span class="font-medium">Octal:</span> ${decimal.toString(8)}</p>
+                    </div>
+                `;
+            } catch (error) {
+                results.innerHTML = '<p class="text-red-400">Dönüştürme hatası.</p>';
+            }
+        };
+
+        window.convertTemperature = function() {
+            var valEl = document.getElementById('temp-value');
+            var fromEl = document.getElementById('temp-from');
+            var results = document.getElementById('temperature-results');
+            if (!valEl || !fromEl || !results) return;
+            var value = parseFloat(valEl.value);
+            var from = fromEl.value;
+
+            if (isNaN(value)) {
+                results.innerHTML = '<p class="text-red-400">Lütfen geçerli bir değer girin.</p>';
+                return;
+            }
+
+            var celsius, fahrenheit, kelvin;
+
+            // Convert to Celsius first
+            switch(from) {
+                case 'celsius':
+                    celsius = value;
+                    break;
+                case 'fahrenheit':
+                    celsius = (value - 32) * 5/9;
+                    break;
+                case 'kelvin':
+                    celsius = value - 273.15;
+                    break;
+            }
+
+            // Convert from Celsius to others
+            fahrenheit = (celsius * 9/5) + 32;
+            kelvin = celsius + 273.15;
+
+            results.innerHTML = `
+                <div class="bg-slate-700/50 rounded-lg p-4 space-y-2">
+                    <p class="text-white"><span class="font-medium">Celsius:</span> ${celsius.toFixed(2)} °C</p>
+                    <p class="text-white"><span class="font-medium">Fahrenheit:</span> ${fahrenheit.toFixed(2)} °F</p>
+                    <p class="text-white"><span class="font-medium">Kelvin:</span> ${kelvin.toFixed(2)} K</p>
+                </div>
+            `;
+        };
+
+        // Data size converter
+        window.convertDataSize = function() {
+            var value = parseFloat((document.getElementById('ds-value') && document.getElementById('ds-value').value) || '');
+            var unit = (document.getElementById('ds-unit') && document.getElementById('ds-unit').value);
+            var out = document.getElementById('ds-result');
+            if (!out || isNaN(value) || value < 0) { if(out) out.textContent = 'Geçerli bir değer girin.'; return; }
+            var multipliers = {B:1, KB:1024, MB:1024**2, GB:1024**3, TB:1024**4};
+            var bytes = value * multipliers[unit || 'B'];
+            var lines = [];
+            lines.push(`<p class="text-white">Byte: ${(bytes).toLocaleString()}</p>`);
+            lines.push(`<p class="text-white">KB: ${(bytes/1024).toLocaleString()}</p>`);
+            lines.push(`<p class="text-white">MB: ${(bytes/1024**2).toLocaleString()}</p>`);
+            lines.push(`<p class="text-white">GB: ${(bytes/1024**3).toLocaleString()}</p>`);
+            lines.push(`<p class="text-white">TB: ${(bytes/1024**4).toLocaleString()}</p>`);
+            out.innerHTML = `<div class="bg-slate-700/50 rounded-lg p-4 space-y-1">${lines.join('')}</div>`;
+        };
+
+        // Data size converter
+        window.convertDataSize = function() {
+            var value = parseFloat((document.getElementById('ds-value') && document.getElementById('ds-value').value) || '');
+            var unit = (document.getElementById('ds-unit') && document.getElementById('ds-unit').value);
+            var out = document.getElementById('ds-result');
+            if (!out || isNaN(value) || value < 0) { if(out) out.textContent = 'Geçerli bir değer girin.'; return; }
+            var multipliers = {B:1, KB:1024, MB:1024**2, GB:1024**3, TB:1024**4};
+            var bytes = value * multipliers[unit || 'B'];
+            var lines = [];
+            lines.push(`<p class="text-white">Byte: ${(bytes).toLocaleString()}</p>`);
+            lines.push(`<p class="text-white">KB: ${(bytes/1024).toLocaleString()}</p>`);
+            lines.push(`<p class="text-white">MB: ${(bytes/1024**2).toLocaleString()}</p>`);
+            lines.push(`<p class="text-white">GB: ${(bytes/1024**3).toLocaleString()}</p>`);
+            lines.push(`<p class="text-white">TB: ${(bytes/1024**4).toLocaleString()}</p>`);
+            out.innerHTML = `<div class="bg-slate-700/50 rounded-lg p-4 space-y-1">${lines.join('')}</div>`;
+        };
+
+        // CRC calculator helpers
+
+        // Part 1 extra tools
+
+        // WiFi serbest uzay menzil hesabı (hassasiyet + marj)
+        window.calcWifiRange = function() {
+            var Pt = parseFloat((document.getElementById('wifi-pt') && document.getElementById('wifi-pt').value) || '');
+            var Gt = parseFloat((document.getElementById('wifi-gt') && document.getElementById('wifi-gt').value) || '');
+            var Gr = parseFloat((document.getElementById('wifi-gr') && document.getElementById('wifi-gr').value) || '');
+            var fMHz = parseFloat((document.getElementById('wifi-band') && document.getElementById('wifi-band').value) || '');
+            var Sens = parseFloat((document.getElementById('wifi-sens') && document.getElementById('wifi-sens').value) || '');
+            var Margin = parseFloat((document.getElementById('wifi-margin') && document.getElementById('wifi-margin').value) || '0');
+            var out = document.getElementById('wifi-result');
+            if (!out || [Pt,Gt,Gr,fMHz,Sens,Margin].some(function(v){return isNaN(v);})){ if(out) out.textContent='Tüm alanları doldurun.'; return; }
+
+            // Eşitlik: Pr = Pt + Gt + Gr - FSPL - Margin
+            // Pr >= Sens için d[km] = 10^((Pt+Gt+Gr - Sens - Margin - 32.44 - 20log10(fMHz))/20)
+            var exp = (Pt + Gt + Gr - Sens - Margin - 32.44 - 20*Math.log10(fMHz)) / 20;
+            var dKm = Math.pow(10, exp);
+            var dM = dKm * 1000;
+
+            if (!isFinite(dM) || dM <= 0) { out.textContent = 'Parametreleri kontrol edin (sonuç geçersiz).'; return; }
+
+            // Ayrıca FSPL @ 100m bilgi amaçlı
+            var fspl100m = 32.44 + 20*Math.log10(fMHz) + 20*Math.log10(0.1);
+            out.innerHTML = `Tahmini menzil ≈ ${dM.toFixed(1)} m (LOS)<br><span class="text-xs text-gray-300">FSPL@100m ≈ ${fspl100m.toFixed(1)} dB, Marj: ${Margin.toFixed(1)} dB</span>`;
+        };
+
+        window.calcI2CPullup = function() {
+            var cpf = parseFloat((document.getElementById('i2c-cpf') && document.getElementById('i2c-cpf').value) || '');
+            var tr = parseFloat((document.getElementById('i2c-tr') && document.getElementById('i2c-tr').value) || '');
+            var v = parseFloat((document.getElementById('i2c-v') && document.getElementById('i2c-v').value) || '');
+            var out = document.getElementById('i2c-result');
+            if (!out || [cpf,tr].some(function(x){return isNaN(x)||x<=0;})) { if(out) out.textContent='C ve Tr girin.'; return; }
+            // Convert pF -> F, ns -> s
+            var C = cpf * 1e-12;
+            var Tr = tr * 1e-9;
+            // From I2C spec approx: Tr ≈ 0.8473 · Rp · C  => Rp ≈ Tr/(0.8473·C)
+            var Rp = Tr / (0.8473 * C);
+            var Ipull = v / Rp;
+            out.innerHTML = `Önerilen en büyük Rp ≈ ${Rp.toFixed(0)} Ω<br>Pull-up akımı ≈ ${Ipull.toExponential(3)} A`;
+        };
+
+        window.calcUartError = function() {
+            var fclk = parseFloat((document.getElementById('uart-clk') && document.getElementById('uart-clk').value) || '');
+            var baud = parseFloat((document.getElementById('uart-baud') && document.getElementById('uart-baud').value) || '');
+            var ovs = parseInt((document.getElementById('uart-ovs') && document.getElementById('uart-ovs').value) || '16',10);
+            var out = document.getElementById('uart-result');
+            if (!out || [fclk,baud].some(function(x){return isNaN(x)||x<=0;}) || isNaN(ovs) || ovs<=0) { if(out) out.textContent='Saat, baud ve oversample girin.'; return; }
+            // Divider = fclk / (ovs * baud)
+            var idealDiv = fclk / (ovs * baud);
+            var divInt = Math.max(1, Math.round(idealDiv));
+            var actualBaud = fclk / (ovs * divInt);
+            var err = (actualBaud - baud) / baud * 100;
+            out.innerHTML = `Bölücü ≈ ${divInt}<br>Gerçek baud ≈ ${actualBaud.toFixed(2)}<br>Hata ≈ ${err.toFixed(3)} %`;
+        };
+
+        window.calcFriis = function() {
+            var Pt = parseFloat((document.getElementById('friis-pt') && document.getElementById('friis-pt').value) || '');
+            var Gt = parseFloat((document.getElementById('friis-gt') && document.getElementById('friis-gt').value) || '');
+            var Gr = parseFloat((document.getElementById('friis-gr') && document.getElementById('friis-gr').value) || '');
+            var fMHz = parseFloat((document.getElementById('friis-fmhz') && document.getElementById('friis-fmhz').value) || '');
+            var dKm = parseFloat((document.getElementById('friis-dkm') && document.getElementById('friis-dkm').value) || '');
+            var out = document.getElementById('friis-result');
+            if (!out || [Pt,Gt,Gr,fMHz,dKm].some(function(v){return isNaN(v)||v<=0;})) { if(out) out.textContent='Tüm girişleri doldurun.'; return; }
+            var fspl = 32.44 + 20*Math.log10(fMHz) + 20*Math.log10(dKm);
+            var Pr = Pt + Gt + Gr - fspl;
+            out.innerHTML = `FSPL ≈ ${fspl.toFixed(2)} dB<br>P<sub>r</sub> ≈ ${Pr.toFixed(2)} dBm`;
+        };
+
+        function hexStringToBytes(str) {
+            var clean = str.replace(/\s+/g, '').toLowerCase();
+            if (clean.length % 2 !== 0) return null;
+            var bytes = [];
+            for (var i=0;i<clean.length;i+=2) {
+                var byte = parseInt(clean.substr(i,2),16);
+                if (isNaN(byte)) return null;
+                bytes.push(byte);
+            }
+            return bytes;
+        }
+        function textToBytes(str) {
+            return Array.from(new TextEncoder().encode(str));
+        }
+
+        window.calcCRC = function() {
+            var input = ((document.getElementById('crc-input') && document.getElementById('crc-input').value) || '').trim();
+            var type = (document.getElementById('crc-type') && document.getElementById('crc-type').value) || 'crc32';
+            var out = document.getElementById('crc-result');
+            if (!out || !input) { if(out) out.textContent='Girdi boş olamaz.'; return; }
+
+            // Decide if hex or ASCII
+            var bytes = hexStringToBytes(input);
+            if (!bytes) bytes = textToBytes(input);
+
+            var crc;
+            if (type === 'crc8') {
+                crc = 0x00;
+                var poly8 = 0x07;
+                bytes.forEach(function(b){
+                    crc ^= b;
+                    for (var i=0;i<8;i++){
+                        crc = (crc & 0x80) ? ((crc<<1) ^ poly8) : (crc<<1);
+                        crc &= 0xFF;
+                    }
+                });
+                out.textContent = `CRC-8: 0x${crc.toString(16).toUpperCase().padStart(2,'0')}`;
+            } else if (type === 'crc16') {
+                var crc16 = 0xFFFF; // CRC-16-IBM
+                bytes.forEach(function(b){
+                    crc16 ^= b;
+                    for (var i=0;i<8;i++){
+                        if (crc16 & 0x0001) crc16 = (crc16>>1) ^ 0xA001;
+                        else crc16 >>= 1;
+                    }
+                });
+                out.textContent = `CRC-16: 0x${crc16.toString(16).toUpperCase().padStart(4,'0')}`;
+            } else {
+                var crc32 = 0xFFFFFFFF;
+                bytes.forEach(function(b){
+                    var cur = (crc32 ^ b) & 0xFF;
+                    for (var i=0;i<8;i++){
+                        var mask = -(cur & 1);
+                        cur = (cur >>> 1) ^ (0xEDB88320 & mask);
+                    }
+                    crc32 = (crc32 >>> 8) ^ cur;
+                });
+                crc32 = (crc32 ^ 0xFFFFFFFF) >>> 0;
+                out.textContent = `CRC-32: 0x${crc32.toString(16).toUpperCase().padStart(8,'0')}`;
+            }
+        };
+
+        // HASH calculator
+        async function digest(algorithm, data) {
+            if (window.crypto && window.crypto.subtle) {
+                const buf = await window.crypto.subtle.digest(algorithm, data);
+                return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+            return null;
+        }
+        function md5Fallback(bytes) {
+            // Lightweight MD5 (RFC 1321) minimal implementation for fallback
+            // For brevity, we include a compact md5 function (public domain)
+            function cmn(q, a, b, x, s, t) { a = (a + q + x + t) | 0; return ((a << s) | (a >>> (32 - s))) + b | 0; }
+            function ff(a, b, c, d, x, s, t) { return cmn((b & c) | (~b & d), a, b, x, s, t); }
+            function gg(a, b, c, d, x, s, t) { return cmn((b & d) | (c & ~b), a, b, x, s, t); }
+            function hh(a, b, c, d, x, s, t) { return cmn(b ^ c ^ d, a, b, x, s, t); }
+            function ii(a, b, c, d, x, s, t) { return cmn(c ^ (b | ~d), a, b, x, s, t); }
+            function toWords(input) {
+                var i, out = [];
+                for (i = 0; i < input.length; i += 4)
+                    out.push(input[i] | (input[i + 1] << 8) | (input[i + 2] << 16) | (input[i + 3] << 24));
+                return out;
+            }
+            function md5blk(s) { // from array of bytes
+                var md5blks = [], i;
+                for (i = 0; i < 64; i += 4)
+                    md5blks[i >> 2] = s[i] + (s[i + 1] << 8) + (s[i + 2] << 16) + (s[i + 3] << 24);
+                return md5blks;
+            }
+            function md51(bytes) {
+                var n = bytes.length, state = [1732584193, -271733879, -1732584194, 271733878], i;
+                for (i = 64; i <= n; i += 64) md5cycle(state, md5blk(bytes.slice(i - 64, i)));
+                bytes = bytes.slice(i - 64);
+                var tail = new Array(64).fill(0);
+                for (i = 0; i < bytes.length; i++) tail[i] = bytes[i];
+                tail[bytes.length] = 0x80;
+                if (bytes.length > 55) { md5cycle(state, md5blk(tail)); tail = new Array(64).fill(0); }
+                var tmp = n * 8;
+                tail[56] = tmp & 0xFF; tail[57] = (tmp >>> 8) & 0xFF; tail[58] = (tmp >>> 16) & 0xFF; tail[59] = (tmp >>> 24) & 0xFF;
+                md5cycle(state, md5blk(tail));
+                return state;
+            }
+            function md5cycle(x, k) {
+                var a = x[0], b = x[1], c = x[2], d = x[3];
+
+                a = ff(a, b, c, d, k[0], 7, -680876936);
+                d = ff(d, a, b, c, k[1], 12, -389564586);
+                c = ff(c, d, a, b, k[2], 17, 606105819);
+                b = ff(b, c, d, a, k[3], 22, -1044525330);
+                a = ff(a, b, c, d, k[4], 7, -176418897);
+                d = ff(d, a, b, c, k[5], 12, 1200080426);
+                c = ff(c, d, a, b, k[6], 17, -1473231341);
+                b = ff(b, c, d, a, k[7], 22, -45705983);
+                a = ff(a, b, c, d, k[8], 7, 1770035416);
+                d = ff(d, a, b, c, k[9], 12, -1958414417);
+                c = ff(c, d, a, b, k[10], 17, -42063);
+                b = ff(b, c, d, a, k[11], 22, -1990404162);
+                a = ff(a, b, c, d, k[12], 7, 1804603682);
+                d = ff(d, a, b, c, k[13], 12, -40341101);
+                c = ff(c, d, a, b, k[14], 17, -1502002290);
+                b = ff(b, c, d, a, k[15], 22, 1236535329);
+
+                a = gg(a, b, c, d, k[1], 5, -165796510);
+                d = gg(d, a, b, c, k[6], 9, -1069501632);
+                c = gg(c, d, a, b, k[11], 14, 643717713);
+                b = gg(b, c, d, a, k[0], 20, -373897302);
+                a = gg(a, b, c, d, k[5], 5, -701558691);
+                d = gg(d, a, b, c, k[10], 9, 38016083);
+                c = gg(c, d, a, b, k[15], 14, -660478335);
+                b = gg(b, c, d, a, k[4], 20, -405537848);
+                a = gg(a, b, c, d, k[9], 5, 568446438);
+                d = gg(d, a, b, c, k[14], 9, -1019803690);
+                c = gg(c, d, a, b, k[3], 14, -187363961);
+                b = gg(b, c, d, a, k[8], 20, 1163531501);
+                a = gg(a, b, c, d, k[13], 5, -1444681467);
+                d = gg(d, a, b, c, k[2], 9, -51403784);
+                c = gg(c, d, a, b, k[7], 14, 1735328473);
+                b = gg(b, c, d, a, k[12], 20, -1926607734);
+
+                a = hh(a, b, c, d, k[5], 4, -378558);
+                d = hh(d, a, b, c, k[8], 11, -2022574463);
+                c = hh(c, d, a, b, k[11], 16, 1839030562);
+                b = hh(b, c, d, a, k[14], 23, -35309556);
+                a = hh(a, b, c, d, k[1], 4, -1530992060);
+                d = hh(d, a, b, c, k[4], 11, 1272893353);
+                c = hh(c, d, a, b, k[7], 16, -155497632);
+                b = hh(b, c, d, a, k[10], 23, -1094730640);
+                a = hh(a, b, c, d, k[13], 4, 681279174);
+                d = hh(d, a, b, c, k[0], 11, -358537222);
+                c = hh(c, d, a, b, k[3], 16, -722521979);
+                b = hh(b, c, d, a, k[6], 23, 76029189);
+                a = ii(a, b, c, d, k[0], 6, -198630844);
+                d = ii(d, a, b, c, k[7], 10, 1126891415);
+                c = ii(c, d, a, b, k[14], 15, -1416354905);
+                b = ii(b, c, d, a, k[5], 21, -57434055);
+                a = ii(a, b, c, d, k[12], 6, 1700485571);
+                d = ii(d, a, b, c, k[3], 10, -1894986606);
+                c = ii(c, d, a, b, k[10], 15, -1051523);
+                b = ii(b, c, d, a, k[1], 21, -2054922799);
+                var tmp = [a, b, c, d];
+                return tmp;
+            }
+            function rhex(n) { var s='', j; for(j=0;j<4;j++) s += ((n >> (j*8)) & 255).toString(16).padStart(2,'0'); return s; }
+            var state = md51(bytes);
+            return state.map(rhex).join('');
+        }
+        function strToBytes(str){ return new TextEncoder().encode(str); }
+
+        window.calcHash = async function(algo) {
+            var input = (document.getElementById('hash-input') && document.getElementById('hash-input').value) || '';
+            var out = document.getElementById('hash-result');
+            if (!out || !input) { if(out) out.textContent='Metin girin.'; return; }
+            var bytes = strToBytes(input);
+            var webAlgo = algo.replace('-', '');
+            var digestHex = await digest(webAlgo, bytes);
+            if (!digestHex && algo === 'MD5') {
+                digestHex = md5Fallback(Array.from(bytes));
+            } else if (!digestHex) {
+                out.textContent = 'Tarayıcı bu algoritmayı desteklemiyor.';
+                return;
+            }
+            out.textContent = `${algo}: ${digestHex}`;
+        };
+
+        // AWG Calculator Functions
+        window.calculateAWG = function() {
+            var typeEl = document.getElementById('awg-input-type');
+            var valueEl = document.getElementById('awg-input-value');
+            var resultsDiv = document.getElementById('awg-results');
+            var basicResults = document.getElementById('awg-basic-results');
+            var currentResults = document.getElementById('awg-current-results');
+            if (!typeEl || !valueEl || !resultsDiv || !basicResults || !currentResults) return;
+            var inputType = typeEl.value;
+            var inputValue = parseFloat(valueEl.value);
+
+            if (isNaN(inputValue) || inputValue <= 0) {
+                alert('Lütfen geçerli bir pozitif değer girin!');
+                return;
+            }
+
+            // AWG to diameter (mil) conversion formula: diameter_mil = 92^((36-AWG)/39) * 5
+            // Standard AWG current ratings (approximate values for 30°C ambient, 60°C conductor temp)
+            var awgCurrentRatings = {
+                40: 0.09, 38: 0.13, 36: 0.19, 34: 0.27, 32: 0.36, 30: 0.52,
+                28: 0.74, 26: 1.0, 24: 1.4, 22: 2.1, 20: 2.9, 18: 4.0,
+                16: 5.5, 14: 8.0, 12: 11, 10: 15, 8: 24, 6: 37, 4: 55,
+                2: 75, 1: 85, 0: 100, '00': 115, '000': 130, '0000': 150
+            };
+
+            var awg, diameterMil, diameterMm, areaMm2, areaKcmil, currentRating;
+
+            // Convert input to AWG equivalent diameter in mils
+            switch(inputType) {
+                case 'awg':
+                    awg = Math.round(inputValue);
+                    if (awg < -3 || awg > 40) {
+                        alert('AWG değeri -3 ile 40 arasında olmalıdır!');
+                        return;
+                    }
+                    diameterMil = Math.pow(92, (36 - awg) / 39) * 5;
+                    break;
+                
+                case 'diameter-mm':
+                    diameterMm = inputValue;
+                    diameterMil = diameterMm / 0.0254;
+                    awg = Math.round(36 - 39 * Math.log(diameterMil / 5) / Math.log(92));
+                    break;
+                
+                case 'diameter-mil':
+                    diameterMil = inputValue;
+                    awg = Math.round(36 - 39 * Math.log(diameterMil / 5) / Math.log(92));
+                    break;
+                
+                case 'area-mm2':
+                    areaMm2 = inputValue;
+                    diameterMm = Math.sqrt(areaMm2 * 4 / Math.PI);
+                    diameterMil = diameterMm / 0.0254;
+                    awg = Math.round(36 - 39 * Math.log(diameterMil / 5) / Math.log(92));
+                    break;
+                
+                case 'area-kcmil':
+                    areaKcmil = inputValue;
+                    areaMm2 = areaKcmil * 0.5067;
+                    diameterMm = Math.sqrt(areaMm2 * 4 / Math.PI);
+                    diameterMil = diameterMm / 0.0254;
+                    awg = Math.round(36 - 39 * Math.log(diameterMil / 5) / Math.log(92));
+                    break;
+            }
+
+            // Calculate all other values
+            if (!diameterMm) diameterMm = diameterMil * 0.0254;
+            if (!areaMm2) areaMm2 = Math.PI * Math.pow(diameterMm / 2, 2);
+            if (!areaKcmil) areaKcmil = areaMm2 / 0.5067;
+            
+            // Get current rating
+            var awgKey = awg;
+            if (awg <= 0) {
+                if (awg === 0) awgKey = 0;
+                else if (awg === -1) awgKey = '00';
+                else if (awg === -2) awgKey = '000';
+                else if (awg === -3) awgKey = '0000';
+            }
+            
+            currentRating = awgCurrentRatings[awgKey] || 'N/A';
+
+            // Format AWG display
+            var awgDisplay;
+            if (awg === 0) awgDisplay = '1/0 (0)';
+            else if (awg === -1) awgDisplay = '2/0 (00)';
+            else if (awg === -2) awgDisplay = '3/0 (000)';
+            else if (awg === -3) awgDisplay = '4/0 (0000)';
+            else awgDisplay = awg.toString();
+
+            // Update basic results
+            basicResults.innerHTML = `
+                <p><strong>AWG:</strong> ${awgDisplay}</p>
+                <p><strong>Çap:</strong> ${diameterMm.toFixed(3)} mm (${diameterMil.toFixed(1)} mil)</p>
+                <p><strong>Kesit Alanı:</strong> ${areaMm2.toFixed(3)} mm²</p>
+                <p><strong>Kesit Alanı:</strong> ${areaKcmil.toFixed(1)} kcmil</p>
+            `;
+
+            // Update current results
+            if (typeof currentRating === 'number') {
+                currentResults.innerHTML = `
+                    <p><strong>Sürekli Akım:</strong> ${currentRating} A</p>
+                    <p><strong>Koşullar:</strong> 30°C ortam</p>
+                    <p><strong>İletken Sıcaklık:</strong> 60°C</p>
+                    <p class="text-yellow-300 text-xs mt-2">Not: Değerler yaklaşık değerlerdir. Gerçek uygulamada yerel standartları kontrol edin.</p>
+                `;
+            } else {
+                currentResults.innerHTML = `
+                    <p><strong>Sürekli Akım:</strong> Veri yok</p>
+                    <p class="text-gray-400 text-xs">Bu AWG değeri için standart akım verisi bulunmamaktadır.</p>
+                `;
+            }
+
+            resultsDiv.classList.remove('hidden');
+        };
+
+        // Extra calculators
+
+        window.calcPeriod = function() {
+            var fEl = document.getElementById('period-f');
+            var res = document.getElementById('period-result');
+            if (!fEl || !res) return;
+            var f = parseFloat(fEl.value);
+            if (isNaN(f) || f <= 0) { res.textContent = 'Geçerli bir frekans girin.'; return; }
+            var T = 1 / f;
+            res.textContent = `Periyot: ${T.toExponential(6)} s`;
+        };
+
+        window.calcDb = function() {
+            var type = (document.getElementById('db-type') && document.getElementById('db-type').value);
+            var a = parseFloat((document.getElementById('db-a') && document.getElementById('db-a').value) || '');
+            var b = parseFloat((document.getElementById('db-b') && document.getElementById('db-b').value) || '');
+            var res = document.getElementById('db-result');
+            if (!res || isNaN(a) || isNaN(b) || a <= 0 || b <= 0) { if(res) res.textContent='Geçerli iki pozitif değer girin.'; return; }
+            var ratio = a / b;
+            var db = type === 'power' ? 10 * Math.log10(ratio) : 20 * Math.log10(ratio);
+            res.textContent = `dB = ${db.toFixed(3)} dB`;
+        };
+
+        window.calcWavelength = function() {
+            var f = parseFloat((document.getElementById('wl-f') && document.getElementById('wl-f').value) || '');
+            var c = parseFloat((document.getElementById('wl-c') && document.getElementById('wl-c').value) || '');
+            var res = document.getElementById('wl-result');
+            if (!res || isNaN(f) || f <= 0 || isNaN(c) || c <= 0) { if(res) res.textContent='Geçerli değerler girin.'; return; }
+            var lambda = c / f;
+            res.textContent = `Dalga boyu: ${lambda.toExponential(6)} m`;
+        };
+
+        window.calcRCTime = function() {
+            var R = parseFloat((document.getElementById('rc-r') && document.getElementById('rc-r').value) || '');
+            var C = parseFloat((document.getElementById('rc-c') && document.getElementById('rc-c').value) || '');
+            var res = document.getElementById('rc-result');
+            if (!res || isNaN(R) || R <= 0 || isNaN(C) || C <= 0) { if(res) res.textContent='Geçerli R ve C girin.'; return; }
+            var tau = R * C;
+            res.innerHTML = `τ = ${tau.toExponential(6)} s<br>%99.3 ≈ ${(5*tau).toExponential(6)} s`;
+        };
+
+        window.calcLedRes = function() {
+            var Vs = parseFloat((document.getElementById('led-vs') && document.getElementById('led-vs').value) || '');
+            var Vf = parseFloat((document.getElementById('led-vf') && document.getElementById('led-vf').value) || '');
+            var I_mA = parseFloat((document.getElementById('led-i') && document.getElementById('led-i').value) || '');
+            var res = document.getElementById('led-result');
+            if (!res || isNaN(Vs) || isNaN(Vf) || isNaN(I_mA) || I_mA <= 0) { if(res) res.textContent='Geçerli değerler girin.'; return; }
+            var I = I_mA / 1000;
+            var R = (Vs - Vf) / I;
+            var P = I*I*R;
+            res.innerHTML = `R ≈ ${R.toFixed(1)} Ω, Güç ≈ ${P.toFixed(3)} W`;
+        };
+
+        function parseResList() {
+            var txt = (document.getElementById('res-list') && document.getElementById('res-list').value) || '';
+            return txt.split(',').map(function(s){ return parseFloat(s.trim()); }).filter(function(v){ return !isNaN(v) && v>0; });
+        }
+        window.calcResSeries = function() {
+            var arr = parseResList();
+            var res = document.getElementById('res-combine-result');
+            if (!res || arr.length===0) { if(res) res.textContent='Geçerli liste girin.'; return; }
+            var eq = arr.reduce(function(a,b){ return a+b; }, 0);
+            res.textContent = `R_seri = ${eq.toFixed(3)} Ω`;
+        };
+        window.calcResParallel = function() {
+            var arr = parseResList();
+            var res = document.getElementById('res-combine-result');
+            if (!res || arr.length===0) { if(res) res.textContent='Geçerli liste girin.'; return; }
+            var inv = arr.reduce(function(a,b){ return a + 1/b; }, 0);
+            var eq = 1/inv;
+            res.textContent = `R_paralel = ${eq.toFixed(3)} Ω`;
+        };
+
+        window.calcReactive = function() {
+            var f = parseFloat((document.getElementById('rx-f') && document.getElementById('rx-f').value) || '');
+            var C = parseFloat((document.getElementById('rx-c') && document.getElementById('rx-c').value) || '0');
+            var L = parseFloat((document.getElementById('rx-l') && document.getElementById('rx-l').value) || '0');
+            var res = document.getElementById('rx-result');
+            if (!res || isNaN(f) || f<=0) { if(res) res.textContent='Geçerli frekans girin.'; return; }
+            var Xc = C>0 ? 1/(2*Math.PI*f*C) : null;
+            var Xl = L>0 ? 2*Math.PI*f*L : null;
+            var msg = [];
+            if (Xc!==null) msg.push(`Xc = ${Xc.toFixed(3)} Ω`);
+            if (Xl!==null) msg.push(`Xl = ${Xl.toFixed(3)} Ω`);
+            res.innerHTML = msg.join('<br>') || 'C veya L girin.';
+        };
+
+        window.calcDividerLoad = function() {
+            var Vin = parseFloat((document.getElementById('vd-vin') && document.getElementById('vd-vin').value) || '');
+            var R1 = parseFloat((document.getElementById('vd-r1') && document.getElementById('vd-r1').value) || '');
+            var R2 = parseFloat((document.getElementById('vd-r2') && document.getElementById('vd-r2').value) || '');
+            var RL = parseFloat((document.getElementById('vd-rl') && document.getElementById('vd-rl').value) || '');
+            var res = document.getElementById('vd-result');
+            if (!res || [Vin,R1,R2].some(function(v){return isNaN(v)||v<=0;})) { if(res) res.textContent='Vin, R1, R2 girin.'; return; }
+            var R2eff = (!isNaN(RL) && RL>0) ? 1 / (1/R2 + 1/RL) : R2;
+            var Vout = Vin * R2eff / (R1 + R2eff);
+            res.innerHTML = `Vout ≈ ${Vout.toFixed(4)} V${(R2eff!==R2)?' (yük etkisi dahil)':''}`;
+        };
+
+        window.calcBatteryAdvanced = function() {
+            var C_mAh = parseFloat((document.getElementById('bat-cap') && document.getElementById('bat-cap').value) || '');
+            var Ion_mA = parseFloat((document.getElementById('bat-ion') && document.getElementById('bat-ion').value) || '');
+            var Ton_s = parseFloat((document.getElementById('bat-ton') && document.getElementById('bat-ton').value) || '');
+            var Isleep_uA = parseFloat((document.getElementById('bat-isleep-ua') && document.getElementById('bat-isleep-ua').value) || '');
+            var Tsleep_s = parseFloat((document.getElementById('bat-tsleep') && document.getElementById('bat-tsleep').value) || '');
+            var eff_pct = parseFloat((document.getElementById('bat-eff') && document.getElementById('bat-eff').value) || '');
+            var safety_pct = parseFloat((document.getElementById('bat-safety') && document.getElementById('bat-safety').value) || '0');
+            var npar = parseInt((document.getElementById('bat-npar') && document.getElementById('bat-npar').value) || '1',10);
+            var out = document.getElementById('bat-result');
+
+            if (!out || [C_mAh, Ion_mA, Ton_s, Isleep_uA, Tsleep_s, eff_pct].some(function(v){return isNaN(v) || v < 0;}) || isNaN(npar) || npar<=0) {
+                if(out) out.textContent = 'Tüm girişleri kontrol edin.'; 
+                return;
+            }
+            var Tcycle = Ton_s + Tsleep_s; 
+            if (Tcycle <= 0) { out.textContent = 'T_on + T_sleep > 0 olmalı.'; return; }
+
+            // Ortalama yük akımı (mA) – Isleep in µA => mA
+            var Isleep_mA = Isleep_uA / 1000.0;
+            var Iavg_load_mA = (Ion_mA * Ton_s + Isleep_mA * Tsleep_s) / Tcycle;
+
+            // Verim – pilden çekilen ortalama akım
+            var eta = Math.max(0.01, Math.min(1.0, eff_pct / 100.0));
+            var Iavg_batt_mA = Iavg_load_mA / eta;
+
+            // Efektif kapasite (paralel sayısı ve güvenlik payı)
+            var safety = Math.max(0, Math.min(100, isNaN(safety_pct)?0:safety_pct));
+            var Ceffective_mAh = C_mAh * npar * (1 - safety/100);
+
+            if (Ceffective_mAh <= 0 || Iavg_batt_mA <= 0) {
+                out.textContent = 'Efektif kapasite ve akım > 0 olmalı.';
+                return;
+            }
+
+            // Saat cinsinden ömür
+            var hours = Ceffective_mAh / Iavg_batt_mA;
+            // İnsan-dostu biçim: gün-saat
+            var days = Math.floor(hours / 24);
+            var remHours = hours - days*24;
+
+            out.innerHTML = `
+                Ortalama yük akımı ≈ ${Iavg_load_mA.toFixed(3)} mA<br>
+                Pil ort. akımı (η dahil) ≈ ${Iavg_batt_mA.toFixed(3)} mA<br>
+                Efektif kapasite ≈ ${Ceffective_mAh.toFixed(0)} mAh<br>
+                Tahmini ömür ≈ ${hours.toFixed(1)} saat (${days} gün ${remHours.toFixed(1)} saat)
+            `;
+        };
+
+        window.calcPwm = function() {
+            var fclk = parseFloat((document.getElementById('pwm-fclk') && document.getElementById('pwm-fclk').value) || '');
+            var psc = parseFloat((document.getElementById('pwm-psc') && document.getElementById('pwm-psc').value) || '');
+            var arr = parseFloat((document.getElementById('pwm-arr') && document.getElementById('pwm-arr').value) || '');
+            var res = document.getElementById('pwm-result');
+            if (!res || [fclk,psc,arr].some(function(v){return isNaN(v)||v<=0;})) { if(res) res.textContent='Geçerli fclk, prescaler ve ARR girin.'; return; }
+            var fPWM = fclk / (psc * (arr + 1));
+            var dutyStep = 1 / (arr + 1);
+            var tStep = 1 / fclk * psc;
+            res.innerHTML = `f_PWM ≈ ${fPWM.toFixed(3)} Hz<br>Duty çözünürlüğü ≈ ${(dutyStep*100).toFixed(3)} % adım<br>Zaman çözünürlüğü ≈ ${tStep.toExponential(6)} s`;
+        };
+
+        window.calcAdc = function() {
+            var N = parseInt((document.getElementById('adc-n') && document.getElementById('adc-n').value) || '0',10);
+            var Vref = parseFloat((document.getElementById('adc-vref') && document.getElementById('adc-vref').value) || '');
+            var Vin = parseFloat((document.getElementById('adc-vin') && document.getElementById('adc-vin').value) || '');
+            var res = document.getElementById('adc-result');
+            if (!res || isNaN(N) || N<=0 || isNaN(Vref) || Vref<=0) { if(res) res.textContent='Geçerli N ve Vref girin.'; return; }
+            var levels = Math.pow(2,N);
+            var lsb = Vref / levels;
+            var code = (!isNaN(Vin)) ? Math.max(0, Math.min(levels-1, Math.floor(Vin / lsb))) : null;
+            res.innerHTML = `Seviye sayısı: ${levels}<br>LSB ≈ ${lsb.toExponential(6)} V${(code!==null)?`<br>Kod ≈ ${code}`:''}`;
+        };
+
+        // LT3045 Calculator Functions
+        window.calculateLT3045 = function() {
+            var voutEl = document.getElementById('lt3045-vout');
+            var knownResistorEl = document.getElementById('lt3045-known-resistor');
+            var knownValueEl = document.getElementById('lt3045-known-value');
+            var knownUnitEl = document.getElementById('lt3045-known-unit');
+            var vPgfbMinEl = document.getElementById('lt3045-vpgfb-min');
+            var vPgfbMaxEl = document.getElementById('lt3045-vpgfb-max');
+            var resultsDiv = document.getElementById('lt3045-results');
+            var theoreticalMin = document.getElementById('lt3045-theoretical-min');
+            var theoreticalMax = document.getElementById('lt3045-theoretical-max');
+            var standardMin = document.getElementById('lt3045-standard-min');
+            var standardMax = document.getElementById('lt3045-standard-max');
+            var circuitDiagram = document.getElementById('lt3045-circuit-diagram');
+            if (!voutEl || !knownResistorEl || !knownValueEl || !knownUnitEl || !vPgfbMinEl || !vPgfbMaxEl || !resultsDiv || !theoreticalMin || !theoreticalMax || !standardMin || !standardMax || !circuitDiagram) return;
+            var vout = parseFloat(voutEl.value);
+            var knownResistor = knownResistorEl.value;
+            var knownValue = parseFloat(knownValueEl.value);
+            var knownUnit = knownUnitEl.value;
+            var vPgfbMin = parseFloat(vPgfbMinEl.value);
+            var vPgfbMax = parseFloat(vPgfbMaxEl.value);
+
+            if (!vout || !knownValue || !vPgfbMin || !vPgfbMax) {
+                alert('Lütfen tüm alanları doldurun!');
+                return;
+            }
+
+// Standard resistor values (E24 series)
+            var standardResistors = [
+                1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0,
+                3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1
+            ];
+            
+            // Unit conversion functions
+            var convertToOhms = function(value, unit) {
+                var multipliers = { 'ohm': 1, 'kohm': 1000, 'Mohm': 1000000 };
+                return value * multipliers[unit];
+            };
+            var convertFromOhms = function(value, unit) {
+                var multipliers = { 'ohm': 1, 'kohm': 1000, 'Mohm': 1000000 };
+                return value / multipliers[unit];
+            };
+
+            var formatValue = function(value) {
+                if (value >= 1000000) {
+                    return `${(value / 1000000).toFixed(2)} MΩ`;
+                } else if (value >= 1000) {
+                    return `${(value / 1000).toFixed(2)} kΩ`;
+                } else {
+                    return `${value.toFixed(2)} Ω`;
+                }
+            };
+
+            // Find nearest standard resistor
+            var findNearestStandardResistor = function(targetValue, unit) {
+                var targetInOhms = convertToOhms(targetValue, unit);
+                var bestMatch = null;
+                var minDifference = Infinity;
+
+                for (var decade = 0.1; decade <= 10000000; decade *= 10) {
+                    standardResistors.forEach(function(base) {
+                        var candidate = base * decade;
+                        var difference = Math.abs(candidate - targetInOhms);
+                        if (difference < minDifference) {
+                            minDifference = difference;
+                            bestMatch = candidate;
+                        }
+                    });
+                }
+
+                return {
+                    value: convertFromOhms(bestMatch, unit),
+                    ohms: bestMatch,
+                    percentError: ((bestMatch - targetInOhms) / targetInOhms * 100)
+                };
+            };
+
+            const knownInOhms = convertToOhms(knownValue, knownUnit);
+            const keepKnownConstant = knownInOhms; // Keep known resistor constant
+            
+            // Calculate resistor values for min and max conditions
+            var r1Min, r2Min, r1Max, r2Max;
+            
+            if (knownResistor === 'R1') {
+                r1Min = r1Max = knownInOhms;
+                r2Min = (vPgfbMin * knownInOhms) / (vout - vPgfbMin);
+                r2Max = (vPgfbMax * knownInOhms) / (vout - vPgfbMax);
+            } else {
+                r2Min = r2Max = knownInOhms;
+                r1Min = knownInOhms * (vout - vPgfbMin) / vPgfbMin;
+                r1Max = knownInOhms * (vout - vPgfbMax) / vPgfbMax;
+            }
+
+            // Find standard resistor recommendations (keep known resistor constant)
+            var r1MinStd, r1MaxStd, r2MinStd, r2MaxStd;
+            
+            if (knownResistor === 'R1') {
+                // Keep R1 constant at the known value
+                r1MinStd = { value: knownValue, ohms: keepKnownConstant, percentError: 0 };
+                r1MaxStd = { value: knownValue, ohms: keepKnownConstant, percentError: 0 };
+                
+                // Find standard values for R2
+                r2MinStd = findNearestStandardResistor(convertFromOhms(r2Min, knownUnit), knownUnit);
+                r2MaxStd = findNearestStandardResistor(convertFromOhms(r2Max, knownUnit), knownUnit);
+            } else {
+                // Keep R2 constant at the known value
+                r2MinStd = { value: knownValue, ohms: keepKnownConstant, percentError: 0 };
+                r2MaxStd = { value: knownValue, ohms: keepKnownConstant, percentError: 0 };
+                
+                // Find standard values for R1
+                r1MinStd = findNearestStandardResistor(convertFromOhms(r1Min, knownUnit), knownUnit);
+                r1MaxStd = findNearestStandardResistor(convertFromOhms(r1Max, knownUnit), knownUnit);
+            }
+
+            // Calculate actual voltages with standard resistors
+            const actualVPgfbMin = vout * r2MinStd.ohms / (r1MinStd.ohms + r2MinStd.ohms);
+            const actualVPgfbMax = vout * r2MaxStd.ohms / (r1MaxStd.ohms + r2MaxStd.ohms);
+
+            // Update UI
+            theoreticalMin.innerHTML = `
+                <p>R1 = ${convertFromOhms(r1Min, knownUnit).toFixed(3)} ${knownUnit}</p>
+                <p>R2 = ${convertFromOhms(r2Min, knownUnit).toFixed(3)} ${knownUnit}</p>
+                <p>V<sub>PGFB</sub> = ${vPgfbMin}V</p>
+            `;
+
+            theoreticalMax.innerHTML = `
+                <p>R1 = ${convertFromOhms(r1Max, knownUnit).toFixed(3)} ${knownUnit}</p>
+                <p>R2 = ${convertFromOhms(r2Max, knownUnit).toFixed(3)} ${knownUnit}</p>
+                <p>V<sub>PGFB</sub> = ${vPgfbMax}V</p>
+            `;
+
+            standardMin.innerHTML = `
+                <p><strong>R1:</strong> ${formatValue(r1MinStd.ohms)} 
+                   <span class="text-green-400">(${r1MinStd.percentError > 0 ? '+' : ''}${r1MinStd.percentError.toFixed(1)}%)</span></p>
+                <p><strong>R2:</strong> ${formatValue(r2MinStd.ohms)} 
+                   <span class="text-green-400">(${r2MinStd.percentError > 0 ? '+' : ''}${r2MinStd.percentError.toFixed(1)}%)</span></p>
+                <p><strong>Gerçek V<sub>PGFB</sub>:</strong> ${actualVPgfbMin.toFixed(3)}V</p>
+            `;
+
+            standardMax.innerHTML = `
+                <p><strong>R1:</strong> ${formatValue(r1MaxStd.ohms)} 
+                   <span class="text-orange-400">(${r1MaxStd.percentError > 0 ? '+' : ''}${r1MaxStd.percentError.toFixed(1)}%)</span></p>
+                <p><strong>R2:</strong> ${formatValue(r2MaxStd.ohms)} 
+                   <span class="text-orange-400">(${r2MaxStd.percentError > 0 ? '+' : ''}${r2MaxStd.percentError.toFixed(1)}%)</span></p>
+                <p><strong>Gerçek V<sub>PGFB</sub>:</strong> ${actualVPgfbMax.toFixed(3)}V</p>
+            `;
+
+            circuitDiagram.innerHTML = `
+                <div>Vout (${vout}V) ──┬──── (+)</div>
+                <div class="ml-16">│</div>
+                <div class="ml-16">R1</div>
+                <div class="ml-16">│</div>
+                <div class="ml-12">├──── V<sub>PGFB</sub></div>
+                <div class="ml-16">│</div>
+                <div class="ml-16">R2</div>
+                <div class="ml-16">│</div>
+                <div class="ml-12">└──── GND</div>
+            `;
+
+            resultsDiv.classList.remove('hidden');
+        };
+
+        // Search + filter state
+        var state = { query: '', category: null };
+
+        function applyFilters() {
+            var q = state.query.toLowerCase();
+            var cat = state.category;
+            var visibleCalcCountByCategory = {};
+
+            // filter calculators
+            document.querySelectorAll('.calculator-item').forEach(function(item){
+                var name = item.getAttribute('data-name') || '';
+                var catName = item.getAttribute('data-category') || '';
+                var matchQuery = !q || name.includes(q) || catName.includes(q);
+                var matchCategory = !cat || catName === cat;
+                var show = matchQuery && matchCategory;
+                item.style.display = show ? '' : 'none';
+                var parentCard = item.closest('.category-card');
+                var parentCategory = parentCard ? (parentCard.getAttribute('data-category') || '') : '';
+                if (show) {
+                    visibleCalcCountByCategory[parentCategory] = (visibleCalcCountByCategory[parentCategory] || 0) + 1;
+                }
+            });
+
+            // hide empty category cards
+            document.querySelectorAll('.category-card').forEach(function(card){
+                var catTitle = card.getAttribute('data-category') || '';
+                var count = visibleCalcCountByCategory[catTitle] || 0;
+                card.style.display = count > 0 ? '' : 'none';
+                // update "X araç" badge
+                var badge = card.querySelector('span.text-xs');
+                if (badge) badge.textContent = count + ' araç';
+            });
+        }
+
+        // Search events
+        if (searchInput) {
+            searchInput.addEventListener('input', function(){
+                state.query = this.value;
+                if (clearSearchBtn) clearSearchBtn.classList.toggle('hidden', this.value.length === 0);
+                applyFilters();
+            });
+        }
+        if (clearSearchBtn) {
+            clearSearchBtn.addEventListener('click', function(){
+                searchInput.value = '';
+                state.query = '';
+                clearSearchBtn.classList.add('hidden');
+                applyFilters();
+                searchInput.focus();
+            });
+        }
+
+        // Filter chip events (toggle select one)
+        activeFilters?.querySelectorAll('.filter-chip').forEach(function(chip){
+            chip.addEventListener('click', function(){
+                var val = this.getAttribute('data-filter');
+                if (state.category === val) {
+                    state.category = null;
+                    this.classList.remove('ring-2','ring-purple-500','text-white','bg-slate-700/70');
+                } else {
+                    state.category = val;
+                    activeFilters.querySelectorAll('.filter-chip').forEach(function(c){
+                        c.classList.remove('ring-2','ring-purple-500','text-white','bg-slate-700/70');
+                    });
+                    this.classList.add('ring-2','ring-purple-500','text-white','bg-slate-700/70');
+                }
+                applyFilters();
+            });
+        });
+
+        // View toggles (cards vs list)
+        function setListView(isList){
+            document.getElementById('categories-grid')?.classList.toggle('!grid-cols-1', !!isList);
+            document.querySelectorAll('.category-card .calculator-item').forEach(function(el){
+                el.classList.toggle('md:flex', !!isList);
+                el.classList.toggle('items-center', !!isList);
+            });
+            toggleCards?.classList.toggle('bg-slate-700/60', !isList);
+            toggleCards?.classList.toggle('text-white', !isList);
+            toggleList?.classList.toggle('bg-slate-700/60', isList);
+            toggleList?.classList.toggle('text-white', isList);
+        }
+        toggleCards?.addEventListener('click', function(){ setListView(false); });
+        toggleList?.addEventListener('click', function(){ setListView(true); });
+
+        // Collapse/expand categories
+        function setAllCategories(expanded){
+            document.querySelectorAll('.category-card').forEach(function(card){
+                var items = card.querySelector('.category-items');
+                var chevron = card.querySelector('.chevron');
+                if (expanded){
+                    items?.classList.remove('hidden');
+                    chevron?.classList.remove('rotate-180');
+                    card.querySelector('.toggle-category')?.setAttribute('aria-expanded','true');
+                } else {
+                    items?.classList.add('hidden');
+                    chevron?.classList.add('rotate-180');
+                    card.querySelector('.toggle-category')?.setAttribute('aria-expanded','false');
+                }
+            });
+        }
+        expandAllBtn?.addEventListener('click', function(){ setAllCategories(true); });
+        collapseAllBtn?.addEventListener('click', function(){ setAllCategories(false); });
+
+        document.querySelectorAll('.toggle-category').forEach(function(btn){
+            btn.addEventListener('click', function(){
+                var card = this.closest('.category-card');
+                var items = card?.querySelector('.category-items');
+                var chevron = card?.querySelector('.chevron');
+                var expanded = this.getAttribute('aria-expanded') === 'true';
+                this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+                items?.classList.toggle('hidden');
+                chevron?.classList.toggle('rotate-180');
+            });
+        });
+
+        // Initialize counts after DOM ready
+        applyFilters();
+        setListView(false);
+
+        // Event listeners
+        calculatorItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                var calculatorId = this.getAttribute('data-calculator');
+                var calculator = calculators[calculatorId];
+                
+                if (!modal || !modalTitle || !calculatorContent) return;
+                if (calculator) {
+                    modalTitle.textContent = calculator.title;
+                    calculatorContent.innerHTML = calculator.content;
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                } else {
+                    modalTitle.textContent = 'Hesaplama Aracı';
+                    calculatorContent.innerHTML = '<p class="text-gray-400">Bu hesaplama aracı henüz hazır değil. Yakında eklenecek!</p>';
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                }
+            });
+        });
+
+        // Close modal
+        if (closeModal && modal) {
+            closeModal.addEventListener('click', function() {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            });
+        }
+
+        // Close modal on backdrop click
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }
+            });
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (modal && e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        });
+
+        // Additional helper functions for perfect Ohm's Law Calculator
+        window.validateOhmInput = function(input) {
+            const value = parseFloat(input.value);
+            const statusIndicator = input.parentElement?.querySelector('.input-status');
+            
+            if (statusIndicator) {
+                if (isNaN(value) || value <= 0) {
+                    statusIndicator.classList.remove('peer-valid:bg-green-400');
+                    statusIndicator.classList.add('peer-invalid:bg-red-400');
+                } else {
+                    statusIndicator.classList.remove('peer-invalid:bg-red-400');
+                    statusIndicator.classList.add('peer-valid:bg-green-400');
+                }
+            }
+        };
+
+        window.autoCalculateOhm = function() {
+            // Auto-calculate when user changes input
+            setTimeout(function() {
+                const voltage = parseFloat(document.getElementById('voltage')?.value || '');
+                const current = parseFloat(document.getElementById('current')?.value || '');
+                const resistance = parseFloat(document.getElementById('resistance')?.value || '');
+                
+                let validInputs = 0;
+                if (!isNaN(voltage) && voltage > 0) validInputs++;
+                if (!isNaN(current) && current > 0) validInputs++;
+                if (!isNaN(resistance) && resistance > 0) validInputs++;
+                
+                if (validInputs >= 2) {
+                    calculateOhmEnhanced();
+                } else {
+                    const result = document.getElementById('ohm-result-enhanced');
+                    if (result) {
+                        result.style.display = 'none';
+                    }
+                }
+            }, 300); // Small delay to avoid too frequent calculations
+        };
+
+        window.clearOhmInputs = function() {
+            const inputs = ['voltage', 'current', 'resistance'];
+            inputs.forEach(function(id) {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.value = '';
+                    validateOhmInput(input);
+                }
+            });
+            
+            const result = document.getElementById('ohm-result-enhanced');
+            if (result) {
+                result.style.display = 'none';
+            }
+        };
+
+        window.highlightFormula = function(type) {
+            const inputs = {
+                'voltage': ['current', 'resistance'],
+                'current': ['voltage', 'resistance'],
+                'resistance': ['voltage', 'current']
+            };
+            
+            if (inputs[type]) {
+                inputs[type].forEach(function(inputId) {
+                    const input = document.getElementById(inputId);
+                    if (input) {
+                        input.focus();
+                        input.style.transform = 'scale(1.02)';
+                        input.style.borderColor = '#a855f7';
+                        input.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.1)';
+                        
+                        setTimeout(function() {
+                            input.style.transform = '';
+                            input.style.borderColor = '';
+                            input.style.boxShadow = '';
+                        }, 2000);
+                    }
+                });
+            }
+        };
+
+    });
+</script>

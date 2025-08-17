@@ -1,0 +1,1518 @@
+---
+title: "Düşük Gürültülü Doğrusal Gerilim Düzenleyici Tasarımı ve Uygulaması"
+description: "AD9833, AD7606, OPA810, BUF634 ve STM32G431 gibi hassas komponentler için LT3042, LT3094 ve MIC5205 ultra düşük gürültülü regülatörler kullanarak bir güç kaynağı tasarımı."
+publishDate: 2025-07-21
+tags: [
+  'düşük gürültülü güç kaynağı',
+  'lineer regülatör',
+  'LT3045',
+  'LT3094',
+  'MIC5205',
+  'AD9833',
+  'AD7606',
+  'OPA810',
+  'BUF634',
+  'STM32G431',
+  'güç kaynağı tasarımı',
+  'analog elektronik',
+  'gürültü azaltma',
+  'sinyal bütünlüğü',
+  'pcb tasarımı',
+  'PSRR',
+  'termal gürültü'
+]
+image:
+  src: '/images/LineerReg/LT3045 - LT3094 Simetrik Gerilim Kaynağı.svg'
+  alt: 'Düşük Gürültülü Simetrik Doğrusal Gerilim Düzenleyici Devre Şeması'
+isDraft: false
+
+
+---
+
+import { ImageWithCaption } from '@/components/ImageWithCaption.jsx';
+
+
+
+## Gerilim Düzenleyicilere Giriş: Temel Kavramlar
+
+Elektronik devrelerin neredeyse tamamı, kararlı ve güvenilir bir şekilde çalışmak için sabit bir DC gerilime ihtiyaç duyar. Ancak pillerin gerilimi zamanla düşer veya AC şebekeden doğrultulan gerilimde dalgalanmalar (ripple) olur. İşte bu noktada **gerilim düzenleyiciler** devreye girer. Görevleri, giriş gerilimi veya yük akımı değişse bile sabit bir çıkış gerilimi sağlamaktır. İki ana tür gerilim düzenleyici vardır: **Doğrusal (Linear)** ve **Anahtarlamalı (Switching)**.
+
+### Doğrusal (Lineer) Gerilim Düzenleyicilerin Çalışma Mantığı
+
+Bir lineer regülatörü, en basit haliyle, **akıllı ve değişken bir direnç** gibi düşünebiliriz. Çıkış voltajını sürekli olarak izler ve sabit tutmak için kendi direncini anlık olarak ayarlar.
+
+<ImageWithCaption
+  src="/images/LineerReg/Doğrusal Regulator Temel Devre.svg"
+  alt="Doğrusal gerilim düzenleyicisinin blok diyagramı"
+>
+  <strong>Şekil 1:</strong> Doğrusal Gerilim Düzenleyicisinin  Temel Blok Diyagramı
+</ImageWithCaption>
+
+{/*
+\documentclass[border=10pt]{standalone}
+\usepackage[svgnames]{xcolor}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usepackage{circuitikz}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{decorations.markings, arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit, backgrounds, patterns}
+\pagecolor{white}
+
+\begin{document}
+\begin{circuitikz}[american, voltage shift=0.5]
+
+% Ana blokları çizelim
+% Giriş bloğu
+\draw[thick] (0, 2) rectangle (2, 4);
+\node at (1, 3) {\textbf{Giriş}};
+%\node at (1, 2.75) {$V_{IN}$};
+
+% Geçiş Elemanı (Transistör) bloğu
+\draw[thick] (4, 2) rectangle (6, 4);
+\node at (5, 3.5) {\textbf{Geçiş}};
+\node at (5, 3) {\textbf{Elemanı}};
+\node at (5, 2.5) {(Transistör)};
+
+% Çıkış bloğu
+\draw[thick] (8, 2) rectangle (10, 4);
+\node at (9, 3) {\textbf{Çıkış}};
+%\node at (9, 2.755) {$V_{OUT}$};
+
+% Hata Yükselteci bloğu
+\draw[thick] (3, -1) rectangle (7, 1);
+\node at (5, 0.5) {\textbf{Hata Yükselteci}};
+\node at (5, 0) {(Op-Amp)};
+\node at (5, -0.5) {$OA_1$};
+
+% Referans Gerilimi bloğu
+\draw[thick] (0, -1) rectangle (2.5, 1);
+\node at (1.25, 0.5) {\textbf{Referans}};
+\node at (1.25, 0) {\textbf{Gerilimi}};
+\node at (1.25, -0.5) {$V_{REF}$};
+
+% Bağlantı okları
+% Giriş -> Geçiş Elemanı
+\draw[->, thick] (2, 3) -- (4, 3);
+
+% Geçiş Elemanı -> Çıkış
+\draw[->, thick] (6, 3) -- (8, 3);
+
+% Hata Yükselteci -> Geçiş Elemanı (kontrol sinyali)
+\draw[->, thick] (5, 1) -- (5, 2);
+\node[right] at (5.2, 1.5) {Kontrol};
+
+% Referans Gerilimi -> Hata Yükselteci (+)
+\draw[->, thick] (2.5, 0) -- (3, 0);
+\node[above] at (2.75, 0.1) {$+$};
+
+% Çıkış -> Hata Yükselteci (-) geri besleme
+\draw[->, thick] (9, 2) |- (7.5, 0) -- (7, 0);
+\node[above] at (7.3, 0.1) {$-$};
+\node[below] at (8.25, -0.1) {Geri Besleme};
+
+% Giriş ve çıkış terminalleri
+\draw[->, thick] (-1, 3) -- (0, 3);
+\node[left] at (-1, 3) {$V_{IN}$};
+
+\draw[->, thick] (10, 3) -- (11, 3);
+\node[right] at (11, 3) {$V_{OUT}$};
+
+% Toprak bağlantıları
+%\draw (1, 2) -- (1, 1.5);
+%\node[ground] at (1, 1.5) {};
+\draw (5, 2) -- (5, 1.7);
+\draw (9, 2) -- (9, 1.5);
+%\node[ground] at (9, 1.5) {};
+
+% Başlık
+%\node[above] at (5, 5) {\Large\textbf{Lineer Regülatörün Temel Blok Diyagramı}};
+
+\end{circuitikz}
+\end{document}
+*/}
+
+Bu işlemin arkasındaki temel yapı üç ana bölümden oluşur:
+
+1.  **Geçiş Elemanı (Pass Element):** Genellikle bir BJT veya MOSFET transistördür. Giriş ile çıkış arasına seri olarak bağlanır ve devrenin ana kontrol vanası gibi çalışır. Direnci, üzerine uygulanan kontrol sinyali ile değişir.
+2.  **Referans Gerilimi (Voltage Reference):** Son derece kararlı, sıcaklıktan ve giriş geriliminden etkilenmeyen sabit bir voltaj kaynağıdır (örn: bir Zener diyot veya bandgap referansı). Bu, regülatörün "hedef" voltajıdır.
+3.  **Hata Yükselteci (Error Amplifier):** Regülatörün beynidir. Çıkış geriliminin bir kısmını (genellikle bir voltaj bölücüden alınan) alır ve bunu sabit referans gerilimi ile karşılaştırır. Aradaki en küçük farkı bile algılar ve yükseltir.
+
+--- 
+
+**Geri Besleme Döngüsü Nasıl Çalışır?**
+  - **Çıkış gerilimi artarsa:** Hata yükselteci, çıkış ile referans arasındaki bu **pozitif farkı** algılar ve geçiş elemanına (örneğin bir MOSFET veya BJT) giden kontrol sinyalinin genliğini azaltır. Bu, geçiş elemanının **iletkenliğini azaltarak** üzerindeki gerilim düşümünü artırır. Böylece çıkış gerilimi tekrar hedeflenen seviyeye düşürülür.
+  - **Çıkış gerilimi azalırsa:** Hata yükselteci, çıkış ile referans arasındaki bu **negatif farkı** algılar ve geçiş elemanına daha yüksek bir kontrol sinyali uygular. Bu da geçiş elemanının **iletkenliğini artırır**, üzerindeki gerilim düşümünü azaltır ve çıkış gerilimi hedef seviyeye yükseltilir.
+
+Bu sürekli ayarlama işlemi sayesinde çıkış gerilimi sabit kalır.
+
+<ImageWithCaption
+  src="/images/LineerReg/Lineer Regülatör Temel Devre.svg"
+  alt="Doğrusal gerilim düzenleyicisinin temel devresi"
+>
+  <strong>Şekil 2:</strong> Doğrusal gerilim düzenleyicisinin temel devresi
+</ImageWithCaption>
+
+{/*
+\documentclass[border=10pt]{standalone}
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usepackage{circuitikz}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{decorations.markings, arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit, backgrounds, patterns} % KUTUCUKLAR İÇİN GEREKLİ KÜTÜPHANELER
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+\begin{document}
+\begin{circuitikz}[american, voltage shift=0.5]
+\ctikzset{tripoles/mos style=arrows}
+\ctikzset{amplifiers/scale=0.75}
+\draw (-2, 2) to [vsource, v=$V_{IN}$] (-2, -5)
+node[ground]{};
+\draw (6,2) node[nmos, rotate=90](nmos1){};
+\draw (5, 2.5) to[open, v=$V_{DS}$] (7, 2.5);
+\draw (-2,2) -- (nmos1.D);
+\draw (5,-0.5) node[op amp, yscale=-1](opamp_1){};
+\draw (opamp_1.out) -| (nmos1.G);
+\ctikzset{diodes/scale=0.6}
+\draw (1.5, -5) to[empty ZZener diode, l = $Z_{Ref}$, v<=$V_Z$] (1.5, -3);
+\draw node[ground] at (1.5, -5) {};
+\draw (1.5, 1) -- (1.5,2);
+\draw (1.5,-1) to [american resistor, l = $R_1$](1.5,1);
+% R1 direnci ile zener diyotu bağlayalım:
+\draw (1.5, -1) -- (1.5, -3);
+% R1 direnci ve zener diyot arasındaki noktadan opampın pozitif girişine bağlantı yapalım:
+\draw (1.5, -2) --++(1.25,0) |- (opamp_1.+);
+%Gerilim bölücü dirençler
+\draw (9, 1) -- (9,2);
+\draw (9,2) -- (nmos1.S);
+\draw (9,1) to [american resistor, l = $R_2$](9, -1);
+\draw (9, -1) -- (9,-3); % bu ikisinin y eksenindeki orta noktası = -1.25
+\draw (9,-3) to [american resistor, l = $R_3$](9, -5);
+\draw node [ground] at (9, -5) {};
+% opamp negatif girişe bu orta noktadan bağlantı yapalım 
+\draw (9, -2) --++(-5.25,0) |- (opamp_1.-);
+\draw (9,2) -- (11,2);
+\draw node[circ] at (9, 2) {};
+\draw node[circ] at (9, -2) {};
+\draw node[circ] at (1.5, 2) {};
+\draw node[circ] at (1.5, -2) {};
+\draw node[ocirc] at (11, 2) {};
+% Etiketler eklendi
+\node[below right] at (opamp_1.north) {$OA_1$};
+\node[below right] at (nmos1.west) {$M_1$};
+\node[right] at (11.2, 2) {$V_{OUT}$};
+\node[right] at (8.5, -1.75) {$X$};
+\node[right] at (9.2, -2) {$V_{X} = V_{OUT} \cdot \frac{R_3}{R_2 + R_3}$};
+\node[right] at (1.5, -1.75) {$Y$};
+\node[right] at (-0.25, -2) {$V_{Y} = V_{Z}$};
+\end{circuitikz}
+\end{document}
+*/}
+Yukarıdaki devre, **negatif geribesleme ile çıkış gerilimini sabit tutan** klasik bir **hata yükselteci (error amplifier)** kontrollü doğrusal gerilim düzenleyici örneğidir. Özünde şu işlemi yapar:
+
+> Çıkış gerilimini, referans gerilimi ile karşılaştırıp, farkı bir MOSFET üzerinden kontrol ederek çıkışı sabit tutar.
+
+---
+
+## Devredeki Temel Elemanlar
+
+| Eleman                        | İşlevi                                                               |
+| ----------------------------- | -------------------------------------------------------------------- |
+| **Zener diyot + R1**          | Sabit referans gerilimi $V_Z$ oluşturur.                             |
+| **Opamp $OA_1$**              | Hata yükselteci; $V_X$ ve $V_Y$’yi karşılaştırır.                    |
+| **Gerilim bölücü $R_2, R_3$** | Çıkış geriliminin orantılı bir kısmını üretir: $V_X$                 |
+| **MOSFET $M_1$**              | Akımı kontrol ederek çıkış gerilimini belirler.                      |
+| **Negatif geribildirim**      | Çıkışı sabit tutmak için opamp çıkışından MOSFET kapısına etki eder. |
+
+---
+
+
+### 1. **Gerilim Bölücü:**
+
+Opamp’ın eksi girişine bağlı gerilim:
+
+$$
+V_X = V_{OUT} \cdot \frac{R_3}{R_2 + R_3}
+$$
+
+Bu, çıkış geriliminin orantılı bir kısmıdır.
+
+---
+
+### 2. **Referans Gerilimi:**
+
+Opamp’ın artı girişine bağlı gerilim:
+
+$$
+V_Y = V_Z
+$$
+
+Buradaki $V_Z$, Zener tarafından sabit tutulan gerilimdir (örneğin 2.5 V).
+
+---
+
+### 3. **Opamp Karşılaştırması:**
+
+Opamp hata yükselteci olarak çalışır. Negatif geribildirimli olduğu için şu **denge durumu** oluşur:
+
+$$
+V_X \approx V_Y
+$$
+
+Yani:
+
+$$
+V_{OUT} \cdot \frac{R_3}{R_2 + R_3} \approx V_Z
+\Rightarrow \boxed{V_{OUT} \approx V_Z \cdot \frac{R_2 + R_3}{R_3}}
+$$
+
+---
+
+###  Örnek:
+
+* $V_Z = 2.5\,\text{V}$
+* $R_2 = 7.5\,\text{k}\Omega$
+* $R_3 = 2.5\,\text{k}\Omega$
+
+$$
+V_{OUT} = 2.5 \cdot \frac{7.5 + 2.5}{2.5} = 2.5 \cdot 4 = 10\,\text{V}
+$$
+
+---
+
+### 4. **MOSFET ve Opamp Etkileşimi:**
+
+* Eğer $V_{OUT}$ artarsa → $V_X > V_Y$ olur → Opamp çıkışı düşer → MOSFET daha az iletir → $V_{OUT}$ tekrar düşer.
+* Eğer $V_{OUT}$ azalırsa → $V_X < V_Y$ olur → Opamp çıkışı artar → MOSFET daha çok iletir → $V_{OUT}$ tekrar yükselir.
+
+Bu sayede devre **negatif geribildirimle stabil çalışır**.
+
+---
+
+## Özet
+
+| Değişken              | İfade                                                              |
+| --------------------- | ------------------------------------------------------------------ |
+| Gerilim bölücü çıkışı | $V_X = V_{OUT} \cdot \dfrac{R_3}{R_2 + R_3}$                       |
+| Referans gerilimi     | $V_Y = V_Z$                                                        |
+| Kararlılık koşulu     | $V_X = V_Y \Rightarrow V_{OUT} = V_Z \cdot \dfrac{R_2 + R_3}{R_3}$ |
+
+---
+
+
+
+### Lineer ve Anahtarlamalı Regülatörlerin Karşılaştırılması
+
+| Özellik | Doğrusal (Lineer) Regülatör | Anahtarlamalı (Switching) Regülatör |
+| :--- | :--- | :--- |
+| **Verimlilik** | Düşük (%30-60). Fazla enerjiyi ısı olarak harcar. | Yüksek (%80-95+). Enerjiyi manyetik alanda depolar. |
+| **Gürültü (EMI)** | **Çok Düşük.** Gürültülü anahtarlama elemanı yoktur. | Yüksek. Hızlı anahtarlama nedeniyle gürültü üretir. |
+| **Karmaşıklık** | Basit. Az sayıda harici komponent gerektirir. | Karmaşık. Bobin, diyot, transistör ve kontrolcü gerektirir. |
+| **Boyut** | Verimsizlik nedeniyle büyük soğutucu (heatsink) gerektirebilir. | Daha küçük olabilir çünkü soğutucu ihtiyacı azdır. |
+| **Maliyet** | Genellikle daha ucuzdur. | Daha pahalı ve tasarımı daha zordur. |
+| **Uygulama Alanı** | **Hassas analog devreler, ses sistemleri, sensörler.** | Bataryalı cihazlar, yüksek güçlü sistemler, bilgisayarlar. |
+
+Bu tablodan da anlaşılacağı gibi, projemizin hedefi olan **hassas ve gürültüsüz** bir sistem için lineer regülatörler bariz bir şekilde en doğru tercihtir.
+
+---
+
+## Projenin En Önemli Bileşeni: Neden "Ultra Düşük Gürültü"?
+
+Yüksek performanslı analog ve karma sinyal (mixed-signal) devrelerin başarısı, büyük ölçüde beslendikleri güç kaynağının kalitesine bağlıdır. LCR Metre gibi hassas ölçüm cihazlarında, sensör arayüzlerinde veya yüksek kaliteli ses sistemlerinde, güç hattındaki en küçük bir gürültü bile sistemin genel performansını ciddi şekilde düşürebilir. Bu proje, bu tür hassas uygulamalar için kritik olan **ultra düşük gürültülü bir doğrusal gerilim düzenleyici** tasarımına odaklanmaktadır.
+
+### Güç Kaynağı Gürültüsünün Etkileri
+
+Güç kaynağı gürültüsü, çeşitli kaynaklardan gelebilir ve farklı komponentleri farklı şekillerde etkiler:
+
+- **ADC'ler (örn: AD7606):** Güç hattındaki gürültü, referans gerilimini etkileyerek veya doğrudan analog girişlere kuple olarak ölçüm doğruluğunu ve çözünürlüğünü (Effective Number of Bits - ENOB) düşürür.
+- **Sinyal Jeneratörleri (örn: AD9833):** Gürültülü bir besleme, üretilen sinyalin faz gürültüsünü (phase noise) ve jitter'ını artırarak sinyal kalitesini bozar.
+- **İşlemsel Yükselteçler (örn: OPA810):** Op-amp'ların Güç Kaynağı Bastırma Oranı (PSRR) ne kadar iyi olursa olsun, belirli bir miktar gürültü çıkışa yansır ve sinyal-gürültü oranını (SNR) kötüleştirir.
+- **Mikrodenetleyiciler (örn: STM32G431):** Özellikle dahili ADC, DAC veya komparatör gibi analog çevre birimleri kullanılırken, gürültülü bir besleme bu birimlerin kararsız çalışmasına neden olabilir.
+
+## Çözüm: Ultra Düşük Gürültülü Regülatörler
+
+Bu sorunların üstesinden gelmek için projemizde, endüstri standardı haline gelmiş, sınıfının en iyisi üç adet lineer regülatör kullanacağız.
+
+Elbette, verdiğiniz metni LT3045'in veri sayfasına göre güncelledim. İşte yeni hali:
+
+### 1. LT3045: Gürültüye Duyarlı Uygulamalar İçin Pozitif Regülatör
+
+Analog Devices tarafından üretilen LT3045, özellikle gürültüye karşı çok hassas olan RF (Radyo Frekansı) ve yüksek hızlı veri dönüştürücü uygulamaları için tasarlanmış, ultra düşük gürültü ve ultra yüksek PSRR performansına sahip bir lineer regülatördür.
+
+- **Temel Özellikler:**
+  - **Ultra Düşük RMS Gürültü:** 0.8µV RMS (10Hz - 100kHz)
+  - **Ultra Düşük Spot Gürültü:** $2nV/\sqrt{Hz}$ (10kHz'de)
+  - **Ultra Yüksek PSRR:** 76dB (1MHz'de)
+  - **Çıkış Akımı:** 500mA
+  - **Geniş Giriş Voltaj Aralığı:** 1.8V - 20V
+  - **Mimarisi:** Hassas bir akım kaynağı referansı ve bunu takip eden yüksek performanslı bir gerilim tamponu (voltage buffer) üzerine kuruludur. Bu benzersiz mimari, geleneksel regülatörlerdeki gürültülü bandgap gerilim referansı ihtiyacını ortadan kaldırır. Bu sayede, çıkış geriliminde bağımsız olarak neredeyse sabit bir çıkış gürültüsü, PSRR ve bant genişliği performansı sunar. Ayrıca, bu yapı sayesinde birden fazla LT3045'in paralel bağlanması çok kolaydır, bu da gürültüyü daha da azaltmaya, çıkış akımını artırmaya ve ısıyı PCB üzerinde dağıtmaya olanak tanır.
+
+<ImageWithCaption
+  src="/images/LineerReg/LT3045-Temel Devre.svg"
+  alt="LT3045-Temel Devre"
+>
+  <strong>Şekil 3:</strong> LT3045-Temel Devre
+</ImageWithCaption>
+
+{/*
+\documentclass[border=10pt]{standalone}
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usepackage{circuitikz}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{decorations.markings, arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit, backgrounds, patterns} % KUTUCUKLAR İÇİN GEREKLİ KÜTÜPHANELER
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+\begin{document}
+\begin{circuitikz}[american, voltage shift=0.5]
+\ctikzset{tripoles/mos style=arrows}
+\ctikzset{amplifiers/scale=0.75}
+
+% Ana IC kutusunu çizelim
+% Rengi tanımlayın
+\definecolor{iccolor}{RGB}{230,194,189}
+\draw[thick, fill=iccolor] (0, 0) rectangle (6, 5.25);
+\node at (5.5, 4.95) {\scriptsize\sffamily LT3045};
+
+% IC pinleri
+% Sol taraf pinleri
+\draw[thick,fill=white] (-0.2, 4.4) rectangle (0.2, 4.8);
+\node[right] at (0.2, 5) {\scriptsize\sffamily IN};
+
+\draw[thick,fill=white] (-0.2, 2.8) rectangle (0.2, 3.2);
+\node[right] at (0.2, 3) {\scriptsize\sffamily EN/UV};
+
+\draw[thick,fill=white] (-0.2, 2) rectangle (0.2, 2.4);
+\node[right] at (0.2, 2.2) {\scriptsize\sffamily PGFB};
+
+\draw[thick,fill=white] (-0.2, 1.2) rectangle (0.2, 1.6);
+\node[right] at (0.2, 1.4) {\scriptsize\sffamily PG};
+
+% Alt taraf pinleri
+
+\draw[thick,fill=white] (1.2, -0.2) rectangle (1.6, 0.2);
+\node[right] at (1.4, 0.4) {\scriptsize\sffamily SET};
+
+\draw[thick,fill=white] (3.235, -0.2) rectangle (3.635, 0.2);
+\node[right] at (3.4, 0.4) {\scriptsize\sffamily GND};
+\draw [thick] node [ground] at (3.435, -0.2) {};
+
+\draw[thick,fill=white] (4.6, -0.2) rectangle (5, 0.2);
+\node[right] at (4.4, 0.4) {\scriptsize\sffamily ILIM};
+
+
+% Sağ taraf pinleri
+\draw[thick,fill=white] (5.8, 0.6) rectangle (6.2, 1);
+\node[left] at (5.9, 1) {\scriptsize\sffamily OUTS};
+
+\draw[thick,fill=white] (5.8, 1.2) rectangle (6.2, 1.6);
+\node[left] at (5.9, 1.6) {\scriptsize\sffamily OUT};
+
+\draw [thick] (5.1,2.5) node[pnp](P1){};
+
+\draw [thick] (3.5,2.5) node[op amp](A1){};
+\draw [thick] (A1.down) |- (3.435, 0.2);
+\draw [thick] (A1.up) |- (3.435, 4.6);
+\draw node[circ] at (3.435, 4.6) {};
+\draw [thick] (A1.out) -| (P1.B);
+
+%Bağlantıları yazalım
+%opamp + girişinden OUTS pinine bağlantı kuralım
+\draw [thick] (A1.+) --++(-0.2,0)|-(5.8, 0.8){};
+
+%PNP Colector ucundan OUT pinine bağlantı yazalım
+\draw [thick] (P1.C) |- (5.8,1.4){};
+
+%Akım kaynağı
+\draw [thick] (1.4, 4.6) to[ioosource, l=100µA, i=$$] (1.4, 3);
+\draw [thick] (1.4, 3) -- (1.4,0.2){};
+% opamp negatif girişten akım kaynağı yoluna hat çizelim
+\draw[thick] (A1.-) -| (1.4,2.8575){};
+\draw node[circ] at (1.4, 2.8575) {};
+\draw node[circ] at (1.4, 4.6) {};
+
+%P1 transistörün Emetör ucundan IN ucuna bağlantı çizelim:
+\draw[thick](P1.E) |- (0.2, 4.6){};
+
+
+%Çevre birimleri çizelim
+
+\draw[thick](-2, 4.6)--(-0.2,4.6){};
+\draw[thick](-0.2, 2.2)--++(-0.4, 0) |- ++(0, 2.4){};
+\draw node[circ] at (-0.6, 3) {};
+\draw[thick](-0.2, 3)--++(-0.4,0){};
+\draw node[circ] at (-0.6, 4.6) {};
+
+%Giriş Kondansatörü
+\draw [thick] (-1.5, 4.6) -- (-1.5, 4) to[C, l_={\small 4.7\,µF}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (-1.5, 3.8) -- (-1.5, 3.6);
+\draw[thick] (-1.5, 3.6) node[ground]{};
+\draw node[circ] at (-1.5, 4.6) {};
+%VIN
+\node[left] at (-2, 4.6) {$V_{IN}$};
+
+%RSET direnci ve paralel kondansatör yazımı
+\draw [thick]  (1.4, -2.6)--(1.4, -2.2) to[variable american resistor, mirror, l_ = {$R_{SET}$}] (1.4, -1.1)  -- (1.4, -0.2) ;
+\draw[thick] (1.4, -2.6) node[ground]{};
+
+% Paralel kondansatör
+\draw [thick] (1.4, -2.5) -- (0.4, -2.5) -- (0.4, -1.75) to[C, l={\small 4.7\,µF}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (0.4, -1.55) -- (0.4, -0.8) -- (1.4, -0.8);
+\draw node[circ] at (1.4, -2.5) {};
+\draw node[circ] at (1.4, -0.8) {};
+
+%ILIM
+%RSET direnci ve paralel kondansatör yazımı
+\draw [thick]  (4.8, -2.6)--(4.8, -2.2) to[variable american resistor, mirror, l_ = {$R_{IOUT}$}] (4.8, -1.1)  -- (4.8, -0.2) ;
+\draw[thick] (4.8, -2.6) node[ground]{};
+
+%Çıkış Kondansatörü
+\draw [thick] (7.5, 1.4) -- (7.5, 0.8) to[C, l={\small 4.7\,µF}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (7.5, 0.6) -- (7.5, 0.4);
+\draw[thick] (7.5, 0.4) node[ground]{};
+\draw node[circ] at (7.5, 1.4) {};
+%VIN
+\node[right] at (8, 1.4) {$V_{OUT}$};
+
+%Çıkış bağlantılarını yapalım
+\draw[thick] (6.2, 1.4) -- (7.5, 1.4)--++(0.5,0){};
+\draw[thick] (6.2, 0.8) -- ++(0.2,0) -- (7.5, 1.4){};
+
+
+\end{circuitikz}
+\end{document}
+*/}
+
+
+### LT3045 Tasarım Kuralları
+
+LT3045, ultralow gürültü ve ultra yüksek PSRR (Power Supply Rejection Ratio - Güç Kaynağı Bastırma Oranı) mimarisine sahip yüksek performanslı bir düşük düşüşlü (LDO) lineer regülatördür. Tasarımlarımızda LT3045'in tam performansını elde etmek ve doğru çalışmasını sağlamak için aşağıdaki kurallara dikkat etmeliyiz:
+
+> **PSRR (Güç Kaynağı Bastırma Oranı)**, bir devrenin (genellikle bir kuvvetlendiricinin veya gerilim düzenleyicinin) **güç kaynağındaki dalgalanma veya gürültülerin çıkışa yansımasını ne kadar iyi bastırabildiğini** gösteren bir ölçüdür. Genellikle desibel (dB) cinsinden ifade edilir.
+> * **Yüksek PSRR**, devrenin **güç kaynağındaki gürültüden daha az etkilendiği** anlamına gelir.
+> * Frekansa bağlıdır: PSRR genellikle yüksek frekanslarda azalır.
+> $$
+> \text{PSRR (dB)} = 20 \log \left( \frac{\Delta V_{\text{güç}}}{\Delta V_{\text{çıkış}}} \right)
+> $$
+
+*   **Çıkış Voltajı Ayarı**:
+    *   LT3045'in SET pininden **$100 \mu A$** hassas bir akım akar.
+    *   SET pini ile GND arasına bir direnç ($R_{SET}$) bağlanarak çıkış voltajı ayarlanır. Çıkış voltajı **$V_{OUT} = I_{SET} \cdot R_{SET}$** formülüyle belirlenir.
+    *   Çıkış voltajı aralığı **$0V$'tan $15V$'a** kadardır. $0V$ için $0Ω$ direnç kullanılabilir.
+    *   Yüksek doğruluk için SET pin direncini **hassas bir direnç** olarak seçmeliyiz (örneğin tolerans değeri %±0.5 veya daha az).
+    *   SET pini yüksek empedanslı bir düğüm olduğundan, istenmeyen sinyallerin kuplajını önlemek için **$10nF$'lik küçük bir kapasitörle** $GND$'ye bypass edilmesi önerilir.
+    *   SET ucundaki **kaçak akım yollarını en aza indirmek** için, bu ucu potansiyeli kendisine yakın olan OUT ucuna bağlı bir **koruma halkası (guard ring)** ile çevrelemek gerekir (aşağıdaki şekildeki gibi). Bu koruma halkasının devre kartının her iki yüzeyinde de uygulanması tavsiye edilir.
+
+<ImageWithCaption
+  src="/images/LineerReg/guard-ring-layout.svg"
+  alt="LT3045 - DFN paketi için koruma halkası yerleşimi (guard ring layout)"
+>
+  <strong>Şekil 4 :</strong> LT3045 - DFN paketi için koruma halkası yerleşimi (guard ring layout)
+</ImageWithCaption>
+
+*   **Kapasitör Seçimi ve Yerleşimi**:
+    *   **Çıkış Kapasitörü ($C_{OUT}$)**:
+        *   LT3045 kararlılık için minimum **$10\mu F$ seramik çıkış kapasitörü** gerektirir.
+        *   Bu kapasitörün ESR (Equivalent Series Resistance - Eşdeğer Seri Direnç)'si **$20 \; mΩ$'dan düşük** ve ESL (Equivalent Series Inductance - Eşdeğer Seri Endüktans)'si **$2 \; nH$'den düşük** olmalıdır.
+        *   Daha büyük çıkış kapasitörleri, regülatörün bant genişliğini azalttığı için performansı marjinal olarak artırır. Ancak, yük geçişleri sırasında tepe çıkış sapmalarını azaltmak için daha büyük değerler kullanılabilir.
+        *   **X5R ve X7R dielektrik** malzeme ile üretilmiş kapasitör kullanılması önerilir. Z5U ve Y5V dielektrikler, voltaj ve sıcaklık değişimleriyle kapasitanslarında büyük değişiklikler gösterebilir.
+        *   Kapasitörlerin DC bias voltajına bağlı olarak gerçek değerlerinin düşebileceği göz önünde bulundurulmalıdır; özellikle X5R ve X7R kapasitörlerde bile bu durum önemli olabilir. Çalışma voltajındaki beklenen kapasitans değerini doğrulamak şiddetle tavsiye edilir.
+        *   LT3045'in çok düşük çıkış empedansı nedeniyle, seramik çıkış kapasitöründen kaynaklanan piezoelektrik gürültü ihmal edilebilir düzeydedir.
+    *   **SET Pini Kapasitörü ($C_{SET}$)**:
+        *   SET pinine bir kapasitör eklemek **çıkış gürültüsünü, PSRR'yi ve geçici tepkiyi iyileştirir**.
+        *   Bu kapasitör, SET pin direncindeki termal gürültüyü ve referans akımının gürültüsünü bypas eder, böylece çıkış gürültüsü sadece hata amplifikatörünün gürültüsüyle sınırlanır.
+        *   CSET kullanımı **başlangıç süresini artırır**.
+        *   Ultralow gürültülü uygulamalar için $22 \mu F$'a kadar daha büyük SET pin kapasitörü gerekebilir. Bu durumlarda, LT3045'nin **hızlı başlangıç devresi** başlangıç akımını 2mA'ya çıkararak bu süreyi kısaltır.
+        *   Bypass kapasitörünün **kaçak akımı, DC regülasyonunu bozabilir** (örneğin 100nA kaçak, %0.1 DC hataya yol açar); bu nedenle kaliteli, düşük kaçaklı seramik kapasitörler kullanılması tavsiye edilir.
+        *   SET pin kapasitöründen kaynaklanabilecek piezoelektrik gürültüyü önlemek için seramik olmayan (tantal, elektrolitik veya film) kapasitörler kullanılabilir; ancak elektrolitik kapasitörlerin yüksek 1/f gürültüsü olabilir. Yüzey montajlı kapasitörler şiddetle tavsiye edilir.
+    *   **Giriş Kapasitörü ($C_{IN}$)**:
+        *   LT3045 minimum **$4.7 \mu F$ IN pini kapasitörü** ile kararlıdır. Düşük ESR'li seramik kapasitörler önerilir.
+        *   Uzun besleme kabloları kullanılıyorsa, tel endüktansından kaynaklanan kararsızlığı önlemek için **daha büyük bir giriş kapasitörü** kullanılmalıdır (kabaca her 15-20 cm tel uzunluğu için ek $1\mu F$).
+        *   Tel endüktansını azaltmak için akım götüren ve getiren iletkenler (giriş ve toprak bağlantıları) **birbirlerine olabildiğince yakın yerleştirilmelidir**.
+        *   Besleme ile LT3045 girişi arasına **$0.1\;Ω$ ila $0.5\;Ω$ gibi seri direnç** eklemek de kararlılığa yardımcı olabilir, ancak bu dirençler gerilim düşümünü artırır. Daha iyi bir alternatif, $4.7 \mu F$ seramik kapasitöre paralel olarak daha yüksek ESR'li tantal veya elektrolitik bir kapasitör kullanmaktır.
+        *   Anahtarlamalı dönüştürücüleri post-regüle ederken, LT3045 girişine yerleştirilen bir kapasitör, anahtarlama frekansında manyetik alan oluşturarak PSRR'yi düşürebilir. Bu etkiyi azaltmak için, anahtarlamalı dönüştürücünün çıkış kapasitörü LT3045'den **en az birkaç cm uzakta konumlandırıldığında giriş kapasitörü tamamen çıkarılabilir**.
+        *   En iyi PSRR performansı için **LT3045 demo kartı (DC2491A) düzeninin** kullanılması tavsiye edilir. Yerleşim düzeni, manyetik kuplajı azaltacak şekilde optimize edilmiştir; bu sayede yüksek frekanslı parazitlerin neden olabileceği PSRR bozulmaları engellenir.
+        *   Çok yüksek frekanslı (100'lerce MHz) anahtarlayıcı "sıçramalarını" filtrelemek için, anahtarlayıcının çıkışı ile LT3045'nin girişi arasına **ferrit boncuk veya kısa bir PCB izi indüktansı** (LC filtresi olarak) eklenebilir.
+
+*   **Pin Bağlantıları ve İşlevsellik**:
+    *   **Kelvin Bağlantıları**: Optimal geçici (transient) performans ve yük regülasyonu için **OUTS pini doğrudan çıkış kapasitörüne ve yüke bağlanmalıdır**. SET pin direncinin GND tarafı da doğrudan $C_{OUT}$'un GND tarafına bağlanmalıdır. $C_{IN}$ ve $C_{OUT}$'un GND bağlantıları da birbirine yakın tutulmalıdır.
+    *   **EN/UV Pini (Pin 3/4)**: LT3045'i kapatmak için EN/UV pini düşüğe ($0 volt$) çekilmelidir ($<1 \mu A$ bekleme akımı). Bir gerilim bölücü kullanarak giriş beslemesi için **düşük voltaj kilitleme (UVLO) eşiği** ayarlamak için kullanılabilir. Kullanılmadığında **EN/UV pinini IN'e bağlanmalıdır**; boşta bırakılmamalıdır.
+    *   **PG Pini (Pin 4/5)**: Açık kollektör bir işaretçi olup, çıkış gerilim regülasyonunu belirtir. PGFB 300mV'nin altına düşerse düşüğe ($0 Volt$) çeker. "Güç iyi" işlevi gerekmiyorsa **PG pini boşta bırakılmalıdır**.
+    *   **ILIM Pini (Pin 5/6)**: Akım limitini programlamak için ILIM ile GND arasına bir direnç bağlanır. Programlama ölçek faktörü nominal olarak **150mA • kΩ**'dur. En iyi doğruluk için, bu direnç doğrudan LT3045'in ILIM pinine **Kelvin bağlantısı ile bağlanır**. Akım limiti veya akım izleme işlevi kullanılmıyorsa **ILIM pini GND'ye bağlanmalıdır**.
+    *   **PGFB Pini (Pin 6/7)**: PG pininin yüksek empedanslı hale gelmesi için PGFB'nin 300mV üzerine çıkması gerekir. Gerilim bölücü ile programlanabilir "**güç iyi**" eşiği ayarlanır. Ayrıca **hızlı başlangıç devresini etkinleştirir**. "Güç iyi" ve "hızlı başlangıç" işlevleri gerekmiyorsa **PGFB IN'e bağlanır**. Ters giriş koruması da gerekiyorsa, bir 1N4148 diyotunun anodu IN'e, katodu PGFB'ye bağlanabilir.
+>**1. Programlanabilir "Güç İyi" (Power Good) Sinyali:**
+>*   **Ne İşe Yarar?** Bu özellik, sistemdeki bir mikrodenetleyiciye veya başka bir mantık devresine, LT3045'in çıkış geriliminin kararlı ve istenen seviyeye ulaştığını bildiren bir bayrak (flag) sinyali sağlar.
+>*   **Nasıl Çalışır?** OUT pini ile GND arasına bir gerilim bölücü bağlayarak PGFB pinindeki gerilim ayarlanır. PGFB pinindeki gerilim **300mV**'u aştığında, açık kollektörlü **PG** pini yüksek empedanslı duruma geçer (yani "yüksek" olur). Gerilim 300mV'un altındaysa, PG pini toprağa çeker (yani "düşük" olur).
+>*   **Ne Zaman Gerekli?** Özellikle sistemdeki diğer bileşenlerin çalışmaya başlamadan önce güç rayının kararlı olduğundan emin olunması gereken durumlarda (örneğin, mikrodenetleyiciler, FPGA'lar, hassas ADC'ler) bu özellik hayati önem taşır.
+
+>**2. Hızlı Başlangıç (Fast Start-Up) Özelliği:**
+>*   **Ne İşe Yarar?** Bu, PGFB'nin en önemli faydalarından biridir. Özellikle gürültüyü azaltmak için **büyük değerli bir SET pini kapasitörü ($C_{SET}$)** (örneğin 1µF - 22µF arası) kullanıldığında, regülatörün başlangıç süresi normalde çok uzar. Hızlı başlangıç özelliği bu süreyi önemli ölçüde kısaltır.
+>*   **Nasıl Çalışır?** PGFB pini 300mV'un altında olduğu sürece (yani çıkış gerilimi henüz hedefe ulaşmamışken), LT3045 dahili olarak **2mA'lik bir akım kaynağını** devreye sokar ve $C_{SET}$ kapasitörünü hızla şarj eder. Bu sayede çıkış gerilimi çok daha hızlı bir şekilde nominal değerine ulaşır.
+>*   **Ne Zaman Gerekli?** Düşük frekans gürültüsünü (1/f noise) bastırmak için büyük bir $C_{SET}$ kapasitörü kullanılıyorsa ve sistemin hızlı bir şekilde açılması gerekiyorsa, bu özellik neredeyse zorunludur.
+    *   **GND Pini (Pin 8/9, Açık Ped Pin 11/13)**: Elektriksel ve termal performans için **açık arka kısmı PCB zeminine lehimlenmeli** ve doğrudan GND pinine bağlanmalıdır.
+    *   **Parazitik Diyotlar**: ILIM, PG, PGFB, SET, OUTS ve OUT pinleri normal çalışma veya arıza koşullarında **GND pininin 0.3V altındaki bir gerilim altında kalmamalıdır**. Bu pinler normal çalışma sırasında GND'den daha pozitif bir gerilimde kalmalıdır.
+
+*   **Termal Yönetim**:
+    *   Cihazı aşırı yük koşullarına karşı koruyan dahili güç ve termal sınırlama devrelerine sahiptir.
+    *   Regülatör uzun süreli çalışmada normal yük altında iken, yarıiletken birleşim bölgesindeki sıcaklık (T<sub>J</sub>) **maksimum birleşim sıcaklığına (T<sub>JMAX</sub>)** ulaşmamalıdır. Bu değer E- ve I-sınıfı sıcaklık derecelendirmesi için 125°C, H- ve MP-sınıfı için 150°C'dir.
+    *   **Güç kaybı ($P_{DISS}$)** şu formül ile hesaplanmalıdır: $ P_{DISS} = I_{OUT(MAX)} \cdot (V_{IN(MAX)} - V_{OUT}) + I_{GND} \cdot V_{IN(MAX)} $. Burada: $I_{OUT(MAX)}$: Maksimum çıkış akımı, $V_{IN(MAX)}$: Maksimum giriş gerilimi, $V_{OUT}$: Çıkış gerilimi, $I_{GND}$: Toprak (gnd) akımıdır.
+    *   Regülatörün birleşim sıcaklığı, ortam sıcaklığının üzerine **güç dağılımı (P<sub>DISS</sub>) ile termal direncin (θ<sub>JA</sub>) çarpımı kadar artar**. Bu, şu formülle yaklaşık olarak ifade edilir: $T_J = T_{A} + (P_{DISS} \times \theta_{JA})$. Burada: $T_A$: Ortam sıcaklığı (°C), $T_J$: Birleşim sıcaklığı (°C)'dır.
+    *   **Termal performansı iyileştirmek amacıyla**, PCB üzerinde geniş **bakır alanları** (özellikle çıkış ve giriş pinlerine bağlı olanlar) kullanılmalıdır. Isının etkin bir şekilde yayılmasını sağlamak için, bu alanlar **iç katmanlara** bağlanmalı ve çok katmanlı PCB'lerde **kaplamalı geçiş delikleri (plated through-holes)** ile desteklenmelidir. Ayrıca, ısı yayılımını artırmak amacıyla **bakır dolgu bölgeleri (thermal vias ve top-bottom pour alanları)** da kullanılabilir.
+    *   Düşük termal direnç elde etmek için **dikkatli PCB düzeni** ve JEDEC standardı JESD51'e uygunluk önemlidir.
+
+*   **Koruma Özellikleri**:
+    *   **Hassas akım limiti ve termal aşırı yük koruması**.
+    *   **Katlanma (foldback) özelliğine sahip dahili akım limiti**: $V_{IN}-V_{OUT}$ farkı 12V'tan büyük olduğunda akım limitini azaltır.
+    *   **Ters pil koruması**: IN pini -20V'a kadar ters gerilimlere dayanır, akım akışı olmaz ve OUT pininde negatif gerilim oluşmaz.
+    *   **Ters akım koruması**: Çıkıştan girişe akım akışını önler. Ancak, SET-OUTS kıskacı nedeniyle SET pin direnci ve çıkış aşırı akım kurtarma devresi üzerinden GND'ye akım akabilir.
+    *   **SET-to-OUTS koruma kıskacı**: SET ve OUTS arasındaki maksimum gerilimi sınırlar. SET pini kapasitörünün ($C_{SET}$) maksimum değeri $22 \mu F$ ile sınırlandırılmalıdır. Aktif olarak gerilim kaynağıyla sürülen SET uygulamalarında, gerilim kaynağının akımı **20mA veya daha az** ile sınırlanmalıdır.
+    *   **Çıkış Aşırı Akım Kurtarma (Overshoot Recovery)**: Yükün tam yükten boşta veya hafif yüke düşmesi durumunda çıkış voltajı aşırı yükseldiğinde, çıkış kapasitörünü boşaltmak için bir akım havuzu devreye girer. Bu akım genellikle 4mA'dır.
+
+*   **Paralel Kullanım**:
+    *   Daha yüksek çıkış akımı elde etmek, gürültüyü **$\sqrt{N}$ oranında azaltmak** ve ısıyı PCB yüzeyine yaymak amacıyla birden fazla **LT3045 regülatörü paralel olarak bağlanabilir.**
+    *   **Tüm SET pinleri ve tüm IN pinleri** ortak bir noktada birleştirilmelidir.
+    *   OUT pinleri, akım paylaşımını sağlamak için **küçük PCB izleri** ile (balast direnci görevi görür) birleştirilmelidir. Her bir LT3045 için yaklaşık **20 mΩ**'luk iz direnci, tam yükte %20'den daha iyi akım paylaşımı sağlar.
+    *   **OUTS pinleri doğrudan çıkış kapasitörüne bağlanmalıdır.**
+
+
+### 2. LT3094: Gürültüye Duyarlı Uygulamalar İçin Negatif Regülatör
+
+Analog Devices tarafından üretilen LT3094, LT3045'in **negatif voltaj** karşılığıdır. Gürültüye karşı çok hassas olan RF, hassas enstrümantasyon ve yüksek hızlı veri dönüştürücü uygulamaları için tasarlanmış, ultra düşük gürültü ve ultra yüksek PSRR performansına sahip bir negatif lineer regülatördür.
+
+- **Temel Özellikler:**
+  - **Ultra Düşük RMS Gürültü:** 0.8µV RMS (10Hz - 100kHz)
+  - **Ultra Düşük Spot Gürültü:** $2.2nV/\sqrt{Hz}$ (10kHz'de)
+  - **Ultra Yüksek PSRR:** 74dB (1MHz'de)
+  - **Çıkış Akımı:** 500mA
+  - **Geniş Giriş Voltaj Aralığı:** **-1.8V ila -20V**
+  - **Mimarisi:** Tıpkı pozitif eşleniği gibi, hassas bir akım kaynağı referansı ve bunu takip eden yüksek performanslı bir gerilim tamponu (voltage buffer) üzerine kuruludur. Bu benzersiz mimari sayesinde, çıkış geriliminden bağımsız olarak neredeyse sabit bir çıkış gürültüsü, PSRR ve bant genişliği performansı sunar. Ayrıca, bu yapı sayesinde birden fazla LT3094'ün paralel bağlanması çok kolaydır, bu da gürültüyü daha da azaltmaya, çıkış akımını artırmaya ve ısıyı PCB üzerinde dağıtmaya olanak tanır.
+
+<ImageWithCaption
+  src="/images/LineerReg/LT3094 - Negatif Gerilim Regülatörü.svg"
+  alt="LT3094 - Negatif Gerilim Regülatörü Tipik Uygulaması"
+>
+  <strong>Şekil 4 :</strong> LT3094 - Negatif Gerilim Regülatörü Tipik Uygulaması
+</ImageWithCaption>
+
+{/*
+
+\documentclass[border=10pt]{standalone}
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usepackage{circuitikz}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{decorations.markings, arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit, backgrounds, patterns} % KUTUCUKLAR İÇİN GEREKLİ KÜTÜPHANELER
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+\begin{document}
+\begin{circuitikz}[american, voltage shift=0.5]
+\ctikzset{tripoles/mos style=arrows}
+\ctikzset{amplifiers/scale=0.75}
+
+% Ana IC kutusunu çizelim
+% Rengi tanımlayın
+\definecolor{iccolor}{RGB}{230,194,189}
+\draw[thick, fill=cyan!10] (0, 0) rectangle (6, 5.25);
+\node [right] at (0, 4.95) {\scriptsize\sffamily LT3094};
+
+% IC pinleri
+% Sol taraf pinleri
+\draw[thick,fill=white] (-0.2, 0.4) rectangle (0.2, 0.8);
+\node[right] at (0.2, 1) {\scriptsize\sffamily IN};
+
+\draw[thick,fill=white] (-0.2, 2.4) rectangle (0.2, 2.8);
+\node[right] at (0.2, 2.6) {\scriptsize\sffamily EN/UV};
+
+\draw[thick,fill=white] (-0.2, 3.7) rectangle (0.2, 4.1);
+\node[right] at (0.2, 3.9) {\scriptsize\sffamily PG};
+
+% üst taraf pinleri
+
+\draw[thick,fill=white] (1.2, 5.05) rectangle (1.6, 5.45);
+\node[right] at (1.4, 4.85) {\scriptsize\sffamily SET};
+
+\draw[thick,fill=white] (2.735, 5.05) rectangle (3.135, 5.45);
+\node[left] at (2.9, 4.85) {\scriptsize\sffamily GND};
+\draw [thick] (2.935, 5.45) -- (2.935, 7.65) {};
+\draw node[circ] at (2.935, 7.65) {};
+
+\draw[thick,fill=white] (3.7, 5.05) rectangle (4.1, 5.45);
+\node[below] at (3.9, 5.05) {\scriptsize\sffamily ILIM};
+
+\draw[thick,fill=white] (4.6, 5.05) rectangle (5, 5.45);
+\node[below] at (4.8, 5.05) {\scriptsize\sffamily PGFB};
+\draw[thick] (4.8, 5.45) |- (9,5.75){};
+\draw [thick]  (9, 7.65)--(9, 7.25) to[american resistor, mirror, l = {$50k \Omega$}] (9, 6.15)  -- (9, 5.75) ;
+\draw [thick]  (9, 5.75)--(9, 5.075) to[american resistor, mirror, l = {$450k \Omega$}] (9, 3.975)  -- (9, 3.3) ;
+\draw node[circ] at (9, 5.75) {};
+
+
+% Sağ taraf pinleri
+\draw[thick,fill=white] (5.8, 4) rectangle (6.2, 4.4);
+\node[left] at (6, 4.6) {\scriptsize\sffamily OUTS};
+
+\draw[thick,fill=white] (5.8, 3.1) rectangle (6.2, 3.5);
+\node[left] at (5.9, 3.5) {\scriptsize\sffamily OUT};
+
+\draw [thick] (5.1,2.5) node[npn](N1){};
+
+\draw [thick] (3,2.5) node[op amp, yscale = -1](A1){};
+\draw [thick] (A1.down) |- (2.935, 5.05);
+\draw [thick] (A1.up) |- (2.935, 0.6);
+\draw node[circ] at (2.935, 0.6) {};
+\draw [thick] (A1.out) -| (N1.B);
+
+%Bağlantıları yazalım
+%opamp + girişinden OUTS pinine bağlantı kuralım
+\draw [thick] (A1.+) --++(-0.2,0)|-(5.8, 4.2){};
+
+%NPN Colector ucundan OUT pinine bağlantı yazalım
+\draw [thick] (N1.C) |- (5.8, 3.3){};
+
+%Akım kaynağı
+\draw [thick] (1.4, 2.2) to[ioosource, l=100µA, i=$$] (1.4, 0.6);
+\draw [thick] (1.4, 5.05) -- (1.4,2.2){};
+% opamp negatif girişten akım kaynağı yoluna hat çizelim
+\draw[thick] (A1.-) -| (1.4,2.8575){};
+\draw node[circ] at (1.4, 2.125) {};
+\draw node[circ] at (1.4, 0.6) {};
+
+%P1 transistörün Emetör ucundan IN ucuna bağlantı çizelim:
+\draw[thick](N1.E) |- (0.2, 0.6){};
+
+
+%Çevre birimleri çizelim
+
+\draw[thick](-2, 0.6)--(-0.2,0.6){};
+\draw[thick](-0.2, 2.6)--++(-0.4, 0) |- ++(0, -2){};
+\draw node[circ] at (-0.6, 0.6) {};
+
+
+%Giriş Kondansatörü
+\draw [thick] (-1.5, 0.6) -- (-1.5, 1.2) to[C, l={\small 10\,µF}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (-1.5, 2.4) -- (-1.5, 2.6);
+\draw[thick] (-1.5, 2.6) node[ground, yscale = -1]{};
+\draw node[circ] at (-1.5, 0.6) {};
+%VIN
+\node[left] at (-2, 0.8) {$V_{IN}$};
+\node[left] at (-2, 0.4) {$-5V$};
+
+%RSET direnci ve paralel kondansatör yazımı
+\draw [thick]  (1.4, 5.45)--(1.4, 6.05) to[american resistor, mirror, l_ = {$33.2k \Omega$}] (1.4, 7.15)  -- (1.4, 7.65) ;
+\draw node[circ] at (1.4, 7.65) {};
+
+% Paralel kondansatör
+\draw [thick] (1.4, 5.7) -- (0.4, 5.7) -- (0.4, 6.5) to[C, l={\small 4.7\,µF}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (0.4, 6.7) -- (0.4, 7.65);
+\draw node[circ] at (1.4, 5.7) {};
+\draw node[circ] at (0.4, 7.65) {};
+
+%ILIM
+\draw [thick]  (3.9, 5.45)--(3.9, 6.05) to[american resistor, mirror, l_ = {$7.5k \Omega$}] (3.9, 7.15)  -- (3.9, 7.65) ;
+\draw node[circ] at (3.9, 7.65) {};
+
+%Çıkış Kondansatörü
+\draw [thick] (7.5, 3.3) -- (7.5, 3.8)  to[C, l_={\small 10\,µF}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (7.5, 4) -- (7.5, 4.5);
+\draw[thick] (7.5, 4.5) node[ground, yscale = -1]{};
+\draw node[circ] at (7.5, 3.3) {};
+%VIN
+\node[right] at (9.5, 3.7) {$V_{OUT}$};
+\node[right] at (9.5, 3.3) {$-3.3V$};
+\node[right] at (9.5, 2.9) {$I_{OUT}(maks)$};
+\node[right] at (9.5, 2.5) {$500 mA$};
+
+%Çıkış bağlantılarını yapalım
+\draw[thick] (6.2, 3.3) -- (7.5, 3.3)--++(2,0){};
+\draw[thick] (6.2, 4.2) -- ++(0.2,0) -- (7.5, 3.3){};
+
+%En üstteki x eksenine paralel hat
+\draw[thick] (9, 7.65) -- (-1.5, 7.65){};
+\draw[thick] (-1.5, 7.65) node[ground]{};
+
+% PG pinine bağlı direnç:
+\draw [thick]  (-0.2, 3.9) -- (-1.5, 3.9)--(-1.5, 4.4) to[american resistor, mirror, l_ = {$7.5k \Omega$}] (-1.5, 5.5)  -- (-1.5, 6) ;
+\node[above] at (-1.5, 6) {$3.3V$};
+
+\end{circuitikz}
+\end{document}
+
+*/}
+
+### LT3094 Tasarım Kuralları
+
+LT3094, ultralow gürültü ve ultra yüksek PSRR mimarisine sahip yüksek performanslı bir negatif düşük düşüşlü (LDO) lineer regülatördür. Tasarımlarımızda LT3094'ün tam performansını elde etmek ve doğru çalışmasını sağlamak için aşağıdaki kurallara dikkat etmeliyiz:
+
+*   **Çıkış Voltajı Ayarı**:
+    *   LT3094'ün SET pininden **$100 \mu A$** hassas bir akım akar.
+    *   SET pini ile GND arasına bir direnç ($R_{SET}$) bağlanarak çıkış voltajı **$V_{OUT} = I_{SET} \cdot R_{SET}$** formülüyle ayarlanır. Çıkış voltajı negatif olacağından, bu denklemdeki $V_{OUT}$ aslında $V_{SET}$ gerilimidir.
+    *   Çıkış voltajı aralığı **$0V$'tan $-19.5V$'a** kadardır. Yüksek doğruluk için SET pin direnci **hassas bir direnç** (%±0.5 veya daha az) olmalıdır.
+    *   SET pini yüksek empedanslı bir düğüm olduğundan, kaçak akımları en aza indirmek için bu ucu potansiyeli kendisine yakın olan OUT ucuna bağlı bir **koruma halkası (guard ring)** ile çevrelemek gerekir.
+
+
+*   **Kapasitör Seçimi ve Yerleşimi**:
+    *   **Çıkış Kapasitörü ($C_{OUT}$)**:
+        *   Kararlılık için minimum **$10\mu F$ seramik çıkış kapasitörü** gerektirir.
+        *   Bu kapasitörün ESR'si **$30 \; mΩ$'dan düşük** ve ESL'si **$1.5 \; nH$'den düşük** olmalıdır.
+        *   **X5R ve X7R dielektrik** malzeme ile üretilmiş kapasitörler, kararlı performansları nedeniyle önerilir. Kapasitörlerin DC bias voltajı altında değer kaybetme eğilimi göz önünde bulundurulmalıdır.
+    *   **SET Pini Kapasitörü ($C_{SET}$)**:
+        *   SET pinine bir kapasitör eklemek **çıkış gürültüsünü, PSRR'yi ve geçici tepkiyi iyileştirir**.
+        *   CSET kullanımı **başlangıç süresini artırır**, ancak bu etki LT3094'ün **hızlı başlangıç (fast start-up) devresi** ile azaltılabilir.
+        *   Bypass kapasitörünün **kaçak akımı DC regülasyonunu bozabileceğinden**, kaliteli, düşük kaçaklı seramik kapasitörler kullanılmalıdır. Piezoelektrik etkilerden kaçınmak için seramik olmayan (tantal, film) kapasitörler tercih edilebilir.
+    *   **Giriş Kapasitörü ($C_{IN}$)**:
+        *   LT3094 minimum **$10 \mu F$ IN pini kapasitörü** ile kararlıdır. Düşük ESR'li seramik kapasitörler önerilir.
+        *   Uzun besleme kabloları kullanılıyorsa, kararlılığı sağlamak için **daha büyük bir giriş kapasitörü** veya daha yüksek ESR'li bir tantal kapasitör eklenmelidir.
+        *   En iyi PSRR performansı için, parazitik indüktans ve manyetik kuplajı en aza indiren **dikkatli bir PCB düzeni** kritik öneme sahiptir. Giriş ve çıkış kapasitörlerinin toprak bağlantıları birbirine yakın tutulmalıdır.
+
+*   **Pin Bağlantıları ve İşlevsellik**:
+    *   **Kelvin Bağlantıları**: Optimal performans için **OUTS pini doğrudan çıkış kapasitörüne ve yüke bağlanmalıdır**. SET pin direncinin GND tarafı da doğrudan $C_{OUT}$'un GND tarafına bağlanmalıdır.
+    *   **EN/UV Pini (Pin 3)**: Bu pin, LT3045'ten farklı olarak **çift yönlü (bidirectional)** çalışır. Regülatörü açmak için +1.26V'un üzerine veya -1.26V'un altına çekilebilir. Bu, pozitif ve negatif raylarla sıralama (sequencing) yapmayı kolaylaştırır. Kullanılmadığında **IN'e bağlanmalıdır**.
+    *   **PGFB (Pin 5) ve PG Pini (Pin 4)**: Bu pinler, çıkış voltajının ayarlanan eşiğe ulaştığını bildiren programlanabilir bir "güç iyi" (Power Good) sinyali ve hızlı başlangıç işlevselliği sağlar. PGFB'deki eşik gerilimi **-300mV**'dur. Bu işlevler gerekmiyorsa, **PGFB pini IN'e bağlanmalı ve PG pini boşta bırakılmalıdır**.
+    *   **ILIM Pini (Pin 6)**: Akım limitini programlamak için ILIM ile GND arasına bir direnç bağlanır. Programlama ölçek faktörü nominal olarak **3.75A • kΩ**'dur. Kullanılmıyorsa **GND'ye bağlanmalıdır**.
+    *   **VIOC Pini (Pin 7)**: Bu pin, LT3045'te bulunmayan **önemli bir özelliktir**. LT3094'ün girişini besleyen bir ön regülatörü (genellikle bir anahtarlamalı dönüştürücü) kontrol etmek için kullanılır. VIOC, LT3094 üzerindeki giriş-çıkış gerilim farkını sabit tutarak **güç kaybını en aza indirir ve PSRR'yi optimize eder**. Bu, özellikle değişken çıkış voltajı gerektiren uygulamalarda verimliliği artırır. Kullanılmıyorsa **boşta bırakılmalıdır**.
+    *   **Parazitik Diyotlar**: ILIM, PG, PGFB, SET, OUTS ve OUT pinleri normal çalışma veya arıza koşullarında **IN pininin 0.3V altındaki bir gerilime çekilmemelidir**.
+
+*   **Termal Yönetim ve Koruma**:
+    *   LT3045 ile aynı termal yönetim prensiplerine sahiptir. Güç kaybı ($P_{DISS}$) hesaplanmalı ve birleşim sıcaklığının maksimum limiti (E/I sınıfı için 125°C, H/MP sınıfı için 150°C) aşmadığından emin olunmalıdır.
+    *   PCB üzerindeki bakır alanlar, termal yollar (thermal vias) ve açıkta kalan alt pedin (exposed pad) toprağa lehimlenmesi, ısıyı dağıtmak için kritik öneme sahiptir.
+    *   Cihaz, hassas akım limiti, termal aşırı yük koruması ve **katlanma (foldback)** akım koruması gibi özelliklere sahiptir. Katlanma koruması, $V_{OUT} - V_{IN}$ farkı 7V'u aştığında akım limitini düşürür.
+
+*   **Paralel Kullanım**:
+    *   Daha yüksek çıkış akımı elde etmek, gürültüyü **$\sqrt{N}$ oranında azaltmak** ve ısıyı PCB yüzeyine yaymak amacıyla birden fazla **LT3094 regülatörü paralel olarak bağlanabilir.**
+    *   **Tüm SET pinleri ve tüm IN pinleri** ortak bir noktada birleştirilmelidir.
+    *   OUT pinleri, akım paylaşımını dengelemek için **küçük PCB izleri** (yaklaşık 20 mΩ, balast direnci olarak) kullanılarak birleştirilmelidir.
+    *   **OUTS pinleri doğrudan çıkış kapasitörüne bağlanmalıdır.**
+
+
+
+### 2. MIC5205: Düşük Gürültülü ve Kompakt Uygulamalar İçin Regülatör
+
+Microchip tarafından üretilen MIC5205, özellikle taşınabilir, pille çalışan ve yer kısıtı olan uygulamalar için tasarlanmış, düşük gürültülü ve verimli bir LDO regülatördür. LT serisi kadar ultra performanslı olmasa da, birçok uygulama için yeterli ve kompakt bir çözüm sunar.
+
+- **Temel Özellikler:**
+  - **Düşük Çıkış Gürültüsü:** 260 nV/√Hz (BYP kapasitörü ile)
+  - **Yüksek Ripple Rejection (PSRR):** Tipik olarak 75 dB (100 Hz'de)
+  - **Boşta Çalışma Akımı (Quiescent Current):** Tipik 150 µA
+  - **Çıkış Akımı:** Garantili 150 mA
+  - **Giriş Voltaj Aralığı:** +2.5V ila +16V
+  - **Mimarisi:** Geleneksel bir bandgap voltaj referansı ve hata amplifikatörü üzerine kuruludur. Gürültüyü azaltmak için harici bir "Bypass" (BYP) pini sunar. Bu pin, dahili voltaj referansını filtreleyerek çıkış gürültüsünü önemli ölçüde düşürür.
+
+<ImageWithCaption
+  src="/images/LineerReg/mic5205 temel devre.svg"
+  alt="MIC5205 - Ultra Düşük Gürültülü Ayarlanabilir Gerilim Düzenleyici Devresi"
+>
+  <strong>Şekil 4 :</strong> MIC5205 - Ultra Düşük Gürültülü Ayarlanabilir Gerilim Düzenleyici Devresi
+</ImageWithCaption>
+
+{/*
+
+\documentclass[border=10pt]{standalone}
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usepackage{circuitikz}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{decorations.markings, arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit, backgrounds, patterns} % KUTUCUKLAR İÇİN GEREKLİ KÜTÜPHANELER
+\usetikzlibrary{calc} % Koordinat hesaplamaları için
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+\begin{document}
+\begin{circuitikz}[american, voltage shift=0.5]
+\ctikzset{tripoles/mos style=arrows}
+\ctikzset{amplifiers/scale=0.75}
+
+% Ana IC kutusunu çizelim
+% Rengi tanımlayın
+\definecolor{iccolor}{RGB}{255,255,255}
+\draw[thick, fill=cyan!10] (0, 0) rectangle (6, 6);
+\node[below] at (1, 0.5) {\scriptsize\sffamily\textbf{MIC5205YM5}};
+
+% IC pinleri
+% Sol taraf pinleri - IN
+\draw[thick,fill=white] (-0.2, 4.7) rectangle (0.2, 5.1);
+\node[left] at (-0.2, 5.3) {\scriptsize\sffamily IN};
+
+% Sol taraf pinleri - EN
+\draw[thick,fill=white] (-0.2, 1.6) rectangle (0.2, 2);
+\node[left] at (-0.2, 2.2) {\scriptsize\sffamily EN};
+
+% Üst taraf pinleri - OUT
+\draw[thick,fill=white] (5.8, 4.7) rectangle (6.2, 5.1);
+\node[right] at (6.2, 5.1) {\scriptsize\sffamily OUT};
+
+% Sağ taraf pinleri - ADJ
+\draw[thick,fill=white] (5.8, 3.35) rectangle (6.2, 3.75);
+\node[right] at (6.2, 3.75) {\scriptsize\sffamily ADJ};
+
+% Alt taraf pinleri - GND
+\draw[thick,fill=white] (4.2, -0.2) rectangle (4.6, 0.2);
+\node[below] at (4, -0.2) {\scriptsize\sffamily GND};
+\draw [thick] node [ground] at (4.4, -0.2) {};
+
+
+% Op-amp çizelim
+\draw [thick] (3,3.2) node[op amp, xscale=-1, yscale = -1](A1){};
+
+% pnp transistör
+\draw [thick] (1.5,4.9) node[pnp, rotate = 90](P1){};
+
+%Opamp transistör bağlantıları
+\draw [thick] (A1.out) -| (P1.B){};
+\draw [thick] (0.2, 4.9) -- (P1.E) {}; % in ucundan Emitere
+\draw [thick] (P1.C) -- (5.8, 4.9) {}; %out ucuna
+\draw [thick] (4.85, 3.1) -- (4.85, 4.9) {}; % out hattından bandgap Ref.'e
+\draw node[circ] at (4.85, 4.9) {}; % bandgap out hattı birleşim bölgesine düğüm çizimi
+\draw [thick] (A1.-) -| (4.2, 2.8){}; % opamp - ucundan bandgap ref'e bağlantı
+\draw [thick] (A1.+) -| (5.8, 3.55){}; % opamp + ucundan ADJ'ye
+\draw [thick] (A1.up) |- (3.048, 1.8){}; % opamp down ucundan bandgap ref hattına bağlantı
+\draw node[circ] at (3.048, 1.8) {}; % bandgap out hattı birleşim bölgesine düğüm çizimi
+
+
+
+% Bandgap referansı
+\draw[thick, fill=white] (4.2, 2.5) rectangle (5.5, 3.1);
+\node at (4.9, 2.9) {\scriptsize\sffamily Bandgap};
+\node at (4.9, 2.7) {\scriptsize\sffamily Ref.};
+
+% Current Limit ve Thermal Shutdown bloğu
+\draw[thick, fill=white] (1.5, 0.5) rectangle (3.7, 1.2);
+\node at (2.6, 1) {\scriptsize\sffamily Current Limit};
+\node at (2.6, 0.75) {\scriptsize\sffamily Thermal Shutdown};
+
+% Örnek: Opamp’ın orta hizasında özel bir bağlantı noktası
+% Enable pin koordinatı tanımlayalım
+\coordinate (A1enable) at ($(A1.center)+(-0.385,-0.14)$);
+
+% EN pininden control bloğuna ve op-amp enable pinine
+\draw[thick] (A1enable) -| (2.6, 1.2);
+
+
+% EN pininden control bloğuna
+\draw[thick] (0.2, 1.8) -- (4.85, 1.8) -- (4.85, 2.5);
+
+
+
+% Dış bileşenler
+% VIN bağlantısı
+\draw[thick] (-1, 4.9) -- (-0.2, 4.9);
+\node[left] at (-1, 4.9) {$V_{IN}$};
+\draw node[ocirc] at (-1, 4.9) {};
+
+% VOUT bağlantısı ve çıkış kondansatörü
+\draw[thick] (6.2, 4.9) -- (11.5, 4.9);
+\draw[thick] (10, 4.9) -- (10, 4.8) to[C, l={\small $C_{OUT}$}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (10, 3.8) -- (10, 3.6);
+\draw[thick] (10, 3.6) node[ground]{};
+\draw node[circ] at (10, 4.9) {};
+\draw node[ocirc] at (11.5, 4.9) {};
+\node[right] at (11.5, 4.9) {$V_{OUT}$};
+
+% ADJ pini dirençleri (R1, R2)
+\draw[thick] (7.5, 4.9) -- (7.5, 4.775) to[american resistor, l={$R_1$}, bipoles/resistor/height=0.2, bipoles/resistor/width=0.4] (7.5, 3.675) -- (7.5, 3.55);
+\draw[thick] (7.5, 3.55) -- (7.5, 3.425) to[american resistor, l={$R_2$}, bipoles/resistor/height=0.2, bipoles/resistor/width=0.4] (7.5, 2.325) -- (7.5, 2.2);
+\draw[thick] (7.5, 2.2) node[ground]{};
+\draw node[circ] at (7.5, 3.55) {};
+\draw node[circ] at (7.5, 4.9) {};
+%ADJ pini ile gerilim bölücü bağlantısı
+\draw[thick] (6.2, 3.55) -- (7.5, 3.55);
+
+% Bypass kondansatörü (opsiyonel)
+\draw[thick] (7.5, 3.55) -|(8.5, 3.55) -- (8.5, 3.05) to[C, l={\scriptsize $C_{BYP}$}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (8.5, 2.85) -- (8.5, 2.2);
+\draw[thick] (8.5, 2.2) node[ground]{};
+\node[right] at (8.5, 2.6) {\scriptsize (optional)};
+
+
+\end{circuitikz}
+\end{document}
+
+*/}
+
+### MIC5205 Tasarım Kuralları
+
+MIC5205, kullanımı kolay, düşük gürültülü bir LDO regülatördür. Tasarımlarımızda doğru ve kararlı çalışmasını sağlamak için aşağıdaki kurallara dikkat etmeliyiz:
+
+*   **Çıkış Voltajı Ayarı**:
+    *   MIC5205, hem sabit voltajlı (MIC5205-x.xYM5) hem de ayarlanabilir (MIC5205YM5) versiyonlara sahiptir.
+    *   Ayarlanabilir versiyonda, çıkış voltajı **ADJ** pini ile GND arasına bağlanan iki dirençli (R1, R2) bir gerilim bölücü ile ayarlanır. Çıkış voltajı, **$V_{OUT} = V_{REF} \cdot (1 + R2/R1)$** formülüyle belirlenir. Burada $V_{REF}$ tipik olarak 1.242V'tur.
+    *   ADJ pini yüksek empedanslıdır. Gürültü performansını artırmak için ADJ pininden toprağa bir bypass kapasitörü ($C_{BYP}$) eklenebilir.
+
+*   **Kapasitör Seçimi ve Yerleşimi**:
+    *   **Çıkış Kapasitörü ($C_{OUT}$)**:
+        *   Kararlılık için minimum **1µF** kapasitör gerektirir. En iyi performans için **2.2µF veya daha büyük** bir kapasitör önerilir.
+        *   Bu regülatör, **düşük ESR'li seramik kapasitörlerle** kararlı çalışacak şekilde tasarlanmıştır. Ancak Tantal ve Alüminyum Elektrolitik kapasitörler de kullanılabilir. Düşük sıcaklıklarda (-25°C altı) elektrolitik kapasitörlerin donma eğilimi göz önünde bulundurulmalıdır.
+    *   **Bypass (BYP) Pini Kapasitörü ($C_{BYP}$)**:
+        *   Bu pin, **MIC5205'in en kritik gürültü azaltma özelliğidir**. BYP pini ile GND arasına bir kapasitör bağlamak, dahili bandgap referansının gürültüsünü filtreler.
+        *   Düşük gürültülü çalışma için **470pF**'lık bir kapasitör önerilir. Bu kapasitör kullanıldığında, kararlılığı sağlamak için çıkış kapasitörünün ($C_{OUT}$) en az **2.2µF** olması gerekir.
+        *   BYP kapasitörü başlangıç süresini (turn-on time) artırır. Eğer hızlı başlangıç kritikse ve gürültü performansı ikincil ise, BYP pini boş bırakılabilir.
+    *   **Giriş Kapasitörü ($C_{IN}$)**:
+        *   Regülatör, güç kaynağından 25 cm'den daha uzağa yerleştirilmişse veya bir batarya ile besleniyorsa, en az **1µF**'lık bir giriş kapasitörü önerilir. Bu kapasitör, hat endüktansından kaynaklanan salınımları engeller.
+
+*   **Pin Bağlantıları ve İşlevsellik**:
+    *   **Kelvin Bağlantısı (Not):** MIC5205, LT3045/LT3094 gibi özel bir OUTS (sense) pinine sahip değildir. Bu nedenle, PCB düzeninde, OUT pini ile çıkış kapasitörü ve yük arasındaki izin olabildiğince **kısa ve geniş** tutulması, gerilim düşümünü en aza indirmek için önemlidir.
+    *   **EN (Enable) Pini:** CMOS uyumlu bir giriş olup, regülatörü açıp kapatmak için kullanılır. Logic "high" ($>2.0V$) regülatörü açar, logic "low" ($<0.4V$) ise kapatarak akım tüketimini 1µA'nın altına düşürür. Kullanılmadığında **IN pinine bağlanmalıdır**.
+    *   **ADJ (Adjust) Pini:** Sadece ayarlanabilir versiyonda bulunur. Geri besleme gerilim bölücüsünün bağlandığı yüksek empedanslı giriştir. Gürültüyü azaltmak için toprağa kapasitörle bypass edilebilir.
+
+*   **Termal Yönetim ve Koruma**:
+    *   MIC5205, küçük SOT-23-5 paketinde gelir ve termal performansı büyük ölçüde PCB düzenine bağlıdır. Güç kaybı ($P_{DISS} = (V_{IN} - V_{OUT}) \cdot I_{OUT} + V_{IN} \cdot I_{GND}$) hesaplanmalı ve birleşim sıcaklığının maksimum limiti olan **125°C**'yi aşmadığından emin olunmalıdır.
+    *   Termal direnç ($\theta_{JA}$) tipik olarak 220°C/W civarındadır. Bu, yüksek giriş-çıkış voltaj farklarında veya yüksek akımlarda ısının önemli bir faktör olacağı anlamına gelir. Isıyı dağıtmak için pinlere bağlı bakır alanların geniş tutulması önemlidir.
+    *   Cihaz, dahili **akım limiti** ve **termal kapatma (thermal shutdown)** korumasına sahiptir. Ayrıca, ters pil bağlantısına karşı da koruma sağlar.
+
+### LT3042 vs. LT3094 Karşılaştırma Tablosu
+
+| Özellik | LT3042 (Pozitif) | LT3094 (Negatif) | Notlar ve Dikkat Edilmesi Gerekenler |
+| :--- | :--- | :--- | :--- |
+| **Voltaj Aralığı** | +1.8V to +20V | -1.8V to -20V | Giriş gerilimi, çıkış gerilimi artı dropout voltajından daha yüksek olmalıdır. |
+| **Çıkış Akımı** | 200mA | 500mA | LT3094 daha yüksek akım kapasitesine sahiptir. |
+| **RMS Gürültü** | **0.8$\mu$Vrms** (10Hz-100kHz) | **0.8µVrms** (10Hz-100kHz) | İkisi de piyasadaki en düşük gürültülü regülatörlerdendir. |
+| **PSRR @ 1MHz** | **~79dB** | ~74dB | Ultra yüksek güç kaynağı bastırma oranına sahiptirler. |
+| **Mimarisi** | Akım Referansı + Voltaj Takipçi | Akım Referansı + Voltaj Takipçi | Bu mimari, gürültünün çıkış geriliminden bağımsız olmasını sağlar. |
+| **Exposed Pad** | **GND (Pin 11)** | **IN (Pin 13)** | **BU ÇOK KRİTİK!** PCB tasarımında en sık yapılan hatadır. Pedler doğru potansiyele bağlanmalıdır. |
+| **Min. C_OUT** | 4.7µF (Seramik) | 10µF (Seramik) | Kararlılık için bu minimum değerlere uyulmalıdır. |
+
+
+---
+
+## LT3045 - LT3094 Simetrik Gerilim Regülatörü Tasarımı
+
+Yüksek performanslı analog devreler, özellikle de işlemsel yükselteçler (op-amp'lar), karşılaştırıcılar ve veri dönüştürücüler (ADC/DAC), genellikle pozitif ve negatif olmak üzere iki simetrik besleme gerilimine ihtiyaç duyar. Güç kaynağının kalitesi, bu hassas devrelerin performansı üzerinde doğrudan bir etkiye sahiptir. Güç raylarındaki gürültü, sinyal-gürültü oranını (SNR) düşürebilir, harmonik bozulmayı (distortion) artırabilir ve ölçüm doğruluğunu azaltabilir. Bu nedenle, LT3045 ve onun negatif karşılığı olan LT3094 gibi ultra düşük gürültülü regülatörler, bu tür uygulamalar için ideal bir simetrik güç kaynağı çözümü sunar.
+
+Bu bölümde, **±9V**'luk bir giriş geriliminden **±7.5V**'luk ultra düşük gürültülü bir çıkış gerilimi üreten simetrik bir güç kaynağı devresini tasarlayacağız.
+
+<ImageWithCaption
+  src="/images/LineerReg/LT3045 - LT3094 Simetrik Gerilim Kaynağı.svg"
+  alt="±9V girişten ±7.5V çıkış üreten LT3045 ve LT3094 tabanlı simetrik gerilim regülatörü devresi."
+>
+  <strong>Şekil 5:</strong> ±9V girişten ±7.5V çıkış üreten LT3045 ve LT3094 tabanlı simetrik gerilim regülatörü devresi.
+</ImageWithCaption>
+
+<ImageWithCaption
+  src="/images/LineerReg/LT3045-LT3094-devre.svg"
+  alt="±9V girişten ±7.5V çıkış üreten LT3045 ve LT3094 tabanlı simetrik gerilim regülatörü LTspice devresi."
+>
+  <strong>Şekil 5:</strong> ±9V girişten ±7.5V çıkış üreten LT3045 ve LT3094 tabanlı simetrik gerilim regülatörünün LTspice ortamında çizilmesi.
+</ImageWithCaption>
+
+Aşağıdaki linkten simülasyon dosyasını indirebilirsiniz. 
+
+<a href="/images/LineerReg/LT3045-LT3094.asc" target="_blank" rel="noopener noreferrer">
+  ↗️ LT3045-LT3094 Simetrik Gerilim Kaynağı LTSpice Simülasyon Dosyası
+</a>
+
+<ImageWithCaption
+  src="/images/LineerReg/LT3045-LT3094-sim.svg"
+  alt="±9V girişten ±7.5V çıkış üreten LT3045 ve LT3094 tabanlı simetrik gerilim regülatörü devresinin simülasyonu."
+>
+  <strong>Şekil 5:</strong> ±9V girişten ±7.5V çıkış üreten LT3045 ve LT3094 tabanlı simetrik gerilim regülatörü devresinin LTSpice simülasyonu.
+</ImageWithCaption>
+
+### Tasarım Parametreleri ve Hedefler
+
+| Parametre | Değer | Açıklama |
+| :--- | :--- | :--- |
+| **Giriş Gerilimi ($V_{IN}$)** | ±9 V | Pozitif ve negatif besleme girişleri. |
+| **Çıkış Gerilimi ($V_{OUT}$)** | **±7.5 V** | Pozitif ve negatif regüleli çıkışlar. |
+| **Maksimum Çıkış Akımı ($I_{OUT,MAX}$)** | 500 mA | Her bir regülatör için hedeflenen maksimum yük akımı. |
+| **Gürültü Hedefi** | < 1 µV RMS | Regülatörlerin doğal gürültü performansına ulaşmak. |
+| **PSRR Hedefi** | > 70 dB @ 1MHz | Girişten gelen gürültüyü etkin bir şekilde bastırmak. |
+
+### Bileşen Değerleri Hesaplaması
+
+#### 1. Çıkış Gerilimi Ayar Dirençleri ($R_{SET}$)
+
+Hem LT3045 hem de LT3094, SET pininden toprağa bağlanan tek bir direnç ($R_{SET}$) ile çıkış voltajını ayarlar. Bu pinden 100µA'lik yüksek hassasiyetli bir akım akar.
+
+-   **LT3045 (Pozitif Regülatör) için $R_{SET}$:**
+    Formül: $V_{OUT} = I_{SET} \cdot R_{SET}$
+    $
+    R_{SET(+)} = \frac{V_{OUT}}{I_{SET}} = \frac{7.5\,V}{100\,µA} = 75,000\,Ω = \mathbf{75\,kΩ}
+    $
+    Yüksek doğruluk için %1 veya daha düşük toleranslı bir direnç seçilmelidir. **75kΩ**, standart E96 serisinde bulunan bir değerdir.
+
+-   **LT3094 (Negatif Regülatör) için $R_{SET}$:**
+    Formül: $V_{OUT} = -I_{SET} \cdot R_{SET}$
+    $
+    R_{SET(-)} = \frac{|V_{OUT}|}{I_{SET}} = \frac{|-7.5\,V|}{100\,µA} = 75,000\,Ω = \mathbf{75\,kΩ}
+    $
+    Aynı şekilde, pozitif regülatör için de **75kΩ**'luk hassas bir direnç kullanılır.
+
+#### 2. Güç Kaybı ve Termal Yönetim
+
+Lineer regülatörler, giriş ve çıkış gerilimi arasındaki farkı ısı olarak harcar. Bu ısının etkin bir şekilde yönetilmesi, regülatörün kararlılığı ve ömrü için kritiktir.
+
+-   **Dropout Gerilimi:**
+    $V_{DROPOUT} = |V_{IN}| - |V_{OUT}| = 9\,V - 7.5\,V = 1.5\,V$
+    Bu değer, regülatörlerin 500mA yükte ihtiyaç duyduğu tipik ~300mV'luk minimum dropout geriliminden çok daha yüksektir. Bu, geniş bir PSRR performansı sağlar.
+
+-   **Maksimum Güç Kaybı ($P_{DISS}$):**
+    Her bir regülatör için maksimum yük (500mA) altında oluşacak ısıyı hesaplayalım (Sükunet akımı $I_Q$ ihmal edilmiştir):
+    $
+    P_{DISS} \approx (|V_{IN}| - |V_{OUT}|) \cdot I_{OUT,MAX} = (9\,V - 7.5\,V) \cdot 0.5\,A = 1.5\,V \cdot 0.5\,A = \mathbf{0.75\,W}
+    $
+    Her bir regülatör 0.75 Watt ısı üretecektir. DFN paketinin termal direnci (θ_JA), iyi bir PCB düzeni ile yaklaşık 40°C/W'tır.
+    $
+    T_{RISE} = P_{DISS} \cdot \theta_{JA} = 0.75\,W \cdot 40\,°C/W = 30\,°C
+    $
+    25°C'lik bir ortam sıcaklığında, regülatörün birleşim yeri sıcaklığı yaklaşık $25°C + 30°C = 55°C$ olacaktır. Bu değer, 125°C'lik maksimum birleşim sıcaklığının oldukça altında olduğu için güvenlidir. Ancak bu, yalnızca regülatörün altındaki **exposed pad**'in PCB üzerindeki geniş bir bakır alana (GND veya IN) düzgünce lehimlenmesi ve termal via'lar ile desteklenmesi durumunda geçerlidir.
+
+### Kondansatör Seçimi ve Gürültü Performansı
+
+-   **Giriş/Çıkış Kapasitörleri ($C_{IN}, C_{OUT}$):** Veri sayfalarının önerilerine uygun olarak, hem giriş hem de çıkış için en az **10µF** düşük ESR'li seramik kapasitör (X7R/X5R) kullanılmalıdır. Yüksek frekanslı gürültüyü daha iyi filtrelemek için bunlara paralel olarak **100nF**'lık seramik kapasitörler eklemek iyi bir pratiktir.
+-   **SET Pini Kapasitörü ($C_{SET}$):** Regülatörün gürültü performansını belirleyen en önemli bileşenlerden biridir. $C_{SET}$ kapasitörü, referans akımının ve $R_{SET}$ direncinin termal gürültüsünü filtreler. Değeri ne kadar büyük olursa, düşük frekans gürültüsü o kadar iyi bastırılır. Bu tasarımda, mükemmel gürültü performansı için **10µF**'lık bir seramik kapasitör seçilmiştir. Bu, başlangıç süresini biraz uzatacaktır, ancak PGFB pini kullanılarak hızlı başlangıç devresi etkinleştirilebilir.
+
+Bu tasarım, belirtilen giriş/çıkış gerilimleri için LT3045 ve LT3094'ün olağanüstü gürültü ve PSRR performansından tam olarak yararlanmayı hedefler. Doğru bileşen seçimi ve dikkatli bir PCB yerleşimi ile, en hassas analog devreleri bile besleyebilecek, stüdyo kalitesinde bir güç kaynağı elde edilebilir.
+
+---
+
+### **LT3045 & LT3094 Regülatör Devreleri Malzeme Listesi**
+
+
+#### **1. Entegre Devreler (ICs)**
+
+| Malzeme Adı / Devredeki Görevi | Adet | Üretici Parça Numarası (MPN) | Üretici |
+| :--- | :--- | :--- | :--- |
+| Pozitif Voltaj Regülatörü | **1** | LT3045EMSE#TRPBF | Analog Devices Inc. |
+| Negatif Voltaj Regülatörü | **1** | LT3094EMSE#TRPBF | Analog Devices Inc. |
+
+#### **2. Kapasitörler**
+
+| Değer | Adet | Üretici Parça Numarası (MPN) | Üretici | Devredeki Görevi |
+| :--- | :--- | :--- | :--- | :--- |
+| 10 µF (Seramik, 25V) | **4** | CL31B106KAHNNNE | Samsung | SET Pini (2 adet), Çıkış Filtreleme (2 adet) |
+| 0.1 µF (Seramik, 50V) | **4** | CL21B104KBCNNNC | Samsung | Giriş Bypass (2 adet), Çıkış Bypass (2 adet) |
+| 10 µF (Alüminyum, 50V) | **2** | EEE-FK1H100UR | Panasonic | Giriş Filtreleme (2 adet) |
+| 10 µF (Tantalum, 16V) | **2** | TCJA106M016R0200 | KYOCERA AVX| Çıkış Filtreleme (2 adet) |
+| 4.7 µF (Seramik, 35V) | **2** | GRM219R6YA475KA73J| Murata | Giriş Filtreleme (2 adet) |
+
+#### **3. Dirençler**
+
+| Değer | Adet  | Üretici Parça Numarası (MPN) | Üretici | Devredeki Görevi |
+| :--- | :--- | :--- | :--- | :--- |
+| 510 kΩ | **2** | RC0805FR-07510KL | YAGEO | PGFB (Gerilim Bölücü, 2 adet) |
+| 200 kΩ | **2** | RC0805FR-07200KL | YAGEO | PG (Pull-up/down, 2 adet) |
+| 75 kΩ | **2** | RT0805BRD0775KL | YAGEO | SET (Çıkış Gerilim Ayarı, 2 adet) |
+| 22 kΩ | **2** | RT0805FRE0722KL | YAGEO | PGFB (Gerilim Bölücü, 2 adet) |
+| 0 Ω (Jumper) | **2** | RK73Z2ATTD | KOA Speer | EN/UV (Jumper, 2 adet) |
+| 4.99 kΩ | **1** | RC0805FR-074K99L | YAGEO | ILIM (Akım Limiti - LT3094) |
+| 249 Ω | **1** | RNCP0805FTD249R | Stackpole | ILIM (Akım Limiti - LT3045) |
+
+
+{/*
+\documentclass[border=10pt]{standalone}
+\usepackage[svgnames]{xcolor} % Renk paketini yüklüyoruz (svgnames daha fazla renk seçeneği sunar)
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usepackage{circuitikz}
+\pgfplotsset{compat=1.17}
+\usetikzlibrary{decorations.markings, arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{fit, backgrounds, patterns} % KUTUCUKLAR İÇİN GEREKLİ KÜTÜPHANELER
+\pagecolor{white} % Tüm sayfanın arka planını beyaz yap
+
+\begin{document}
+\begin{circuitikz}[american, voltage shift=0.5]
+\ctikzset{tripoles/mos style=arrows}
+\ctikzset{amplifiers/scale=0.75}
+
+% =================================================================
+% --- LT3045 Devresi (Üstte) ---
+% =================================================================
+
+% Ana IC kutusunu çizelim
+% Rengi tanımlayın
+\definecolor{iccolor}{RGB}{230,194,189}
+\draw[thick, fill=cyan!10] (0, 0) rectangle (6, 5.25);
+\node at (5.5, 4.95) {\scriptsize\sffamily LT3045};
+
+% IC pinleri
+% Sol taraf pinleri
+\draw[thick,fill=white] (-0.2, 4.4) rectangle (0.2, 4.8);
+\node[right] at (0.2, 5) {\scriptsize\sffamily IN};
+
+\draw[thick,fill=white] (-0.2, 2.8) rectangle (0.2, 3.2);
+\node[right] at (0.2, 3) {\scriptsize\sffamily EN/UV};
+
+\draw[thick,fill=white] (-0.2, 2) rectangle (0.2, 2.4);
+\node[right] at (0.2, 2.2) {\scriptsize\sffamily PGFB};
+
+\draw[thick,fill=white] (-0.2, 1.2) rectangle (0.2, 1.6);
+\node[right] at (0.2, 1.4) {\scriptsize\sffamily PG};
+
+% Alt taraf pinleri
+\draw[thick,fill=white] (1.2, -0.2) rectangle (1.6, 0.2);
+\node[right] at (1.4, 0.4) {\scriptsize\sffamily SET};
+
+\draw[thick,fill=white] (3.235, -0.2) rectangle (3.635, 0.2);
+\node[right] at (3.4, 0.4) {\scriptsize\sffamily GND};
+\draw [thick] (3.435, -2.6) -- (3.435, -0.2) {};
+\draw node[circ] at (3.435, -2.6) {};
+
+\draw[thick,fill=white] (4.6, -0.2) rectangle (5, 0.2);
+\node[right] at (4.4, 0.4) {\scriptsize\sffamily ILIM};
+
+% Sağ taraf pinleri
+\draw[thick,fill=white] (5.8, 0.6) rectangle (6.2, 1);
+\node[left] at (5.9, 1) {\scriptsize\sffamily OUTS};
+
+\draw[thick,fill=white] (5.8, 1.2) rectangle (6.2, 1.6);
+\node[left] at (5.9, 1.6) {\scriptsize\sffamily OUT};
+
+\draw [thick] (5.1,2.5) node[pnp](P1){};
+
+\draw [thick] (3.5,2.5) node[op amp](A1_top){}; % opamp ismi değiştirildi
+\draw [thick] (A1_top.down) |- (3.435, 0.2);
+\draw [thick] (A1_top.up) |- (3.435, 4.6);
+\draw node[circ] at (3.435, 4.6) {};
+\draw [thick] (A1_top.out) -| (P1.B);
+
+%Bağlantıları yazalım
+%opamp + girişinden OUTS pinine bağlantı kuralım
+\draw [thick] (A1_top.+) --++(-0.2,0)|-(5.8, 0.8){};
+
+%PNP Colector ucundan OUT pinine bağlantı yazalım
+\draw [thick] (P1.C) |- (5.8,1.4){};
+
+%Akım kaynağı
+\draw [thick] (1.4, 4.6) to[ioosource, l=100µA, i=$] (1.4, 3);
+\draw [thick] (1.4, 3) -- (1.4,0.2){};
+% opamp negatif girişten akım kaynağı yoluna hat çizelim
+\draw[thick] (A1_top.-) -| (1.4,2.8575){};
+\draw node[circ] at (1.4, 2.8575) {};
+\draw node[circ] at (1.4, 4.6) {};
+
+%P1 transistörün Emetör ucundan IN ucuna bağlantı çizelim:
+\draw[thick](P1.E) |- (0.2, 4.6){};
+
+
+%Giriş Kondansatörü
+\draw[thick](-9.6, 4.6)--(-0.2,4.6){};
+\draw [thick] (-5.1, 4.6) -- (-5.1, 3.5) to[C, l_ = {\begin{tabular}{c} 4.7µF\\50V \\ %10 \\0805  \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (-5.1, 3.3) -- (-5.1, 3.1);
+\draw[thick] (-5.1, 3.1) node[ground]{};
+\draw node[circ] at (-5.1, 4.6) {};
+
+% Giriş Kondansatörü - 2 ekseninde -2 birim kaydırılmış
+\draw [thick] (-7.1, 4.6) -- (-7.1, 3.5) to[C, l_ = {\begin{tabular}{c} 0.1µF\\50V \\ %10 \\0805 \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (-7.1, 3.3) -- (-7.1, 3.1);
+\draw[thick] (-7.1, 3.1) node[ground]{};
+\draw node[circ] at (-7.1, 4.6) {};
+
+% Giriş Kondansatörü - 3 - X ekseninde -2 birim kaydırılmış
+\draw [thick] (-9.1, 4.6) -- (-9.1, 3.5) to[C, l_ = {\begin{tabular}{c} 10µF\\50V \\ %20 \\ALUM-5mm\end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (-9.1, 3.3) -- (-9.1, 3.1);
+\draw[thick] (-9.1, 3.1) node[ground]{};
+\draw node[circ] at (-9.1, 4.6) {};
+
+%VIN
+\draw node[ocirc] at (-9.65, 4.6) {};
+\node[left] at (-9.6, 4.6) {$+9V$};
+
+%RSET direnci ve paralel kondansatör yazımı
+\draw [thick]  (1.4, -2.6)--(1.4, -2.2) to[american resistor, mirror, l_ = {\begin{tabular}{c} 75k \\ %0.5 \\0805 \end{tabular}}] (1.4, -1.1)  -- (1.4, -0.2) ;
+%\draw[thick] (1.4, -2.6) node[ground]{};
+
+% Paralel kondansatör
+\draw [thick] (0.4, -2.6) -- (0.4, -1.75) to[C, l = {\begin{tabular}{c} 10µF\\25V \\ %10 \\1206 \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (0.4, -1.55) -- (0.4, -0.8) -- (1.4, -0.8);
+\draw node[circ] at (1.4, -0.8) {};
+
+%ILIM
+\draw [thick]  (4.8, -2.6)--(4.8, -2.2) to[american resistor, mirror, l_ = {\begin{tabular}{c} 249 \\ %1 \\0805 \end{tabular}}] (4.8, -1.1)  -- (4.8, -0.2) ;
+%\draw[thick] (4.8, -2.6) node[ground]{};
+
+%Çıkış Kondansatörü -1 
+\draw [thick] (7.5, 1.4) -- (7.5, 0.3) to[C, l = {\begin{tabular}{c} 10µF\\25V \\ %10 \\1206 \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (7.5, 0.1) -- (7.5, -0.1);
+\draw[thick] (7.5, -0.1) node[ground]{};
+\draw node[circ] at (7.5, 1.4) {};
+%Çıkış Kondansatörü -2
+\draw [thick] (11.5, 1.4) -- (11.5, 0.3) to[C, l = {\begin{tabular}{c} 0.1µF\\50V \\ %10 \\0805  \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (11.5, 0.1) -- (11.5, -0.1);
+\draw[thick] (11.5, -0.1) node[ground]{};
+\draw node[circ] at (11.5, 1.4) {};
+
+% Çıkış Kondansatörü - 3 ekseninde +2 birim kaydırılmış
+\draw [thick] (13.5, 1.4) -- (13.5, 0.3) to[C, l = {\begin{tabular}{c} 10µF\\16V \\ %10 \\1206  \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (13.5, 0.1) -- (13.5, -0.1);
+\draw[thick] (13.5, -0.1) node[ground]{};
+\draw node[circ] at (13.5, 1.4) {};
+
+
+%Vout
+\draw node[ocirc] at (15.05, 1.4) {};
+\node[right] at (15, 1.4) {$+7.5V$};
+\node[right] at (15, 1) {$500 mA$};
+
+%Çıkış bağlantılarını yapalım
+\draw[thick] (6.2, 1.4) -- (7.5, 1.4)--++(7.5,0){};
+\draw[thick] (6.2, 0.8) -- ++(0.2,0) -- (7.5, 1.4){};
+
+% PGFB dirençleri
+%PGFB beslemesi
+\node[left] at (-5.6, 2.2) {$+7.5V$};
+\draw node[ocirc] at (-5.65, 2.2) {};
+%R1 direnci
+\draw [thick]  (-5.6, 2.2)--(-5.1, 2.2) to[american resistor, mirror, l_ = {\begin{tabular}{c} 510k \\ %1 \\0805 \end{tabular}}] (-4, 2.2)  -- (-3.5, 2.2) -- (-0.2, 2.2) ;
+%R2 direnci
+\draw [thick]  (-3.5, 2.2)--(-3.5, 1.7) to[american resistor, mirror, l = {\begin{tabular}{c} 22k \\ %1 \\0805 \end{tabular}}] (-3.5, 0.6);
+\draw[thick] (-3.5, 0.6) node[ground]{};
+
+% +PG direnci 
+\draw [thick]  (-2, 4.6)--(-2, 4.1) to[american resistor, mirror, l_ = {\begin{tabular}{c} 200k \\ %1 \\0805 \end{tabular}}] (-2, 3) |- (-0.2, 1.4);
+%P-PG bağlantısı
+\draw node[circ] at (-2, 1.4) {};
+\draw[thick] (-2, 1.4) |- (-9.6, -0.5){};
+\draw node[ocirc] at (-9.65, -0.5) {};
+\node[left] at (-9.6, -0.5) {$+PG$};
+
+
+%+EN/UV pini bağlantıları
+\draw node[circ] at (-1.2, 4.6) {};
+\draw [thick]  (-1.2, 4.6)--(-1.2, 4.4) to[american resistor, mirror, l = {\begin{tabular}{c} 0 \\0805 \end{tabular}}] (-1.2, 3.3) |- (-0.2, 3);
+\draw node[circ] at (-1.2, 3) {};
+\draw [thick]  (-1.2, 3.3)--(-1.2, 1.2) to[american resistor, mirror, l = {\begin{tabular}{c} R(op) \\0805 \end{tabular}}] (-1.2, 0.1) |- (-9.6, -1.5) ;
+\draw node[ocirc] at (-9.65, -1.5) {};
+\node[left] at (-9.6, -1.5) {$+EN$};
+
+
+
+
+% =================================================================
+% --- LT3094 Devresi (Altta) ---
+% =================================================================
+\begin{scope}[yshift=-10.25cm] % Bu scope içindeki her şey 12cm aşağı kaydırılır
+
+% Ana IC kutusunu çizelim
+\draw[thick, fill=cyan!10] (0, 0) rectangle (6, 5.25);
+\node [right] at (0, 4.95) {\scriptsize\sffamily LT3094};
+
+% IC pinleri
+% Sol taraf pinleri
+\draw[thick,fill=white] (-0.2, 0.4) rectangle (0.2, 0.8);
+\node[right] at (0.2, 1) {\scriptsize\sffamily IN};
+
+\draw[thick,fill=white] (-0.2, 2.4) rectangle (0.2, 2.8);
+\node[right] at (0.2, 2.6) {\scriptsize\sffamily EN/UV};
+
+\draw[thick,fill=white] (-0.2, 3.7) rectangle (0.2, 4.1);
+\node[right] at (0.2, 3.9) {\scriptsize\sffamily PG};
+
+% üst taraf pinleri
+\draw[thick,fill=white] (1.2, 5.05) rectangle (1.6, 5.45);
+\node[right] at (1.4, 4.85) {\scriptsize\sffamily SET};
+
+\draw[thick,fill=white] (2.735, 5.05) rectangle (3.135, 5.45);
+\node[left] at (2.9, 4.85) {\scriptsize\sffamily GND};
+\draw [thick] (2.935, 5.45) -- (2.935, 7.65) {};
+\draw node[circ] at (2.935, 7.65) {};
+
+\draw[thick,fill=white] (3.7, 5.05) rectangle (4.1, 5.45);
+\node[below] at (3.9, 5.05) {\scriptsize\sffamily ILIM};
+
+\draw[thick,fill=white] (4.6, 5.05) rectangle (5, 5.45);
+\node[below] at (4.8, 5.05) {\scriptsize\sffamily PGFB};
+%PGFB pinine bağlı dirençler
+\draw[thick] (4.8, 5.45) |- (9.5,5.75){};
+\draw [thick]  (9, 7.65)-|(9.5, 7.25) to[american resistor, mirror, l = {\begin{tabular}{c} 22k \\ %1 \\0805 \end{tabular}}] (9.5, 6.15)  -- (9.5, 5.75) ;
+\draw [thick]  (9.5, 5.75)--(9.5, 5.075) to[american resistor, mirror, l = {\begin{tabular}{c} 510k \\ %1 \\0805 \end{tabular}}] (9.5, 3.975)  -- (9.5, 3.3) ;
+\draw node[circ] at (9.5, 5.75) {};
+\draw node[circ] at (9.5, 3.3) {};
+
+% Sağ taraf pinleri
+\draw[thick,fill=white] (5.8, 4) rectangle (6.2, 4.4);
+\node[left] at (6, 4.6) {\scriptsize\sffamily OUTS};
+
+\draw[thick,fill=white] (5.8, 3.1) rectangle (6.2, 3.5);
+\node[left] at (5.9, 3.5) {\scriptsize\sffamily OUT};
+
+\draw[thick,fill=white] (5.8, 1) rectangle (6.2, 1.4);
+\node[left] at (5.9, 1.2) {\scriptsize\sffamily VIOC};
+
+\draw [thick] (5.1,2.5) node[npn](N1){};
+
+\draw [thick] (3,2.5) node[op amp, yscale = -1](A1_bottom){}; % opamp ismi değiştirildi
+\draw [thick] (A1_bottom.down) |- (2.935, 5.05);
+\draw [thick] (A1_bottom.up) |- (2.935, 0.6);
+\draw node[circ] at (2.935, 0.6) {};
+\draw [thick] (A1_bottom.out) -| (N1.B);
+
+%Bağlantıları yazalım
+%opamp + girişinden OUTS pinine bağlantı kuralım
+\draw [thick] (A1_bottom.+) --++(-0.2,0)|-(5.8, 4.2){};
+
+%NPN Colector ucundan OUT pinine bağlantı yazalım
+\draw [thick] (N1.C) |- (5.8, 3.3){};
+
+%Akım kaynağı
+\draw [thick] (1.4, 2.2) to[ioosource, l=100µA, i=$] (1.4, 0.6);
+\draw [thick] (1.4, 5.05) -- (1.4,2.2){};
+% opamp negatif girişten akım kaynağı yoluna hat çizelim
+\draw[thick] (A1_bottom.-) -| (1.4,2.8575){};
+\draw node[circ] at (1.4, 2.125) {};
+\draw node[circ] at (1.4, 0.6) {};
+
+%N1 transistörün Emetör ucundan IN ucuna bağlantı çizelim:
+\draw[thick](N1.E) |- (0.2, 0.6){};
+
+%Çevre birimleri çizelim
+\draw[thick](-9.6, 0.6)--(-0.2,0.6){};
+
+
+
+%Giriş Kondansatörü - 1
+\draw [thick] (-5.1, 0.6) -- (-5.1, 1.2) to[C, l = {\begin{tabular}{c} 4.7µF\\50V \\ %10 \\0805 \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (-5.1, 2.4) -- (-5.1, 2.6);
+\draw[thick] (-5.1, 2.6) node[ground, yscale = -1]{};
+\draw node[circ] at (-5.1, 0.6) {};
+
+% Giriş Kondansatörü - 2 - X ekseninde -2 birim kaydırılmış
+\draw [thick] (-7.1, 0.6) -- (-7.1, 1.2) to[C, l = {\begin{tabular}{c} 0.1µF\\50V \\ %10 \\0805 \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (-7.1, 2.4) -- (-7.1, 2.6);
+\draw[thick] (-7.1, 2.6) node[ground, yscale = -1]{};
+\draw node[circ] at (-7.1, 0.6) {};
+
+% Giriş Kondansatörü - 3 - X ekseninde -2 birim kaydırılmış
+\draw [thick] (-9.1, 0.6) -- (-9.1, 1.2) to[C, l = {\begin{tabular}{c} 10µF\\50V \\ %20 \\ALUM-5mm \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (-9.1, 2.4) -- (-9.1, 2.6);
+\draw[thick] (-9.1, 2.6) node[ground, yscale = -1]{};
+\draw node[circ] at (-9.1, 0.6) {};
+
+%VIN
+\draw node[ocirc] at (-9.65, 0.6) {};
+\node[left] at (-9.6, 0.6) {$-9V$};
+
+
+%RSET direnci ve paralel kondansatör yazımı
+\draw [thick]  (1.4, 5.45)--(1.4, 6.05) to[american resistor, mirror, l_ = {\begin{tabular}{c} 75k \\ %0.5 \\0805 \end{tabular}}] (1.4, 7.15)  -- (1.4, 7.65) ;
+\draw node[circ] at (1.4, 7.65) {};
+
+% Paralel kondansatör
+\draw [thick] (1.4, 5.7) -- (0.4, 5.7) -- (0.4, 6.5) to[C, l = {\begin{tabular}{c} 10µF\\25V \\ %10 \\1206 \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (0.4, 6.7) -- (0.4, 7.65);
+\draw node[circ] at (1.4, 5.7) {};
+\draw node[circ] at (0.4, 7.65) {};
+
+%ILIM
+\draw [thick]  (3.9, 5.45)--(3.9, 6.05) to[american resistor, mirror, l_ = {\begin{tabular}{c} 4.99k \\ %1 \\0805 \end{tabular}}] (3.9, 7.15)  -- (3.9, 7.65) ;
+\draw node[circ] at (3.9, 7.65) {};
+
+%Çıkış Kondansatörü -1 
+\draw [thick] (7.5, 3.3) -- (7.5, 4.3)  to[C, l_ = {\begin{tabular}{c} 10µF\\25V \\ %10 \\1206 \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (7.5, 4.5) -- (7.5, 5);
+\draw[thick] (7.5, 5) node[ground, yscale = -1]{};
+\draw node[circ] at (7.5, 3.3) {};
+%Çıkış Kondansatörü -2 
+\draw [thick] (11.5, 3.3) -- (11.5, 4.3)  to[C, l_ = {\begin{tabular}{c} 0.1µF\\50V \\ %10 \\0805 \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (11.5, 4.5) -- (11.5, 5);
+\draw[thick] (11.5, 5) node[ground, yscale = -1]{};
+\draw node[circ] at (11.5, 3.3) {};
+
+% Çıkış Kondansatörü -3 - X ekseninde +2 birim kaydırılmış
+\draw [thick] (13.5, 3.3) -- (13.5, 4.3)  to[C, l_ = {\begin{tabular}{c} 10µF\\16V \\ %10 \\1206 \end{tabular}}, bipoles/capacitor/height=0.4, bipoles/capacitor/width=0.15] (13.5, 4.5) -- (13.5, 5);
+\draw[thick] (13.5, 5) node[ground, yscale = -1]{};
+\draw node[circ] at (13.5, 3.3) {};
+
+%VOUT
+\draw node[ocirc] at (15.05, 3.3) {};
+\node[right] at (15, 3.3) {$-7.5V$};
+\node[right] at (15, 2.9) {$500 mA$};
+
+%Çıkış bağlantılarını yapalım
+\draw[thick] (6.2, 3.3) -- (7.5, 3.3)--++(7.5,0){};
+\draw[thick] (6.2, 4.2) -- ++(0.2,0) -- (7.5, 3.3){};
+
+%En üstteki x eksenine paralel hat
+\draw[thick] (9, 7.65) -- (-1.5, 7.65){};
+\draw[thick] (-1.5, 7.65) node[ground]{};
+
+% PG pinine bağlı direnç:
+\draw [thick]  (-0.2, 3.9) -- (-1.5, 3.9)--(-1.5, 4.4) to[american resistor, mirror, l_ = {\begin{tabular}{c} 200k \\ %1 \\0805 \end{tabular}}] (-1.5, 5.5)  |- (-9.6, 6.5) ;
+\node[left] at (-9.6, 6.5) {$+3.3V$};
+\draw node[ocirc] at (-9.65, 6.5) {};
+\draw[thick] (-1.5, 3.9) -- (-2.25, 3.9) |- (-9.6, 5.6){};
+\draw node[circ] at (-1.5, 3.9) {};
+\node[left] at (-9.6, 5.6) {$-PG$};
+\draw node[ocirc] at (-9.65, 5.6) {};
+
+
+
+%-EN/UV pini bağlantıları
+\draw node[circ] at (-3, 0.6) {};
+\draw [thick]  (-3, 0.6)--(-3, 1.1) to[american resistor, mirror, l = {\begin{tabular}{c} 0 \\0805 \end{tabular}}] (-3, 2.3) |- (-0.2, 2.6);
+\draw node[circ] at (-3, 2.6) {};
+\draw [thick]  (-3, 2.6)--(-3, 3.1) to[american resistor, mirror, l = {\begin{tabular}{c} R(op) \\0805 \end{tabular}}] (-3, 4.2) |- (-9.6, 4.7) ;
+\draw node[ocirc] at (-9.65, 4.7) {};
+\node[left] at (-9.6, 4.7) {$-EN$};
+
+%VIOC Bağlantısı
+\draw[thick](6.2, 1.2) -- (15, 1.2){};
+\draw node[ocirc] at (15.05, 1.2) {};
+\node[right] at (15, 1.2) {$VIOC$};
+
+\end{scope} % Y shift scope'unu kapat
+
+\end{circuitikz}
+\end{document}
+*/}
+
+## Tasarım ve PCB Yerleşim Stratejileri: Teoriden Pratiğe
+
+LT3045 gibi ultra yüksek performanslı bir regülatörün veri sayfasında vaat edilen rekor düzeydeki gürültü ve PSRR performansına ulaşmak, sadece doğru bileşenleri seçmekle kalmaz, aynı zamanda bu bileşenlerin PCB üzerine nasıl yerleştirildiğine de bağlıdır. PCB yerleşimi, teorik performansı pratiğe dökmek için en kritik faktördür. İşte adım adım kritik tasarım noktaları:
+
+### 1. Kelvin Bağlantıları: Hassas Algılamanın Temeli (En Kritik Kural!)
+
+Kelvin bağlantısı, parazitik PCB izi direncinden kaynaklanan gerilim düşümlerini geri besleme döngüsünden izole ederek regülasyon doğruluğunu en üst düzeye çıkaran dört terminalli bir algılama tekniğidir.
+
+- **OUTS (Output Sense) Pini:** Bu pin, hata amplifikatörünün non-inverting girişini oluşturur. Optimal yük regülasyonu ve geçici tepki (transient response) performansı için, OUTS pini, yüksek akım taşıyan OUT pininden **ayrı, bağımsız bir PCB izi** kullanılarak doğrudan çıkış kapasitörünün ($C_{OUT}$) pozitif terminaline bağlanmalıdır. Bu yöntem, yük akımının PCB izinde oluşturduğu IR (akım-direnç) gerilim düşümünü geri besleme döngüsünden izole ederek, regülatörün çıkış voltajını doğrudan yük noktasından hassas bir şekilde algılamasını sağlar.
+
+- **$R_{SET}$ ve $C_{SET}$ Toprak Bağlantısı:** Benzer şekilde, çıkış voltajını ayarlayan bu iki kritik bileşenin toprak bağlantısı, ana toprak akım yollarından ayrı bir iz ile doğrudan $C_{OUT}$ çıkış kapasitörünün **toprak (GND) terminaline** bağlanmalıdır. Bu, toprak hattındaki gürültünün ve gerilim dalgalanmalarının, regülatörün hassas referans noktasını bozmasını engeller.
+
+### 2. $C_{OUT}$ ve $C_{SET}$ Bağlantıları: En İyi AC Performansı İçin Gelişmiş Düzen
+
+LT3045'in ~1MHz'lik yüksek bant genişliği, çıkış kapasitörünün kendi rezonans frekansına çok yakındır. Bu nedenle, geri besleme döngüsü dışındaki parazitik empedansları (ESL ve ESR) en aza indirmek mutlak bir zorunluluktur.
+
+- **Ayrık Pad (Split Pad) Tekniği ile Kelvin Bağlantısı:**
+  - En iyi performansı elde etmek için, DC2491A demo kartında gösterildiği gibi, **ayrık pad (split pad)** tekniği kullanılmalıdır. Bu teknikte, çıkış kapasitörü (C2) için ayrılmış pad'lerden biri (Şekil 5'teki Pad 4) doğrudan **OUTS** pinine, diğeri (Şekil 5'teki Pad 1) ise **$C_{SET}$'in GND tarafına** bağlanır.
+  - Bu yöntem, hassas algılama hatlarından akan AC akımını minimumda tutar. Böylece, lehim noktası ve PCB izinden kaynaklanan parazitik endüktansın kararlılık üzerindeki olumsuz etkisi ortadan kaldırılır. Bu düzen takip edilmezse, LT3045 osilasyona girmeyecek kadar sağlam olsa da, faz/kazanç marjı ve PSRR performansı ciddi şekilde düşebilir.
+
+<ImageWithCaption
+  src="/images/LineerReg/C2 ve CSET Kapasitörleri.svg"
+  alt="C2 ve CSET Kapasitörleri"
+>
+  <strong>Şekil 5:</strong> En iyi AC performansı için C2 ve CSET kapasitörlerinin ayrık pad tekniği ile bağlantısı. Bu düzen, parazitik etkileri en aza indirir.
+</ImageWithCaption>
+
+<ImageWithCaption
+  src="/images/LineerReg/C2 ve CSET Kapasitörleri PCB.svg"
+  alt="C2 ve CSET Kapasitörleri"
+>
+  <strong>Şekil 5:</strong> En iyi AC performansı için C2 ve CSET kapasitörlerinin ayrık pad tekniği ile bağlantısı. Bu düzen, parazitik etkileri en aza indirir.
+</ImageWithCaption>
+
+### 3. Giriş İzi Düzeni: Maksimum PSRR İçin Manyetik Alan İptali
+
+Özellikle anahtarlamalı bir regülatör sonrası post-regülasyon uygulamalarında, giriş hattındaki yüksek frekanslı AC akımları, PSRR performansını manyetik kuplaj (EMF) yoluyla düşürebilir.
+
+- **Katmanlar Arası Yerleşim:**
+  - PSRR'deki bu bozulmayı engellemek için, DC2491A demo kartında uygulanan özel yerleşim tekniği kullanılmalıdır. Giriş voltajı izi (**VIN**) bir PCB katmanında (örneğin Layer 3) ilerlerken, geri dönüş yolu (**GND**) hemen altındaki veya üstündeki katmanda, **VIN iziyle tam olarak üst üste gelecek şekilde** yerleştirilmelidir.
+  - Bu yerleşim, gidiş ve dönüş akımlarının oluşturduğu elektromanyetik alanların zıt yönlü olmasını sağlar. İzler tam olarak üst üste geldiğinde, bu alanlar birbirini büyük ölçüde iptal eder. Bu, çıkış kapasitörü ve ilgili hassas izlerle olan manyetik kuplajı en aza indirerek LT3045'in sunduğu maksimum PSRR performansına ulaşmayı mümkün kılar.
+  
+
+<ImageWithCaption
+  src="/images/LineerReg/Vin-layer-3.svg"
+  alt="C2 ve CSET Kapasitörleri"
+>
+  <strong>Şekil 5:</strong> En iyi AC performansı için C2 ve CSET kapasitörlerinin ayrık pad tekniği ile bağlantısı. Bu düzen, parazitik etkileri en aza indirir.
+</ImageWithCaption>
+
+<ImageWithCaption
+  src="/images/LineerReg/GND-bottom-layer.svg"
+  alt="C2 ve CSET Kapasitörleri"
+>
+  <strong>Şekil 5:</strong> En iyi AC performansı için C2 ve CSET kapasitörlerinin ayrık pad tekniği ile bağlantısı. Bu düzen, parazitik etkileri en aza indirir.
+</ImageWithCaption>
+
+### 2. Termal Yönetim ve Exposed Pad
+
+Bu regülatörler lineer oldukları için, giriş ve çıkış voltajı arasındaki farkı ısı olarak yayarlar.
+
+- **Exposed Pad:** Regülatörün altındaki metal ped, ana termal yoldur. PCB'de geniş bir bakır alana lehimlenmeli ve bu alan, ısıyı diğer katmanlara yaymak için termal via'lar ile desteklenmelidir.
+- **Kritik Fark:** **LT3042'de exposed pad GND'ye, LT3094'te ise IN voltajına bağlanmalıdır!** Bu hata, devrenin çalışmamasına veya hasar görmesine neden olabilir.
+
+### 3. Akım Döngüleri ve PSRR
+
+Yüksek frekans PSRR performansını korumak için, giriş akımının (`C_IN`'den regülatöre) ve çıkış akımının (`C_OUT`'tan yüke) oluşturduğu fiziksel döngü alanlarını mümkün olduğunca küçük tutun. Giriş ve çıkış devrelerini birbirinden fiziksel olarak ayırın.
+
+`[Resim: Optimal PCB Layout Örneği. Giriş ve çıkış kapasitörlerinin yerleşimi, Kelvin bağlantıları, termal via'lar ve ayrık akım yollarını gösteren bir layout örneği.]`
+
+
+## Sonuç
+
+Bu proje, sadece belirli komponentler için bir güç kaynağı tasarlamaktan öte, yüksek performanslı elektronik tasarımın temel taşlarından birini derinlemesine anlamayı hedefler. Elde edilecek düşük gürültülü güç kaynağı, gelecekteki hassas ölçüm ve sinyal işleme projeleri için güvenilir bir temel oluşturacaktır.

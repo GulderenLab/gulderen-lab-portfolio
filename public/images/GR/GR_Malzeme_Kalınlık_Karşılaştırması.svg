@@ -1,0 +1,119 @@
+<svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradients for gulderenlab.com uyumlu modern look -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="catheterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="needle18Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f87171;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ef4444;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="needle22Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#34d399;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10b981;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="wire35Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="wire18Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Drop shadow filter -->
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+  
+  <!-- Transparent Background -->
+  <rect width="1000" height="400" fill="none"/>
+  
+  <!-- 1. 6F Kateter ve DİKEY Cetvel -->
+  <g transform="translate(80, 80)">
+    <!-- Card background -->
+    <rect x="0" y="0" width="280" height="240" fill="#1e293b" stroke="#334155" stroke-width="1" rx="12" filter="url(#dropShadow)"/>
+    
+    <text x="140" y="30" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600" fill="#f8fafc">Kateterler</text>
+    
+
+    <!-- 6F Kateter - ÜST -->
+    <rect x="100" y="100" width="60" height="20" fill="url(#catheterGrad)" stroke="#2563eb" stroke-width="1" rx="10" filter="url(#dropShadow)"/>
+    <text x="170" y="113" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#f1f5f9">6F</text>
+    
+    <!-- 8F Kateter - ALT (daha kalın) -->
+    <rect x="100" y="140" width="60" height="27" fill="url(#catheterGrad)" stroke="#2563eb" stroke-width="1" rx="13" filter="url(#dropShadow)"/>
+    <text x="170" y="156" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500" fill="#f1f5f9">8F</text>
+    
+    <!-- 6F için 2mm çap ölçümü -->
+    <line x1="175" y1="100" x2="185" y2="100" stroke="#ef4444" stroke-width="2"/>
+    <line x1="175" y1="120" x2="185" y2="120" stroke="#ef4444" stroke-width="2"/>
+    <line x1="190" y1="100" x2="190" y2="120" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="195" y="113" font-size="10" fill="#ef4444" font-weight="600">2mm</text>
+    
+    <!-- 8F için 2.7mm çap ölçümü -->
+    <line x1="175" y1="140" x2="185" y2="140" stroke="#10b981" stroke-width="2"/>
+    <line x1="175" y1="167" x2="185" y2="167" stroke="#10b981" stroke-width="2"/>
+    <line x1="190" y1="140" x2="190" y2="167" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="195" y="156" font-size="10" fill="#10b981" font-weight="600">2.7mm</text>
+    
+    <text x="140" y="185" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#cbd5e1">6F (2.0mm) ve 8F (2.7mm)</text>
+    <text x="140" y="200" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="10" fill="#94a3b8">Kateter kalınlık karşılaştırması</text>
+  </g>
+  
+  <!-- 2. İğne Karşılaştırması -->
+  <g transform="translate(380, 80)">
+    <!-- Card background -->
+    <rect x="0" y="0" width="280" height="240" fill="#1e293b" stroke="#334155" stroke-width="1" rx="12" filter="url(#dropShadow)"/>
+    
+    <text x="140" y="30" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600" fill="#f8fafc">İğne Kalınlıkları</text>
+    
+    <!-- 18G İğne -->
+    <rect x="70" y="80" width="70" height="12" fill="url(#needle18Grad)" stroke="#dc2626" stroke-width="1" rx="6" filter="url(#dropShadow)"/>
+    <text x="105" y="110" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#cbd5e1">18G İğne</text>
+    <text x="105" y="125" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="10" fill="#94a3b8">(1.27mm)</text>
+    
+    <!-- 22G İğne -->
+    <rect x="140" y="84" width="70" height="6" fill="url(#needle22Grad)" stroke="#059669" stroke-width="1" rx="3" filter="url(#dropShadow)"/>
+    <text x="175" y="110" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#cbd5e1">22G İğne</text>
+    <text x="175" y="125" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="10" fill="#94a3b8">(0.71mm)</text>
+    
+    <!-- Comparison line -->
+    <line x1="70" y1="150" x2="210" y2="150" stroke="#334155" stroke-width="1"/>
+    <text x="140" y="165" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="10" fill="#64748b">Kalınlık karşılaştırması</text>
+  </g>
+  
+  <!-- 3. Kılavuz Tel Karşılaştırması -->
+  <g transform="translate(680, 80)">
+    <!-- Card background -->
+    <rect x="0" y="0" width="280" height="240" fill="#1e293b" stroke="#334155" stroke-width="1" rx="12" filter="url(#dropShadow)"/>
+    
+    <text x="140" y="30" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600" fill="#f8fafc">Kılavuz Teller</text>
+    
+    <!-- 0.035" Tel -->
+    <rect x="70" y="82" width="70" height="8" fill="url(#wire35Grad)" stroke="#7c3aed" stroke-width="1" rx="4" filter="url(#dropShadow)"/>
+    <text x="105" y="110" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#cbd5e1">0.035"</text>
+    <text x="105" y="125" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="10" fill="#94a3b8">(0.89mm)</text>
+    
+    <!-- 0.018" Tel -->
+    <rect x="140" y="85" width="70" height="3" fill="url(#wire18Grad)" stroke="#d97706" stroke-width="1" rx="1.5" filter="url(#dropShadow)"/>
+    <text x="175" y="110" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="500" fill="#cbd5e1">0.018"</text>
+    <text x="175" y="125" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="10" fill="#94a3b8">(0.46mm)</text>
+    
+    <!-- Comparison line -->
+    <line x1="70" y1="150" x2="210" y2="150" stroke="#334155" stroke-width="1"/>
+    <text x="140" y="165" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="10" fill="#64748b">Kalınlık karşılaştırması</text>
+  </g>
+  
+</svg>

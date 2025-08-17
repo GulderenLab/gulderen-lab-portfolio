@@ -1,0 +1,328 @@
+---
+// AnimationDebugger.astro - Tool to help debug animation issues
+---
+
+<div class="animation-debugger">
+  <h3>🔧 Animation Debug Panel</h3>
+  <div class="debug-info">
+    <div class="debug-section">
+      <h4>Browser Support</h4>
+      <div class="debug-item">
+        <span class="label">CSS Animations:</span>
+        <span class="value" id="css-animations">Checking...</span>
+      </div>
+      <div class="debug-item">
+        <span class="label">CSS Transitions:</span>
+        <span class="value" id="css-transitions">Checking...</span>
+      </div>
+      <div class="debug-item">
+        <span class="label">Transform Support:</span>
+        <span class="value" id="css-transforms">Checking...</span>
+      </div>
+      <div class="debug-item">
+        <span class="label">Reduced Motion:</span>
+        <span class="value" id="reduced-motion">Checking...</span>
+      </div>
+    </div>
+    
+    <div class="debug-section">
+      <h4>Performance</h4>
+      <div class="debug-item">
+        <span class="label">Hardware Acceleration:</span>
+        <span class="value" id="hardware-accel">Checking...</span>
+      </div>
+      <div class="debug-item">
+        <span class="label">FPS (approx):</span>
+        <span class="value" id="fps-counter">0</span>
+      </div>
+    </div>
+    
+    <div class="debug-section">
+      <h4>Animation Test</h4>
+      <div class="test-animation-box" id="test-box">
+        <div class="test-content">Click to test animations</div>
+      </div>
+      <button id="test-btn" class="debug-test-btn">Test Animations</button>
+      <button id="force-enable-btn" class="debug-test-btn">Force Enable All</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .animation-debugger {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    color: #e2e8f0;
+    font-family: 'Courier New', monospace;
+  }
+  
+  .animation-debugger h3 {
+    color: #60a5fa;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .debug-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .debug-section {
+    background: rgba(30, 41, 59, 0.5);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  
+  .debug-section h4 {
+    color: #fbbf24;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+  }
+  
+  .debug-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0;
+  }
+  
+  .label {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+  }
+  
+  .value {
+    color: #10b981;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  
+  .value.error {
+    color: #ef4444;
+  }
+  
+  .value.warning {
+    color: #f59e0b;
+  }
+  
+  .test-animation-box {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem auto;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+  }
+  
+  .test-content {
+    color: white;
+    font-size: 0.8rem;
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  .test-animation-box:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+  }
+  
+  .test-animation-box.animate-test {
+    animation: debugTestAnimation 2s ease-in-out;
+  }
+  
+  @keyframes debugTestAnimation {
+    0% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.2) rotate(90deg); }
+    50% { transform: scale(0.8) rotate(180deg); }
+    75% { transform: scale(1.1) rotate(270deg); }
+    100% { transform: scale(1) rotate(360deg); }
+  }
+  
+  .debug-test-btn {
+    background: #059669;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin: 0.25rem;
+    transition: background 0.2s ease;
+  }
+  
+  .debug-test-btn:hover {
+    background: #047857;
+  }
+  
+  .debug-test-btn:active {
+    transform: scale(0.98);
+  }
+  
+  @media (max-width: 768px) {
+    .debug-info {
+      grid-template-columns: 1fr;
+    }
+    
+    .animation-debugger {
+      padding: 1rem;
+    }
+  }
+</style>
+
+<script>
+  // Animation Debug Functions
+  function checkAnimationSupport() {
+    const testEl = document.createElement('div');
+    const support = {};
+    
+    // Check CSS Animation support
+    support.animations = 'animation' in testEl.style ||
+                        'webkitAnimation' in testEl.style ||
+                        'mozAnimation' in testEl.style;
+    
+    // Check CSS Transition support
+    support.transitions = 'transition' in testEl.style ||
+                         'webkitTransition' in testEl.style ||
+                         'mozTransition' in testEl.style;
+    
+    // Check Transform support
+    support.transforms = 'transform' in testEl.style ||
+                        'webkitTransform' in testEl.style ||
+                        'mozTransform' in testEl.style;
+    
+    // Check for reduced motion preference
+    support.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    // Check for hardware acceleration
+    support.hardwareAccel = 'transform3d' in testEl.style || 
+                           'webkitTransform3d' in testEl.style;
+    
+    return support;
+  }
+  
+  function updateDebugInfo() {
+    const support = checkAnimationSupport();
+    
+    const elements = {
+      'css-animations': support.animations ? '✅ Supported' : '❌ Not Supported',
+      'css-transitions': support.transitions ? '✅ Supported' : '❌ Not Supported',
+      'css-transforms': support.transforms ? '✅ Supported' : '❌ Not Supported',
+      'reduced-motion': support.reducedMotion ? '⚠️ Enabled (animations disabled)' : '✅ Disabled',
+      'hardware-accel': support.hardwareAccel ? '✅ Available' : '⚠️ Limited'
+    };
+    
+    Object.entries(elements).forEach(([id, text]) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = text;
+        if (text.includes('❌') || text.includes('⚠️')) {
+          el.classList.add(text.includes('❌') ? 'error' : 'warning');
+        }
+      }
+    });
+  }
+  
+  function measureFPS() {
+    let frames = 0;
+    let lastTime = performance.now();
+    
+    function countFrames(currentTime) {
+      frames++;
+      
+      if (currentTime >= lastTime + 1000) {
+        const fps = Math.round((frames * 1000) / (currentTime - lastTime));
+        const fpsEl = document.getElementById('fps-counter');
+        if (fpsEl) {
+          fpsEl.textContent = fps + ' FPS';
+          if (fps < 30) fpsEl.classList.add('warning');
+          else if (fps < 15) fpsEl.classList.add('error');
+        }
+        
+        frames = 0;
+        lastTime = currentTime;
+      }
+      
+      requestAnimationFrame(countFrames);
+    }
+    
+    requestAnimationFrame(countFrames);
+  }
+  
+  function testAnimations() {
+    const testBox = document.getElementById('test-box');
+    if (testBox) {
+      testBox.classList.remove('animate-test');
+      setTimeout(() => {
+        testBox.classList.add('animate-test');
+      }, 10);
+      
+      setTimeout(() => {
+        testBox.classList.remove('animate-test');
+      }, 2000);
+    }
+  }
+  
+  function forceEnableAnimations() {
+    // Add force-animations class to body
+    document.body.classList.add('force-animations');
+    
+    // Override reduced motion
+    const style = document.createElement('style');
+    style.id = 'force-animations-style';
+    style.textContent = `
+      .force-animations * {
+        animation-duration: initial !important;
+        animation-iteration-count: initial !important;
+        transition-duration: initial !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Update debug info
+    setTimeout(updateDebugInfo, 100);
+    
+    alert('Animations force-enabled! This overrides reduced motion preferences.');
+  }
+  
+  // Initialize debug tool
+  document.addEventListener('DOMContentLoaded', () => {
+    updateDebugInfo();
+    measureFPS();
+    
+    // Test button event
+    const testBtn = document.getElementById('test-btn');
+    if (testBtn) {
+      testBtn.addEventListener('click', testAnimations);
+    }
+    
+    // Force enable button
+    const forceBtn = document.getElementById('force-enable-btn');
+    if (forceBtn) {
+      forceBtn.addEventListener('click', forceEnableAnimations);
+    }
+    
+    // Test box click event
+    const testBox = document.getElementById('test-box');
+    if (testBox) {
+      testBox.addEventListener('click', testAnimations);
+    }
+  });
+  
+  // Re-run on Astro page transitions
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(() => {
+      updateDebugInfo();
+      measureFPS();
+    }, 100);
+  });
+</script>

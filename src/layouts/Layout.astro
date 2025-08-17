@@ -3,6 +3,8 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/tailwind.css';
+import '../styles/design-system-optimized.css';
+import '../styles/animations.css';
 
 // Props interface'ini tanımlıyoruz
 interface Props {
@@ -23,6 +25,9 @@ const formattedTitle = `${title} | ${siteName}`;
 const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
 const ogImageURL = image && Astro.site ? new URL(image, Astro.site).toString() : undefined;
 
+// Animate background only on homepage
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/index.html';
+
 if (!Astro.site && import.meta.env.PROD) {
     console.warn(
         `Astro.site yapılandırması astro.config.mjs dosyasında tanımlanmamış. Canonical ve OG URL'ler düzgün oluşturulamayacak.`
@@ -38,8 +43,9 @@ if (!Astro.site && import.meta.env.PROD) {
         <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
         <meta name="generator" content={Astro.generator} />
 
-        {/* KaTeX (Matematik Formülleri) Stil ve Script Dosyaları */}
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+        {/* KaTeX (Matematik Formülleri) Stil ve Script Dosyaları - Optimized */}
+        <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"></noscript>
         <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
         <script>
@@ -59,8 +65,23 @@ if (!Astro.site && import.meta.env.PROD) {
           });
         </script>
         
-        {/* model-viewer script */}
+        {/* model-viewer script - Optimized */}
+        <link rel="modulepreload" href="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
         <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" defer></script>
+        
+        {/* Image modal script */}
+        <script src="/scripts/image-modal.js" defer></script>
+        
+        {/* Performance and SEO Optimizations */}
+        <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+        <link rel="dns-prefetch" href="//unpkg.com">
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+        <meta name="googlebot" content="index, follow">
+        <meta name="theme-color" content="#1e293b">
+        <meta name="msapplication-TileColor" content="#1e293b">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="format-detection" content="telephone=no">
 
         {/* SEO ve META ETİKETLERİ */}
         <title>{formattedTitle}</title>
@@ -73,6 +94,33 @@ if (!Astro.site && import.meta.env.PROD) {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={siteName} />
         <meta property="og:locale" content="tr_TR" />
+        
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content={formattedTitle}>
+        <meta name="twitter:description" content={description}>
+        {ogImageURL && <meta name="twitter:image" content={ogImageURL}>}
+        <meta name="twitter:creator" content="@GulderenLab">
+        
+        {/* JSON-LD Structured Data */}
+        <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Abdullah Gülderen",
+          "url": Astro.site?.toString(),
+          "sameAs": [
+            "https://github.com/GulderenLab",
+            "https://linkedin.com/in/abdullah-gülderen-31120b35b/"
+          ],
+          "jobTitle": "Electronics Engineer & Software Developer",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "Gulderen Lab"
+          },
+          "knowsAbout": ["Electronics", "Software Development", "IoT", "Machine Learning", "PCB Design"]
+        })}
+        </script>
 
         {/* STİLLER */}
         <style is:inline>
@@ -151,10 +199,17 @@ if (!Astro.site && import.meta.env.PROD) {
             }
         </style>
     </head>
-    <body class="bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 text-gray-100 flex flex-col min-h-screen font-sans antialiased">
+    <body class="relative bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 text-gray-100 flex flex-col min-h-screen font-sans antialiased overflow-x-hidden">
+        {/* Dynamic Conic Gradient Wave Background (Option B) - only on Home */}
+        {isHome && (
+          <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
+            <div class="wave-bg"></div>
+          </div>
+        )}
+
         <Header siteTitle={siteName} />
 
-        <main class="px-4 py-8 flex-grow w-full overflow-x-hidden">
+        <main class="relative px-4 py-8 flex-grow w-full overflow-x-hidden">
             <div class="max-w-full">
                 <article class="prose prose-invert w-full max-w-none">
                     <slot />
@@ -222,5 +277,48 @@ if (!Astro.site && import.meta.env.PROD) {
             document.addEventListener('astro:after-swap', initCopyButtons);
         </script>
 
+        {/* Conic Gradient Wave Styles */}
+        <style is:inline>
+          .wave-bg {
+            position: absolute;
+            inset: -20%;
+            filter: blur(60px);
+            opacity: 0.18;
+            transform: translateZ(0);
+            will-change: transform;
+            background:
+              conic-gradient(
+                from 180deg at 50% 50%,
+                rgba(59,130,246,0.35),
+                rgba(34,211,238,0.35),
+                rgba(168,85,247,0.30),
+                rgba(59,130,246,0.35)
+              );
+            animation: spinWave 38s linear infinite;
+            mask-image: radial-gradient(65% 65% at 50% 40%, rgba(0,0,0,0.9), rgba(0,0,0,0.1) 60%, transparent 100%);
+            pointer-events: none;
+          }
+
+          @keyframes spinWave {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.05); }
+            100% { transform: rotate(360deg) scale(1); }
+          }
+
+          /* Subtle parallax shift on scroll (no JS) */
+          @media (min-width: 768px) {
+            .wave-bg { animation-duration: 46s; }
+          }
+
+          /* Respect reduced motion */
+          @media (prefers-reduced-motion: reduce) {
+            .wave-bg { animation: none; opacity: 0.12; }
+          }
+
+          /* Mobile optimization */
+          @media (max-width: 768px) {
+            .wave-bg { opacity: 0.14; filter: blur(48px); }
+          }
+        </style>
     </body>
 </html>

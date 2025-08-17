@@ -1,0 +1,120 @@
+---
+// src/pages/radyoloji/index.astro
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const pageTitle = "Radyoloji";
+const pageDescription = "Radyoloji üzerine içerikler ve kılavuzlar.";
+
+// Radyoloji yazılarını al, taslak olmayanları filtrele ve tarihe göre sırala
+const posts = (await getCollection('radyoloji'))
+    .filter(post => !post.data.isDraft)
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Radiology Header Section -->
+  <section class="relative py-20 md:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/10 to-cyan-900/10"></div>
+    <div class="absolute inset-0">
+      <div class="absolute top-20 right-20 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 left-20 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+    </div>
+    
+    <div class="relative container mx-auto px-6 text-center">
+      <!-- Section Badge -->
+      <div class="inline-flex items-center px-4 py-2 mb-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full">
+        <span class="text-sm text-blue-400 font-medium">Radyoloji Rehberi</span>
+      </div>
+      
+      <h1 class="text-5xl md:text-6xl font-bold mb-6">
+        <span class="bg-gradient-to-r from-white via-blue-100 to-cyan-100 bg-clip-text text-transparent">
+          Radyoloji İçerikleri
+        </span>
+      </h1>
+      
+      <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-12 leading-relaxed">
+        Radyoloji alanındaki en son gelişmeler, <span class="text-cyan-300 font-semibold">klinik kılavuzlar</span> ve teknik detaylar.
+      </p>
+    </div>
+  </section>
+
+  <!-- Sample Content -->
+  <section class="py-16 md:py-24">
+    <div class="container mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        {posts.map((post) => (
+          <article class="group relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden hover:border-blue-400/50 transition-all duration-500 hover:transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/10">
+            {/* Make entire card clickable */}
+            <a href={`/radyoloji/${post.slug}/`} class="absolute inset-0 z-10" aria-label={`Read: ${post.data.title}`}></a>
+            
+            <div class="p-6">
+              <div class="flex items-center gap-4 mb-4">
+                <div class="flex items-center text-gray-400 text-sm">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                  </svg>
+                  {post.data.category}
+                </div>
+                <div class="flex items-center text-gray-400 text-sm">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  {post.data.publishDate.toLocaleDateString('tr-TR', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                  })}
+                </div>
+              </div>
+              <h2 class="text-xl font-bold mb-3 text-white group-hover:text-blue-300 transition-colors duration-300">
+                {post.data.title}
+              </h2>
+              <p class="text-gray-400 mb-4 leading-relaxed">
+                {post.data.description}
+              </p>
+              {post.data.tags && post.data.tags.length > 0 && (
+                <div class="flex flex-wrap gap-2 mb-4">
+                  {post.data.tags.slice(0, 3).map(tag => (
+                    <span class="px-2 py-1 bg-slate-700/50 text-blue-300 text-xs rounded-md border border-slate-600/50 hover:bg-slate-600/50 transition-colors relative z-20">
+                      {tag}
+                    </span>
+                  ))}
+                  {post.data.tags.length > 3 && (
+                    <span class="px-2 py-1 text-gray-400 text-xs">
+                      +{post.data.tags.length - 3} more
+                    </span>
+                  )}
+                </div>
+              )}
+              <div class="flex items-center justify-between">
+                <div class="flex items-center text-blue-400 group-hover:text-blue-300 transition-colors">
+                  <span class="text-sm font-medium">Detayları Görüntüle</span>
+                  <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                  </svg>
+                </div>
+                <div class="text-gray-500 text-xs">
+                  {post.data.readingTime || '5 dk okuma'}
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+        {posts.length === 0 && (
+          <div class="col-span-full text-center py-20">
+            <div class="mx-auto max-w-md">
+              <svg class="w-16 h-16 mx-auto mb-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <h3 class="text-xl font-semibold text-gray-300 mb-2">Henüz İçerik Yok</h3>
+              <p class="text-gray-500">Radyoloji içerikleri yayınlandıkça burada görüntülenecek.</p>
+            </div>
+          </div>
+        )}
+        
+      </div>
+    </div>
+  </section>
+</Layout>
+

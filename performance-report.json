@@ -1,0 +1,2335 @@
+{
+  "images": [
+    {
+      "name": "profil-placeholder.jpg",
+      "path": "images\\profil-placeholder.jpg",
+      "size": "7.26",
+      "extension": ".jpg"
+    },
+    {
+      "name": "i2c-haberlesme-kapak.jpg",
+      "path": "images\\i2c-haberlesme-kapak.jpg",
+      "size": "3.50",
+      "extension": ".jpg"
+    },
+    {
+      "name": "manzara.jpg",
+      "path": "images\\manzara.jpg",
+      "size": "3.50",
+      "extension": ".jpg"
+    },
+    {
+      "name": "cadquery-python-3d-modeling-kapak.png",
+      "path": "images\\cadquery-python-3d-modeling-kapak.png",
+      "size": "2.16",
+      "extension": ".png"
+    },
+    {
+      "name": "astro-ile-blog.png",
+      "path": "images\\astro-ile-blog.png",
+      "size": "1.94",
+      "extension": ".png"
+    },
+    {
+      "name": "markdown-klavuzu-kapak.png",
+      "path": "images\\markdown-klavuzu-kapak.png",
+      "size": "1.78",
+      "extension": ".png"
+    },
+    {
+      "name": "markdown_katex.png",
+      "path": "images\\markdown_katex.png",
+      "size": "1.70",
+      "extension": ".png"
+    },
+    {
+      "name": "ferrit_karşılaştırma_tablosu.svg",
+      "path": "images\\OrtakModBobinleri\\ferrit_karşılaştırma_tablosu.svg",
+      "size": "1.55",
+      "extension": ".svg"
+    },
+    {
+      "name": "KaTeX-entegrasyonu-kapak.png",
+      "path": "images\\KaTeX-entegrasyonu-kapak.png",
+      "size": "1.43",
+      "extension": ".png"
+    },
+    {
+      "name": "katex.png",
+      "path": "images\\katex.png",
+      "size": "1.18",
+      "extension": ".png"
+    },
+    {
+      "name": "LT3045 - LT3094 Simetrik Gerilim Kaynağı.svg",
+      "path": "images\\LineerReg\\LT3045 - LT3094 Simetrik Gerilim Kaynağı.svg",
+      "size": "0.47",
+      "extension": ".svg"
+    },
+    {
+      "name": "LT3045-LT3094-sim.svg",
+      "path": "images\\LineerReg\\LT3045-LT3094-sim.svg",
+      "size": "0.47",
+      "extension": ".svg"
+    },
+    {
+      "name": "10_bit_adres.svg",
+      "path": "images\\i2c\\10_bit_adres.svg",
+      "size": "0.45",
+      "extension": ".svg"
+    },
+    {
+      "name": "LT3045-LT3094-devre.svg",
+      "path": "images\\LineerReg\\LT3045-LT3094-devre.svg",
+      "size": "0.42",
+      "extension": ".svg"
+    },
+    {
+      "name": "LCR_metre_blok_diyagrami.svg",
+      "path": "images\\LCR\\LCR_metre_blok_diyagrami.svg",
+      "size": "0.39",
+      "extension": ".svg"
+    },
+    {
+      "name": "ortak_mod_sok_bobini_calisma_prensibi_diyagrami.png",
+      "path": "images\\OrtakModBobinleri\\ortak_mod_sok_bobini_calisma_prensibi_diyagrami.png",
+      "size": "0.38",
+      "extension": ".png"
+    },
+    {
+      "name": "GND-bottom-layer.svg",
+      "path": "images\\LineerReg\\GND-bottom-layer.svg",
+      "size": "0.24",
+      "extension": ".svg"
+    },
+    {
+      "name": "Vin-layer-3.svg",
+      "path": "images\\LineerReg\\Vin-layer-3.svg",
+      "size": "0.21",
+      "extension": ".svg"
+    },
+    {
+      "name": "CF139.pdf",
+      "path": "images\\OrtakModBobinleri\\CF139.pdf",
+      "size": "0.21",
+      "extension": ".pdf"
+    },
+    {
+      "name": "ack_nack_sinyali.svg",
+      "path": "images\\i2c\\ack_nack_sinyali.svg",
+      "size": "0.20",
+      "extension": ".svg"
+    },
+    {
+      "name": "şekil_3_3__Bus_Kapasitansı_ve_Yükseliş_Zamanı__RC_Gecikmesi_.svg",
+      "path": "images\\i2c\\şekil_3_3__Bus_Kapasitansı_ve_Yükseliş_Zamanı__RC_Gecikmesi_.svg",
+      "size": "0.20",
+      "extension": ".svg"
+    },
+    {
+      "name": "Şekil_3_5__I2C_Lojik_Voltaj_Seviyeleri.svg",
+      "path": "images\\i2c\\Şekil_3_5__I2C_Lojik_Voltaj_Seviyeleri.svg",
+      "size": "0.18",
+      "extension": ".svg"
+    },
+    {
+      "name": "ortak_mod_şok_bobini_akıları.svg",
+      "path": "images\\OrtakModBobinleri\\ortak_mod_şok_bobini_akıları.svg",
+      "size": "0.15",
+      "extension": ".svg"
+    },
+    {
+      "name": "şekil_4_1_i2c_master_slave_ilişkisi.svg",
+      "path": "images\\i2c\\şekil_4_1_i2c_master_slave_ilişkisi.svg",
+      "size": "0.13",
+      "extension": ".svg"
+    },
+    {
+      "name": "LT3094 - Negatif Gerilim Regülatörü.svg",
+      "path": "images\\LineerReg\\LT3094 - Negatif Gerilim Regülatörü.svg",
+      "size": "0.13",
+      "extension": ".svg"
+    },
+    {
+      "name": "öncelik_durumu.svg",
+      "path": "images\\i2c\\öncelik_durumu.svg",
+      "size": "0.12",
+      "extension": ".svg"
+    },
+    {
+      "name": "Şekil_3_6__Çift_Yönlü_Seviye_Dönüştürücü__Level_Shifter_.svg",
+      "path": "images\\i2c\\Şekil_3_6__Çift_Yönlü_Seviye_Dönüştürücü__Level_Shifter_.svg",
+      "size": "0.12",
+      "extension": ".svg"
+    },
+    {
+      "name": "ŞEKİL_3_3__Yükseliş_Zamanı__RC_Gecikmesi.svg",
+      "path": "images\\i2c\\ŞEKİL_3_3__Yükseliş_Zamanı__RC_Gecikmesi.svg",
+      "size": "0.12",
+      "extension": ".svg"
+    },
+    {
+      "name": "C2 ve CSET Kapasitörleri PCB.svg",
+      "path": "images\\LineerReg\\C2 ve CSET Kapasitörleri PCB.svg",
+      "size": "0.11",
+      "extension": ".svg"
+    },
+    {
+      "name": "AWG - Metrik Dönüşüm Tablosu.pdf",
+      "path": "images\\OrtakModBobinleri\\AWG - Metrik Dönüşüm Tablosu.pdf",
+      "size": "0.11",
+      "extension": ".pdf"
+    },
+    {
+      "name": "astro-latex.png",
+      "path": "images\\astro-latex.png",
+      "size": "0.10",
+      "extension": ".png"
+    },
+    {
+      "name": "baslama_durma_koşulları.svg",
+      "path": "images\\i2c\\baslama_durma_koşulları.svg",
+      "size": "0.10",
+      "extension": ".svg"
+    },
+    {
+      "name": "Şekil_3_6__Çift_Yönlü_Seviye_Dönüştürücü__Level_Shifter_.png",
+      "path": "images\\i2c\\Şekil_3_6__Çift_Yönlü_Seviye_Dönüştürücü__Level_Shifter_.png",
+      "size": "0.10",
+      "extension": ".png"
+    },
+    {
+      "name": "Doğrusal Regulator Temel Devre.svg",
+      "path": "images\\LineerReg\\Doğrusal Regulator Temel Devre.svg",
+      "size": "0.10",
+      "extension": ".svg"
+    },
+    {
+      "name": "proje3-kapak.jpg",
+      "path": "images\\proje3-kapak.jpg",
+      "size": "0.10",
+      "extension": ".jpg"
+    },
+    {
+      "name": "ŞEKİL_3_3__Bus_Kapasitansı.svg",
+      "path": "images\\i2c\\ŞEKİL_3_3__Bus_Kapasitansı.svg",
+      "size": "0.09",
+      "extension": ".svg"
+    },
+    {
+      "name": "CF139 T4511 Toroid Çekirdek.pdf",
+      "path": "images\\OrtakModBobinleri\\CF139 T4511 Toroid Çekirdek.pdf",
+      "size": "0.09",
+      "extension": ".pdf"
+    },
+    {
+      "name": "multi_master_şeması.svg",
+      "path": "images\\i2c\\multi_master_şeması.svg",
+      "size": "0.08",
+      "extension": ".svg"
+    },
+    {
+      "name": "temel_i2c_donanım_yapısı.svg",
+      "path": "images\\i2c\\temel_i2c_donanım_yapısı.svg",
+      "size": "0.08",
+      "extension": ".svg"
+    },
+    {
+      "name": "çoklu_i2c_cihaz_bağlantısı.svg",
+      "path": "images\\i2c\\çoklu_i2c_cihaz_bağlantısı.svg",
+      "size": "0.08",
+      "extension": ".svg"
+    },
+    {
+      "name": "Lineer Regülatör Temel Devre.svg",
+      "path": "images\\LineerReg\\Lineer Regülatör Temel Devre.svg",
+      "size": "0.08",
+      "extension": ".svg"
+    },
+    {
+      "name": "LT3045-Temel Devre.svg",
+      "path": "images\\LineerReg\\LT3045-Temel Devre.svg",
+      "size": "0.08",
+      "extension": ".svg"
+    },
+    {
+      "name": "mic5205 temel devre.svg",
+      "path": "images\\LineerReg\\mic5205 temel devre.svg",
+      "size": "0.08",
+      "extension": ".svg"
+    },
+    {
+      "name": "m1_iletimde_2.svg",
+      "path": "images\\i2c\\m1_iletimde_2.svg",
+      "size": "0.07",
+      "extension": ".svg"
+    },
+    {
+      "name": "m1_iletimde_4.svg",
+      "path": "images\\i2c\\m1_iletimde_4.svg",
+      "size": "0.07",
+      "extension": ".svg"
+    },
+    {
+      "name": "m1_kesimde_1.svg",
+      "path": "images\\i2c\\m1_kesimde_1.svg",
+      "size": "0.07",
+      "extension": ".svg"
+    },
+    {
+      "name": "m1_kesimde_3.svg",
+      "path": "images\\i2c\\m1_kesimde_3.svg",
+      "size": "0.07",
+      "extension": ".svg"
+    },
+    {
+      "name": "C2 ve CSET Kapasitörleri.svg",
+      "path": "images\\LineerReg\\C2 ve CSET Kapasitörleri.svg",
+      "size": "0.07",
+      "extension": ".svg"
+    },
+    {
+      "name": "profil-placeholder-large.webp",
+      "path": "images\\optimized\\profil-placeholder-large.webp",
+      "size": "0.07",
+      "extension": ".webp"
+    },
+    {
+      "name": "7_bit_adres.svg",
+      "path": "images\\i2c\\7_bit_adres.svg",
+      "size": "0.06",
+      "extension": ".svg"
+    },
+    {
+      "name": "proje2-kapak.jpg",
+      "path": "images\\proje2-kapak.jpg",
+      "size": "0.06",
+      "extension": ".jpg"
+    },
+    {
+      "name": "i2c_haberlesme_yönleri.svg",
+      "path": "images\\i2c\\i2c_haberlesme_yönleri.svg",
+      "size": "0.04",
+      "extension": ".svg"
+    },
+    {
+      "name": "Temel_i2c_bağlantısı.svg",
+      "path": "images\\i2c\\Temel_i2c_bağlantısı.svg",
+      "size": "0.04",
+      "extension": ".svg"
+    },
+    {
+      "name": "Auto_Balancing_Bridge_Circuit_Opamp.svg",
+      "path": "images\\LCR\\Auto_Balancing_Bridge_Circuit_Opamp.svg",
+      "size": "0.04",
+      "extension": ".svg"
+    },
+    {
+      "name": "guard-ring-layout.svg",
+      "path": "images\\LineerReg\\guard-ring-layout.svg",
+      "size": "0.04",
+      "extension": ".svg"
+    },
+    {
+      "name": "Auto_Balancing_Bridge_Circuit_temel_yöntem.svg",
+      "path": "images\\LCR\\Auto_Balancing_Bridge_Circuit_temel_yöntem.svg",
+      "size": "0.02",
+      "extension": ".svg"
+    },
+    {
+      "name": "profil-placeholder-medium.webp",
+      "path": "images\\optimized\\profil-placeholder-medium.webp",
+      "size": "0.02",
+      "extension": ".webp"
+    },
+    {
+      "name": "profil-placeholder-small.webp",
+      "path": "images\\optimized\\profil-placeholder-small.webp",
+      "size": "0.01",
+      "extension": ".webp"
+    },
+    {
+      "name": "proje1-kapak.jpeg",
+      "path": "images\\proje1-kapak.jpeg",
+      "size": "0.01",
+      "extension": ".jpeg"
+    },
+    {
+      "name": "LT3045-LT3094.asc",
+      "path": "images\\LineerReg\\LT3045-LT3094.asc",
+      "size": "0.00",
+      "extension": ".asc"
+    }
+  ],
+  "models": [
+    {
+      "name": "for_loop_patterns_assembly.bin",
+      "path": "models\\for_loop_patterns_assembly.bin",
+      "size": "9.12",
+      "extension": ".bin"
+    },
+    {
+      "name": "delikli_plaka_ve_gelismis_yivli_vida.bin",
+      "path": "models\\delikli_plaka_ve_gelismis_yivli_vida.bin",
+      "size": "4.30",
+      "extension": ".bin"
+    },
+    {
+      "name": "heliks_boru_modeli.bin",
+      "path": "models\\heliks_boru_modeli.bin",
+      "size": "2.36",
+      "extension": ".bin"
+    },
+    {
+      "name": "raf_sistemi.step",
+      "path": "models\\raf_sistemi.step",
+      "size": "1.50",
+      "extension": ".step"
+    },
+    {
+      "name": "refined_screw_plate_assembly.bin",
+      "path": "models\\refined_screw_plate_assembly.bin",
+      "size": "1.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "vida_plaka_montaji.bin",
+      "path": "models\\vida_plaka_montaji.bin",
+      "size": "1.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "vida_plaka_yivli_union.bin",
+      "path": "models\\vida_plaka_yivli_union.bin",
+      "size": "1.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "fonksiyonlarla_moduler_tasarim.bin",
+      "path": "models\\fonksiyonlarla_moduler_tasarim.bin",
+      "size": "1.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "solid_heliks_modeli.bin",
+      "path": "models\\solid_heliks_modeli.bin",
+      "size": "0.96",
+      "extension": ".bin"
+    },
+    {
+      "name": "delikli_plaka_ve_yivli_vida.bin",
+      "path": "models\\delikli_plaka_ve_yivli_vida.bin",
+      "size": "0.56",
+      "extension": ".bin"
+    },
+    {
+      "name": "delikli_plaka_ve_baslikli_yivli_vida.bin",
+      "path": "models\\delikli_plaka_ve_baslikli_yivli_vida.bin",
+      "size": "0.43",
+      "extension": ".bin"
+    },
+    {
+      "name": "metin.bin",
+      "path": "models\\metin.bin",
+      "size": "0.43",
+      "extension": ".bin"
+    },
+    {
+      "name": "type_plane_yuzey_kenar_fillet.bin",
+      "path": "models\\type_plane_yuzey_kenar_fillet.bin",
+      "size": "0.40",
+      "extension": ".bin"
+    },
+    {
+      "name": "kompleks_montaj_son_hali_v2.bin",
+      "path": "models\\kompleks_montaj_son_hali_v2.bin",
+      "size": "0.31",
+      "extension": ".bin"
+    },
+    {
+      "name": "plaka_ve_gercek_yivli_pim_v4.bin",
+      "path": "models\\plaka_ve_gercek_yivli_pim_v4.bin",
+      "size": "0.31",
+      "extension": ".bin"
+    },
+    {
+      "name": "kompleks_montaj_orta_vida.bin",
+      "path": "models\\kompleks_montaj_orta_vida.bin",
+      "size": "0.28",
+      "extension": ".bin"
+    },
+    {
+      "name": "kompleks_montaj_ornek.bin",
+      "path": "models\\kompleks_montaj_ornek.bin",
+      "size": "0.27",
+      "extension": ".bin"
+    },
+    {
+      "name": "delikli_plaka_ve_yivli_pim.bin",
+      "path": "models\\delikli_plaka_ve_yivli_pim.bin",
+      "size": "0.26",
+      "extension": ".bin"
+    },
+    {
+      "name": "kompleks_montaj_genis_kafa.bin",
+      "path": "models\\kompleks_montaj_genis_kafa.bin",
+      "size": "0.26",
+      "extension": ".bin"
+    },
+    {
+      "name": "kompleks_montaj_sade_orta.bin",
+      "path": "models\\kompleks_montaj_sade_orta.bin",
+      "size": "0.26",
+      "extension": ".bin"
+    },
+    {
+      "name": "vazo.bin",
+      "path": "models\\vazo.bin",
+      "size": "0.22",
+      "extension": ".bin"
+    },
+    {
+      "name": "damla_modeli_yayli.step",
+      "path": "models\\damla_modeli_yayli.step",
+      "size": "0.17",
+      "extension": ".step"
+    },
+    {
+      "name": "vida_plaka_montaj.bin",
+      "path": "models\\vida_plaka_montaj.bin",
+      "size": "0.17",
+      "extension": ".bin"
+    },
+    {
+      "name": "ic_ice_montaj_delikli_ornegi.bin",
+      "path": "models\\ic_ice_montaj_delikli_ornegi.bin",
+      "size": "0.15",
+      "extension": ".bin"
+    },
+    {
+      "name": "damla.bin",
+      "path": "models\\damla.bin",
+      "size": "0.14",
+      "extension": ".bin"
+    },
+    {
+      "name": "workplane-9.bin",
+      "path": "models\\workplane-9.bin",
+      "size": "0.13",
+      "extension": ".bin"
+    },
+    {
+      "name": "coklu_daire.bin",
+      "path": "models\\coklu_daire.bin",
+      "size": "0.12",
+      "extension": ".bin"
+    },
+    {
+      "name": "ic_ice_montaj_ornegi.bin",
+      "path": "models\\ic_ice_montaj_ornegi.bin",
+      "size": "0.12",
+      "extension": ".bin"
+    },
+    {
+      "name": "type_sphere_yuzey_cikinti.bin",
+      "path": "models\\type_sphere_yuzey_cikinti.bin",
+      "size": "0.11",
+      "extension": ".bin"
+    },
+    {
+      "name": "workplane-7.bin",
+      "path": "models\\workplane-7.bin",
+      "size": "0.11",
+      "extension": ".bin"
+    },
+    {
+      "name": "workplane-8.bin",
+      "path": "models\\workplane-8.bin",
+      "size": "0.11",
+      "extension": ".bin"
+    },
+    {
+      "name": "yaratici_plaka_montaji.bin",
+      "path": "models\\yaratici_plaka_montaji.bin",
+      "size": "0.11",
+      "extension": ".bin"
+    },
+    {
+      "name": "metin.gltf",
+      "path": "models\\metin.gltf",
+      "size": "0.10",
+      "extension": ".gltf"
+    },
+    {
+      "name": "type_cylinder_vida.bin",
+      "path": "models\\type_cylinder_vida.bin",
+      "size": "0.10",
+      "extension": ".bin"
+    },
+    {
+      "name": "eachpoint_montaj.bin",
+      "path": "models\\eachpoint_montaj.bin",
+      "size": "0.09",
+      "extension": ".bin"
+    },
+    {
+      "name": "parametrik_tabure.step",
+      "path": "models\\gltf_ciktilari\\parametrik_tabure.step",
+      "size": "0.09",
+      "extension": ".step"
+    },
+    {
+      "name": "parametrik_tabure.step",
+      "path": "models\\models\\parametrik_tabure.step",
+      "size": "0.09",
+      "extension": ".step"
+    },
+    {
+      "name": "parametrik_tabure.step",
+      "path": "models\\parametrik_tabure.step",
+      "size": "0.09",
+      "extension": ".step"
+    },
+    {
+      "name": "pushPoints_ornegi.bin",
+      "path": "models\\pushPoints_ornegi.bin",
+      "size": "0.09",
+      "extension": ".bin"
+    },
+    {
+      "name": "revolve-vase.bin",
+      "path": "models\\revolve-vase.bin",
+      "size": "0.08",
+      "extension": ".bin"
+    },
+    {
+      "name": "sweep-cerceve.bin",
+      "path": "models\\sweep-cerceve.bin",
+      "size": "0.08",
+      "extension": ".bin"
+    },
+    {
+      "name": "parametrik_tabure.bin",
+      "path": "models\\gltf_ciktilari\\parametrik_tabure.bin",
+      "size": "0.07",
+      "extension": ".bin"
+    },
+    {
+      "name": "parametrik_tabure.bin",
+      "path": "models\\models\\parametrik_tabure.bin",
+      "size": "0.07",
+      "extension": ".bin"
+    },
+    {
+      "name": "parametrik_tabure.bin",
+      "path": "models\\parametrik_tabure.bin",
+      "size": "0.07",
+      "extension": ".bin"
+    },
+    {
+      "name": "for_loop_patterns_assembly.gltf",
+      "path": "models\\for_loop_patterns_assembly.gltf",
+      "size": "0.06",
+      "extension": ".gltf"
+    },
+    {
+      "name": "intersect.bin",
+      "path": "models\\intersect.bin",
+      "size": "0.06",
+      "extension": ".bin"
+    },
+    {
+      "name": "model.step",
+      "path": "models\\model.step",
+      "size": "0.06",
+      "extension": ".step"
+    },
+    {
+      "name": "otelenmis_cerceve.step",
+      "path": "models\\otelenmis_cerceve.step",
+      "size": "0.06",
+      "extension": ".step"
+    },
+    {
+      "name": "yumusak_damla_modeli.step",
+      "path": "models\\yumusak_damla_modeli.step",
+      "size": "0.06",
+      "extension": ".step"
+    },
+    {
+      "name": "ay_yildiz.step",
+      "path": "models\\ay_yildiz.step",
+      "size": "0.05",
+      "extension": ".step"
+    },
+    {
+      "name": "ay_yildiz_bayrak.step",
+      "path": "models\\ay_yildiz_bayrak.step",
+      "size": "0.05",
+      "extension": ".step"
+    },
+    {
+      "name": "loft-adapter.bin",
+      "path": "models\\loft-adapter.bin",
+      "size": "0.05",
+      "extension": ".bin"
+    },
+    {
+      "name": "parametrik_montaj_Cylinder_roundHole.bin",
+      "path": "models\\parametrik_montaj_Cylinder_roundHole.bin",
+      "size": "0.05",
+      "extension": ".bin"
+    },
+    {
+      "name": "tag_etiketle_secim_islem.bin",
+      "path": "models\\tag_etiketle_secim_islem.bin",
+      "size": "0.05",
+      "extension": ".bin"
+    },
+    {
+      "name": "gelismis_mate_sistemi_ornegi_string_selector.bin",
+      "path": "models\\gelismis_mate_sistemi_ornegi_string_selector.bin",
+      "size": "0.04",
+      "extension": ".bin"
+    },
+    {
+      "name": "heliks_boru.step",
+      "path": "models\\heliks_boru.step",
+      "size": "0.04",
+      "extension": ".step"
+    },
+    {
+      "name": "heliks_kati.step",
+      "path": "models\\heliks_kati.step",
+      "size": "0.04",
+      "extension": ".step"
+    },
+    {
+      "name": "kesisim.step",
+      "path": "models\\kesisim.step",
+      "size": "0.04",
+      "extension": ".step"
+    },
+    {
+      "name": "kompleks_montaj_ornek.gltf",
+      "path": "models\\kompleks_montaj_ornek.gltf",
+      "size": "0.04",
+      "extension": ".gltf"
+    },
+    {
+      "name": "kompleks_montaj_son_hali_v2.gltf",
+      "path": "models\\kompleks_montaj_son_hali_v2.gltf",
+      "size": "0.04",
+      "extension": ".gltf"
+    },
+    {
+      "name": "plaka_pim_montaji.bin",
+      "path": "models\\plaka_pim_montaji.bin",
+      "size": "0.04",
+      "extension": ".bin"
+    },
+    {
+      "name": "plaka_ve_sivri_uclu_derin_yivli_pim.bin",
+      "path": "models\\plaka_ve_sivri_uclu_derin_yivli_pim.bin",
+      "size": "0.04",
+      "extension": ".bin"
+    },
+    {
+      "name": "prizma_kure_oyuk.bin",
+      "path": "models\\prizma_kure_oyuk.bin",
+      "size": "0.04",
+      "extension": ".bin"
+    },
+    {
+      "name": "rafine_montaj_ornegi.bin",
+      "path": "models\\rafine_montaj_ornegi.bin",
+      "size": "0.04",
+      "extension": ".bin"
+    },
+    {
+      "name": "yildiz_5_kose.step",
+      "path": "models\\yildiz_5_kose.step",
+      "size": "0.04",
+      "extension": ".step"
+    },
+    {
+      "name": "attr_circular_kenar_pah.bin",
+      "path": "models\\attr_circular_kenar_pah.bin",
+      "size": "0.03",
+      "extension": ".bin"
+    },
+    {
+      "name": "box_with_pocket_on_first_face.step",
+      "path": "models\\box_with_pocket_on_first_face.step",
+      "size": "0.03",
+      "extension": ".step"
+    },
+    {
+      "name": "cut_cesitleri.bin",
+      "path": "models\\cut_cesitleri.bin",
+      "size": "0.03",
+      "extension": ".bin"
+    },
+    {
+      "name": "kompleks_montaj_genis_kafa.gltf",
+      "path": "models\\kompleks_montaj_genis_kafa.gltf",
+      "size": "0.03",
+      "extension": ".gltf"
+    },
+    {
+      "name": "kompleks_montaj_orta_vida.gltf",
+      "path": "models\\kompleks_montaj_orta_vida.gltf",
+      "size": "0.03",
+      "extension": ".gltf"
+    },
+    {
+      "name": "kompleks_montaj_sade_orta.gltf",
+      "path": "models\\kompleks_montaj_sade_orta.gltf",
+      "size": "0.03",
+      "extension": ".gltf"
+    },
+    {
+      "name": "kosullu_secim_islemi.bin",
+      "path": "models\\kosullu_secim_islemi.bin",
+      "size": "0.03",
+      "extension": ".bin"
+    },
+    {
+      "name": "otelenmis_cerceve.bin",
+      "path": "models\\otelenmis_cerceve.bin",
+      "size": "0.03",
+      "extension": ".bin"
+    },
+    {
+      "name": "pahli_kutu_30x30x10.step",
+      "path": "models\\pahli_kutu_30x30x10.step",
+      "size": "0.03",
+      "extension": ".step"
+    },
+    {
+      "name": "parallel_Z_yuzey_kenar_pah.bin",
+      "path": "models\\parallel_Z_yuzey_kenar_pah.bin",
+      "size": "0.03",
+      "extension": ".bin"
+    },
+    {
+      "name": "plaka_pim_montaji.step",
+      "path": "models\\plaka_pim_montaji.step",
+      "size": "0.03",
+      "extension": ".step"
+    },
+    {
+      "name": "plaka_ve_gercek_yivli_pim.bin",
+      "path": "models\\plaka_ve_gercek_yivli_pim.bin",
+      "size": "0.03",
+      "extension": ".bin"
+    },
+    {
+      "name": "plaka_ve_gercek_yivli_pim_v2.bin",
+      "path": "models\\plaka_ve_gercek_yivli_pim_v2.bin",
+      "size": "0.03",
+      "extension": ".bin"
+    },
+    {
+      "name": "plaka_ve_gercek_yivli_pim_v3.bin",
+      "path": "models\\plaka_ve_gercek_yivli_pim_v3.bin",
+      "size": "0.03",
+      "extension": ".bin"
+    },
+    {
+      "name": "refined_screw_plate_assembly.gltf",
+      "path": "models\\refined_screw_plate_assembly.gltf",
+      "size": "0.03",
+      "extension": ".gltf"
+    },
+    {
+      "name": "simetrik_plaka.bin",
+      "path": "models\\simetrik_plaka.bin",
+      "size": "0.03",
+      "extension": ".bin"
+    },
+    {
+      "name": "vida_plaka_montaji.gltf",
+      "path": "models\\vida_plaka_montaji.gltf",
+      "size": "0.03",
+      "extension": ".gltf"
+    },
+    {
+      "name": "vida_plaka_yivli_union.gltf",
+      "path": "models\\vida_plaka_yivli_union.gltf",
+      "size": "0.03",
+      "extension": ".gltf"
+    },
+    {
+      "name": "workplane-3.bin",
+      "path": "models\\workplane-3.bin",
+      "size": "0.03",
+      "extension": ".bin"
+    },
+    {
+      "name": "3b-farkli-renk.bin",
+      "path": "models\\3b-farkli-renk.bin",
+      "size": "0.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "ay_yildiz.bin",
+      "path": "models\\ay_yildiz.bin",
+      "size": "0.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "box.step",
+      "path": "models\\box.step",
+      "size": "0.02",
+      "extension": ".step"
+    },
+    {
+      "name": "box_cutblind.step",
+      "path": "models\\box_cutblind.step",
+      "size": "0.02",
+      "extension": ".step"
+    },
+    {
+      "name": "box_drilled.step",
+      "path": "models\\box_drilled.step",
+      "size": "0.02",
+      "extension": ".step"
+    },
+    {
+      "name": "delikli_plaka_ve_gelismis_yivli_vida.gltf",
+      "path": "models\\delikli_plaka_ve_gelismis_yivli_vida.gltf",
+      "size": "0.02",
+      "extension": ".gltf"
+    },
+    {
+      "name": "egik_duzleme_paralel_cizim.bin",
+      "path": "models\\egik_duzleme_paralel_cizim.bin",
+      "size": "0.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "egimli_duzlem_montaji.bin",
+      "path": "models\\egimli_duzlem_montaji.bin",
+      "size": "0.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "gt_X_sag_yuzey_delik.step",
+      "path": "models\\gt_X_sag_yuzey_delik.step",
+      "size": "0.02",
+      "extension": ".step"
+    },
+    {
+      "name": "ic_ice_montaj_delikli_ornegi.gltf",
+      "path": "models\\ic_ice_montaj_delikli_ornegi.gltf",
+      "size": "0.02",
+      "extension": ".gltf"
+    },
+    {
+      "name": "ic_ice_montaj_ornegi.gltf",
+      "path": "models\\ic_ice_montaj_ornegi.gltf",
+      "size": "0.02",
+      "extension": ".gltf"
+    },
+    {
+      "name": "indexed_lt_Z_neg1_yazi.bin",
+      "path": "models\\indexed_lt_Z_neg1_yazi.bin",
+      "size": "0.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "indexed_lt_Z_neg1_yazi.gltf",
+      "path": "models\\indexed_lt_Z_neg1_yazi.gltf",
+      "size": "0.02",
+      "extension": ".gltf"
+    },
+    {
+      "name": "parametrik_montaj_Cylinder_squareHole.bin",
+      "path": "models\\parametrik_montaj_Cylinder_squareHole.bin",
+      "size": "0.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "plaka_ve_yukaridaki_baslikli_vida.bin",
+      "path": "models\\plaka_ve_yukaridaki_baslikli_vida.bin",
+      "size": "0.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "prizma_kure_kesisimi.step",
+      "path": "models\\prizma_kure_kesisimi.step",
+      "size": "0.02",
+      "extension": ".step"
+    },
+    {
+      "name": "spline.bin",
+      "path": "models\\spline.bin",
+      "size": "0.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "sweep-cerceve.gltf",
+      "path": "models\\sweep-cerceve.gltf",
+      "size": "0.02",
+      "extension": ".gltf"
+    },
+    {
+      "name": "transformed_workplane_assembly.bin",
+      "path": "models\\transformed_workplane_assembly.bin",
+      "size": "0.02",
+      "extension": ".bin"
+    },
+    {
+      "name": "yaratici_plaka_montaji.gltf",
+      "path": "models\\yaratici_plaka_montaji.gltf",
+      "size": "0.02",
+      "extension": ".gltf"
+    },
+    {
+      "name": "2B_den_3B_ye_silindir.bin",
+      "path": "models\\2B_den_3B_ye_silindir.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "3b-model.glb",
+      "path": "models\\3b-model.glb",
+      "size": "0.01",
+      "extension": ".glb"
+    },
+    {
+      "name": "attr_circular_kenar_pah.step",
+      "path": "models\\attr_circular_kenar_pah.step",
+      "size": "0.01",
+      "extension": ".step"
+    },
+    {
+      "name": "ayna_ornek.gltf",
+      "path": "models\\ayna_ornek.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "ay_yildiz.gltf",
+      "path": "models\\ay_yildiz.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "biconcave_lens.step",
+      "path": "models\\biconcave_lens.step",
+      "size": "0.01",
+      "extension": ".step"
+    },
+    {
+      "name": "box2.step",
+      "path": "models\\box2.step",
+      "size": "0.01",
+      "extension": ".step"
+    },
+    {
+      "name": "chamfer_and_fillet.bin",
+      "path": "models\\chamfer_and_fillet.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "chamfer_and_fillet.gltf",
+      "path": "models\\chamfer_and_fillet.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "coklu_daire.gltf",
+      "path": "models\\coklu_daire.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "custom_plane_assembly.gltf",
+      "path": "models\\custom_plane_assembly.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "cut_and_cutThruAll.bin",
+      "path": "models\\cut_and_cutThruAll.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "cut_and_cutThruAll_2.bin",
+      "path": "models\\cut_and_cutThruAll_2.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "cut_cesitleri.gltf",
+      "path": "models\\cut_cesitleri.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "damla.gltf",
+      "path": "models\\damla.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "damla_modeli_simetrik.step",
+      "path": "models\\damla_modeli_simetrik.step",
+      "size": "0.01",
+      "extension": ".step"
+    },
+    {
+      "name": "delikli_plaka_ve_baslikli_yivli_vida.gltf",
+      "path": "models\\delikli_plaka_ve_baslikli_yivli_vida.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "delikli_plaka_ve_yivli_pim.gltf",
+      "path": "models\\delikli_plaka_ve_yivli_pim.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "delikli_plaka_ve_yivli_vida.gltf",
+      "path": "models\\delikli_plaka_ve_yivli_vida.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "eachpoint_montaj.gltf",
+      "path": "models\\eachpoint_montaj.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "etiketli_secim_islemi.bin",
+      "path": "models\\etiketli_secim_islemi.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "etiketli_secim_islemi.gltf",
+      "path": "models\\etiketli_secim_islemi.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "fillet.bin",
+      "path": "models\\fillet.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "fonksiyonlarla_moduler_tasarim.gltf",
+      "path": "models\\fonksiyonlarla_moduler_tasarim.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "gelismis_mate_sistemi_ornegi_string_selector.gltf",
+      "path": "models\\gelismis_mate_sistemi_ornegi_string_selector.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "parametrik_tabure.gltf",
+      "path": "models\\gltf_ciktilari\\parametrik_tabure.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "gt_X_sag_yuzey_delik.bin",
+      "path": "models\\gt_X_sag_yuzey_delik.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "gt_Y_arka_yuzey_besgen_cep.gltf",
+      "path": "models\\gt_Y_arka_yuzey_besgen_cep.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "gt_Z_secim_islemi.bin",
+      "path": "models\\gt_Z_secim_islemi.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "gt_Z_ust_yuzey_cep.bin",
+      "path": "models\\gt_Z_ust_yuzey_cep.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "guzel_damla_modeli.step",
+      "path": "models\\guzel_damla_modeli.step",
+      "size": "0.01",
+      "extension": ".step"
+    },
+    {
+      "name": "indexed_gt_X_0_cep.bin",
+      "path": "models\\indexed_gt_X_0_cep.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "indexed_gt_X_0_cep.gltf",
+      "path": "models\\indexed_gt_X_0_cep.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "indexed_gt_X_1_silindir.bin",
+      "path": "models\\indexed_gt_X_1_silindir.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "indexed_gt_X_1_silindir.gltf",
+      "path": "models\\indexed_gt_X_1_silindir.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "kalin_kenarli_mercek.step",
+      "path": "models\\kalin_kenarli_mercek.step",
+      "size": "0.01",
+      "extension": ".step"
+    },
+    {
+      "name": "kosullu_secim_islemi.gltf",
+      "path": "models\\kosullu_secim_islemi.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "kutu_ve_kapagi.gltf",
+      "path": "models\\kutu_ve_kapagi.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "mantik_operatorlerle_secim_islemi.gltf",
+      "path": "models\\mantik_operatorlerle_secim_islemi.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "mate_sistemi_ornegi.gltf",
+      "path": "models\\mate_sistemi_ornegi.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "parametrik_tabure.gltf",
+      "path": "models\\models\\parametrik_tabure.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "model_karma.bin",
+      "path": "models\\model_karma.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "otelenmis_cerceve.gltf",
+      "path": "models\\otelenmis_cerceve.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "parallel_X_yuzey_cep.gltf",
+      "path": "models\\parallel_X_yuzey_cep.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "parallel_Y_kenar_fillet.bin",
+      "path": "models\\parallel_Y_kenar_fillet.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "parallel_Z_yuzey_kenar_pah.gltf",
+      "path": "models\\parallel_Z_yuzey_kenar_pah.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "parametrik_montaj_Cylinder_squareHole.gltf",
+      "path": "models\\parametrik_montaj_Cylinder_squareHole.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "parametrik_tabure.gltf",
+      "path": "models\\parametrik_tabure.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "perp_Z_dik_yuzey_cep.gltf",
+      "path": "models\\perp_Z_dik_yuzey_cep.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "plaka_pim_montaji.gltf",
+      "path": "models\\plaka_pim_montaji.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "plaka_ve_gercek_yivli_pim_v4.gltf",
+      "path": "models\\plaka_ve_gercek_yivli_pim_v4.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "plaka_ve_sivri_uclu_derin_yivli_pim.gltf",
+      "path": "models\\plaka_ve_sivri_uclu_derin_yivli_pim.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "pushPoints_ornegi.gltf",
+      "path": "models\\pushPoints_ornegi.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "rafine_montaj_ornegi.gltf",
+      "path": "models\\rafine_montaj_ornegi.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "simetrik_braket.gltf",
+      "path": "models\\simetrik_braket.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "simetrik_plaka.gltf",
+      "path": "models\\simetrik_plaka.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "special_last_yuzey_cep.bin",
+      "path": "models\\special_last_yuzey_cep.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "transformed_workplane_assembly.gltf",
+      "path": "models\\transformed_workplane_assembly.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "type_cylinder_vida.gltf",
+      "path": "models\\type_cylinder_vida.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "type_plane_yuzey_kenar_fillet.gltf",
+      "path": "models\\type_plane_yuzey_kenar_fillet.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "vida_plaka_montaj.gltf",
+      "path": "models\\vida_plaka_montaj.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "workplane-1.bin",
+      "path": "models\\workplane-1.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "workplane-2.bin",
+      "path": "models\\workplane-2.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "workplane-4.bin",
+      "path": "models\\workplane-4.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "workplane-6.bin",
+      "path": "models\\workplane-6.bin",
+      "size": "0.01",
+      "extension": ".bin"
+    },
+    {
+      "name": "workplane-8.gltf",
+      "path": "models\\workplane-8.gltf",
+      "size": "0.01",
+      "extension": ".gltf"
+    },
+    {
+      "name": "2B_den_3B_ye_cokgen.bin",
+      "path": "models\\2B_den_3B_ye_cokgen.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "2B_den_3B_ye_cokgen.gltf",
+      "path": "models\\2B_den_3B_ye_cokgen.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "2B_den_3B_ye_dikdortgen.bin",
+      "path": "models\\2B_den_3B_ye_dikdortgen.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "2B_den_3B_ye_dikdortgen.gltf",
+      "path": "models\\2B_den_3B_ye_dikdortgen.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "2B_den_3B_ye_silindir.gltf",
+      "path": "models\\2B_den_3B_ye_silindir.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "3b-farkli-renk.gltf",
+      "path": "models\\3b-farkli-renk.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "attr_circular_kenar_pah.gltf",
+      "path": "models\\attr_circular_kenar_pah.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "ayna_ornek.bin",
+      "path": "models\\ayna_ornek.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "box_with_pocket_on_first_face.bin",
+      "path": "models\\box_with_pocket_on_first_face.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "box_with_pocket_on_first_face.gltf",
+      "path": "models\\box_with_pocket_on_first_face.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "cad-query-blog-kodlari.py",
+      "path": "models\\cad-query-blog-kodlari.py",
+      "size": "0.00",
+      "extension": ".py"
+    },
+    {
+      "name": "chamfer.bin",
+      "path": "models\\chamfer.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "chamfer.gltf",
+      "path": "models\\chamfer.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "custom_plane_assembly.bin",
+      "path": "models\\custom_plane_assembly.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "cut_and_cutThruAll.gltf",
+      "path": "models\\cut_and_cutThruAll.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "cut_and_cutThruAll_2.gltf",
+      "path": "models\\cut_and_cutThruAll_2.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "egik_duzleme_paralel_cizim.gltf",
+      "path": "models\\egik_duzleme_paralel_cizim.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "egimli_duzlem_montaji.gltf",
+      "path": "models\\egimli_duzlem_montaji.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "fillet.gltf",
+      "path": "models\\fillet.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "gt_X_sag_yuzey_delik.gltf",
+      "path": "models\\gt_X_sag_yuzey_delik.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "gt_Y_arka_yuzey_besgen_cep.bin",
+      "path": "models\\gt_Y_arka_yuzey_besgen_cep.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "gt_Z_secim_islemi.gltf",
+      "path": "models\\gt_Z_secim_islemi.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "gt_Z_ust_yuzey_cep.gltf",
+      "path": "models\\gt_Z_ust_yuzey_cep.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "heliks_boru_modeli.gltf",
+      "path": "models\\heliks_boru_modeli.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "ici_bos_kutu.bin",
+      "path": "models\\ici_bos_kutu.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "ici_bos_kutu.gltf",
+      "path": "models\\ici_bos_kutu.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "intersect.gltf",
+      "path": "models\\intersect.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "kanat.bin",
+      "path": "models\\kanat.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "kanat.gltf",
+      "path": "models\\kanat.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "kutu_ve_kapagi.bin",
+      "path": "models\\kutu_ve_kapagi.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "kutu_zx_donuk.bin",
+      "path": "models\\kutu_zx_donuk.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "kutu_zx_donuk.gltf",
+      "path": "models\\kutu_zx_donuk.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "loft-adapter.gltf",
+      "path": "models\\loft-adapter.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "lt_X_sol_ust_kenar_fillet.bin",
+      "path": "models\\lt_X_sol_ust_kenar_fillet.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "lt_X_sol_ust_kenar_fillet.gltf",
+      "path": "models\\lt_X_sol_ust_kenar_fillet.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "lt_Y_on_yuzey_kenar_pah.bin",
+      "path": "models\\lt_Y_on_yuzey_kenar_pah.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "lt_Y_on_yuzey_kenar_pah.gltf",
+      "path": "models\\lt_Y_on_yuzey_kenar_pah.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "lt_Z_alt_yuzey_kare_cep.bin",
+      "path": "models\\lt_Z_alt_yuzey_kare_cep.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "lt_Z_alt_yuzey_kare_cep.gltf",
+      "path": "models\\lt_Z_alt_yuzey_kare_cep.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "l_prizma.bin",
+      "path": "models\\l_prizma.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "l_prizma.gltf",
+      "path": "models\\l_prizma.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "mantik_operatorlerle_secim_islemi.bin",
+      "path": "models\\mantik_operatorlerle_secim_islemi.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "mate_sistemi_ornegi.bin",
+      "path": "models\\mate_sistemi_ornegi.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "model_karma.gltf",
+      "path": "models\\model_karma.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "orijinal_kutu.bin",
+      "path": "models\\orijinal_kutu.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "orijinal_kutu.gltf",
+      "path": "models\\orijinal_kutu.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "parallel_X_yuzey_cep.bin",
+      "path": "models\\parallel_X_yuzey_cep.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "parallel_Y_kenar_fillet.gltf",
+      "path": "models\\parallel_Y_kenar_fillet.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "parametrik_montaj_Cylinder_roundHole.gltf",
+      "path": "models\\parametrik_montaj_Cylinder_roundHole.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "perp_Z_dik_yuzey_cep.bin",
+      "path": "models\\perp_Z_dik_yuzey_cep.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "plaka_ve_gercek_yivli_pim.gltf",
+      "path": "models\\plaka_ve_gercek_yivli_pim.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "plaka_ve_gercek_yivli_pim_v2.gltf",
+      "path": "models\\plaka_ve_gercek_yivli_pim_v2.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "plaka_ve_gercek_yivli_pim_v3.gltf",
+      "path": "models\\plaka_ve_gercek_yivli_pim_v3.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "plaka_ve_yukaridaki_baslikli_vida.gltf",
+      "path": "models\\plaka_ve_yukaridaki_baslikli_vida.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "polyline.bin",
+      "path": "models\\polyline.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "polyline.gltf",
+      "path": "models\\polyline.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "prizma.bin",
+      "path": "models\\prizma.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "prizma.gltf",
+      "path": "models\\prizma.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "prizma_kure_oyuk.gltf",
+      "path": "models\\prizma_kure_oyuk.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "revolve-vase.gltf",
+      "path": "models\\revolve-vase.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "secici_pahlama_1.bin",
+      "path": "models\\secici_pahlama_1.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "secici_pahlama_1.gltf",
+      "path": "models\\secici_pahlama_1.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "simetrik_braket.bin",
+      "path": "models\\simetrik_braket.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "solid_heliks_modeli.gltf",
+      "path": "models\\solid_heliks_modeli.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "special_last_yuzey_cep.gltf",
+      "path": "models\\special_last_yuzey_cep.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "spline.gltf",
+      "path": "models\\spline.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "tag_etiketle_secim_islem.gltf",
+      "path": "models\\tag_etiketle_secim_islem.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "type_sphere_yuzey_cikinti.gltf",
+      "path": "models\\type_sphere_yuzey_cikinti.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "union-1.bin",
+      "path": "models\\union-1.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "union-1.gltf",
+      "path": "models\\union-1.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "vazo.gltf",
+      "path": "models\\vazo.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "workplane-1.gltf",
+      "path": "models\\workplane-1.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "workplane-2.gltf",
+      "path": "models\\workplane-2.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "workplane-3.gltf",
+      "path": "models\\workplane-3.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "workplane-4.gltf",
+      "path": "models\\workplane-4.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "workplane-5.bin",
+      "path": "models\\workplane-5.bin",
+      "size": "0.00",
+      "extension": ".bin"
+    },
+    {
+      "name": "workplane-5.gltf",
+      "path": "models\\workplane-5.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "workplane-6.gltf",
+      "path": "models\\workplane-6.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "workplane-7.gltf",
+      "path": "models\\workplane-7.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    },
+    {
+      "name": "workplane-9.gltf",
+      "path": "models\\workplane-9.gltf",
+      "size": "0.00",
+      "extension": ".gltf"
+    }
+  ],
+  "scripts": [
+    {
+      "name": "astro.svg",
+      "path": "..\\src\\assets\\astro.svg",
+      "size": "0.00",
+      "extension": ".svg"
+    },
+    {
+      "name": "background.svg",
+      "path": "..\\src\\assets\\background.svg",
+      "size": "0.00",
+      "extension": ".svg"
+    },
+    {
+      "name": "AboutHero.astro",
+      "path": "..\\src\\components\\AboutHero.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "AnimatedFrame.astro",
+      "path": "..\\src\\components\\AnimatedFrame.astro",
+      "size": "0.00",
+      "extension": ".astro"
+    },
+    {
+      "name": "ContactForm.astro",
+      "path": "..\\src\\components\\ContactForm.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "ContactInfo.astro",
+      "path": "..\\src\\components\\ContactInfo.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "FAQ.astro",
+      "path": "..\\src\\components\\FAQ.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "Footer.astro",
+      "path": "..\\src\\components\\Footer.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "Header.astro",
+      "path": "..\\src\\components\\Header.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "CombinedFormatDiagram.jsx",
+      "path": "..\\src\\components\\i2c\\CombinedFormatDiagram.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "EEPROMRandomReadDiagram.jsx",
+      "path": "..\\src\\components\\i2c\\EEPROMRandomReadDiagram.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "EEPROMRandomReadDiagramEnhanced.jsx",
+      "path": "..\\src\\components\\i2c\\EEPROMRandomReadDiagramEnhanced.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "I2CBitLevelDiagram.jsx",
+      "path": "..\\src\\components\\i2c\\I2CBitLevelDiagram.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "I2CClockStretchingDiagram.jsx",
+      "path": "..\\src\\components\\i2c\\I2CClockStretchingDiagram.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "I2CRepeatedStartDiagram.jsx",
+      "path": "..\\src\\components\\i2c\\I2CRepeatedStartDiagram.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "I2CTimingDiagram.jsx",
+      "path": "..\\src\\components\\i2c\\I2CTimingDiagram.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "LogicAnalyzerView.jsx",
+      "path": "..\\src\\components\\i2c\\LogicAnalyzerView.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "MasterdanSlaveYazmak.jsx",
+      "path": "..\\src\\components\\i2c\\MasterdanSlaveYazmak.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "OscilloscopeView.jsx",
+      "path": "..\\src\\components\\i2c\\OscilloscopeView.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "RTCMemoryMap.jsx",
+      "path": "..\\src\\components\\i2c\\RTCMemoryMap.jsx",
+      "size": "0.00",
+      "extension": ".jsx"
+    },
+    {
+      "name": "RTCMemoryMapEnhanced.jsx",
+      "path": "..\\src\\components\\i2c\\RTCMemoryMapEnhanced.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "SensorBlockDiagram.jsx",
+      "path": "..\\src\\components\\i2c\\SensorBlockDiagram.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "I2CVisualization.astro",
+      "path": "..\\src\\components\\I2CVisualization.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "ImageWithCaption.jsx",
+      "path": "..\\src\\components\\ImageWithCaption.jsx",
+      "size": "0.00",
+      "extension": ".jsx"
+    },
+    {
+      "name": "LT3045-LT3094-VPGF-Hesaplayici.jsx",
+      "path": "..\\src\\components\\LineerReg\\LT3045-LT3094-VPGF-Hesaplayici.jsx",
+      "size": "0.01",
+      "extension": ".jsx"
+    },
+    {
+      "name": "AkimAnimasyonu.jsx",
+      "path": "..\\src\\components\\OrtakModBobinleri\\AkimAnimasyonu.jsx",
+      "size": "0.02",
+      "extension": ".jsx"
+    },
+    {
+      "name": "OrtakModAnimasyon.jsx",
+      "path": "..\\src\\components\\OrtakModBobinleri\\OrtakModAnimasyon.jsx",
+      "size": "0.02",
+      "extension": ".jsx"
+    },
+    {
+      "name": "ortak_mod_şok_bobini_akıları.svg",
+      "path": "..\\src\\components\\OrtakModBobinleri\\ortak_mod_şok_bobini_akıları.svg",
+      "size": "0.15",
+      "extension": ".svg"
+    },
+    {
+      "name": "P5Sketch.astro",
+      "path": "..\\src\\components\\P5Sketch.astro",
+      "size": "0.00",
+      "extension": ".astro"
+    },
+    {
+      "name": "SearchComponent.astro",
+      "path": "..\\src\\components\\SearchComponent.astro",
+      "size": "0.02",
+      "extension": ".astro"
+    },
+    {
+      "name": "SimpleSearch.astro",
+      "path": "..\\src\\components\\SimpleSearch.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "SkillsSection.astro",
+      "path": "..\\src\\components\\SkillsSection.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "SocialLinks.astro",
+      "path": "..\\src\\components\\SocialLinks.astro",
+      "size": "0.00",
+      "extension": ".astro"
+    },
+    {
+      "name": "SvgAnimationContainer.jsx",
+      "path": "..\\src\\components\\SvgAnimationContainer.jsx",
+      "size": "0.00",
+      "extension": ".jsx"
+    },
+    {
+      "name": "TableOfContents.astro",
+      "path": "..\\src\\components\\TableOfContents.astro",
+      "size": "0.00",
+      "extension": ".astro"
+    },
+    {
+      "name": "Timeline.astro",
+      "path": "..\\src\\components\\Timeline.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "Welcome.astro",
+      "path": "..\\src\\components\\Welcome.astro",
+      "size": "0.00",
+      "extension": ".astro"
+    },
+    {
+      "name": "astro-latex-komponenti-ekleme.md",
+      "path": "..\\src\\content\\blog\\astro-latex-komponenti-ekleme.md",
+      "size": "0.01",
+      "extension": ".md"
+    },
+    {
+      "name": "cad-query-klavuzu-bolum-1.md",
+      "path": "..\\src\\content\\blog\\cad-query-klavuzu-bolum-1.md",
+      "size": "0.01",
+      "extension": ".md"
+    },
+    {
+      "name": "cad-query-klavuzu-bolum-2.md",
+      "path": "..\\src\\content\\blog\\cad-query-klavuzu-bolum-2.md",
+      "size": "0.08",
+      "extension": ".md"
+    },
+    {
+      "name": "cad-query-klavuzu-bolum-3.md",
+      "path": "..\\src\\content\\blog\\cad-query-klavuzu-bolum-3.md",
+      "size": "0.04",
+      "extension": ".md"
+    },
+    {
+      "name": "cad-query-klavuzu-bolum-4.md",
+      "path": "..\\src\\content\\blog\\cad-query-klavuzu-bolum-4.md",
+      "size": "0.13",
+      "extension": ".md"
+    },
+    {
+      "name": "i2c_haberlesme_protokolu_teknik_rehber.mdx",
+      "path": "..\\src\\content\\blog\\i2c_haberlesme_protokolu_teknik_rehber.mdx",
+      "size": "0.19",
+      "extension": ".mdx"
+    },
+    {
+      "name": "markdown-klavuzu.md",
+      "path": "..\\src\\content\\blog\\markdown-klavuzu.md",
+      "size": "0.06",
+      "extension": ".md"
+    },
+    {
+      "name": "markdownda_KaTEX_kullanimi.md",
+      "path": "..\\src\\content\\blog\\markdownda_KaTEX_kullanimi.md",
+      "size": "0.05",
+      "extension": ".md"
+    },
+    {
+      "name": "ortak_mod_şok_bobinleri.mdx",
+      "path": "..\\src\\content\\blog\\ortak_mod_şok_bobinleri.mdx",
+      "size": "0.04",
+      "extension": ".mdx"
+    },
+    {
+      "name": "config.ts",
+      "path": "..\\src\\content\\config.ts",
+      "size": "0.00",
+      "extension": ".ts"
+    },
+    {
+      "name": "dusuk-gurultulu-dogrusal-gerilim-duzenleyici-tasarimi-ve-uygulamasi.mdx",
+      "path": "..\\src\\content\\projeler\\dusuk-gurultulu-dogrusal-gerilim-duzenleyici-tasarimi-ve-uygulamasi.mdx",
+      "size": "0.08",
+      "extension": ".mdx"
+    },
+    {
+      "name": "lcr-meter-project.mdx",
+      "path": "..\\src\\content\\projeler\\lcr-meter-project.mdx",
+      "size": "0.04",
+      "extension": ".mdx"
+    },
+    {
+      "name": "girisimsel-radyoloji.mdx",
+      "path": "..\\src\\content\\radyoloji\\girisimsel-radyoloji.mdx",
+      "size": "0.02",
+      "extension": ".mdx"
+    },
+    {
+      "name": "meme-kanseri-evreleme.md",
+      "path": "..\\src\\content\\radyoloji\\meme-kanseri-evreleme.md",
+      "size": "0.00",
+      "extension": ".md"
+    },
+    {
+      "name": "pi-rads-v21.md",
+      "path": "..\\src\\content\\radyoloji\\pi-rads-v21.md",
+      "size": "0.00",
+      "extension": ".md"
+    },
+    {
+      "name": "Layout.astro",
+      "path": "..\\src\\layouts\\Layout.astro",
+      "size": "0.02",
+      "extension": ".astro"
+    },
+    {
+      "name": "search-data.json.js",
+      "path": "..\\src\\pages\\api\\search-data.json.js",
+      "size": "0.00",
+      "extension": ".js"
+    },
+    {
+      "name": "index.astro",
+      "path": "..\\src\\pages\\blog\\index.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "[slug].astro",
+      "path": "..\\src\\pages\\blog\\[slug].astro",
+      "size": "0.00",
+      "extension": ".astro"
+    },
+    {
+      "name": "gizlilik-politikasi.astro",
+      "path": "..\\src\\pages\\gizlilik-politikasi.astro",
+      "size": "0.00",
+      "extension": ".astro"
+    },
+    {
+      "name": "hakkimizda.astro",
+      "path": "..\\src\\pages\\hakkimizda.astro",
+      "size": "0.00",
+      "extension": ".astro"
+    },
+    {
+      "name": "hesaplama-araclari.astro",
+      "path": "..\\src\\pages\\hesaplama-araclari.astro",
+      "size": "0.15",
+      "extension": ".astro"
+    },
+    {
+      "name": "iletisim.astro",
+      "path": "..\\src\\pages\\iletisim.astro",
+      "size": "0.00",
+      "extension": ".astro"
+    },
+    {
+      "name": "index.astro",
+      "path": "..\\src\\pages\\index.astro",
+      "size": "0.03",
+      "extension": ".astro"
+    },
+    {
+      "name": "index.astro",
+      "path": "..\\src\\pages\\projeler\\index.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "[slug].astro",
+      "path": "..\\src\\pages\\projeler\\[slug].astro",
+      "size": "0.00",
+      "extension": ".astro"
+    },
+    {
+      "name": "index.astro",
+      "path": "..\\src\\pages\\radyoloji\\index.astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "[slug].astro",
+      "path": "..\\src\\pages\\radyoloji\\[slug].astro",
+      "size": "0.01",
+      "extension": ".astro"
+    },
+    {
+      "name": "robots.txt.ts",
+      "path": "..\\src\\pages\\robots.txt.ts",
+      "size": "0.00",
+      "extension": ".ts"
+    },
+    {
+      "name": "sitemap.xml.ts",
+      "path": "..\\src\\pages\\sitemap.xml.ts",
+      "size": "0.00",
+      "extension": ".ts"
+    },
+    {
+      "name": "_global.css",
+      "path": "..\\src\\pages\\_global.css",
+      "size": "0.00",
+      "extension": ".css"
+    },
+    {
+      "name": "design-system-optimized.css",
+      "path": "..\\src\\styles\\design-system-optimized.css",
+      "size": "0.00",
+      "extension": ".css"
+    },
+    {
+      "name": "tailwind.css",
+      "path": "..\\src\\styles\\tailwind.css",
+      "size": "0.00",
+      "extension": ".css"
+    },
+    {
+      "name": "_global.css",
+      "path": "..\\src\\styles\\_global.css",
+      "size": "0.00",
+      "extension": ".css"
+    }
+  ],
+  "styles": [],
+  "totalSize": 65.54000000000012,
+  "recommendations": [
+    {
+      "type": "images",
+      "severity": "high",
+      "message": "10 large images found (>1MB). Consider optimizing these images.",
+      "files": [
+        "images\\astro-ile-blog.png",
+        "images\\cadquery-python-3d-modeling-kapak.png",
+        "images\\i2c-haberlesme-kapak.jpg",
+        "images\\KaTeX-entegrasyonu-kapak.png",
+        "images\\katex.png",
+        "images\\manzara.jpg",
+        "images\\markdown-klavuzu-kapak.png",
+        "images\\markdown_katex.png",
+        "images\\OrtakModBobinleri\\ferrit_karşılaştırma_tablosu.svg",
+        "images\\profil-placeholder.jpg"
+      ]
+    },
+    {
+      "type": "images",
+      "severity": "medium",
+      "message": "15 images could be converted to WebP/AVIF for better compression.",
+      "files": [
+        "images\\astro-ile-blog.png",
+        "images\\astro-latex.png",
+        "images\\cadquery-python-3d-modeling-kapak.png",
+        "images\\i2c\\Şekil_3_6__Çift_Yönlü_Seviye_Dönüştürücü__Level_Shifter_.png",
+        "images\\i2c-haberlesme-kapak.jpg"
+      ]
+    },
+    {
+      "type": "models",
+      "severity": "high",
+      "message": "1 large 3D models found (>5MB). Consider compression or lazy loading.",
+      "files": [
+        "models\\for_loop_patterns_assembly.bin"
+      ]
+    }
+  ]
+}

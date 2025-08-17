@@ -13,13 +13,14 @@
     "optimize": "npm run clean && npm run build:analyze"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.0",
+    "@astrojs/mdx": "^4.3.3",
     "@astrojs/react": "^4.3.0",
-    "@astrojs/sitemap": "^3.4.1",
+    "@astrojs/sitemap": "^3.4.2",
     "@google/model-viewer": "^4.1.0",
-    "astro": "^5.11.0",
+    "astro": "^5.12.8",
     "framer-motion": "^12.19.2",
     "gsap": "^3.13.0",
+    "lucide-react": "^0.536.0",
     "p5": "^2.0.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

@@ -1,0 +1,150 @@
+---
+// src/pages/radyoloji/[slug].astro
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+// Generate static paths for all radiology posts
+export async function getStaticPaths() {
+  const radyolojiPosts = await getCollection('radyoloji');
+  return radyolojiPosts.map(post => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<Layout title={post.data.title} description={post.data.description}>
+  <!-- Article Header -->
+  <article class="min-h-screen">
+    <!-- Hero Section -->
+    <section class="relative py-16 md:py-24 bg-gradient-to-br from-slate-900 via-blue-900/10 to-cyan-900/10">
+      <div class="absolute inset-0">
+        <div class="absolute top-20 right-20 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-20 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+      </div>
+      
+      <div class="relative container mx-auto px-6">
+        <!-- Breadcrumb -->
+        <nav class="mb-8">
+          <div class="flex items-center space-x-2 text-sm text-gray-400">
+            <a href="/" class="hover:text-blue-400 transition-colors">Ana Sayfa</a>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+            <a href="/radyoloji" class="hover:text-blue-400 transition-colors">Radyoloji</a>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+            <span class="text-blue-400">{post.data.title}</span>
+          </div>
+        </nav>
+
+        <div class="max-w-4xl mx-auto text-center">
+          <!-- Category Badge -->
+          <div class="inline-flex items-center px-4 py-2 mb-6 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full">
+            <span class="text-sm text-blue-400 font-medium">{post.data.category}</span>
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-4xl md:text-5xl font-bold mb-6 text-white leading-tight">
+            {post.data.title}
+          </h1>
+
+          <!-- Meta Information -->
+          <div class="flex flex-wrap justify-center items-center gap-6 mb-8 text-gray-400">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              <span>{post.data.author}</span>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <time datetime={post.data.publishDate.toISOString()}>
+                {post.data.publishDate.toLocaleDateString('tr-TR', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </time>
+            </div>
+            {post.data.readingTime && (
+              <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>{post.data.readingTime}</span>
+              </div>
+            )}
+          </div>
+
+          <!-- Tags -->
+          {post.data.tags && post.data.tags.length > 0 && (
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+              {post.data.tags.map(tag => (
+                <span class="px-3 py-1 bg-slate-700/50 text-blue-300 text-sm rounded-full border border-slate-600/50">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <!-- Description -->
+          <p class="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            {post.data.description}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Article Content -->
+    <section class="py-16 md:py-24">
+      <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+          <!-- Content -->
+          <div class="prose prose-lg prose-invert prose-blue max-w-none">
+            <Content />
+          </div>
+
+          <!-- Back to Radyoloji Button -->
+          <div class="mt-16 text-center">
+            <a 
+              href="/radyoloji" 
+              class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+              Radyoloji Sayfasına Dön
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  /* Custom prose styles for better readability */
+  .prose h1 { @apply text-3xl font-bold text-white mt-8 mb-6; }
+  .prose h2 { @apply text-2xl font-bold text-blue-300 mt-8 mb-4; }
+  .prose h3 { @apply text-xl font-semibold text-cyan-300 mt-6 mb-3; }
+  .prose h4 { @apply text-lg font-semibold text-gray-200 mt-4 mb-2; }
+  .prose p { @apply text-gray-300 leading-relaxed mb-4; }
+  .prose strong { @apply text-white font-semibold; }
+  .prose ul, .prose ol { @apply text-gray-300 ml-6; }
+  .prose li { @apply mb-2; }
+  .prose a { @apply text-blue-400 hover:text-blue-300 transition-colors; }
+  .prose code { @apply bg-slate-800 text-cyan-300 px-2 py-1 rounded text-sm; }
+  .prose pre { @apply bg-slate-800 border border-slate-700 rounded-lg p-4 overflow-x-auto; }
+  .prose blockquote { @apply border-l-4 border-blue-500 pl-4 italic text-gray-400; }
+  .prose table { @apply w-full border-collapse border border-slate-700; }
+  .prose th, .prose td { @apply border border-slate-700 px-4 py-2 text-left; }
+  .prose th { @apply bg-slate-800 font-semibold text-white; }
+  .prose td { @apply bg-slate-900/50; }
+</style>

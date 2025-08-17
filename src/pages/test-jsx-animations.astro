@@ -1,0 +1,116 @@
+---
+// Test page for JSX animations
+import Layout from '../layouts/Layout.astro';
+import AnimationDebugger from '../components/AnimationDebugger.astro';
+
+// Import JSX components for testing
+import { SvgAnimationContainer } from '@/components/SvgAnimationContainer.jsx';
+---
+
+<Layout title="JSX Animation Test">
+  <div class="max-w-4xl mx-auto p-8">
+    <h1 class="text-3xl font-bold text-center mb-8">JSX Animation Test Page</h1>
+    
+    <AnimationDebugger />
+    
+    <div class="mt-8">
+      <h2 class="text-2xl font-bold mb-4">SVG Animation Container Test</h2>
+      
+      <SvgAnimationContainer 
+        client:load
+        slides={[
+          { src: '/images/i2c/m1_iletimde_2.svg', alt: 'Test slide 1' },
+          { src: '/images/i2c/m1_kesimde_1.svg', alt: 'Test slide 2' },
+          { src: '/images/i2c/m1_iletimde_4.svg', alt: 'Test slide 3' }
+        ]}
+      >
+        <p>This is a test of the SVG animation container.</p>
+      </SvgAnimationContainer>
+    </div>
+
+    <div class="mt-8">
+      <h2 class="text-2xl font-bold mb-4">React Component Import Test</h2>
+      
+      <div id="react-test" class="p-4 bg-slate-800 rounded-lg">
+        <p class="text-yellow-400">Testing JSX component loading...</p>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <h2 class="text-2xl font-bold mb-4">Direct Component Test</h2>
+      <div id="direct-component-test"></div>
+    </div>
+  </div>
+
+  <script>
+    // Test if React components can load
+    document.addEventListener('DOMContentLoaded', () => {
+      const testDiv = document.getElementById('react-test');
+      
+      // Test if React is available
+      if (typeof React !== 'undefined') {
+        testDiv.innerHTML += '<p class="text-green-400">✅ React is loaded</p>';
+      } else {
+        testDiv.innerHTML += '<p class="text-red-400">❌ React is not loaded</p>';
+      }
+      
+      // Test if JSX components are working
+      try {
+        // Try to import and use a component
+        import('@/components/OrtakModBobinleri/AkimAnimasyonu.jsx').then(module => {
+          testDiv.innerHTML += '<p class="text-green-400">✅ JSX component imported successfully</p>';
+          console.log('JSX component loaded:', module);
+        }).catch(error => {
+          testDiv.innerHTML += `<p class="text-red-400">❌ JSX component import failed: ${error.message}</p>`;
+          console.error('JSX import error:', error);
+        });
+      } catch (error) {
+        testDiv.innerHTML += `<p class="text-red-400">❌ JSX import error: ${error.message}</p>`;
+        console.error('JSX error:', error);
+      }
+    });
+
+    // Test client-side component loading
+    document.addEventListener('astro:page-load', () => {
+      console.log('Astro page loaded - checking for React components');
+      
+      const testDiv = document.getElementById('direct-component-test');
+      if (testDiv) {
+        testDiv.innerHTML = '<p class="text-blue-400">🔄 Testing direct component rendering...</p>';
+        
+        // Try to render a React component directly
+        try {
+          // Dynamic import of the animation component
+          import('@/components/OrtakModBobinleri/AkimAnimasyonu.jsx').then(async (module) => {
+            const Component = module.default;
+            
+            if (Component) {
+              testDiv.innerHTML += '<p class="text-green-400">✅ Component loaded, attempting render...</p>';
+              
+              // Check if React and ReactDOM are available
+              if (typeof React !== 'undefined' && typeof ReactDOM !== 'undefined') {
+                try {
+                  const element = React.createElement(Component);
+                  ReactDOM.render(element, testDiv);
+                  testDiv.innerHTML += '<p class="text-green-400">✅ Component rendered successfully!</p>';
+                } catch (renderError) {
+                  testDiv.innerHTML += `<p class="text-red-400">❌ Render error: ${renderError.message}</p>`;
+                }
+              } else {
+                testDiv.innerHTML += '<p class="text-orange-400">⚠️ React/ReactDOM not available for direct rendering</p>';
+              }
+            } else {
+              testDiv.innerHTML += '<p class="text-red-400">❌ Component is undefined</p>';
+            }
+          }).catch(error => {
+            testDiv.innerHTML += `<p class="text-red-400">❌ Import failed: ${error.message}</p>`;
+            console.error('Import error:', error);
+          });
+        } catch (error) {
+          testDiv.innerHTML += `<p class="text-red-400">❌ Error: ${error.message}</p>`;
+          console.error('Test error:', error);
+        }
+      }
+    });
+  </script>
+</Layout>

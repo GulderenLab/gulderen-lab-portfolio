@@ -27,7 +27,7 @@ export default defineConfig({
     }),
     sitemap(),
     react({
-      include: ['**/react/*', '**/*.jsx', '**/*.tsx'],
+      include: ['**/*.jsx', '**/*.tsx'],
     }),
   ],
 

@@ -1,12 +1,12 @@
 // `caption` yerine `children` alıyoruz
-export const ImageWithCaption = ({ src, alt, children, maxWidth = '700px' }) => {
+export const ImageWithCaption = ({ src, alt, children, maxWidth = '700px', className }) => {
   return (
-    <div style={{ textAlign: 'center', margin: '2em 0' }}>
-      <figure style={{ margin: 0 }}>
+    <div className={`flex justify-center ${className || ''}`} style={{ margin: '2em 0' }}>
+      <figure style={{ margin: 0, textAlign: 'center' }}>
         <img 
           src={src} 
           alt={alt} 
-          style={{ width: '100%', maxWidth: maxWidth }} 
+          style={{ width: '100%', maxWidth: maxWidth, display: 'block', marginLeft: 'auto', marginRight: 'auto' }} 
         />
         {/* children varsa figcaption'ı render ediyoruz */}
         {children && (

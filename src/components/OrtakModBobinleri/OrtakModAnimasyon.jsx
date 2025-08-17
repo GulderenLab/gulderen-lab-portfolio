@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const CONFIG = {
   WIDTH: 1000,
@@ -183,7 +183,7 @@ function generateCoilPath({ xStart, y, length, amplitude, turns, direction = 1 }
 export default function OrtakModSokBobiniEgitici() {
   // Faz state'i: gerçek zamanlı hesaplanacak
   const [phase, setPhase] = useState(0);
-  const animationStartRef = React.useRef(Date.now());
+  const animationStartRef = useRef(Date.now());
   useEffect(() => {
     let frameId;
     const ANIMATION_DURATION_MS = parseDuration(ANIMATION_DURATION);

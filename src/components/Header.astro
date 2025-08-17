@@ -2,92 +2,330 @@
 // src/components/Header.astro
 const { siteTitle = "Varsayılan Başlık" } = Astro.props;
 ---
-<header class="backdrop-blur-md bg-slate-900/95 border-b border-slate-700/50 sticky top-0 z-50 transition-all duration-300">
+<header class="backdrop-blur-md bg-slate-900/95 border-b border-slate-700/50 sticky top-0 z-50 transition-all duration-300" role="banner">
   <div class="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-cyan-600/5"></div>
   
   {/* Ana Navigasyon Çubuğu */}
-  <nav class="relative container mx-auto px-6 py-4">
+  <nav class="relative container mx-auto px-6 py-4" role="navigation" aria-label="Ana navigasyon">
     <div class="flex justify-between items-center">
       {/* Logo ve Site Başlığı */}
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center">
-          <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
           </svg>
         </div>
-        <a href="/" class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent hover:from-blue-300 hover:to-cyan-200 transition-all duration-300">
+        <a 
+          href="/" 
+          class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent hover:from-blue-300 hover:to-cyan-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 rounded-md"
+          aria-label="Gulderen Lab ana sayfa"
+        >
           {siteTitle}
         </a>
       </div>
 
       {/* Professional Navigation */}
-      <div class="hidden md:flex items-center space-x-8">
-        <a href="/" class="relative group px-3 py-2 text-gray-300 hover:text-white transition-all duration-300">
-          <span class="relative z-10">Ana Sayfa</span>
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      <div class="hidden lg:flex items-center space-x-6">
+        <a href="/" class="nav-link" aria-current="page">
+          <span class="relative z-10 flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span>Ana Sayfa</span>
+          </span>
+          <div class="nav-hover-bg"></div>
         </a>
-        <a href="/projeler" class="relative group px-3 py-2 text-gray-300 hover:text-white transition-all duration-300">
-          <span class="relative z-10">Projeler</span>
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        
+        <a href="/projeler" class="nav-link">
+          <span class="relative z-10 flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            <span>Projeler</span>
+          </span>
+          <div class="nav-hover-bg"></div>
         </a>
-        <a href="/blog" class="relative group px-3 py-2 text-gray-300 hover:text-white transition-all duration-300">
-          <span class="relative z-10">Blog</span>
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        
+        <a href="/blog" class="nav-link">
+          <span class="relative z-10 flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+            <span>Blog</span>
+          </span>
+          <div class="nav-hover-bg"></div>
         </a>
-        <a href="/hakkimizda" class="relative group px-3 py-2 text-gray-300 hover:text-white transition-all duration-300">
-          <span class="relative z-10">Hakkımızda</span>
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        
+        <a href="/hesaplama-araclari" class="nav-link">
+          <span class="relative z-10 flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+            <span class="hidden xl:inline">Hesaplama Araçları</span>
+            <span class="xl:hidden">Araçlar</span>
+          </span>
+          <div class="nav-hover-bg"></div>
         </a>
-        <a href="/iletisim" class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 px-6 py-2 rounded-lg text-white font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-          İletişim
+        
+        <a href="/radyoloji" class="nav-link">
+          <span class="relative z-10 flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+            <span>Radyoloji</span>
+          </span>
+          <div class="nav-hover-bg"></div>
+        </a>
+        
+        <a href="/hakkimizda" class="nav-link">
+          <span class="relative z-10 flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Hakkımızda</span>
+          </span>
+          <div class="nav-hover-bg"></div>
+        </a>
+        
+        <a 
+          href="/iletisim" 
+          class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 px-6 py-2.5 rounded-lg text-white font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 flex items-center space-x-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+          <span>İletişim</span>
         </a>
       </div>
       
       {/* Mobile Menu Button */}
-      <button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
-        <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-        </svg>
-        <span class="sr-only">Menüyü Aç/Kapat</span>
-      </button>
+<button 
+  id="menu-toggle" 
+  class="lg:hidden p-2 rounded-lg hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors relative z-50"
+  aria-expanded="false"
+  aria-controls="mobile-menu"
+  aria-label="Menüyü aç/kapat"
+  type="button"
+>
+  <svg id="menu-icon" class="w-6 h-6 text-gray-300 transition-transform duration-200 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+  </svg>
+  <svg id="close-icon" class="w-6 h-6 text-gray-300 transition-transform duration-200 absolute top-2 left-2 hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+  </svg>
+</button>
     </div>
   </nav>
 
   {/* === MOBİL MENÜ İÇERİĞİ === */}
-  {/* Başlangıçta tamamen gizli, JavaScript ile açılacak */}
-  {/* Orta ekrandan ('md') itibaren gizlenecek */}
-  <div id="mobile-menu" class="hidden md:hidden bg-gray-800 absolute top-full left-0 w-full shadow-md">
-    <ul class="flex flex-col px-4 pt-2 pb-4 space-y-2"> {/* Dikey liste, boşluklar */}
-      <li><a href="/" class="block py-2 px-2 rounded hover:bg-gray-700 transition-colors">Ana Sayfa</a></li>
-      <li><a href="/projeler" class="block py-2 px-2 rounded hover:bg-gray-700 transition-colors">Projeler</a></li>
-      <li><a href="/blog" class="block py-2 px-2 rounded hover:bg-gray-700 transition-colors">Blog</a></li>
-      <li><a href="/hakkimizda" class="block py-2 px-2 rounded hover:bg-gray-700 transition-colors">Hakkımızda</a></li>
-      <li><a href="/iletisim" class="block py-2 px-2 rounded hover:bg-gray-700 transition-colors">İletişim</a></li>
-    </ul>
+  <div 
+    id="mobile-menu" 
+    class="hidden lg:hidden bg-slate-800/95 backdrop-blur-md border-t border-slate-700/50 absolute top-full left-0 w-full shadow-xl transition-all duration-300 ease-out z-40"
+    role="menu"
+    aria-labelledby="menu-toggle"
+  >
+    <div class="container mx-auto px-6 py-4">
+      <ul class="space-y-1" role="none">
+        <li role="none">
+          <a href="/" class="mobile-nav-link" role="menuitem">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span>Ana Sayfa</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/projeler" class="mobile-nav-link" role="menuitem">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            <span>Projeler</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/blog" class="mobile-nav-link" role="menuitem">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+            <span>Blog</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/hesaplama-araclari" class="mobile-nav-link" role="menuitem">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+            <span>Hesaplama Araçları</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/radyoloji" class="mobile-nav-link" role="menuitem">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+            <span>Radyoloji</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/hakkimizda" class="mobile-nav-link" role="menuitem">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Hakkımızda</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/iletisim" class="mobile-nav-link bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border border-blue-500/30" role="menuitem">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <span>İletişim</span>
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
   {/* ========================= */}
 </header>
 
+{/* Enhanced CSS Styles */}
+<style>
+  /* Replace Tailwind @apply with plain CSS for reliability in inline style blocks */
+  .nav-link {
+    position: relative;
+    padding: 0.5rem 0.75rem;
+    color: rgb(209 213 219); /* text-gray-300 */
+    transition: all 300ms;
+    border-radius: 0.5rem;
+  }
+  .nav-link:focus {
+    outline: 2px solid rgb(59 130 246); /* ring-blue-500 */
+    outline-offset: 2px;
+  }
+  .nav-link:hover { color: white; }
+  .nav-hover-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, rgba(59,130,246,0.1), rgba(34,211,238,0.1));
+    border-radius: 0.5rem;
+    opacity: 0; transition: opacity 300ms;
+  }
+  .nav-link:hover .nav-hover-bg { opacity: 1; }
+
+  .mobile-nav-link {
+    display: flex; align-items: center; gap: 0.75rem; width: 100%;
+    padding: 0.75rem 1rem; color: rgb(209 213 219);
+    border-radius: 0.5rem; transition: all 200ms;
+  }
+  .mobile-nav-link:hover { color: white; background-color: rgba(51,65,85,0.5); }
+  .mobile-nav-link:focus { outline: 2px solid rgb(59,130,246); outline-offset: 2px; }
+
+  /* Mobile menu open animation (simple opacity/translate) */
+  #mobile-menu.menu-open {
+    display: block !important;
+    animation: menuSlideDown 200ms ease-out forwards;
+  }
+  @keyframes menuSlideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Icons visibility handled via .hidden class toggled in JS */
+</style>
+
 {/* JavaScript for Mobile Menu Toggle */}
 <script>
-  // Gerekli elementleri seç
-  const menuToggle = document.getElementById('menu-toggle');
-  const mobileMenu = document.getElementById('mobile-menu');
+  function initMobileMenu() {
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeIcon = document.getElementById('close-icon');
 
-  // Butona tıklama olayını dinle
-  if (menuToggle && mobileMenu) {
-    menuToggle.addEventListener('click', () => {
-      // 'hidden' sınıfını aç/kapat
-      mobileMenu.classList.toggle('hidden');
+    if (!menuToggle || !mobileMenu) return;
+
+    let isOpen = false;
+
+    function applyIconState() {
+      if (!menuIcon || !closeIcon) return;
+      if (isOpen) {
+        menuIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+      } else {
+        closeIcon.classList.add('hidden');
+        menuIcon.classList.remove('hidden');
+      }
+    }
+
+    function toggleMenu() {
+      isOpen = !isOpen;
+
+      // Visibility control
+      mobileMenu.classList.toggle('hidden', !isOpen);
+      mobileMenu.classList.toggle('menu-open', isOpen);
+
+      // ARIA state
+      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+      // Icons state
+      applyIconState();
+
+      // Body scroll lock
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+
+    function closeMenu() {
+      if (!isOpen) return;
+      isOpen = false;
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('menu-open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      applyIconState();
+      document.body.style.overflow = '';
+    }
+
+    // Toggle menu on button click
+    menuToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleMenu();
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (event) => {
+      if (isOpen && !mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+        closeMenu();
+      }
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isOpen) {
+        closeMenu();
+      }
+    });
+
+    // Close menu when clicking on menu links
+    const menuLinks = mobileMenu.querySelectorAll('a');
+    menuLinks.forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024 && isOpen) { // lg breakpoint
+        closeMenu();
+      }
     });
   }
 
-  // Başka bir yere tıklandığında menüyü kapatma (Opsiyonel ama önerilir)
-  document.addEventListener('click', (event) => {
-    const isClickInsideHeader = menuToggle?.contains(event.target as Node) || mobileMenu?.contains(event.target as Node);
-    // Eğer tıklama header dışında ve menü açıksa, menüyü kapat
-    if (!isClickInsideHeader && !mobileMenu?.classList.contains('hidden')) {
-       mobileMenu?.classList.add('hidden');
-    }
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+  } else {
+    initMobileMenu();
+  }
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', () => {
+    initMobileMenu();
   });
 </script>

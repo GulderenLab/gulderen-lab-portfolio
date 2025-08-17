@@ -1,8 +1,12 @@
 // Performance Analysis Script for Astro Site
 // This script analyzes the site's assets and provides optimization recommendations
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class PerformanceAnalyzer {
   constructor() {
