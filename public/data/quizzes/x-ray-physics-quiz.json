@@ -1,0 +1,251 @@
+{
+  "id": "x-ray-physics-quiz",
+  "title": "X-Ray Fiziği Quiz",
+  "description": "X-ışını üretimi, madde ile etkileşimler, görüntü oluşumu ve kalite faktörleri hakkında kapsamlı quiz",
+  "category": "Radyoloji Fiziği",
+  "difficulty": "Orta",
+  "timeLimit": 30,
+  "passingScore": 70,
+  "questions": [
+    {
+      "id": "xray-1",
+      "question": "X-ışını üretiminde bremsstrahlung radyasyonunun toplam X-ışını üretimine katkısı nedir?",
+      "options": [
+        "%80",
+        "%90",
+        "%99",
+        "%100"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Bremsstrahlung (fren radyasyonu) X-ışını üretiminin %99'unu oluştururken, karakteristik radyasyon sadece %1'ini oluşturur."
+    },
+    {
+      "id": "xray-2",
+      "question": "Bremsstrahlung verimliliği hangi faktörlere bağlıdır?",
+      "options": [
+        "Sadece kVp",
+        "Sadece hedef atom numarası (Z)",
+        "Z × kVp",
+        "Z² × kVp²"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Bremsstrahlung verimliliği hedef materyalinin atom numarası (Z) ile tüp voltajı (kVp) çarpımı ile doğru orantılıdır."
+    },
+    {
+      "id": "xray-3",
+      "question": "Tungsten hedef için en güçlü karakteristik X-ışını çizgisi hangisidir?",
+      "options": [
+        "Kα (69.5 keV)",
+        "Lα₁ (59.3 keV)", 
+        "Lβ₁ (67.2 keV)",
+        "Mα (2.3 keV)"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Tungsten için Kα çizgisi (69.5 keV) en yüksek enerjili ve en güçlü karakteristik X-ışınıdır. L→K geçişlerinden daha yüksek enerjilidir."
+    },
+    {
+      "id": "xray-4",
+      "question": "Fotoelektrik etkinin soğurma katsayısı hangi formülle ifade edilir?",
+      "options": [
+        "τ ∝ Z/E",
+        "τ ∝ Z²/E²",
+        "τ ∝ Z³/E²",
+        "τ ∝ Z⁴/E³"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Fotoelektrik soğurma katsayısı τ ∝ Z⁴/E³ ile ifade edilir. Atom numarasının 4. kuvveti ve foton enerjisinin 3. kuvveti ile ters orantılıdır."
+    },
+    {
+      "id": "xray-5",
+      "question": "Compton saçılmasının baskın olduğu enerji aralığı hangisidir?",
+      "options": [
+        "10-30 keV",
+        "30-100 keV", 
+        "100-200 keV",
+        "200-500 keV"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Compton saçılması 30-100 keV enerji aralığında baskındır. Bu aralık genel radyografi ve BT için tipik enerji seviyelerini kapsar."
+    },
+    {
+      "id": "xray-6",
+      "question": "X-ışını spektrumunda ortalama enerji, maksimum enerjinin (kVp) yaklaşık kaç katıdır?",
+      "options": [
+        "1/2'si",
+        "1/3'ü",
+        "1/4'ü",
+        "1/5'i"
+      ],
+      "correctAnswer": 1,
+      "explanation": "X-ışını spektrumunda ortalama enerji, maksimum enerjinin (kVp) yaklaşık 1/3'ü kadardır. Bu polikromatik spektrumun karakteristik özelliğidir."
+    },
+    {
+      "id": "xray-7",
+      "question": "Lambert-Beer kanunu X-ışını zayıflaması için nasıl ifade edilir?",
+      "options": [
+        "I = I₀ × e^(μx)",
+        "I = I₀ × e^(-μx)",
+        "I = I₀ × μx", 
+        "I = I₀ / μx"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Lambert-Beer kanunu I = I₀ × e^(-μx) şeklinde ifade edilir. Bu eksponansiyel zayıflama yasasıdır."
+    },
+    {
+      "id": "xray-8",
+      "question": "Kemik dokusunun efektif atom numarası (Z_eff) yaklaşık kaçtır?",
+      "options": [
+        "7.4",
+        "10.2",
+        "13.8",
+        "16.5"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Kemik dokusunun efektif atom numarası yaklaşık 13.8'dir. Bu değer yüksek kalsiyum ve fosfat içeriği nedeniyledir."
+    },
+    {
+      "id": "xray-9",
+      "question": "kVp artışının görüntü üzerindeki birincil etkisi nedir?",
+      "options": [
+        "Kontrast artışı",
+        "Kontrast azalması",
+        "Noise artışı",
+        "Keskinlik azalması"
+      ],
+      "correctAnswer": 1,
+      "explanation": "kVp artışı penetrasyonu artırır ancak kontrast azaltır. Yüksek enerji fotonları doku farklılıklarını daha az belirgin hale getirir."
+    },
+    {
+      "id": "xray-10",
+      "question": "Grid kullanımının hasta dozuna etkisi nedir?",
+      "options": [
+        "Dozu azaltır",
+        "Dozu değiştirmez",
+        "Dozu 2-3 kat artırır",
+        "Dozu 4-5 kat artırır"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Grid kullanımı scatter radyasyonu azaltır ancak primer beam'i de kısmen absorbe ettiği için hasta dozunu 4-5 kat artırır."
+    },
+    {
+      "id": "xray-11",
+      "question": "Minimum dalga boyu (λ_min) hangi formülle hesaplanır?",
+      "options": [
+        "λ_min = hc/eV",
+        "λ_min = eV/hc",
+        "λ_min = h/eV",
+        "λ_min = c/eV"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Minimum dalga boyu λ_min = hc/eV formülü ile hesaplanır. Bu, maksimum foton enerjisine karşılık gelir."
+    },
+    {
+      "id": "xray-12",
+      "question": "Mamografi için optimal X-ışını enerjisi neden düşük seçilir?",
+      "options": [
+        "Hasta dozu azaltmak için",
+        "Fotoelektrik etkiyi artırarak kontrast sağlamak için",
+        "Scatter radyasyonu azaltmak için",
+        "Görüntü keskinliğini artırmak için"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Mamografide düşük enerji (<30 keV) kullanılır çünkü bu enerji seviyesinde fotoelektrik etki dominant olur ve yumuşak doku kontrastı maksimize edilir."
+    },
+    {
+      "id": "xray-13",
+      "question": "Characteristic X-ray üretimi için elektronun minimum enerjisi ne olmalıdır?",
+      "options": [
+        "Valans elektronun bağlanma enerjisi",
+        "En dış orbital elektronun bağlanma enerjisi",
+        "K-shell elektronunun bağlanma enerjisi",
+        "Ortalama bağlanma enerjisi"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Karakteristik X-ışını üretimi için gelen elektron K-shell elektronunu çıkarabilecek kadar enerjiye sahip olmalıdır (tungsten için ~69.5 keV)."
+    },
+    {
+      "id": "xray-14",
+      "question": "X-ışını tüpünde anot açısının küçük olmasının avantajı nedir?",
+      "options": [
+        "Isı kapasitesini artırır",
+        "Efektif odak boyutunu küçültür",
+        "X-ışını çıkışını artırır",
+        "Anot rotasyonunu hızlandırır"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Küçük anot açısı (6-20°) line focus principle sayesinde efektif odak boyutunu küçültür, bu da görüntü keskinliğini artırır."
+    },
+    {
+      "id": "xray-15",
+      "question": "Compton saçılmasında saçılan foton enerjisi neye bağlıdır?",
+      "options": [
+        "Sadece gelen foton enerjisine",
+        "Sadece saçılma açısına",
+        "Gelen foton enerjisi ve saçılma açısına",
+        "Atom numarasına"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Compton saçılmasında saçılan foton enerjisi hem gelen foton enerjisine hem de saçılma açısına bağlıdır. Klein-Nishina formülü ile tanımlanır."
+    },
+    {
+      "id": "xray-16",
+      "question": "ALARA prensibindeki 'zaman' faktörü nasıl uygulanır?",
+      "options": [
+        "Ekspozür süresini artırarak",
+        "mAs değerini artırarak",
+        "En kısa uygun ekspozür süresini kullanarak",
+        "kVp değerini azaltarak"
+      ],
+      "correctAnswer": 2,
+      "explanation": "ALARA prensibinde 'zaman' faktörü, tanısal kaliteyi koruyarak en kısa uygun ekspozür süresinin kullanılması anlamına gelir."
+    },
+    {
+      "id": "xray-17",
+      "question": "Filtrasyon X-ışını spektrumunu nasıl etkiler?",
+      "options": [
+        "Spektrumu yumuşatır (düşük enerjileri azaltır)",
+        "Spektrumu sertleştirir (ortalama enerjiyi artırır)",
+        "Spektrumu değiştirmez",
+        "Sadece toplam şiddeti azaltır"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Filtrasyon X-ışını spektrumunu sertleştirir (beam hardening). Düşük enerjili fotonları tercihli olarak absorbe ederek ortalama enerjiyi artırır."
+    },
+    {
+      "id": "xray-18",
+      "question": "Quantum mottle (quantum noise) ne zaman en belirgindir?",
+      "options": [
+        "Yüksek mAs değerlerinde",
+        "Düşük mAs değerlerinde",
+        "Yüksek kVp değerlerinde",
+        "Thick filtrasyon kullanıldığında"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Quantum mottle düşük mAs değerlerinde (az foton sayısı) en belirgindir. Foton istatistiklerinin rastgele dalgalanması nedeniyle oluşur."
+    },
+    {
+      "id": "xray-19",
+      "question": "Toraks radyografisinde neden yüksek kVp (110-125) tercih edilir?",
+      "options": [
+        "Kontrast artırmak için",
+        "Hasta dozunu artırmak için",
+        "Penetrasyonu artırmak için",
+        "Scatter radyasyonu artırmak için"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Toraks radyografisinde yüksek kVp kalp ve mediastinal yapıları penetrasyonu için gereklidir. Akciğer parankiminde detay görmek için önemlidir."
+    },
+    {
+      "id": "xray-20",
+      "question": "Heel effect nedir ve nasıl kompanse edilir?",
+      "options": [
+        "Anot ısınması, soğutma ile",
+        "X-ışını şiddet değişimi, filtrasyonla",
+        "Katot-anot yönünde şiddet farkı, hasta pozisyonlaması ile",
+        "Karakteristik X-ışını üretimi, kVp ile"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Heel effect katot-anot yönündeki X-ışını şiddet farkıdır. Kalın vücut bölümü katot tarafına, ince bölüm anot tarafına yerleştirilerek kompanse edilir."
+    }
+  ]
+}

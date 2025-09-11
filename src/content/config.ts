@@ -47,7 +47,7 @@ const blogCollection = defineCollection({
 });
 // ==========================================
 
-// === RADYOLOJİ KOLEKSİYONU TANIMI ===
+// === RADYOLOJI KOLEKSIYONU TANIMI ===
 const radyolojiCollection = defineCollection({
   type: 'content',
   schema: z.object({
@@ -66,6 +66,7 @@ const radyolojiCollection = defineCollection({
   }),
 });
 // =======================================
+
 
 // Koleksiyonları dışa aktarıyoruz
 export const collections = {

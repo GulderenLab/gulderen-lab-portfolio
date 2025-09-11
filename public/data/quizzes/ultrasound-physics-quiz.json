@@ -1,0 +1,251 @@
+{
+  "id": "ultrasound-physics-quiz",
+  "title": "Ultrason Fiziği Quiz",
+  "description": "Akustik özellikler, transducer teknolojisi, beam formation, Doppler efekti, artefaktlar ve güvenlik hakkında kapsamlı quiz",
+  "category": "Radyoloji Fiziği",
+  "difficulty": "Orta",
+  "timeLimit": 35,
+  "passingScore": 70,
+  "questions": [
+    {
+      "id": "us-1",
+      "question": "Tıbbi ultrasonografi tipik olarak hangi frekans aralığında çalışır?",
+      "options": [
+        "20 Hz - 20 kHz",
+        "2-15 MHz",
+        "100-500 MHz",
+        "1-5 GHz"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Tıbbi ultrasonografi tipik olarak 2-15 MHz frekans aralığında çalışır. Bu aralık, uygun penetrasyon derinliği ve çözünürlük dengesini sağlar."
+    },
+    {
+      "id": "us-2",
+      "question": "Akustik impedans (Z) nasıl hesaplanır?",
+      "options": [
+        "Z = ρ / c",
+        "Z = c / ρ", 
+        "Z = ρ × c",
+        "Z = ρ² × c"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Akustik impedans Z = ρ × c formülü ile hesaplanır. ρ doku yoğunluğu, c ses hızıdır. Bu değer dokuların akustik 'direncini' belirtir."
+    },
+    {
+      "id": "us-3",
+      "question": "Yumuşak dokudaki ortalama ultrason hızı nedir?",
+      "options": [
+        "343 m/s",
+        "1,450 m/s",
+        "1,540 m/s",
+        "4,080 m/s"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Yumuşak dokudaki ortalama ultrason hızı 1,540 m/s'dir. Bu değer, ultrason sistemlerinin kalibrasyonunda kullanılan standart hız değeridir."
+    },
+    {
+      "id": "us-4",
+      "question": "Hangi doku en yüksek akustik impedansa sahiptir?",
+      "options": [
+        "Hava",
+        "Yağ", 
+        "Yumuşak doku",
+        "Kemik"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Kemik en yüksek akustik impedansa (7.8 MRayl) sahiptir. Bu nedenle kemik-yumuşak doku arayüzünden güçlü yansıma olur ve kemik arkasında acoustic shadow oluşur."
+    },
+    {
+      "id": "us-5",
+      "question": "Piezoelektrik efektin temel prensibi nedir?",
+      "options": [
+        "Sadece elektrik enerjisinin mekanik enerjiye dönüşümü",
+        "Sadece mekanik enerjinin elektrik enerjisine dönüşümü",
+        "Elektrik-mekanik enerji dönüşümünün her iki yönde de gerçekleşmesi",
+        "Akustik enerjinin elektromanyetik enerjiye dönüşümü"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Piezoelektrik efekt, elektrik ve mekanik enerji arasında her iki yönde de dönüşüm sağlar. Direkt efekt (mekanik→elektrik) ve ters efekt (elektrik→mekanik) ultrason sistemlerinde kullanılır."
+    },
+    {
+      "id": "us-6",
+      "question": "Linear array transduser'ın beam şekli nedir?",
+      "options": [
+        "Sektör (yelpaze)",
+        "Dikdörtgen",
+        "Oval",
+        "Dairesel"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Linear array transducer dikdörtgen beam şekli üretir. Bu, yüzeyel yapıların görüntülenmesinde ve vasküler uygulamalarda avantaj sağlar."
+    },
+    {
+      "id": "us-7",
+      "question": "Near zone (Fresnel zone) uzunluğu nasıl hesaplanır?",
+      "options": [
+        "N = r × λ",
+        "N = r² / λ",
+        "N = λ / r",
+        "N = λ² / r"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Near zone uzunluğu N = r²/λ formülü ile hesaplanır. r transducer yarıçapı, λ dalga boyudur. Near zone'da beam paralel ve lateral çözünürlük en iyidir."
+    },
+    {
+      "id": "us-8",
+      "question": "Doppler frekans kayması (Δf) hangi formülle hesaplanır?",
+      "options": [
+        "Δf = f0 × v × cos θ / c",
+        "Δf = 2f0 × v × cos θ / c",
+        "Δf = f0 × v × sin θ / c",
+        "Δf = 2f0 × v × sin θ / c"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Doppler frekans kayması Δf = 2f0 × v × cos θ / c formülü ile hesaplanır. Faktör 2, ses dalgasının gidip dönmesinden kaynaklanır."
+    },
+    {
+      "id": "us-9",
+      "question": "Optimal Doppler sinyali için açı kaç dereceden küçük olmalıdır?",
+      "options": [
+        "30°",
+        "45°",
+        "60°",
+        "90°"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Optimal Doppler sinyali için açı 60°'den küçük olmalıdır. Bu açıda cos θ = 0.5 olur ve daha büyük açılarda Doppler duyarlılığı önemli ölçüde azalır."
+    },
+    {
+      "id": "us-10",
+      "question": "Power Doppler'ın avantajı nedir?",
+      "options": [
+        "Yön bilgisi verir",
+        "Açı bağımlılığı yoktur",
+        "Yüksek hızları ölçebilir",
+        "Aliasing göstermez"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Power Doppler'ın en önemli avantajı açı bağımlılığının olmamasıdır. Bu özellik düşük akımların tespitinde yüksek duyarlılık sağlar."
+    },
+    {
+      "id": "us-11",
+      "question": "Posterior acoustic enhancement hangi durumda görülür?",
+      "options": [
+        "Kemik arkasında",
+        "Gaz arkasında",
+        "Sıvı dolu yapılar arkasında",
+        "Kalsifikasyon arkasında"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Posterior acoustic enhancement sıvı dolu yapıların (kist, mesane) arkasında görülür. Düşük atenüasyonlu yapıların arkasında hyperechoic bölge oluşur."
+    },
+    {
+      "id": "us-12",
+      "question": "Comet tail artefaktının nedeni nedir?",
+      "options": [
+        "Büyük yansıtıcı yüzeyler",
+        "Küçük yüksek impedans yapılar",
+        "Gaz balonları",
+        "Hasta hareketi"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Comet tail artefaktı küçük yüksek impedans yapılardan kaynaklanır. Metal objeler, adenomiomatosis gibi durumlarda güçlü echogenic çizgiler şeklinde görülür."
+    },
+    {
+      "id": "us-13",
+      "question": "Thermal Index (TI) için güvenli kabul edilen limit nedir?",
+      "options": [
+        "TI &lt; 0.5",
+        "TI &lt; 1.0",
+        "TI &lt; 2.0",
+        "TI &lt; 3.0"
+      ],
+      "correctAnswer": 1,
+      "explanation": "TI &lt; 1.0 güvenli kabul edilir. TI, akustik güçün dokuda sıcaklık artışına neden olma potansiyelini gösterir ve ALARA prensibi gereği minimum tutulmalıdır."
+    },
+    {
+      "id": "us-14",
+      "question": "Mechanical Index (MI) için güvenli limit nedir?",
+      "options": [
+        "MI &lt; 0.3",
+        "MI &lt; 0.7",
+        "MI &lt; 1.2",
+        "MI &lt; 1.9"
+      ],
+      "correctAnswer": 1,
+      "explanation": "MI &lt; 0.7 kavitasyon riski için güvenli kabul edilir. MI, akustik basıncın kavitasyon oluşturma potansiyelini gösterir."
+    },
+    {
+      "id": "us-15",
+      "question": "Yumuşak dokudaki tipik zayıflama katsayısı (α) nedir?",
+      "options": [
+        "0.002 dB/cm/MHz",
+        "0.18 dB/cm/MHz",
+        "0.5-1.0 dB/cm/MHz",
+        "5.0 dB/cm/MHz"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Yumuşak dokuda tipik zayıflama katsayısı 0.5-1.0 dB/cm/MHz'dir. Bu değer penetrasyon derinliği ve frekans seçiminde önemlidir."
+    },
+    {
+      "id": "us-16",
+      "question": "Time Gain Compensation (TGC) ne işe yarar?",
+      "options": [
+        "Frekansı ayarlar",
+        "Odak noktasını değiştirir",
+        "Derinlikle değişen zayıflamayı kompanse eder",
+        "Doppler açısını optimize eder"
+      ],
+      "correctAnswer": 2,
+      "explanation": "TGC, derinlikle artan zayıflamayı kompanse etmek için derinlik boyunca kazancı ayarlar. Bu sayede uniform görüntü yoğunluğu elde edilir."
+    },
+    {
+      "id": "us-17",
+      "question": "Harmonic imaging'in temel prensibi nedir?",
+      "options": [
+        "Yarım frekans kullanımı",
+        "İki kat frekans (2f0) kullanımı",
+        "Üç kat frekans kullanımı",
+        "Değişken frekans kullanımı"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Harmonic imaging, temel frekansın iki katında (2f0) görüntüleme yapar. Bu teknik artefaktları azaltır ve obez hastalarda görüntü kalitesini artırır."
+    },
+    {
+      "id": "us-18",
+      "question": "Aliasing artefaktının nedeni nedir?",
+      "options": [
+        "Düşük frekans",
+        "Yüksek gain",
+        "Nyquist limitini aşan hızlar",
+        "Yanlış fokus ayarı"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Aliasing, Nyquist limitini aşan hızlar nedeniyle oluşur. Pulsed Wave Doppler'da PRF'nin yarısını aşan hızlarda renk inversiyonu (wraparound) görülür."
+    },
+    {
+      "id": "us-19",
+      "question": "Shear wave elastografi hangi özelliği ölçer?",
+      "options": [
+        "Relatif sertlik",
+        "Absolute elastisite (kPa)",
+        "Akustik hız",
+        "Impedans farkı"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Shear wave elastografi absolute elastisiteyi (kPa cinsinden) ölçer. ARFI teknolojisi kullanarak doku sertliğinin kantitatif değerlendirmesini sağlar."
+    },
+    {
+      "id": "us-20",
+      "question": "Obstetrik USG'de güvenlik açısından hangi kural en önemlidir?",
+      "options": [
+        "Yüksek frekans kullanımı",
+        "ALARA prensibi ve scan time minimizasyonu",
+        "Maximum güç kullanımı",
+        "Sürekli Doppler kullanımı"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Obstetrik USG'de ALARA prensibi ve scan time minimizasyonu en önemlidir. Özellikle ilk trimesterde ve Doppler çalışmalarında TI ve MI limitleri daha katı tutulmalıdır."
+    }
+  ]
+}

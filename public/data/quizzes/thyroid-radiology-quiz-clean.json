@@ -1,0 +1,247 @@
+{
+  "title": "Tiroid Radyolojisi Quiz",
+  "description": "Tiroid görüntüleme ve TI-RADS konularında bilginizi test edin. Her soru için anında geri bildirim alacaksınız!",
+  "passingScore": 80,
+  "questions": [
+    {
+      "id": "tirads-1",
+      "question": "ACR TI-RADS sisteminde, bir nodülün 'solid veya neredeyse tamamen solid' olması kaç puan verir?",
+      "options": [
+        "0 puan",
+        "1 puan", 
+        "2 puan",
+        "3 puan"
+      ],
+      "correctAnswer": 2,
+      "explanation": "ACR TI-RADS kompozisyon kategorisinde, solid veya neredeyse tamamen solid nodüller (>%90 solid) 2 puan alır. Bu, malignite riski açısından daha yüksek bir değer taşır."
+    },
+    {
+      "id": "tirads-2", 
+      "question": "TI-RADS TR5 kategorisindeki bir nodül için ince iğne aspirasyon biyopsisi (İİAB) eşiği nedir?",
+      "options": [
+        "≥0.5 cm",
+        "≥1.0 cm",
+        "≥1.5 cm", 
+        "≥2.5 cm"
+      ],
+      "correctAnswer": 1,
+      "explanation": "TR5 (yüksek şüpheli) nodüller için İİAB eşiği ≥1.0 cm'dir. Bu nodüllerin malignite riski %20'nin üzerindedir ve daha küçük boyutlarda bile biyopsi önerilir."
+    },
+    {
+      "id": "tirads-3",
+      "question": "Normal tiroid parankimasının ultrasonografik görünümü nasıldır?",
+      "options": [
+        "Komşu strap kaslardan daha hipoekoik",
+        "Komşu strap kaslarla izoekoik", 
+        "Komşu strap kaslardan daha hiperekoik",
+        "Heterojen hipoekoik"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Normal tiroid parankiması komşu strap kaslardan daha hiperekoik (daha parlak) görünür. Bu normal anatomi bilgisidir ve nodül değerlendirmesinde referans olarak kullanılır."
+    },
+    {
+      "id": "tirads-4",
+      "question": "Papiller tiroid karsinomunun en karakteristik ultrasonografik bulgusu hangisidir?",
+      "options": [
+        "Makrokalsifikasyonlar",
+        "Periferik kalsifikasyonlar",
+        "Mikrokalsifikasyonlar (punktat ekojen odaklar)",
+        "Kuyruklu yıldız artefaktları"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Mikrokalsifikasyonlar (punktat ekojen odaklar) papiller tiroid karsinomunun en karakteristik bulgusudur. TI-RADS sisteminde 3 puan değerindedir ve yüksek malignite şüphesi yaratır."
+    },
+    {
+      "id": "tirads-5",
+      "question": "Hashimoto tiroiditinin ultrasonografik görünümü nasıldır?",
+      "options": [
+        "Homojen hiperekoik parankima",
+        "Heterojen hipoekoik parankima ve septasyonlar",
+        "Diffüz kistik değişiklikler", 
+        "Çok sayıda solid nodül"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Hashimoto tiroiditi heterojen hipoekoik parankima ve 'mikronodüler' görünüm oluşturan septasyonlarla karakterizedir. İleri evrelerde atrofi gelişebilir."
+    },
+    {
+      "id": "tirads-6",
+      "question": "TI-RADS TR3 kategorisindeki bir nodül için takip önerisi nedir?",
+      "options": [
+        "Takip gerekmez",
+        ">0.5 cm: yıllık x 5 yıl",
+        ">1.5 cm: yıllık x 5 yıl",
+        ">2.0 cm: 6 ayda bir"
+      ],
+      "correctAnswer": 2,
+      "explanation": "TR3 (hafif şüpheli) nodüller için >1.5 cm olanlar yıllık olarak 5 yıl takip edilir. İİAB eşiği ise ≥2.5 cm'dir."
+    },
+    {
+      "id": "tirads-7",
+      "question": "Graves hastalığının ultrasonografik bulguları arasında hangisi yoktur?",
+      "options": [
+        "Diffüz simetrik büyüme",
+        "Homojen hipoekoik parankima", 
+        "Belirgin artmış vaskülarite ('tiroid inferno')",
+        "Çok sayıda kalsifik nodül"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Graves hastalığında çok sayıda kalsifik nodül görülmez. Tipik bulgular diffüz büyüme, hipoekoik parankima ve 'tiroid inferno' olarak adlandırılan artmış vasküllaritedir."
+    },
+    {
+      "id": "tirads-8",
+      "question": "Boy > genişlik şeklindeki nodüller TI-RADS sisteminde kaç puan alır?",
+      "options": [
+        "0 puan",
+        "1 puan",
+        "2 puan", 
+        "3 puan"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Boy > genişlik (taller-than-wide) şekli TI-RADS'da 3 puan değerindedir ve malignite için yüksek şüphe yaratır. Normal nodüller genellikle genişlik > boy şeklindedir."
+    },
+    {
+      "id": "tirads-9",
+      "question": "Folliküler tiroid karsinomunun ayırıcı tanısı nasıl yapılır?",
+      "options": [
+        "Sadece ultrasonografi ile",
+        "İnce iğne aspirasyon biyopsisi ile",
+        "Histopatolojik inceleme ile (kapsüler/vasküler invazyon)",
+        "Sadece MR görüntüleme ile"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Folliküler karsinom görüntülemede folliküler adenomdan ayırt edilemez. Kesin tanı histopatolojik inceleme ile kapsüler/vasküler invazyon gösterilerek konulur."
+    },
+    {
+      "id": "tirads-10",
+      "question": "Medüller tiroid karsinomunun karakteristik özellikleri arasında hangisi vardır?",
+      "options": [
+        "Her zaman bilateral",
+        "Sadece kadınlarda görülür",
+        "MEN2 sendromları ile ilişkili olabilir",
+        "Her zaman benign seyirli"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Medüller tiroid karsinomu MEN2A ve MEN2B sendromları ile ilişkili olabilir. Sporadik ve herediter formları vardır. Ultrasonografide tipik olarak kaba kalsifikasyonlar gösterir."
+    },
+    {
+      "id": "tirads-11",
+      "question": "TI-RADS sisteminde 'çok hipoekoik' ekojenite kaç puan değerindedir?",
+      "options": [
+        "1 puan",
+        "2 puan",
+        "3 puan",
+        "4 puan"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Çok hipoekoik (komşu strap kaslarından daha az ekojen) nodüller TI-RADS sisteminde 3 puan alır ve yüksek malignite şüphesi yaratır."
+    },
+    {
+      "id": "tirads-12",
+      "question": "Kolloid nodüllerin karakteristik ultrasonografik bulgusu hangisidir?",
+      "options": [
+        "Mikrokalsifikasyonlar",
+        "İrregüler kenarlar",
+        "Kuyruklu yıldız artefaktları",
+        "Ekstratiroidal uzanım"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Kolloid nodüller karakteristik olarak kolloid kristallerinden kaynaklanan kuyruklu yıldız artefaktları gösterir. Bu benign nodüllerin tipik bulgusudur."
+    },
+    {
+      "id": "tirads-13",
+      "question": "Bethesda Kategori II sitoloji sonucu ne anlama gelir?",
+      "options": [
+        "Malign",
+        "Benign",
+        "Şüpheli",
+        "Tanısal değil"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Bethesda Kategori II benign sitoloji sonucunu gösterir ve <%3 malignite riski taşır. Bu nodüller konservatif takip edilebilir."
+    },
+    {
+      "id": "tirads-14",
+      "question": "TI-RADS sisteminde 'süngerimsi' kompozisyon kaç puan alır?",
+      "options": [
+        "0 puan",
+        "1 puan",
+        "2 puan",
+        "3 puan"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Süngerimsi (spongiform) kompozisyon TI-RADS sisteminde 0 puan alır ve benign olarak kabul edilir. Bu nodüller mikrokistik agregasyon paterni gösterir."
+    },
+    {
+      "id": "tirads-15",
+      "question": "Anaplastik tiroid karsinomunun prognoz açısından özelliği nedir?",
+      "options": [
+        "Mükemmel prognoz",
+        "İyi prognoz",
+        "Orta prognoz",
+        "Çok kötü prognoz"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Anaplastik tiroid karsinomu en agresif tiroid malignitesi olup çok kötü prognoza sahiptir. Genellikle yaşlı hastalarda görülür ve hızla büyür."
+    },
+    {
+      "id": "tirads-16",
+      "question": "Normal yetişkin kadında tiroid bezinin üst sınır hacmi nedir?",
+      "options": [
+        "15 ml",
+        "18 ml",
+        "25 ml",
+        "30 ml"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Normal yetişkin kadında tiroid bezi hacmi ≤18 ml, erkeklerde ≤25 ml'dir. Bu değerler guatr tanısı için önemlidir."
+    },
+    {
+      "id": "tirads-17",
+      "question": "Tiroid görüntülemede en uygun ultrason prob frekansı hangisidir?",
+      "options": [
+        "3-5 MHz",
+        "5-7 MHz",
+        "7-15 MHz",
+        "15-20 MHz"
+      ],
+      "correctAnswer": 2,
+      "explanation": "7-15 MHz yüksek frekanslı lineer problar tiroid görüntülemesi için idealdir. Yüzeyel yerleşim nedeniyle mükemmel çözünürlük sağlar."
+    },
+    {
+      "id": "tirads-18",
+      "question": "TI-RADS TR4 nodül için İİAB eşik boyutu nedir?",
+      "options": [
+        "≥1.0 cm",
+        "≥1.5 cm",
+        "≥2.0 cm",
+        "≥2.5 cm"
+      ],
+      "correctAnswer": 1,
+      "explanation": "TI-RADS TR4 (orta şüpheli) nodüller ≥1.5 cm boyutunda İİAB gerektirir. Bu nodüllerin malignite riski %5-20 arasındadır."
+    },
+    {
+      "id": "tirads-19",
+      "question": "Ekstratiroidal uzanım TI-RADS sisteminde kaç puan değerindedir?",
+      "options": [
+        "1 puan",
+        "2 puan",
+        "3 puan",
+        "4 puan"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Ekstratiroidal uzanım TI-RADS kenar kategorisinde 3 puan değerindedir ve malignite için en yüksek şüphe yaratır."
+    },
+    {
+      "id": "tirads-20",
+      "question": "Periferik kalsifikasyonlar TI-RADS sisteminde kaç puan alır?",
+      "options": [
+        "0 puan",
+        "1 puan",
+        "2 puan",
+        "3 puan"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Periferik kalsifikasyonlar (rim kalsifikasyonları) TI-RADS ekojen odaklar kategorisinde 2 puan alır ve orta düzey şüphe yaratır."
+    }
+  ]
+}

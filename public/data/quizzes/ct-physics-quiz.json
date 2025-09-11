@@ -1,0 +1,251 @@
+{
+  "id": "ct-physics-quiz",
+  "title": "CT Fiziği Quiz",
+  "description": "Bilgisayarlı Tomografi fizik prensipleri, görüntü rekonstrüksiyonu, artefaktlar ve doz optimizasyonu hakkında kapsamlı test",
+  "category": "Radyoloji Fiziği",
+  "difficulty": "Orta",
+  "timeLimit": 30,
+  "passingScore": 70,
+  "questions": [
+    {
+      "id": "ct-1",
+      "question": "CT sistemlerinde görüntü rekonstrüksiyonu için en yaygın kullanılan klasik algoritma hangisidir?",
+      "options": [
+        "Iterative Reconstruction",
+        "Filtered Back Projection (FBP)", 
+        "Maximum Likelihood",
+        "Algebraic Reconstruction"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Filtered Back Projection (FBP), CT sistemlerinde uzun yıllar kullanılan klasik rekonstrüksiyon algoritmasıdır. Projeksiyon verilerini filtreler ve geri yansıtma işlemi uygular."
+    },
+    {
+      "id": "ct-2",
+      "question": "Hounsfield üniteleri (HU) ölçeğinde suyun değeri nedir?",
+      "options": [
+        "-1000 HU",
+        "0 HU",
+        "+1000 HU",
+        "+100 HU"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Hounsfield üniteleri ölçeğinde su referans alınır ve 0 HU değerine sahiptir. Hava -1000 HU, kemik +1000 HU civarındadır."
+    },
+    {
+      "id": "ct-3",
+      "question": "CT sistemlerinde beam hardening artefaktının ana nedeni nedir?",
+      "options": [
+        "Hasta hareketi",
+        "X-ray spektrumunun dokulardan geçerken değişmesi",
+        "Metal implantlar",
+        "Dedektör arızası"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Beam hardening, X-ray demeti dokulardan geçerken düşük enerjili fotonların daha fazla soğurulması sonucu spektrumun sertleşmesi ile oluşur."
+    },
+    {
+      "id": "ct-4",
+      "question": "CTDI (CT Dose Index) neyi ölçer?",
+      "options": [
+        "Görüntü kalitesini",
+        "Radyasyon dozunu",
+        "Kontrast çözünürlüğü",
+        "Temporal çözünürlüğü"
+      ],
+      "correctAnswer": 1,
+      "explanation": "CTDI (CT Dose Index), CT taramalarında hastaya verilen radyasyon dozunu ölçen temel metriktir."
+    },
+    {
+      "id": "ct-5",
+      "question": "Modern CT sistemlerinde iterative reconstruction'ın ana avantajı nedir?",
+      "options": [
+        "Daha hızlı görüntüleme",
+        "Daha düşük doz ile daha iyi görüntü kalitesi",
+        "Daha büyük görüntü matrisi",
+        "Daha fazla kesit sayısı"
+      ],
+      "correctAnswer": 1,
+      "explanation": "İteratif rekonstrüksiyon algoritmaları, daha düşük radyasyon dozu ile daha iyi görüntü kalitesi ve azalmış görüntü gürültüsü sağlar."
+    },
+    {
+      "id": "ct-6",
+      "question": "CT'de temporal çözünürlük hangi uygulamada en kritiktir?",
+      "options": [
+        "Abdominal görüntüleme",
+        "Kardiyak görüntüleme",
+        "Kemik görüntüleme",
+        "Beyin görüntüleme"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Kardiyak görüntülemede kalbin hareketli yapısı nedeniyle yüksek temporal çözünürlük kritiktir. Hızlı görüntüleme gerekir."
+    },
+    {
+      "id": "ct-7",
+      "question": "Dual-energy CT'nin ana avantajı nedir?",
+      "options": [
+        "Daha hızlı görüntüleme",
+        "Materyal dekompozisyonu ve spektral görüntüleme",
+        "Daha düşük doz",
+        "Daha yüksek uzaysal çözünürlük"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Dual-energy CT, iki farklı enerji seviyesinde görüntüleme yaparak materyal dekompozisyonu, sanal kontrast görüntüleme ve gelişmiş doku karakterizasyonu sağlar."
+    },
+    {
+      "id": "ct-8",
+      "question": "CT'de metal artefakt azaltımı için hangisi kullanılmaz?",
+      "options": [
+        "İteratif rekonstrüksiyon algoritmaları",
+        "Dual-energy teknikler",
+        "Slice kalınlığını azaltma",
+        "Metal artefakt azaltım yazılımları"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Slice kalınlığını azaltmak metal artefaktları azaltmaz, aksine artefaktları daha belirgin hale getirebilir. Diğer seçenekler etkili yöntemlerdir."
+    },
+    {
+      "id": "ct-9",
+      "question": "CT'de kontrast çözünürlük nedir?",
+      "options": [
+        "En küçük ayırt edilebilen mesafe",
+        "Düşük kontrast farklılıklarını ayırt etme yeteneği",
+        "Görüntüleme hızı",
+        "Kesit kalınlığı"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Kontrast çözünürlük, benzer yoğunlukta dokular arasındaki küçük attenuation farklılıklarını ayırt etme yeteneğidir."
+    },
+    {
+      "id": "ct-10",
+      "question": "MDCT'de 'M' harfi neyi ifade eder?",
+      "options": [
+        "Medical",
+        "Multi-detector",
+        "Magnetic",
+        "Maximum"
+      ],
+      "correctAnswer": 1,
+      "explanation": "MDCT (Multi-detector CT), çoklu dedektör sıraları kullanarak aynı anda birden fazla kesit elde eden CT sistemlerini ifade eder."
+    },
+    {
+      "id": "ct-11",
+      "question": "CT'de DLP (Dose Length Product) nasıl hesaplanır?",
+      "options": [
+        "CTDI × Hasta ağırlığı",
+        "CTDIvol × Tarama uzunluğu",
+        "kV × mAs",
+        "HU × Kesit sayısı"
+      ],
+      "correctAnswer": 1,
+      "explanation": "DLP (Dose Length Product), CTDIvol ile tarama uzunluğunun çarpımı ile hesaplanır ve toplam doz yükünü gösterir."
+    },
+    {
+      "id": "ct-12",
+      "question": "CT'de 'cupping artefakt'ının nedeni nedir?",
+      "options": [
+        "Hasta hareketi",
+        "Beam hardening",
+        "Metal implant",
+        "Dedektör kalibrasyonu"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Cupping artefaktı, beam hardening etkisiyle homojen dokularda merkezde daha düşük HU değerlerinin görülmesi ile oluşur."
+    },
+    {
+      "id": "ct-13",
+      "question": "CT perfüzyon çalışmalarında hangi parametre kritiktir?",
+      "options": [
+        "Uzaysal çözünürlük",
+        "Temporal çözünürlük",
+        "Kontrast çözünürlük",
+        "Z-ekseni çözünürlük"
+      ],
+      "correctAnswer": 1,
+      "explanation": "CT perfüzyon çalışmalarında kontrast maddenin dinamik geçişini izlemek için yüksek temporal çözünürlük gereklidir."
+    },
+    {
+      "id": "ct-14",
+      "question": "CT kalite kontrolünde günlük yapılması gereken test hangisidir?",
+      "options": [
+        "Uzaysal çözünürlük testi",
+        "HU değeri ve uniformite testi",
+        "Slice kalınlığı testi",
+        "Doz kalibrasyonu"
+      ],
+      "correctAnswer": 1,
+      "explanation": "HU değeri doğruluğu ve uniformite testleri, CT sistemlerinin günlük performans kontrolü için yapılan temel testlerdir."
+    },
+    {
+      "id": "ct-15",
+      "question": "CT'de slip ring teknolojisinin amacı nedir?",
+      "options": [
+        "Görüntü kalitesini artırmak",
+        "Sürekli rotasyon sağlamak",
+        "Dozu azaltmak",
+        "Gürültüyü azaltmak"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Slip ring teknolojisi, X-ray tüpü ve dedektörlerin kesintisiz sürekli rotasyonunu sağlayarak spiral CT görüntülemeye imkan verir."
+    },
+    {
+      "id": "ct-16",
+      "question": "Yumuşak doku için tipik HU değer aralığı nedir?",
+      "options": [
+        "-1000 ile -500 HU",
+        "-120 ile -90 HU",
+        "+10 ile +40 HU",
+        "+400 ile +1000 HU"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Yumuşak dokular tipik olarak +10 ile +40 HU arasında değerlere sahiptir. Bu değerler suyun (0 HU) yakınındadır."
+    },
+    {
+      "id": "ct-17",
+      "question": "CT'de automatic tube current modulation'ın amacı nedir?",
+      "options": [
+        "Görüntü kalitesini standardize etmek",
+        "Dozu optimize etmek",
+        "Tarama süresini kısaltmak",
+        "Hepsi"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Otomatik tüp akımı modülasyonu, vücut anatomisine göre akımı ayarlayarak doz optimizasyonu, görüntü kalitesi standardizasyonu ve verimli tarama sağlar."
+    },
+    {
+      "id": "ct-18",
+      "question": "CT anjiografide kontrast timing için en kritik faktör nedir?",
+      "options": [
+        "Hasta yaşı",
+        "Bolus tracking veya test bolus",
+        "Kesit kalınlığı",
+        "kV değeri"
+      ],
+      "correctAnswer": 1,
+      "explanation": "CT anjiografide optimal vasküler opasifikasyon için bolus tracking veya test bolus yöntemleri ile kontrast timing optimizasyonu kritiktir."
+    },
+    {
+      "id": "ct-19",
+      "question": "Foton sayım CT'nin geleneksel CT'ye göre ana avantajı nedir?",
+      "options": [
+        "Daha hızlı görüntüleme",
+        "Spektral görüntüleme ve daha iyi kontrast çözünürlük",
+        "Daha büyük gantry açıklığı",
+        "Daha düşük maliyet"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Foton sayım CT, her fotonu ayrı ayrı sayarak spektral görüntüleme, gelişmiş kontrast çözünürlük ve materyal dekompozisyon avantajları sağlar."
+    },
+    {
+      "id": "ct-20",
+      "question": "CT'de ALARA prensibinin uygulanması için hangisi yapılmaz?",
+      "options": [
+        "Klinik endikasyona uygun protokol seçimi",
+        "Mümkün olan en yüksek doz kullanımı",
+        "İteratif rekonstrüksiyon kullanımı",
+        "Tube current modulation"
+      ],
+      "correctAnswer": 1,
+      "explanation": "ALARA prensibi 'As Low As Reasonably Achievable' demektir. Mümkün olan en yüksek doz kullanımı bu prensibe aykırıdır. Amaç minimum doz ile maksimum görüntü kalitesi elde etmektir."
+    }
+  ]
+}

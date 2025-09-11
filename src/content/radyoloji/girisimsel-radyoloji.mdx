@@ -10,6 +10,7 @@ isDraft: false
 ---
 
 import { ImageWithCaption } from '@/components/ImageWithCaption.jsx';
+import QuizComponent from '../../components/QuizComponent.jsx';
 
 # Klinik Uygulayıcılar İçin Girişimsel Radyoloji Teknik Rehberi
 Girişimsel radyoloji (GR), görüntüleme rehberliğinde gerçekleştirilen invaziv prosedürleri içeren bir tıbbi disiplindir. GR, tanı koyma, tedavi etme ve hastalık yönetimi için minimal invaziv teknikler sunar. Bu rehber, girişimsel radyoloji pratiğine yeni başlayan hekimler için tasarlanmış, prosedürel adımları, teknik seçimlerin arkasındaki mantığı ve yaygın senaryolarda komplikasyon yönetimini detaylandıran didaktik bir kaynaktır.  
@@ -221,4 +222,20 @@ Bu prosedürler, uzun süreli IV tedavi, kemoterapi, TPN veya hemodiyaliz için 
 
 ---
 
-Bu rehber, temel prosedürlere bir giriş niteliğindedir. Girişimsel radyolojide yetkinlik, tekrarlayan pratik, sürekli eğitim ve her vakayı bireysel olarak değerlendirme yeteneği ile kazanılır.
+## 🧠 Bilginizi Test Edin
+
+Girişimsel radyoloji konularındaki bilginizi aşağıdaki kapsamlı quiz ile test edebilirsiniz. Quiz, bu rehberde ele alınan tüm konuları kapsamaktadır:
+
+- Temel malzeme bilgisi (French, Gauge, kılavuz teller)
+- Seldinger tekniği ve vasküler erişim
+- DSA, PTA ve stentleme prosedürleri
+- Embolizasyon teknikleri ve ajanları
+- Biyopsi, drenaj ve ablasyon işlemleri
+- Santral venöz kateter ve port yerleştirme
+- Komplikasyon yönetimi ve güvenlik önlemleri
+
+<QuizComponent client:load quizFile="interventional-radiology-quiz.json" />
+
+---
+
+*Bu rehber, temel prosedürlere bir giriş niteliğindedir. Girişimsel radyolojide yetkinlik, tekrarlayan pratik, sürekli eğitim ve her vakayı bireysel olarak değerlendirme yeteneği ile kazanılır.*

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X-Ray Fiziği - Detaylı Eğitim</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">RadyolojiHub</a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i> Ana Sayfa
+                </a>
+                <a href="radiology-physics.html" class="nav-link">
+                    <i class="fas fa-atom"></i> Radyoloji Fiziği
+                </a>
+                <a href="quiz.html?quiz=x-ray-physics-quiz" class="nav-link">
+                    <i class="fas fa-question-circle"></i> Quiz Çöz
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="radiology-physics.html">Radyoloji Fiziği</a> > X-Ray Fiziği
+        </div>
+
+        <header class="article-header">
+            <h1><i class="fas fa-radiation"></i> X-Ray Fiziği</h1>
+            <p class="article-subtitle">
+                X-ışını üretimi, madde ile etkileşimleri ve görüntü oluşumu prensipleri
+            </p>
+            <div class="article-meta">
+                <span><i class="fas fa-clock"></i> 25 dakika okuma</span>
+                <span><i class="fas fa-layer-group"></i> Temel Seviye</span>
+                <span><i class="fas fa-bookmark"></i> Fizik Temelleri</span>
+            </div>
+        </header>
+
+        <div class="article-content">
+            <div class="table-of-contents">
+                <h3><i class="fas fa-list"></i> İçindekiler</h3>
+                <ul>
+                    <li><a href="#x-ray-production">1. X-ışını Üretimi</a></li>
+                    <li><a href="#interactions">2. Madde ile Etkileşimler</a></li>
+                    <li><a href="#image-formation">3. Görüntü Oluşumu</a></li>
+                    <li><a href="#image-quality">4. Görüntü Kalitesi</a></li>
+                    <li><a href="#radiation-protection">5. Radyasyon Korunması</a></li>
+                    <li><a href="#clinical-applications">6. Klinik Uygulamalar</a></li>
+                </ul>
+            </div>
+
+            <section id="x-ray-production">
+                <h2>1. X-ışını Üretimi</h2>
+                
+                <div class="concept-box">
+                    <h3><i class="fas fa-lightbulb"></i> Temel Konsept</h3>
+                    <p>X-ışınları, yüksek enerjili elektronların madde ile etkileşimi sonucu oluşan elektromanyetik radyasyondur.</p>
+                </div>
+
+                <h3>1.1 X-ışını Tüpü Yapısı</h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>Katot (Negatif)</h4>
+                        <ul>
+                            <li>Tungsten filament</li>
+                            <li>Elektron emisyonu</li>
+                            <li>Odaklama kupası</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4>Anot (Pozitif)</h4>
+                        <ul>
+                            <li>Tungsten hedef</li>
+                            <li>X-ışını üretimi</li>
+                            <li>Isı dağıtımı</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>1.2 X-ışını Üretim Mekanizmaları</h3>
+                
+                <div class="mechanism-section">
+                    <h4>A) Bremsstrahlung (Fren Radyasyonu)</h4>
+                    <div class="highlight-box">
+                        <p><strong>%99 X-ışını üretiminin kaynağı</strong></p>
+                        <ul>
+                            <li>Elektronların çekirdek yakınında yavaşlaması</li>
+                            <li>Kinetik enerji → X-ışını fotonu</li>
+                            <li>Sürekli spektrum oluşturur</li>
+                            <li>Maksimum enerji = eV (kVp)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="formula-box">
+                        <h5>Bremsstrahlung Verimliliği:</h5>
+                        <code>Verimlilik ∝ Z × kVp</code>
+                        <p>Z: Hedef atom numarası, kVp: Tüp voltajı</p>
+                    </div>
+                </div>
+
+                <div class="mechanism-section">
+                    <h4>B) Karakteristik Radyasyon</h4>
+                    <div class="highlight-box">
+                        <p><strong>%1 X-ışını üretimi</strong></p>
+                        <ul>
+                            <li>İç orbital elektronlarının çıkarılması</li>
+                            <li>Orbital geçişlerle X-ışını üretimi</li>
+                            <li>Çizgisel spektrum</li>
+                            <li>Element spesifik enerjiler</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="characteristic-table">
+                        <h5>Tungsten Karakteristik X-ışınları:</h5>
+                        <table>
+                            <tr><th>Geçiş</th><th>Enerji (keV)</th></tr>
+                            <tr><td>Lα₁ (L₃→K)</td><td>59.3</td></tr>
+                            <tr><td>Lα₂ (L₂→K)</td><td>57.9</td></tr>
+                            <tr><td>Lβ₁ (M₃→K)</td><td>67.2</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <h3>1.3 X-ışını Spektrumu</h3>
+                <div class="spectrum-explanation">
+                    <p>X-ışını spektrumu sürekli (bremsstrahlung) ve çizgisel (karakteristik) bileşenlerden oluşur:</p>
+                    <ul>
+                        <li><strong>Minimum dalga boyu (λmin):</strong> Maksimum foton enerjisi</li>
+                        <li><strong>Ortalama enerji:</strong> kVp'nin yaklaşık 1/3'ü</li>
+                        <li><strong>Spektrum şekli:</strong> kVp, filtrasyon ve hedef materyale bağlı</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="interactions">
+                <h2>2. X-ışınlarının Madde ile Etkileşimleri</h2>
+                
+                <div class="interaction-overview">
+                    <p>X-ışınlarının doku ile etkileşimi görüntü kontrastının temelini oluşturur. Başlıca dört etkileşim mekanizması vardır:</p>
+                </div>
+
+                <h3>2.1 Fotoelektrik Etki</h3>
+                <div class="interaction-box photoelectric">
+                    <div class="interaction-details">
+                        <h4><i class="fas fa-atom"></i> Fotoelektrik Etki</h4>
+                        <div class="mechanism">
+                            <p><strong>Mekanizma:</strong> X-ışını fotonu tamamen emilir, elektron fırlatılır</p>
+                            <p><strong>Enerji koşulu:</strong> E(foton) > Bağlanma enerjisi</p>
+                            <p><strong>Baskın enerji aralığı:</strong> <30 keV (düşük enerji)</p>
+                        </div>
+                    </div>
+                    <div class="interaction-formula">
+                        <h5>Fotoelektrik Soğurma:</h5>
+                        <code>τ ∝ Z⁴/E³</code>
+                        <p>Z: Atom numarası, E: Foton enerjisi</p>
+                    </div>
+                    <div class="clinical-relevance">
+                        <h5>Klinik Önemi:</h5>
+                        <ul>
+                            <li>Yüksek kontrast sağlar</li>
+                            <li>Kemik-yumuşak doku ayrımı</li>
+                            <li>Kontrast madde etkinliği</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>2.2 Compton Saçılması</h3>
+                <div class="interaction-box compton">
+                    <div class="interaction-details">
+                        <h4><i class="fas fa-share-alt"></i> Compton Saçılması</h4>
+                        <div class="mechanism">
+                            <p><strong>Mekanizma:</strong> X-ışını serbest elektron ile etkileşir</p>
+                            <p><strong>Sonuç:</strong> Düşük enerjili saçılan foton + recoil elektron</p>
+                            <p><strong>Baskın enerji aralığı:</strong> 30-100 keV (orta enerji)</p>
+                        </div>
+                    </div>
+                    <div class="interaction-formula">
+                        <h5>Compton Saçılması:</h5>
+                        <code>σ ∝ Z/E</code>
+                        <p>Electron yoğunluğu ile orantılı</p>
+                    </div>
+                    <div class="clinical-relevance">
+                        <h5>Klinik Etkiler:</h5>
+                        <ul>
+                            <li>Kontrast azaltır (scatter)</li>
+                            <li>Hasta dozu artırır</li>
+                            <li>Grid kullanımı gerektirir</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>2.3 Rayleigh (Coherent) Saçılması</h3>
+                <div class="interaction-box rayleigh">
+                    <div class="interaction-details">
+                        <h4><i class="fas fa-wave-square"></i> Rayleigh Saçılması</h4>
+                        <div class="mechanism">
+                            <p><strong>Mekanizma:</strong> Elastik saçılma, enerji kaybı yok</p>
+                            <p><strong>Karakteristik:</strong> Düşük açılarda saçılma</p>
+                            <p><strong>Etki:</strong> Minimal klinik önem</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>2.4 Çift Oluşumu</h3>
+                <div class="interaction-box pair-production">
+                    <div class="interaction-details">
+                        <h4><i class="fas fa-plus-circle"></i> Çift Oluşumu</h4>
+                        <div class="mechanism">
+                            <p><strong>Eşik enerji:</strong> 1.022 MeV</p>
+                            <p><strong>Mekanizma:</strong> Foton → elektron + pozitron</p>
+                            <p><strong>Tanısal radyolojide:</strong> Önemsiz</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="interaction-summary">
+                    <h3>2.5 Etkileşim Dominansı</h3>
+                    <table class="dominance-table">
+                        <thead>
+                            <tr>
+                                <th>Enerji Aralığı</th>
+                                <th>Baskın Etkileşim</th>
+                                <th>Klinik Uygulama</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>&lt;30 keV</td>
+                                <td>Fotoelektrik</td>
+                                <td>Mamografi, düşük kVp teknikleri</td>
+                            </tr>
+                            <tr>
+                                <td>30-100 keV</td>
+                                <td>Compton</td>
+                                <td>Genel radyografi, BT</td>
+                            </tr>
+                            <tr>
+                                <td>&gt;100 keV</td>
+                                <td>Compton</td>
+                                <td>Yüksek enerji uygulamaları</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="image-formation">
+                <h2>3. X-ışını Görüntü Oluşumu</h2>
+                
+                <h3>3.1 Diferansiyel Soğurma</h3>
+                <div class="concept-explanation">
+                    <p>X-ışını görüntülemenin temel prensibi <strong>diferansiyel soğurma</strong>dur:</p>
+                    <ul>
+                        <li>Farklı dokular farklı miktarda X-ışını soğurur</li>
+                        <li>Soğurma farkları kontrast oluşturur</li>
+                        <li>Detektöre ulaşan fotonlar görüntüyü oluşturur</li>
+                    </ul>
+                </div>
+
+                <h3>3.2 Lambert-Beer Kanunu</h3>
+                <div class="formula-section">
+                    <div class="formula-box">
+                        <h4>X-ışını Zayıflaması:</h4>
+                        <code>I = I₀ × e^(-μx)</code>
+                        <ul>
+                            <li>I: Geçen X-ışını şiddeti</li>
+                            <li>I₀: Gelen X-ışını şiddeti</li>
+                            <li>μ: Lineer zayıflama katsayısı</li>
+                            <li>x: Madde kalınlığı</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>3.3 Doku Yoğunlukları ve Kontrast</h3>
+                <div class="tissue-densities">
+                    <table class="density-table">
+                        <thead>
+                            <tr>
+                                <th>Doku Tipi</th>
+                                <th>Elektron Yoğunluğu</th>
+                                <th>Efektif Z</th>
+                                <th>Radyografik Görünüm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Hava</td>
+                                <td>0.001</td>
+                                <td>7.6</td>
+                                <td>Siyah (radyolucent)</td>
+                            </tr>
+                            <tr>
+                                <td>Yağ</td>
+                                <td>0.91</td>
+                                <td>6.3</td>
+                                <td>Koyu gri</td>
+                            </tr>
+                            <tr>
+                                <td>Yumuşak doku</td>
+                                <td>1.0</td>
+                                <td>7.4</td>
+                                <td>Gri</td>
+                            </tr>
+                            <tr>
+                                <td>Kemik</td>
+                                <td>1.65</td>
+                                <td>13.8</td>
+                                <td>Beyaz (radyoopak)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="image-quality">
+                <h2>4. X-ışını Görüntü Kalitesi</h2>
+                
+                <h3>4.1 Görüntü Kalitesi Faktörleri</h3>
+                <div class="quality-factors">
+                    <div class="factor-grid">
+                        <div class="factor-card">
+                            <h4>Kontrast</h4>
+                            <p>Komşu yapılar arasındaki yoğunluk farkı</p>
+                            <ul>
+                                <li><strong>Konu kontrastı:</strong> Doku özelliklerine bağlı</li>
+                                <li><strong>Film kontrastı:</strong> Detektör özelliklerine bağlı</li>
+                                <li><strong>Etki eden faktörler:</strong> kVp, scatter, filtrasyon</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="factor-card">
+                            <h4>Keskinlik (Sharpness)</h4>
+                            <p>Görüntüdeki kenar netliği</p>
+                            <ul>
+                                <li><strong>Geometrik keskinlik:</strong> Odak boyutu, mesafeler</li>
+                                <li><strong>Hareket bulanıklığı:</strong> Hasta/detektör hareketi</li>
+                                <li><strong>System keskinliği:</strong> Detektör özelliği</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="factor-card">
+                            <h4>Noise</h4>
+                            <p>Rastgele yoğunluk değişimleri</p>
+                            <ul>
+                                <li><strong>Quantum noise:</strong> Düşük foton sayısı</li>
+                                <li><strong>Electronic noise:</strong> Sistem elektroniği</li>
+                                <li><strong>Structural noise:</strong> Scatter, grid çizgileri</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="factor-card">
+                            <h4>Distorsiyon</h4>
+                            <p>Gerçek boyut/şekilden sapma</p>
+                            <ul>
+                                <li><strong>Büyütme:</strong> Nesne-film mesafesi</li>
+                                <li><strong>Şekil bozukluğu:</strong> Açısal projeksiyonlar</li>
+                                <li><strong>Foreshortening:</strong> Kısalma artefaktı</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>4.2 Teknik Faktörler ve Etkileri</h3>
+                <div class="technical-factors">
+                    <table class="factors-table">
+                        <thead>
+                            <tr>
+                                <th>Faktör</th>
+                                <th>Artış Etkisi</th>
+                                <th>Görüntü Kalitesi</th>
+                                <th>Hasta Dozu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>kVp ↑</td>
+                                <td>Penetrasyon ↑, Kontrast ↓</td>
+                                <td>Düşük kontrast</td>
+                                <td>Azalır</td>
+                            </tr>
+                            <tr>
+                                <td>mAs ↑</td>
+                                <td>X-ışını miktarı ↑</td>
+                                <td>Noise ↓, Dansité ↑</td>
+                                <td>Artar</td>
+                            </tr>
+                            <tr>
+                                <td>Filtrasyon ↑</td>
+                                <td>Beam hardening ↑</td>
+                                <td>Kontrast ↓</td>
+                                <td>Azalır</td>
+                            </tr>
+                            <tr>
+                                <td>Grid kullanımı</td>
+                                <td>Scatter azalır</td>
+                                <td>Kontrast ↑</td>
+                                <td>Artar (4x)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="radiation-protection">
+                <h2>5. Radyasyon Korunması</h2>
+                
+                <h3>5.1 ALARA Prensibi</h3>
+                <div class="alara-section">
+                    <div class="principle-box">
+                        <h4><i class="fas fa-shield-alt"></i> As Low As Reasonably Achievable</h4>
+                        <p>Tanısal kaliteyi koruyarak radyasyon dozunu minimum seviyede tutma</p>
+                    </div>
+                    
+                    <div class="protection-methods">
+                        <div class="method-grid">
+                            <div class="method-card">
+                                <h5>Zaman</h5>
+                                <ul>
+                                    <li>Ekspozür süresini minimize et</li>
+                                    <li>Uygun mAs seçimi</li>
+                                    <li>Hızlı çekim teknikleri</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="method-card">
+                                <h5>Mesafe</h5>
+                                <ul>
+                                    <li>Ters kare kanunu</li>
+                                    <li>Personel için 2m minimum</li>
+                                    <li>Uzaktan kontrol sistemleri</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="method-card">
+                                <h5>Zırhlama</h5>
+                                <ul>
+                                    <li>Kurşun önlük (0.25-0.5 mm Pb)</li>
+                                    <li>Tiroid kalkanı</li>
+                                    <li>Gonad koruması</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>5.2 Beam Limitation</h3>
+                <div class="beam-limitation">
+                    <h4>Kollimasyon</h4>
+                    <ul>
+                        <li><strong>Birincil amacı:</strong> İlgi alanı dışı radyasyonu azaltma</li>
+                        <li><strong>Faydaları:</strong> Hasta dozu ↓, scatter ↓, kontrast ↑</li>
+                        <li><strong>Kural:</strong> Film boyutundan küçük field size</li>
+                    </ul>
+                    
+                    <h4>Filtrasyon</h4>
+                    <ul>
+                        <li><strong>Inherent filtrasyon:</strong> Tüp penceresi, yağ, housing</li>
+                        <li><strong>Added filtrasyon:</strong> Al, Cu filtreler</li>
+                        <li><strong>Total filtrasyon:</strong> ≥2.5 mm Al equivalent (>70 kVp)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="clinical-applications">
+                <h2>6. Klinik Uygulamalar</h2>
+                
+                <h3>6.1 Modalite Spesifik Optimizasyonlar</h3>
+                <div class="modality-optimizations">
+                    <div class="modality-card">
+                        <h4>Toraks Radyografisi</h4>
+                        <ul>
+                            <li><strong>kVp:</strong> 110-125 (penetrasyon için)</li>
+                            <li><strong>Grid:</strong> 10:1 veya 12:1</li>
+                            <li><strong>SID:</strong> 180 cm (büyütme minimize)</li>
+                            <li><strong>Filtrasyon:</strong> Heavy (beam hardening)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="modality-card">
+                        <h4>Ekstremite Radyografisi</h4>
+                        <ul>
+                            <li><strong>kVp:</strong> 60-75 (kontrast için)</li>
+                            <li><strong>Grid:</strong> Genellikle yok</li>
+                            <li><strong>Detail enhancement:</strong> Küçük fokal spot</li>
+                            <li><strong>Immobilizasyon:</strong> Kritik</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="modality-card">
+                        <h4>Abdomen Radyografisi</h4>
+                        <ul>
+                            <li><strong>kVp:</strong> 80-100</li>
+                            <li><strong>Grid:</strong> 8:1 veya 10:1</li>
+                            <li><strong>Respirasyon:</strong> Ekspirasyonda</li>
+                            <li><strong>Centering:</strong> İliak crest seviyesi</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>6.2 Özel Durumlar</h3>
+                <div class="special-cases">
+                    <div class="case-section">
+                        <h4>Pediatrik Radyografi</h4>
+                        <div class="pediatric-considerations">
+                            <ul>
+                                <li><strong>Doz optimizasyonu:</strong> Kritik öneme sahip</li>
+                                <li><strong>Teknik faktörler:</strong> Düşük kVp, kısa ekspozür</li>
+                                <li><strong>Immobilizasyon:</strong> Hareket artefaktlarını önleme</li>
+                                <li><strong>Gonad koruması:</strong> Mümkün olduğunca uygula</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="case-section">
+                        <h4>Portabl Radyografi</h4>
+                        <div class="portable-considerations">
+                            <ul>
+                                <li><strong>Düşük kVp:</strong> Limited penetrasyon</li>
+                                <li><strong>Grid kullanımı:</strong> Sınırlı (ağır ekipman)</li>
+                                <li><strong>Pozisyonlama:</strong> Suboptimal koşullar</li>
+                                <li><strong>Scatter kontrolü:</strong> Zorluklar</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="article-navigation">
+            <div class="nav-buttons">
+                <a href="radiology-physics.html" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Geri Dön
+                </a>
+                <a href="quiz.html?quiz=x-ray-physics-quiz" class="btn btn-primary">
+                    <i class="fas fa-question-circle"></i> Quiz Çöz
+                </a>
+                <a href="ct-physics.html" class="btn btn-secondary">
+                    BT Fiziği <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="key-takeaways">
+            <h2><i class="fas fa-key"></i> Önemli Noktalar</h2>
+            <div class="takeaway-grid">
+                <div class="takeaway-item">
+                    <h4>X-ışını Üretimi</h4>
+                    <p>%99 bremsstrahlung, %1 karakteristik radyasyon. Verimlilik Z×kVp ile orantılı.</p>
+                </div>
+                <div class="takeaway-item">
+                    <h4>Madde Etkileşimi</h4>
+                    <p>Düşük enerjide fotoelektrik, orta-yüksek enerjide Compton dominant.</p>
+                </div>
+                <div class="takeaway-item">
+                    <h4>Görüntü Kalitesi</h4>
+                    <p>Kontrast, keskinlik, noise ve distorsiyon faktörlerinin optimizasyonu.</p>
+                </div>
+                <div class="takeaway-item">
+                    <h4>ALARA Prensibi</h4>
+                    <p>Zaman, mesafe, zırhlama ile radyasyon korunması.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 RadyolojiHub. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</body>
+</html>

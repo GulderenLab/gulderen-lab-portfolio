@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radyoloji Fiziği - Kapsamlı Eğitim</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">RadyolojiHub</a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i> Ana Sayfa
+                </a>
+                <a href="mri-sequences.html" class="nav-link">
+                    <i class="fas fa-magnet"></i> MRI Sekansları
+                </a>
+                <a href="radiology-physics.html" class="nav-link active">
+                    <i class="fas fa-atom"></i> Radyoloji Fiziği
+                </a>
+                <a href="quiz-hub.html" class="nav-link">
+                    <i class="fas fa-brain"></i> Quiz Hub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="hero-section">
+            <h1>Radyoloji Fiziği</h1>
+            <p class="lead">
+                Radyoloji pratiğinin temelini oluşturan fizik prensiplerini detaylı olarak öğrenin.
+                Her modalite için özel hazırlanmış içerikler ve interaktif quizler ile bilginizi pekiştirin.
+            </p>
+        </header>
+
+        <div class="physics-overview">
+            <div class="overview-card">
+                <div class="card-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h3>Neden Radyoloji Fiziği?</h3>
+                <p>
+                    Radyoloji pratiğinde başarılı olmak için her modaliteye özgü fizik prensiplerini anlamak kritiktir.
+                    Fizik bilgisi görüntü kalitesini artırır, radyasyon dozunu optimize eder ve artefaktları minimize eder.
+                </p>
+            </div>
+        </div>
+
+        <div class="physics-sections">
+            <h2>Fizik Modülları</h2>
+            <div class="physics-grid">
+                
+                <div class="physics-card" data-section="x-ray">
+                    <div class="physics-card-header">
+                        <i class="fas fa-radiation"></i>
+                        <h3>X-Ray Fiziği</h3>
+                    </div>
+                    <div class="physics-card-content">
+                        <p>X-ışını üretimi, madde ile etkileşim, görüntü oluşumu ve kalite faktörleri</p>
+                        <ul class="topic-list">
+                            <li>X-ışını üretim mekanizmaları</li>
+                            <li>Bremsstrahlung ve karakteristik radyasyon</li>
+                            <li>Madde ile etkileşim (fotoelektrik, Compton)</li>
+                            <li>Kontrast ve keskinlik faktörleri</li>
+                            <li>Scatter radyasyon kontrolü</li>
+                        </ul>
+                        <div class="card-actions">
+                            <a href="x-ray-physics.html" class="btn btn-primary">
+                                <i class="fas fa-book-open"></i> Makaleyi Oku
+                            </a>
+                            <a href="quiz.html?quiz=x-ray-physics-quiz" class="btn btn-secondary">
+                                <i class="fas fa-question-circle"></i> Quiz Çöz
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="physics-card" data-section="ct">
+                    <div class="physics-card-header">
+                        <i class="fas fa-circle-dot"></i>
+                        <h3>BT Fiziği</h3>
+                    </div>
+                    <div class="physics-card-content">
+                        <p>Bilgisayarlı tomografi prensipleri, rekonstrüksiyon algoritmaları ve artefaktlar</p>
+                        <ul class="topic-list">
+                            <li>BT görüntüleme prensipleri</li>
+                            <li>Rekonstrüksiyon algoritmaları</li>
+                            <li>Hounsfield üniteleri</li>
+                            <li>Spiral BT ve pitch kavramı</li>
+                            <li>BT artefaktları ve çözümleri</li>
+                        </ul>
+                        <div class="card-actions">
+                            <a href="ct-physics.html" class="btn btn-primary">
+                                <i class="fas fa-book-open"></i> Makaleyi Oku
+                            </a>
+                            <a href="quiz.html?quiz=ct-physics-quiz" class="btn btn-secondary">
+                                <i class="fas fa-question-circle"></i> Quiz Çöz
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="physics-card" data-section="mri">
+                    <div class="physics-card-header">
+                        <i class="fas fa-magnet"></i>
+                        <h3>MRG Fiziği</h3>
+                    </div>
+                    <div class="physics-card-content">
+                        <p>Manyetik rezonans prensipleri, relaxasyon zamanları ve pulse sekansları</p>
+                        <ul class="topic-list">
+                            <li>Manyetik özellikler ve nükleer spin</li>
+                            <li>T1 ve T2 relaxasyon</li>
+                            <li>Pulse sekans tasarımı</li>
+                            <li>Kontrast mekanizmaları</li>
+                            <li>MRG artefaktları ve güvenlik</li>
+                        </ul>
+                        <div class="card-actions">
+                            <a href="mri-physics.html" class="btn btn-primary">
+                                <i class="fas fa-book-open"></i> Makaleyi Oku
+                            </a>
+                            <a href="quiz.html?quiz=mri-physics-quiz" class="btn btn-secondary">
+                                <i class="fas fa-question-circle"></i> Quiz Çöz
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="physics-card" data-section="mammography">
+                    <div class="physics-card-header">
+                        <i class="fas fa-user-nurse"></i>
+                        <h3>Mamografi Fiziği</h3>
+                    </div>
+                    <div class="physics-card-content">
+                        <p>Meme görüntüleme için özel fizik gereksinimleri ve optimizasyon teknikleri</p>
+                        <ul class="topic-list">
+                            <li>Düşük enerjili X-ışınları</li>
+                            <li>Kompresyon ve scatter kontrolü</li>
+                            <li>Kontrast optimizasyonu</li>
+                            <li>Digital mamografi sistemleri</li>
+                            <li>Tomosintez prensipleri</li>
+                        </ul>
+                        <div class="card-actions">
+                            <a href="mammography-physics.html" class="btn btn-primary">
+                                <i class="fas fa-book-open"></i> Makaleyi Oku
+                            </a>
+                            <a href="quiz.html?quiz=mammography-physics-quiz" class="btn btn-secondary">
+                                <i class="fas fa-question-circle"></i> Quiz Çöz
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="physics-card" data-section="ultrasound">
+                    <div class="physics-card-header">
+                        <i class="fas fa-sound"></i>
+                        <h3>Ultrason Fiziği</h3>
+                    </div>
+                    <div class="physics-card-content">
+                        <p>Akustik özellikler, beam oluşumu ve Doppler prensipleri</p>
+                        <ul class="topic-list">
+                            <li>Akustik dalga özellikleri</li>
+                            <li>Piezoelektrik transdüserler</li>
+                            <li>Beam focusing ve steering</li>
+                            <li>Doppler efekti ve uygulamaları</li>
+                            <li>Ultrason artefaktları</li>
+                        </ul>
+                        <div class="card-actions">
+                            <a href="ultrasound-physics.html" class="btn btn-primary">
+                                <i class="fas fa-book-open"></i> Makaleyi Oku
+                            </a>
+                            <a href="quiz.html?quiz=ultrasound-physics-quiz" class="btn btn-secondary">
+                                <i class="fas fa-question-circle"></i> Quiz Çöz
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="physics-card" data-section="fluoroscopy">
+                    <div class="physics-card-header">
+                        <i class="fas fa-video"></i>
+                        <h3>Floroskopi Fiziği</h3>
+                    </div>
+                    <div class="physics-card-content">
+                        <p>Gerçek zamanlı görüntüleme prensipleri ve radyasyon yönetimi</p>
+                        <ul class="topic-list">
+                            <li>Image intensifier teknolojisi</li>
+                            <li>Flat panel detektörler</li>
+                            <li>Automatic brightness control</li>
+                            <li>Radyasyon dozu optimizasyonu</li>
+                            <li>Digital substraction angiografi</li>
+                        </ul>
+                        <div class="card-actions">
+                            <a href="fluoroscopy-physics.html" class="btn btn-primary">
+                                <i class="fas fa-book-open"></i> Makaleyi Oku
+                            </a>
+                            <a href="quiz.html?quiz=fluoroscopy-physics-quiz" class="btn btn-secondary">
+                                <i class="fas fa-question-circle"></i> Quiz Çöz
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="learning-path">
+            <h2>Önerilen Öğrenme Yolu</h2>
+            <div class="path-container">
+                <div class="path-step" data-step="1">
+                    <div class="step-number">1</div>
+                    <h4>X-Ray Fiziği</h4>
+                    <p>Temel radyoloji fiziği kavramları ile başlayın</p>
+                </div>
+                <div class="path-arrow">→</div>
+                <div class="path-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <h4>BT Fiziği</h4>
+                    <p>X-ray bilgisini tomografik görüntülemeye genişletin</p>
+                </div>
+                <div class="path-arrow">→</div>
+                <div class="path-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <h4>MRG Fiziği</h4>
+                    <p>Manyetik rezonans prensiplerini öğrenin</p>
+                </div>
+                <div class="path-arrow">→</div>
+                <div class="path-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <h4>Özel Modaliteler</h4>
+                    <p>Mamografi, ultrason ve floroskopi fiziği</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="study-tips">
+            <h2>Etkili Çalışma İpuçları</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <i class="fas fa-brain"></i>
+                    <h4>Teori ve Pratik</h4>
+                    <p>Fizik prensiplerini klinik uygulamalarla ilişkilendirin</p>
+                </div>
+                <div class="tip-card">
+                    <i class="fas fa-calculator"></i>
+                    <h4>Matematiksel Hesaplamalar</h4>
+                    <p>Formülleri ezberlemek yerine anlamaya odaklanın</p>
+                </div>
+                <div class="tip-card">
+                    <i class="fas fa-repeat"></i>
+                    <h4>Düzenli Tekrar</h4>
+                    <p>Quizleri düzenli aralıklarla çözerek bilginizi pekiştirin</p>
+                </div>
+                <div class="tip-card">
+                    <i class="fas fa-microscope"></i>
+                    <h4>Görsel Öğrenme</h4>
+                    <p>Diyagramlar ve görsellerle kavramları görselleştirin</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 RadyolojiHub. Tüm hakları saklıdır.</p>
+            <p>Radyoloji eğitiminde kalite ve bilimsellik için</p>
+        </div>
+    </footer>
+
+    <script src="physics-overview.js"></script>
+</body>
+</html>

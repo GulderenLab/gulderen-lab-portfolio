@@ -1,0 +1,286 @@
+---
+title: "CT Fiziği Temelleri"
+description: "Radyoloji asistanları için özel olarak hazırlanmış bu rehber; CT'nin fiziksel temellerini, rekonstrüksiyonu, görüntü kalitesini, artefaktları, doz yönetimini ve modern teknolojileri klinik odaklı bir yaklaşımla ele alır."
+author: "Dr. Radiolog"
+publishDate: 2025-09-09
+category: "Radyoloji Fiziği"
+tags: ["CT", "Bilgisayarlı Tomografi", "Fizik", "Rekonstrüksiyon", "Doz", "Artefakt", "Spektral CT", "Radyoloji Asistan"]
+readingTime: "35 dakika okuma"
+image:
+  src: "/images/ct-physics-hero.jpg"
+  alt: "CT physics illustration"
+isDraft: false
+---
+
+import QuizComponent from '../../components/QuizComponent.jsx';
+
+# CT Fiziği: Kapsamlı ve Pratik Rehber
+
+Bilgisayarlı Tomografi (CT), vücuttan geçen X-ışını demetinin çok açılı ölçümlerini kullanarak, dokuların zayıflatma (atenüasyon) haritasını oluşturan devrimsel bir görüntüleme yöntemidir. Bu rehber, bir radyoloji asistanının bilmesi gereken tüm temel ve ileri düzey CT fiziği konularını, klinik pratik ve sınav başarısı odaklı bir dille derinlemesine incelemektedir.
+
+## 📋 İçindekiler
+
+1. [CT Sistem Mimarisi](#ct-sistem-mimarisi)
+2. [Veri Toplama ve Temel Fizik](#veri-toplama-ve-temel-fizik)
+3. [Hounsfield Üniteleri ve Pencereleme](#hounsfield-üniteleri-ve-pencereleme)
+4. [Rekonstrüksiyon: FBP, İteratif ve Derin Öğrenme](#rekonstrüksiyon-fbp-iteratif-ve-derin-öğrenme)
+5. [Helikal CT, Pitch ve Kollimasyon](#helikal-ct-pitch-ve-kollimasyon)
+6. [Görüntü Kalitesi: Çözünürlük, Gürültü, Kontrast](#görüntü-kalitesi-çözünürlük-gürültü-kontrast)
+7. [CT Dozu: CTDI, DLP ve Efektif Doz](#ct-dozu-ctdi-dlp-ve-efektif-doz)
+8. [Artefaktlar ve Pratik Çözümler](#artefaktlar-ve-pratik-çözümler)
+9. [Gelecek: Spektral ve Foton Sayım CT](#gelecek-spektral-ve-foton-sayım-ct)
+10. [Özel Uygulamalar: Kardiyak, Perfüzyon, Pediatri](#özel-uygulamalar-kardiyak-perfüzyon-pediatri)
+11. [Kalite Kontrol ve Güvencesi](#kalite-kontrol-ve-güvencesi)
+12. [Klinik Protokol Optimizasyon Kontrol Listesi](#klinik-protokol-optimizasyon-kontrol-listesi)
+
+---
+
+## CT Sistem Mimarisi
+
+### 🔧 Ana Bileşenler
+- **X-ışını Tüpü (Döner Anotlu)**: Çok sayıda projeksiyonu hızla elde etmek için yüksek ısı kapasitesi kritik öneme sahiptir. Modern sistemler 0.3-0.5 saniye gibi çok hızlı rotasyon sürelerine ulaşır.
+- **Kolimasyon**: Işın demetini şekillendirir. *Pre-patient* kolimatörler dilim kalınlığını belirlerken, *post-patient* (dedektör önü) kolimatörler saçılmayı azaltarak görüntü kalitesini artırır.
+- **Dedektörler**: Genellikle katı hal sintilasyon kristalleri (örn. GOS, LYSO) ve fotodiyotlardan oluşur. Yüksek *Kuantum Saptama Verimliliği (DQE)* ve hızlı sinyal yanıtı, düşük dozda kaliteli görüntü için esastır.
+- **Gantry ve Slip-Ring Teknolojisi**: Tüp ve dedektörlerin kesintisiz dönmesini sağlayarak helikal (spiral) taramayı mümkün kılar. Enerji ve veri kablosuz olarak aktarılır.
+- **Hasta Masası**: Sub-milimetrik hassasiyetle hareket ederek helikal taramada **pitch** değerini ve taranan hacmi belirler.
+
+### 🧬 CT Jenerasyonları (Evrim)
+- **3. Jenerasyon**: En yaygın mimari. *Fan-beam* geometri kullanır, X-ışını tüpü ve ark şeklindeki dedektör dizisi birlikte döner.
+- **4. Jenerasyon**: Dönen tüp ve sabit bir tam halka dedektör dizisi bulunur. Halka artefaktlarına eğilimlidir.
+- **Cone-Beam CT (CBCT)**: Geniş, konik bir demet ve düz panel bir dedektör kullanır. Dental, ortopedik ve anjiyografi uygulamalarında yaygındır. Rekonstrüksiyonu için özel algoritmalar (örn. Feldkamp-Davis-Kress) gerekir.
+
+---
+
+## Veri Toplama ve Temel Fizik
+
+CT, Beer-Lambert yasasına dayanır: Bir materyalden geçen X-ışını yoğunluğu, materyalin zayıflatma katsayısı (μ) ve kalınlığı (x) ile logaritmik olarak azalır. Dedektörler bu azalan yoğunluğu ölçer.
+
+### 📐 Zayıflama (Attenuation)
+```
+I = I₀ × e^{-\int \mu(x) \, dx}
+```
+- **Log-Dönüşüm**: Sistem, ölçülen `I` ve başlangıçtaki `I₀` oranının negatif logaritmasını alarak `∫μ(x)dx` (projeksiyon verisi) değerini hesaplar. Bu işlem, zayıflatmayı lineer bir toplama problemine dönüştürerek rekonstrüksiyonu matematiksel olarak mümkün kılar.
+
+### 🌀 Ölçüm Geometrisi
+- **Fan-beam / Cone-beam**: Çok sıralı dedektörlü CT'lerde (MDCT), z-ekseni boyunca birden çok veri sırası aynı anda toplanır.
+- **Örnekleme (Sampling)**: Görüntünün doğruluğu, hem açısal (dönüş sırasında ne sıklıkta ölçüm alındığı) hem de uzaysal (dedektör elemanlarının boyutu) örneklemeye bağlıdır. Yetersiz örnekleme (*undersampling*), aliasing artefaktlarına (ince, keskin çizgiler) yol açar.
+
+---
+
+## Hounsfield Üniteleri ve Pencereleme
+
+### 🔢 HU Tanımı ve Anlamı
+```
+HU = 1000 × (μ_voxel - μ_su) / μ_su
+```
+- Bu ölçek, dokuların zayıflatma katsayılarını suyun değerine göre normalize eder. Bu sayede, farklı CT cihazlarında elde edilen görüntüler kantitatif olarak karşılaştırılabilir hale gelir.
+- **Su: 0 HU**, **Hava: -1000 HU**, **Kompakt Kemik: +1000 HU** ve üzeri.
+
+### 📊 Tipik HU Aralıkları
+- **Yağ**: -120 ile -90 HU
+- **Akciğer**: -900 ile -700 HU (parankim)
+- **Kan (taze)**: +40 ile +60 HU
+- **Yumuşak Doku (kas, parankim organları)**: +10 ile +60 HU
+- **İyotlu Kontrast (arteriyel faz)**: +150 ile +600 HU (veya daha yüksek)
+
+### 🪟 Pencereleme (Windowing): Kontrast Sanatı
+- **WW (Window Width - Pencere Genişliği)**: Görüntüde gösterilecek HU aralığının genişliğini belirler. *Geniş WW* (örn. 1500 HU), farklı yoğunluktaki dokuları (kemik, yumuşak doku, hava) aynı anda gösterir ama aralarındaki kontrastı azaltır (örn. Akciğer penceresi). *Dar WW* (örn. 350 HU), benzer yoğunluktaki dokular arasındaki ince farkları vurgular (örn. Mediasten penceresi).
+- **WL (Window Level - Pencere Seviyesi)**: WW'nin merkezindeki HU değeridir. İncelenen dokunun ortalama HU değerine ayarlanmalıdır.
+- **Klinik İnci**: Beyin parankiminde iskemik değişiklikleri erken fokal ödemden ayırt etmek için dar bir pencere (örn. WW 80, WL 40) kullanmak, gri-beyaz cevher ayrımını belirginleştirir.
+
+---
+
+## Rekonstrüksiyon: FBP, İteratif ve Derin Öğrenme
+
+### 🧮 Filtered Back Projection (FBP)
+- **Nasıl Çalışır?**: Projeksiyon verilerini bir filtreyle (kernel) keskinleştirir ve ardından görüntü matrisine geri yansıtır.
+- **Filtreleme Adımı**: Ham "bulanık" görüntüyü keskinleştirmek için bir **ramp filtresi** uygulanır. Bu filtre yüksek frekansları (kenarları) güçlendirir ama aynı zamanda gürültüyü de artırır. Gürültüyü kontrol etmek için bu filtre **apodizasyon** fonksiyonları (örn. Shepp-Logan, Hamming) ile yumuşatılır.
+- **Avantaj/Dezavantaj**: Çok hızlı ve verimlidir. Ancak gürültüye karşı hassastır ve düşük dozlu çekimlerde belirgin *streak* (çizgisel) artefaktlar oluşturur.
+
+### ♻️ İteratif Rekonstrüksiyon (IR)
+- **Nasıl Çalışır?**: FBP gibi tek adımlı bir çözüm yerine, tahmini bir görüntü ile başlar ve bu görüntüyü ölçülen projeksiyon verileriyle tekrar tekrar karşılaştırarak hatayı minimize eder. Her döngüde (iterasyon) görüntü daha doğru hale gelir.
+- **Avantaj**: Gürültüyü ve birçok artefaktı (örn. beam hardening) FBP'ye göre çok daha etkin bir şekilde bastırır. Bu sayede, **dozun belirgin şekilde düşürülmesine** olanak tanır.
+- **Dezavantaj**: Yüksek iterasyon seviyeleri veya yanlış parametre seçimi, dokularda doğal olmayan, "lekeli" veya **"plastik gibi"** bir görünüme neden olabilir. Bu, ince doku detaylarının aşırı düzleştirilmesinden kaynaklanır.
+
+### 🤖 Derin Öğrenme Tabanlı Rekonstrüksiyon (DLR)
+- **Nasıl Çalışır?**: Yüksek dozlu, yüksek kaliteli görüntülerle eğitilmiş bir yapay zeka modeli, düşük dozlu bir görüntünün gürültü ve artefaktlarını "temizler".
+- **Avantaj**: FBP'nin doğal dokusunu ve keskinliğini, IR'nin üstün gürültü bastırma yeteneğiyle birleştirir. Görüntü kalitesini korurken doz azaltımında yeni bir çığır açmıştır.
+
+### 🧱 Kernel (Rekonstrüksiyon Filtresi)
+- **Ne İşe Yarar?**: Görüntünün keskinliği (uzaysal çözünürlük) ve gürültüsü arasındaki dengeyi ayarlar.
+- **Seçim**: **Keskin kernel** (örn. Bone, Lung), kenarları ve ince detayları vurgular ancak gürültüyü artırır. **Yumuşak kernel** (örn. Soft, Standard), gürültüyü azaltır ve düşük kontrastlı lezyonların saptanabilirliğini (kontrast çözünürlüğü) iyileştirir. Klinik soruya göre doğru kerneli seçmek esastır.
+
+---
+
+## Helikal CT, Pitch ve Kollimasyon
+
+### 🔁 Helikal (Spiral) Tarama
+- Sürekli tüp rotasyonu ve eş zamanlı masa ilerlemesi ile veriler sarmal bir yörüngede toplanır.
+- **Helikal İnterpolasyon**: Aksiyel kesitler oluşturmak için bu sarmal veriden düzlemsel veriler matematiksel olarak türetilir (interpolasyon). Bu işlem, artefakt oluşumuna neden olabilir.
+
+### ⚙️ Pitch
+```
+Pitch = Masa İlerlemesi (mm/rotasyon) / Toplam Kollimasyon (mm)
+```
+- **Pitch = 1**: Bitişik sarmallar. Standart kalite ve doz.
+- **Pitch &gt; 1**: Sarmallar arasında boşluk (hızlı tarama). Tarama süresi ve doz azalır, ancak z-ekseni çözünürlüğü düşebilir ve *windmill* artefaktları görülebilir. Genellikle anjiyografi ve travma protokollerinde kullanılır.
+- **Pitch &lt; 1**: Sarmallar üst üste biner (yüksek kalite tarama). Z-ekseni çözünürlüğü artar, ancak tarama süresi ve doz artar. Yüksek çözünürlüklü vasküler veya kemik çalışmaları için tercih edilir.
+
+### 🎯 Kollimasyon ve Dilim Kalınlığı
+- **Kollimasyon**: Dedektörde X-ışını demetinin z-eksenindeki genişliğidir. *İnce kollimasyon*, z-ekseni çözünürlüğünü artırır ve parsiyel hacim artefaktını azaltır, ancak aynı mAs değerinde gürültüyü artırır.
+- **Rekonstrüksiyon Kalınlığı**: Ham veriden istenilen kalınlıkta kesitler oluşturulabilir. **Klinik İnci**: Her zaman en ince kollimasyonla veri toplayıp, bu veriyi arşivleyin (PACS). Bu sayede, daha sonra ihtiyaç duyulduğunda kalın veya ince kesitler, MPR ve 3D rekonstrüksiyonlar kaliteden ödün vermeden oluşturulabilir.
+
+---
+
+## Görüntü Kalitesi: Çözünürlük, Gürültü, Kontrast
+
+### 🔍 Uzaysal Çözünürlük
+- Birbirine yakın iki küçük nesneyi ayırt etme yeteneğidir.
+- **In-plane (x-y düzlemi)**: Piksel boyutu (FOV / Matris boyutu) ve rekonstrüksiyon kerneli ile belirlenir.
+- **Z-ekseni**: Kollimasyon, pitch ve rekonstrüksiyon aralığına bağlıdır.
+- **MTF (Modulation Transfer Function)**: Sistemin keskinliğini ölçen en önemli teknik parametredir. %10 MTF değeri, sistemin teorik maksimum çözünürlüğünü (lp/cm) ifade eder.
+
+### 📉 Gürültü (Noise)
+- Görüntüdeki rastgele sinyal dalgalanmalarıdır (benekli görünüm).
+- **Kuantum Gürültüsü**: Temel nedeni foton sayısındaki istatistiksel dalgalanmadır. Gürültü, foton sayısının kareköküyle ters orantılıdır (`Gürültü ∝ 1/√N`).
+- **Kontrol Parametreleri**:
+  - **mAs ↑ → Foton sayısı ↑ → Gürültü ↓** (Doz artar).
+  - **kVp ↑ → Foton penetrasyonu ↑ → Gürültü ↓** (Ancak doku kontrastı da azalabilir).
+  - **Dilim kalınlığı ↑ → Voksel hacmi ↑ → Gürültü ↓**.
+
+### 🧪 Kontrast Çözünürlüğü
+- Bir nesneyi arka planından ayırt etme yeteneğidir. Özellikle düşük kontrastlı lezyonlar (örn. karaciğer metastazı) için kritiktir.
+- **CNR (Contrast-to-Noise Ratio)**: `CNR = |HU_lezyon - HU_arkaplan| / Gürültü`.
+- **Klinik Önemi**: IR ve DLR, gürültüyü (paydayı) etkin bir şekilde azaltarak CNR'yi önemli ölçüde artırır. Bu da ya lezyon saptanabilirliğini iyileştirir ya da dozu düşürme potansiyeli sunar.
+
+---
+
+## CT Dozu: CTDI, DLP ve Efektif Doz
+
+### 📏 CT Doz İndisleri (Konsol Değerleri)
+- **CTDI_w (Weighted CT Dose Index)**: Standart bir fantomda (kafa veya vücut) tek bir kesite verilen ortalama dozu temsil eder.
+- **CTDI_vol (Volume CTDI)**: Helikal taramada pitch etkisini hesaba katar: `CTDI_vol = CTDI_w / Pitch`. Protokol optimizasyonunda kullanılan en önemli doz göstergesidir.
+- **DLP (Dose-Length Product)**: Toplam tarama hacmine verilen dozu yansıtır: `DLP = CTDI_vol × Tarama Uzunluğu (cm)`.
+
+### 👥 Efektif Doz (Stokastik Risk Tahmini)
+- Vücudun maruz kaldığı toplam radyasyon riskini tahmin etmek için kullanılır ve birimi **mSv**'dir.
+- **Yaklaşık Hesaplama**: `E (mSv) ≈ DLP (mGy·cm) × k_faktörü`.
+- `k` faktörü, taranan vücut bölgesinin radyasyon hassasiyetine göre değişir (örn. Göğüs: ~0.014, Abdomen-Pelvis: ~0.015, Kafa: ~0.0021).
+
+### 🛡️ Doz Azaltım Teknikleri (ALARA Prensibi)
+- **Otomatik Tüp Akımı Modülasyonu (ATCM)**: Vücut kalınlığına göre (z-ekseni) ve şekline göre (açısal) mAs'yi anlık olarak ayarlayarak dozu optimize eder.
+- **Doğru kVp Seçimi**: Özellikle pediatrik hastalarda ve kontrastlı anjiyografi çalışmalarında düşük kVp (70-100 kVp) kullanmak, iyot kontrastını artırırken dozu önemli ölçüde düşürür.
+- **İteratif/DLR Rekonstrüksiyon**: Gürültüyü azaltarak daha düşük mAs değerleriyle çekim yapılmasına olanak tanır.
+- **Protokol Yönetimi**: Tarama alanını (FOV) ve faz sayısını endikasyona göre kesinlikle sınırlayın. "Biraz daha yukarıdan alalım" yaklaşımından kaçının.
+
+---
+
+## Artefaktlar ve Pratik Çözümler
+
+### 🧍 Hareket
+- **Görünüm**: Bulanıklaşma, çift konturlar. Özellikle solunum ve kalp atımı nedeniyle belirgindir.
+- **Çözüm**: Hızlı rotasyon süresi, EKG senkronizasyonu (gating), nefes tutma komutları, immobilizasyon.
+
+### 🪨 Beam Hardening (Işın Sertleşmesi)
+- **Neden**: Polikromatik X-ışını demetindeki düşük enerjili fotonların vücut tarafından daha fazla emilmesi, demetin ortalama enerjisinin artmasına ("sertleşmesine") neden olur.
+- **Görünüm**: *Cupping* (görüntü merkezinin kenarlara göre daha koyu görünmesi) ve iki yoğun yapı (örn. petroz kemikler) arasında koyu bantlar/çizgiler.
+- **Çözüm**: Ön filtreleme (bowtie filter), kalibrasyon düzeltmeleri, **Dual-Energy CT** ile sanal monoenerjik görüntüler (özellikle 70-140 keV aralığı), IR/DLR algoritmaları.
+
+### 🔩 Metal Artefaktı
+- **Neden**: Metal implantlar gibi aşırı yoğun nesneler, fotonların neredeyse tamamını emerek dedektörde sinyal kaybına ve veri bozulmasına yol açar.
+- **Görünüm**: Yoğun parlak ve karanlık çizgiler (streak).
+- **Çözüm**: **MAR (Metal Artifact Reduction)** algoritmaları, Dual-Energy monoenerjik görüntüler, ince dilimlerle rekonstrüksiyon, kVp artırımı (penetrasyonu artırmak için).
+
+### 🕸️ Parsiyel Hacim
+- **Neden**: Bir vokselin içinde birden fazla farklı yoğunlukta doku (örn. kemik ve beyin) bulunduğunda, vokselin HU değeri bu dokuların ortalaması olarak hesaplanır.
+- **Görünüm**: İnce yapıların (örn. sella tabanı) silik veya olduğundan daha kalın görünmesi.
+- **Çözüm**: **İnce kesitler** kullanmak en etkili yöntemdir.
+
+---
+
+## Gelecek: Spektral ve Foton Sayım CT
+
+### 🎛️ Dual-Energy / Spektral CT
+- **Nasıl Çalışır?**: Vücudu aynı anda veya çok hızlı bir şekilde iki farklı enerji seviyesiyle (örn. 80 kVp ve 140 kVp) tarar.
+- **Klinik Çıktılar**:
+  - **Sanal Monoenerjik Görüntüler**: Görüntüyü tek bir enerji seviyesindeymiş gibi yeniden oluşturarak iyot kontrastını optimize eder veya beam hardening/metal artefaktlarını azaltır.
+  - **Materyal Ayrıştırma**: Dokuları atom numaralarına göre ayırt eder (örn. iyot, kalsiyum, ürik asit).
+  - **Sanal Non-Kontrast (VNC)**: Kontrastlı bir çekimden, kontrast maddesi olmadan nasıl görüneceğini gösteren bir görüntü oluşturarak fazladan bir taramayı önler.
+
+### 🧮 Foton Sayım (Photon-Counting) CT
+- **Teknoloji**: Gelen fotonların sadece sayısını değil, aynı zamanda enerji seviyelerini de tek tek ölçen devrimsel bir dedektör teknolojisidir.
+- **Beklenen Avantajlar**:
+  - **Ultra-Yüksek Uzaysal Çözünürlük**: Çok daha küçük dedektör pikselleri sayesinde.
+  - **Daha Düşük Doz**: Elektronik gürültünün olmaması ve daha verimli foton kullanımı.
+  - **Dahili Spektral Bilgi**: Her tarama doğal olarak multi-enerji bilgisini içerir.
+  - **Artefakt Azalması**: Beam hardening artefaktlarını önemli ölçüde azaltır.
+
+---
+
+## Özel Uygulamalar: Kardiyak, Perfüzyon, Pediatri
+
+### ❤️ Kardiyak CT
+- **Temporal Çözünürlük**: Kalp hareketini "dondurmak" için en kritik parametredir. Gantry rotasyon süresinin yarısına eşittir (örn. 0.3s rotasyon → ~150 ms çözünürlük). Çift tüplü sistemler bu süreyi yarıya indirir.
+- **EKG Senkronizasyonu**:
+  - *Prospektif (Adım ve Çekim)*: Sadece R-R aralığının belirli bir fazında (genellikle diyastol) ışın verilir. **Doz daha düşüktür.**
+  - *Retrospektif*: Tüm kardiyak döngü boyunca ışın verilir ve istenilen fazlar sonradan seçilir. Fonksiyonel analiz için esneklik sağlar ama **doz daha yüksektir.**
+- **Klinik İnci**: Optimal bir kardiyak CT için hastanın kalp hızının &lt;65 atım/dk olması hedeflenir. Gerekirse beta-bloker premedikasyonu planlanmalıdır.
+
+### 🧠 CT Perfüzyon (İnme vb.)
+- Belirli bir alandan tekrarlayan, seri taramalar alınarak kontrast maddenin dokudan geçişi dinamik olarak izlenir.
+- **Çıktılar**: CBF (Serebral Kan Akımı), CBV (Serebral Kan Hacmi), MTT (Ortalama Geçiş Süresi), Tmax gibi haritalar oluşturulur. Bu haritalar, inmede penumbra (kurtarılabilir doku) ve infarkt çekirdeğini ayırt etmede kritiktir.
+- **Doz Uyarısı**: Doz yüksektir. Tarama alanı ve faz sayısı minimumda tutulmalıdır.
+
+### 👶 Pediatrik CT
+- Çocuklar radyasyona daha duyarlıdır ve yaşam beklentileri daha uzundur. **ALARA prensibi burada en katı şekilde uygulanmalıdır.**
+- **Protokol**: Düşük ve bedene göre ayarlanmış kVp (70-80 kVp) ve mAs kullanımı şarttır. ATCM agresif ayarlanmalıdır. IR/DLR kullanımı standart olmalıdır.
+- **Öncelik**: Endikasyon sorgulanmalı, tarama alanı dar tutulmalı ve faz sayısı (örn. sadece venöz faz) kısıtlanmalıdır. **Etkin protokol optimizasyonu, kurşun kalkanlardan çok daha üstün bir doz koruması sağlar.**
+
+---
+
+## Kalite Kontrol ve Güvencesi
+
+### Günlük
+- **Su Fantomu**: Ortalama HU değeri 0 ± 4 aralığında olmalı, uniformite (merkez ve çevre farkı) ≤ 5 HU olmalıdır.
+- **Gürültü**: Standart sapma değeri, belirlenen limitler içinde kalmalıdır.
+
+### Aylık/Çeyreklik
+- **Uzaysal Çözünürlük**: Line pair fantomu ile ölçülen çözünürlük (lp/cm), üretici spesifikasyonlarına uygun olmalıdır.
+- **Düşük Kontrast Saptanabilirliği**: Düşük kontrastlı nesneleri ayırt etme yeteneği test edilmelidir.
+- **Kesit Kalınlığı Doğruluğu**: Rampa şeklindeki bir fantom ile ölçülür.
+
+### Yıllık
+- **Doz Doğruluğu**: Medikal fizikçi tarafından CTDI fantomu ile yapılan ölçümler, konsolda görüntülenen değerlerle uyumlu olmalıdır.
+- **Lazer ve Masa Hizalaması**: Geometrik doğruluk kontrol edilmelidir.
+
+---
+
+## Klinik Protokol Optimizasyon Kontrol Listesi
+
+Bir protokolü onaylamadan veya başlatmadan önce kendinize sorun:
+1.  **Endikasyon Uygun mu?** Bu tarama gerçekten gerekli mi? Alternatif (dozsuz) bir yöntem var mı?
+2.  **Kapsam (Coverage) Doğru mu?** Tarama alanı, klinik soruyu yanıtlamak için gereken minimum alanla sınırlı mı?
+3.  **Faz Sayısı Gerekli mi?** Kontrastsız, arteriyel, venöz, geç fazların hepsi gerçekten gerekli mi? Tek faz yeterli olabilir mi?
+4.  **kVp ve mAs Optimize Edildi mi?** Hastanın BMI'sine göre en düşük uygun kVp seçildi mi? ATCM aktif ve doğru ayarlanmış mı?
+5.  **Rekonstrüksiyon Akıllıca mı?** Ham veriler ince kesit olarak saklanıyor mu? Tanısal amaç için doğru kernel (keskin vs. yumuşak) kullanılıyor mu?
+6.  **İleri Teknolojiler Kullanılıyor mu?** Doz düşürmek için IR/DLR kullanılıyor mu? Artefakt azaltmak veya tanısal güveni artırmak için Dual-Energy seçenekleri değerlendirildi mi?
+
+---
+
+## 🔑 Önemli Noktalar
+
+> **HU**, farklı cihazlar arasında kantitatif karşılaştırma sağlayan, suya göre normalize edilmiş bir zayıflatma ölçeğidir.
+>
+> **Pitch**, tarama hızı, doz ve z-ekseni çözünürlüğü arasındaki dengeyi yönetir. İnce kollimasyon ise detay ve 3D rekonstrüksiyon kalitesi için kritiktir.
+>
+> **IR/DLR**, gürültüyü azaltarak doz düşürmenin anahtarıdır. Ancak **kernel** ve **pencere** seçimi, tanısal soruyu doğru yanıtlamak için hala hekime aittir.
+>
+> **CTDI_vol** ve **DLP** konsolda gördüğünüz doz göstergeleridir. **Efektif doz** ise bu değerlerden türetilen bir risk tahminidir.
+
+---
+
+## 🧠 Bilginizi Test Edin
+
+CT fiziği konularındaki bilginizi aşağıdaki interaktif quiz ile ölçebilirsiniz. Quiz; rekonstrüksiyon, artefaktlar, doz, spektral CT ve özel uygulamalar gibi tüm ana başlıkları kapsar.
+
+<QuizComponent client:load quizFile="ct-physics-quiz.json" />

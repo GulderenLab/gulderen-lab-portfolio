@@ -1,0 +1,246 @@
+{
+  "title": "Girişimsel Radyoloji Teknik Rehberi Quizi",
+  "description": "Girişimsel radyoloji prosedürleri, malzeme bilgisi, Seldinger tekniği ve komplikasyon yönetimi konularını kapsayan kapsamlı quiz",
+  "questions": [
+    {
+      "id": 1,
+      "question": "French (F) ölçü birimi neyi ölçer ve hangi formül kullanılır?",
+      "options": [
+        "İğnelerin iç çapını ölçer, 3F = 1 mm",
+        "Kateterlerin dış çapını ölçer, 3F = 1 mm",
+        "Kılavuz tellerin çapını ölçer, 2F = 1 mm",
+        "İğnelerin dış çapını ölçer, 5F = 1 mm"
+      ],
+      "correctAnswer": 1,
+      "explanation": "French (F veya Fr) kateterlerin, kılıfların ve dilatörlerin **dış çapını** ölçer. Basit formülü: 3F = 1 mm'dir. Yani 6F bir kılıfın dış çapı 2 mm'dir."
+    },
+    {
+      "id": 2,
+      "question": "Gauge (G) ölçü birimi ile ilgili aşağıdaki ifadelerden hangisi doğrudur?",
+      "options": [
+        "Gauge değeri arttıkça iğnenin çapı artar",
+        "Gauge değeri azaldıkça iğnenin çapı artar",
+        "18G bir iğne 22G bir iğneden daha incedir",
+        "Gauge ile French aynı orantıda çalışır"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Gauge **ters orantılıdır**. Gauge değeri büyüdükçe, iğnenin çapı küçülür. 18G bir iğne, 22G bir iğneden daha kalındır."
+    },
+    {
+      "id": 3,
+      "question": "Yüksek riskli girişimsel prosedürler için hedef laboratuvar değerleri aşağıdakilerden hangisidir?",
+      "options": [
+        "INR < 2.0, aPTT uzamış, trombosit > 30,000/μL",
+        "INR < 1.5, aPTT normal, trombosit > 50,000/μL",
+        "INR < 1.8, aPTT normal, trombosit > 40,000/μL",
+        "INR herhangi değer, aPTT kısa, trombosit > 60,000/μL"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Yüksek riskli işlemler için hedef: INR < 1.5, aPTT normal sınırlarda, trombosit sayısı > 50,000/μL olmalıdır. Gerekirse TDP veya trombosit süspansiyonu ile düzeltme yapılır."
+    },
+    {
+      "id": 4,
+      "question": "Seldinger tekniğinin doğru sırası aşağıdakilerden hangisidir?",
+      "options": [
+        "Ponksiyon → Kılıf yerleştirme → Kılavuz tel → Dilatasyon",
+        "Ponksiyon → Kılavuz tel → Kılıf yerleştirme → Kateter",
+        "Ponksiyon → Kılavuz tel → Dilatasyon → Kılıf ve kateter yerleştirme",
+        "Kılavuz tel → Ponksiyon → Dilatasyon → Kılıf"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Seldinger tekniği sırası: 1) Ponksiyon, 2) Kılavuz tel yerleştirme, 3) Dilatasyon (isteğe bağlı), 4) Kılıf ve kateter yerleştirme, 5) İşlem gerçekleştirme."
+    },
+    {
+      "id": 5,
+      "question": "J-uçlu kılavuz tellerin temel avantajı nedir?",
+      "options": [
+        "Daha hızlı ilerleme sağlar",
+        "Damar duvarını daha az travmatize eder",
+        "Daha küçük çaplı damarlarda kullanılır",
+        "Sadece arteriyel sistem için tasarlanmıştır"
+      ],
+      "correctAnswer": 1,
+      "explanation": "J-uçlu kılavuz teller damar duvarını daha az travmatize eder, çünkü ucu kıvrık olduğu için keskin köşeleri yoktur ve damar duvarına yumuşakça temas eder."
+    },
+    {
+      "id": 6,
+      "question": "Mikroponksiyon iğnesi (21G) ve sistemi ne zaman tercih edilir?",
+      "options": [
+        "Sadece büyük damarlarda",
+        "Riskli veya küçük damarlarda daha az travmatik giriş için",
+        "Yalnızca santral venöz erişimde",
+        "Arteriyel ponksiyondan kaçınmak için"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Mikroponksiyon iğnesi (21G), içinden 0.018\" tel geçen, daha az travmatik bir giriş sağlayan iğnedir. Özellikle riskli veya küçük damarlarda tercih edilir."
+    },
+    {
+      "id": 7,
+      "question": "PTA (Perkütan Transluminal Anjiyoplasti) için stentleme endikasyonları aşağıdakilerden hangisidir?",
+      "options": [
+        ">20% rezidüel darlık veya minor diseksiyon",
+        ">30% rezidüel darlık, akımı kısıtlayan diseksiyon veya elastik geri çekilme",
+        ">40% rezidüel darlık veya herhangi bir diseksiyon",
+        "Sadece tam oklüzyon durumunda"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Anjiyoplasti sonrası >30%'dan fazla rezidüel darlık, akımı kısıtlayan bir diseksiyon veya elastik geri çekilme (recoil) varsa stentleme endikedir."
+    },
+    {
+      "id": 8,
+      "question": "Balloon-expandable ve self-expanding stentler arasındaki temel fark nedir?",
+      "options": [
+        "Balloon-expandable daha esnek, self-expanding daha sert",
+        "Self-expanding ostial lezyonlarda, balloon-expandable periferik damarlarda kullanılır",
+        "Balloon-expandable ostial lezyonlarda yüksek radyal güçle, self-expanding esnek damarlarda kullanılır",
+        "İkisi de aynı endikasyonlarda kullanılır"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Balloon-expandable stentler ostial lezyonlar gibi hassas yerleşim gerektiren yerlerde yüksek radyal güçle tercih edilir. Self-expanding stentler SFA gibi dış basıya maruz kalabilecek damarlarda daha esnek oldukları için kullanılır."
+    },
+    {
+      "id": 9,
+      "question": "Embolizasyon işleminde 'süper-selektif kateterizasyon' neden önemlidir?",
+      "options": [
+        "İşlemi daha hızlı tamamlamak için",
+        "Hedef damarı tıkarken sağlıklı dokuların kanlanmasını korumak için",
+        "Daha büyük embolik ajanlar kullanabilmek için",
+        "Sadece koil yerleştirmek için gereklidir"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Süper-selektif kateterizasyon, hedef damarı tıkarken proksimal ve distal sağlıklı dokuların kanlanmasını korumak için kritiktir. Non-target embolizasyon riskini minimuma indirir."
+    },
+    {
+      "id": 10,
+      "question": "Miyom embolizasyonunda hangi boyutta partiküller tercih edilir?",
+      "options": [
+        "100-300 mikron",
+        "500-900 mikron",
+        "1000-1200 mikron",
+        "Partikül boyutu önemli değildir"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Miyom embolizasyonunda 500-900 mikron boyutunda partiküller kullanılır. Partikül boyutu hedeflenen damar çapına göre seçilir."
+    },
+    {
+      "id": 11,
+      "question": "NBCA-glue ve Onyx gibi sıvı ajanların kullanımında en büyük risk nedir?",
+      "options": [
+        "Alerji reaksiyonu",
+        "Katetere yapışma veya non-target embolizasyon",
+        "Yavaş polimerize olmaları",
+        "Sadece düşük akımlı lezyonlarda etkili olmaları"
+      ],
+      "correctAnswer": 1,
+      "explanation": "NBCA-glue ve Onyx hızlı polimerize olurlar ve katetere yapışma veya non-target embolizasyon riski yüksektir. Bu nedenle yüksek tecrübe gerektirir."
+    },
+    {
+      "id": 12,
+      "question": "Koaksiyel biyopsi sistemi ne zaman ve neden kullanılır?",
+      "options": [
+        "Sadece akciğer biyopsilerinde",
+        "Her örnek için organın tekrar delinmesini önlemek için",
+        "Yalnızca büyük lezyonlarda",
+        "İnce iğne aspirasyonu için"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Koaksiyel sistemde rehber iğne lezyon kenarında durur, kesici iğne rehber içinden geçerek birden fazla örnek alır. Bu her örnek için organın tekrar delinmesini önler."
+    },
+    {
+      "id": 13,
+      "question": "Akciğer biyopsisinde pnömotoraks riskini azaltmak için hangi teknik kullanılır?",
+      "options": [
+        "Plevrayı birden fazla kez geçmek",
+        "Plevrayı tek kez geçmek ve mümkün olduğunca dik açı kullanmak",
+        "Yan açıdan yaklaşmak",
+        "Büyük çaplı iğne kullanmak"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Akciğer biyopsilerinde plevrayı tek bir kez geçmek ve mümkün olduğunca dik bir açı kullanmak pnömotoraks riskini azaltır."
+    },
+    {
+      "id": 14,
+      "question": "Perkütan drenajda kateter boyutu genellikle kaç French arasında seçilir?",
+      "options": [
+        "4-6F",
+        "8-14F",
+        "16-20F",
+        "22-28F"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Pigtail drenaj kateterleri genellikle 8-14F boyutlarında seçilir ve sıvı koleksiyonları boşaltmak için kullanılır."
+    },
+    {
+      "id": 15,
+      "question": "Tümör ablasyonunda güvenlik marjı ne kadar olmalıdır?",
+      "options": [
+        "0.2-0.3 cm",
+        "0.5-1.0 cm",
+        "1.5-2.0 cm",
+        "3.0-4.0 cm"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Tümör ablasyonunda hedef, tümörü ve etrafında 0.5-1.0 cm'lik bir güvenlik marjını içeren ablasyon zonu oluşturmaktır."
+    },
+    {
+      "id": 16,
+      "question": "Hidrodiseksiyon ne zaman ve neden yapılır?",
+      "options": [
+        "Tüm ablasyon işlemlerinde rutin olarak",
+        "Tümör ısı hasarı riski taşıyan bir yapıya 5 mm'den yakınsa güvenlik için",
+        "Sadece karaciğer ablasyonlarında",
+        "Probun daha kolay ilerlemesi için"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Tümör, ısı hasarı riski taşıyan bir yapıya (barsak, safra kesesi) 5 mm'den yakınsa, araya sıvı enjekte edilerek güvenli bir yastık oluşturulur."
+    },
+    {
+      "id": 17,
+      "question": "Port kateter yerleştirmede hangi ven birinci tercihtir ve neden?",
+      "options": [
+        "Sol internal juguler ven - daha güvenli",
+        "Sağ internal juguler ven - SVC'ya daha düz yol",
+        "Subklavyen ven - daha kolay erişim",
+        "Femoral ven - komplikasyon riski düşük"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Öncelikli tercih sağ internal juguler ven (IJV)'dir çünkü superior vena kava (SVC)'ya daha düz bir yol sunar."
+    },
+    {
+      "id": 18,
+      "question": "Port kateterinin ucunun floroskopi altında hangi seviyede olması hedeflenir?",
+      "options": [
+        "Superior vena kava üst kısmı",
+        "Kavoatriyal bileşke (SVC'nin sağ atriuma girdiği yer)",
+        "Sağ atriumun ortası",
+        "İnferior vena kava"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Kateter ucu, floroskopi altında kavoatriyal bileşke (SVC'nin sağ atriuma girdiği yer) seviyesinde olacak şekilde pozisyonlanır."
+    },
+    {
+      "id": 19,
+      "question": "Non-target embolizasyon şüphesinde ilk müdahale ne olmalıdır?",
+      "options": [
+        "İşleme devam etmek",
+        "İşlemi derhal durdurup vazodilatörler (nitrogliserin) denemek",
+        "Hasta pozisyonunu değiştirmek",
+        "Kontrast madde vermek"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Non-target embolizasyon şüphesinde işlem derhal durdurulmalı, vazodilatörler (nitrogliserin) denenmelidir, ancak hasar genellikle kalıcıdır."
+    },
+    {
+      "id": 20,
+      "question": "Drenaj kateterinin çekilme kriterleri aşağıdakilerden hangisidir?",
+      "options": [
+        "Sadece klinik düzelme",
+        "Günlük drenaj <50 mL olması",
+        "Klinik düzelme, günlük drenaj <20 mL ve kontrol görüntülemede koleksiyonun rezorbe olması",
+        "Sadece görüntülemede düzelme"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Drenaj kateterinin çekilme kriterleri: Klinik düzelme, günlük drenajın <20 mL'ye düşmesi ve kontrol görüntülemede koleksiyonun rezorbe olması."
+    }
+  ]
+}

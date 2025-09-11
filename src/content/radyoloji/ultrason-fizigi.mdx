@@ -1,0 +1,683 @@
+---
+title: "Ultrason Fiziği"
+description: "Ultrason fiziğinin temel prensiplerinden klinik uygulamalarına kadar, akustik özellikler, beam formatı, Doppler efekti, artefaktlar ve optimizasyon teknikleri"
+author: "Dr. Abdullah Gülderen"
+publishDate: 2025-09-10
+category: "Radyoloji Fiziği"
+tags: ["Ultrason", "Akustik", "Doppler", "Transducer", "Piezoelektrik", "Beam", "Artefakt", "USG"]
+readingTime: "40 dakika okuma"
+image:
+  src: "/images/ultrasound-physics-hero.jpg"
+  alt: "Ultrasound physics illustration"
+isDraft: false
+---
+
+import QuizComponent from '../../components/QuizComponent.jsx';
+
+# Ultrason Fiziği: Radyoloji Asistanları için Kapsamlı Rehber
+
+Ultrasonografi, ses dalgalarını kullanarak gerçek zamanlı, non-invazif görüntüleme sağlayan vazgeçilmez bir tanısal modalitedir. Bu kapsamlı rehber, ultrason fiziğinin temel prensiplerinden ileri düzey klinik uygulamalarına kadar tüm konuları detaylıca ele alacaktır.
+
+## 📋 İçindekiler
+
+1. [Akustik Temel Kavramlar](#akustik-temel-kavramlar)
+2. [Ses Dalgalarının Doku ile Etkileşimi](#ses-dalgalarının-doku-ile-etkileşimi)
+3. [Piezoelektrik Efekt ve Transducer Teknolojisi](#piezoelektrik-efekt-ve-transducer-teknolojisi)
+4. [Beam Formation ve Focusing](#beam-formation-ve-focusing)
+5. [Doppler Efekti ve Uygulamaları](#doppler-efekti-ve-uygulamaları)
+6. [Görüntü Optimizasyonu](#görüntü-optimizasyonu)
+7. [Ultrason Artefaktları](#ultrason-artefaktları)
+8. [Güvenlik ve Biyoeffektler](#güvenlik-ve-biyoeffektler)
+9. [İleri Teknolojiler](#ileri-teknolojiler)
+10. [Klinik Uygulamalar ve Optimizasyon](#klinik-uygulamalar-ve-optimizasyon)
+
+---
+
+## Akustik Temel Kavramlar
+
+### 🌊 Ses Dalgası Nedir?
+
+Ultrason, **20 kHz üzerindeki** mekanik ses dalgalarıdır. Tıbbi ultrasonografi tipik olarak **2-15 MHz** frekans aralığında çalışır.
+
+> #### 🎵 Temel Dalga Özellikleri
+> 
+> **Frekans (f)**: Saniyedeki dalga sayısı (Hz)
+> 
+> **Dalga boyu (λ)**: İki dalga tepesi arası mesafe (mm)
+> 
+> **Hız (c)**: Dalganın ortamdaki yayılma hızı (m/s)
+> 
+> #### Temel Denklem:
+> ```
+> c = f × λ
+> ```
+
+### Akustik Özellikler
+
+#### **Hız (Velocity)**
+Ultrasonun dokudaki yayılma hızı, dokunun **yoğunluğu** ve **sıkışabilirliğine** bağlıdır:
+
+```
+c = √(B/ρ)
+```
+- **B**: Bulk modulus (sıkışmaya direnç)
+- **ρ**: Doku yoğunluğu
+
+| Doku | Hız (m/s) | Yoğunluk (kg/m³) |
+|------|-----------|------------------|
+| **Hava** | 343 | 1.2 |
+| **Yağ** | 1,450 | 924 |
+| **Yumuşak doku** | 1,540 | 1,050 |
+| **Kas** | 1,580 | 1,070 |
+| **Kemik** | 4,080 | 1,908 |
+
+#### **Akustik İmpedans (Z)**
+Dokunun akustik "direnci"dir:
+
+```
+Z = ρ × c
+```
+
+**Klinik Önemi**: İki doku arasındaki impedans farkı ne kadar büyükse, arayüzden yansıma o kadar güçlü olur.
+
+| Doku | Akustik İmpedans (MRayl) |
+|------|-------------------------|
+| **Hava** | 0.0004 |
+| **Yağ** | 1.34 |
+| **Yumuşak doku** | 1.63 |
+| **Kemik** | 7.8 |
+
+---
+
+## Ses Dalgalarının Doku ile Etkileşimi
+
+### 1. Yansıma (Reflection)
+
+> #### 📡 Specular (Spekülâr) Yansıma
+> 
+> **Koşul**: Düzgün yüzey + Dik açı
+> 
+> **Örnek**: Diyafram, mesane duvarı
+> 
+> **Sonuç**: Güçlü eko sinyali
+
+> #### 🔄 Diffuse (Yaygın) Yansıma  
+> 
+> **Koşul**: Pürüzlü yüzey + Çeşitli açılar
+> 
+> **Örnek**: Organ parankimi
+> 
+> **Sonuç**: Zayıf ama yaygın eko
+
+**Yansıma Katsayısı (R):**
+```
+R = [(Z₂ - Z₁) / (Z₂ + Z₁)]²
+```
+
+- **Z₁, Z₂**: İki dokunun akustik impedansları
+
+### 2. Saçılma (Scattering)
+
+#### **Rayleigh Saçılması**
+- **Koşul**: Nesne boyutu &lt;&lt; Dalga boyu
+- **Örnek**: Alyuvarlar (~7 μm)
+- **Özellik**: Frekansın 4. kuvveti ile orantılı
+
+#### **Mie Saçılması**
+- **Koşul**: Nesne boyutu ≈ Dalga boyu  
+- **Örnek**: Organ sınırları
+- **Özellik**: Frekans bağımlılığı karmaşık
+
+### 3. Zayıflama (Attenuation)
+
+Ultrasonun dokudaki enerji kaybıdır. Üç ana bileşenden oluşur:
+
+#### **Soğurma (Absorption) - ~80%**
+- Mekanik enerji → Isı enerjisi
+- Frekansla doğru orantılı
+
+#### **Saçılma (Scattering) - ~20%**  
+- Enerjinin farklı yönlere dağılması
+
+#### **Yansıma (Reflection)**
+- Arayüzlerden geri dönen enerji
+
+**Zayıflama Katsayısı (α):**
+
+| Doku | α (dB/cm/MHz) |
+|------|---------------|
+| **Su** | 0.002 |
+| **Kan** | 0.18 |
+| **Yumuşak doku** | 0.5-1.0 |
+| **Kas** | 1.3-3.3 |
+| **Kemik** | 5.0 |
+
+**Klinik Formül:**
+```
+Zayıflama (dB) = α × f × d
+```
+- **α**: Zayıflama katsayısı
+- **f**: Frekans (MHz)  
+- **d**: Mesafe (cm)
+
+---
+
+## Piezoelektrik Efekt ve Transducer Teknolojisi
+
+### 🔌 Piezoelektrik Efekt
+
+> #### ⚡ Temel Prensip
+> 
+> **Direkt Efekt**: Mekanik basınç → Elektrik voltajı
+> 
+> **Ters Efekt**: Elektrik voltajı → Mekanik titreşim
+> 
+> **Tıbbi Ultrasonografide**: Her iki efekt de kullanılır
+
+### Piezoelektrik Materyaller
+
+#### **Doğal Materyaller**
+- **Kuvartz (SiO₂)**: Düşük piezoelektrik katsayı
+- **Turmalin**: Tarihi önemi
+
+#### **Sentetik Seramikler**
+- **PZT (Lead Zirconate Titanate)**: En yaygın
+- **PVDF (Polyvinylidene Fluoride)**: Esnek, geniş bant
+
+### Transducer Anatomisi
+
+#### **Ana Bileşenler**
+
+1. **Piezoelektrik Element(ler)**
+   - Aktif ultrason üretici/alıcı katman
+   - Kalınlık = λ/2 (rezonans koşulu)
+
+2. **Matching Layer**
+   - Akustik impedans uyumu sağlar
+   - Kalınlık = λ/4
+   - Z_match = √(Z_element × Z_tissue)
+
+3. **Backing Material**
+   - Gereksiz titreşimleri sönümler
+   - Pulse uzunluğunu kısaltır
+   - Yüksek zayıflama katsayısı
+
+4. **Lens (Acoustic Lens)**
+   - Geometrik odaklama
+   - Lateral beam profilini şekillendirir
+
+### Transducer Tipleri
+
+#### **Linear Array**
+- **Konfigürasyon**: Düz sıralı elementler
+- **Beam şekli**: Dikdörtgen  
+- **Uygulamalar**: Yüzeyel yapılar, vasküler
+- **FOV**: Sabit genişlik
+
+#### **Convex (Curved) Array**
+- **Konfigürasyon**: Kavisli sıralı elementler
+- **Beam şekli**: Sektör (yelpaze)
+- **Uygulamalar**: Abdominal, obstetrik
+- **FOV**: Derinlikle genişler
+
+#### **Phased Array**
+- **Konfigürasyon**: Küçük elemanlar
+- **Beam şekli**: Sektör  
+- **Uygulamalar**: Kardiyak, intrakranyal
+- **Özellik**: Elektronik steering
+
+#### **Endocavitary**
+- **Konfigürasyon**: Yüksek frekanslı
+- **Uygulamalar**: Transvaginal, transrektal
+- **Avantaj**: Yüksek çözünürlük
+
+---
+
+## Beam Formation ve Focusing
+
+### 🎯 Beam Karakteristikleri
+
+#### **Near Zone (Fresnel Zone)**
+```
+N = r²/λ
+```
+- **N**: Near zone uzunluğu
+- **r**: Transducer yarıçapı
+- **λ**: Dalga boyu
+
+**Özellikler:**
+- Beam paralel
+- Uniform şiddet dağılımı
+- En iyi lateral çözünürlük
+
+#### **Far Zone (Fraunhofer Zone)**
+- Near zone'un ötesi
+- Beam ıraksar (divergence)
+- Lateral çözünürlük azalır
+
+**Divergence Açısı:**
+```
+sin θ = 1.22λ/D
+```
+- **D**: Transducer çapı
+
+### Electronic Focusing
+
+#### **Transmit Focusing**
+- **Yöntem**: Element aktivasyon zamanlaması
+- **Sonuç**: Odak noktasında beam daralmasi
+- **Avantaj**: Yüksek akustik güç yoğunluğu
+
+#### **Receive Focusing**  
+- **Yöntem**: Dinamik aperture kontrolü
+- **Sonuç**: Tüm derinlikler için optimum odak
+- **Klinik Faydası**: Uniform lateral çözünürlük
+
+#### **Multi-Zone Focusing**
+- Tek taramada çoklu odak noktaları
+- Her derinlik için optimize edilmiş beam
+- **Dezavantaj**: Frame rate azalır
+
+### Beam Steering
+
+#### **Phased Array Steering**
+```
+Δt = d × sin θ / c
+```
+- **Δt**: Komşu elementler arası gecikme
+- **d**: Element arası mesafe
+- **θ**: Steering açısı
+
+**Uygulamalar:**
+- Kardiyak USG (intercostal pencere)
+- Color Doppler yön ayarı
+- Compound imaging
+
+---
+
+## Doppler Efekti ve Uygulamaları
+
+### 🌊 Doppler Prensibi
+
+> #### 📐 Temel Denklem
+> 
+> ```
+> Δf = 2f₀ × v × cos θ / c
+> ```
+> 
+> - **Δf**: Doppler frekans kayması
+> - **f₀**: İletim frekansı  
+> - **v**: Hedef hızı
+> - **θ**: Doppler açısı
+> - **c**: Ses hızı (1540 m/s)
+
+### Doppler Açısı (θ)
+
+**Kritik Faktör**: cos θ değeri
+
+| Açı (θ) | cos θ | Doppler Sensitivity |
+|---------|-------|-------------------|
+| **0°** | 1.0 | Maksimum |
+| **30°** | 0.87 | İyi |
+| **45°** | 0.71 | Orta |
+| **60°** | 0.50 | Zayıf |
+| **90°** | 0.0 | Yok |
+
+> **Klinik İnci**: **60°'den küçük açılar** optimal Doppler sinyali için gereklidir.
+
+### Doppler Modaliteleri
+
+#### **Continuous Wave (CW) Doppler**
+- **Avantaj**: Yüksek hız ölçümü (aliasing yok)
+- **Dezavantaj**: Range ambiguity
+- **Uygulama**: Kardiyak stenoz/yetmezlik
+
+#### **Pulsed Wave (PW) Doppler**
+- **Avantaj**: Range resolution (sample volume)
+- **Dezavantaj**: Nyquist limiti (aliasing)
+- **Uygulama**: Lokal hız ölçümleri
+
+**Nyquist Limiti:**
+```
+PRF_max = c / 4d
+v_max = PRF_max × c / 4f₀ × cos θ
+```
+
+#### **Color Doppler**
+- **Prensip**: Çok sayıda sample volume
+- **Kodlama**: BART (Blue Away Red Toward)
+- **Parametreler**: Scale, PRF, wall filter
+
+#### **Power Doppler**
+- **Avantaj**: Açı bağımlılığı yok
+- **Avantaj**: Yüksek duyarlılık
+- **Dezavantaj**: Yön bilgisi yok
+- **Uygulama**: Düşük akım tespiti
+
+---
+
+## Görüntü Optimizasyonu
+
+### 🎛️ Temel Kontroller
+
+#### **Gain (Kazanç)**
+- **Fonksiyon**: Sinyal amplifikasyonu
+- **TGC (Time Gain Compensation)**: Derinlikle değişken kazanç
+- **Ayar**: Noise seviyesinin altında
+
+#### **Frequency (Frekans)**
+- **Yüksek Frekans**: İyi çözünürlük, az penetrasyon
+- **Düşük Frekans**: İyi penetrasyon, kötü çözünürlük
+- **Seçim**: Hastaaya ve uygulamaya göre
+
+#### **Depth (Derinlik)**
+- **Kural**: Minimum gerekli derinlik
+- **Faydası**: Frame rate artışı
+- **Optimizasyon**: İlgi alanını merkeze al
+
+#### **Focus**
+- **Konum**: İlgi alanı seviyesi
+- **Multiple Focus**: Daha iyi uniform çözünürlük
+- **Trade-off**: Frame rate azalır
+
+### İleri Optimizasyon
+
+#### **Dynamic Range**
+- **Tanım**: Görüntülenebilir echo aralığı
+- **Ayar**: Doku tipine göre
+- **Geniş DR**: Yumuşak kontrast
+- **Dar DR**: Yüksek kontrast
+
+#### **Harmonic Imaging**
+- **Prensip**: 2f₀ frekansında görüntüleme
+- **Avantaj**: Artifact azaltma
+- **Uygulama**: Obez hastalar, gaz artifact
+
+#### **Compound Imaging**
+- **Yöntem**: Çoklu açıdan görüntüleme
+- **Avantaj**: Artifact azaltma, SNR artışı
+- **Dezavantaj**: Frame rate azalır
+
+---
+
+## Ultrason Artefaktları
+
+### 🔍 Acoustic Shadows
+
+#### **Posterior Acoustic Shadowing**
+> **Neden**: Yüksek atenüasyon (kemik, gaz, kalsifikasyon)
+> 
+> **Görünüm**: Yapının arkasında hypoechoic band
+> 
+> **Tanısal Değer**: Kalsül, kemik kırığı tespiti
+
+#### **Posterior Acoustic Enhancement** 
+> **Neden**: Düşük atenüasyon (sıvı dolu yapılar)
+> 
+> **Görünüm**: Yapının arkasında hyperechoic bölge
+> 
+> **Tanısal Değer**: Kist tanısı
+
+### Çoklu Yansıma Artefaktları
+
+#### **Reverberation**
+- **Mekanizma**: Transducer-güçlü yansıtıcı arası çoklu yansıma
+- **Görünüm**: Eşit aralıklı paralel çizgiler
+- **Örnek**: Diyafram altındaki çizgiler
+
+#### **Comet Tail**
+- **Mekanizma**: Küçük yüksek impedans yapılar
+- **Görünüm**: Güçlü echogenic çizgi
+- **Örnek**: Adenomiomatosis, metal objeler
+
+#### **Ring Down**
+- **Mekanizma**: Gaz balonlarında rezonans
+- **Görünüm**: Sürekli hyperechoic çizgi
+- **Örnek**: Bağırsak gazları
+
+### Geometrik Distorsiyonlar
+
+#### **Speed Displacement**
+- **Neden**: Gerçekten farklı ses hızı
+- **Sonuç**: Yanlış derinlik ölçümü
+- **Örnek**: Yağ doku içindeki yapılar
+
+#### **Multi-path Artifact**
+- **Neden**: Dolaylı ses yolu
+- **Sonuç**: Duplikasyon artifact
+- **Çözüm**: Transducer pozisyonu değişimi
+
+#### **Side Lobe / Grating Lobe**
+- **Neden**: Ana beam dışında zayıf energy lobes
+- **Sonuç**: Yalancı echolar
+- **Çözüm**: Fokus optimizasyonu
+
+### Doppler Artefaktları
+
+#### **Aliasing**
+- **Neden**: Nyquist limitini aşan hızlar
+- **Görünüm**: Renk inversiyonu (wraparound)
+- **Çözüm**: Scale artırma, CW Doppler
+
+#### **Flash Artifact**
+- **Neden**: Hasta hareketi, transducer basıncı
+- **Görünüm**: Momentary color fill
+- **Çözüm**: Wall filter artırma
+
+---
+
+## Güvenlik ve Biyoeffektler
+
+### 🛡️ ALARA Prensibi
+
+> #### As Low As Reasonably Achievable
+> 
+> **Klinik Prensibi**: Tanısal kaliteyi koruyarak akustik güçü minimum tut
+
+### Akustik Güç ve Güvenlik İndisleri
+
+#### **Thermal Index (TI)**
+```
+TI = P / P_thermal_threshold
+```
+
+**Alt Kategoriler:**
+- **TIS**: Soft tissue thermal index
+- **TIC**: Cranial bone thermal index
+- **TIB**: Bone thermal index
+
+**Güvenlik Limitleri:**
+- **TI &lt; 1.0**: Güvenli kabul
+- **TI &lt; 3.0**: Kontrollü kullanım
+
+#### **Mechanical Index (MI)**
+```
+MI = P_rarefactional / √f₀
+```
+
+**Güvenlik Limitleri:**
+- **MI &lt; 0.7**: Kavitasyon riski minimal
+- **MI &lt; 1.9**: FDA güvenlik limiti
+
+### Biyoeffektler
+
+#### **Termal Effektler**
+- **Mekanizma**: Akustik enerji → Isı
+- **Risk**: 1-2°C sıcaklık artışı
+- **Yüksek Risk**: Kemik-yumuşak doku arayüzü
+
+#### **Non-Termal (Mekanik) Effektler**
+- **Kavitasyon**: Mikrobubble collapse
+- **Akustik Streaming**: Doku içi sıvı hareketi
+- **Risk**: Hücre zarı hasarı
+
+### Obstetrik Güvenlik
+
+#### **Özel Dikkat Gereken Dönemler**
+- **İlk trimester**: Organogenez dönem
+- **Doppler çalışmaları**: TI ve MI limitleri daha katı
+
+#### **Güvenlik Kuralları**
+1. **ALARA** prensibini uygula
+2. **Scan time** minimize et
+3. **Termal/Mekanik indis** takibi yap
+4. **Pulsed Doppler** kullanımını sınırla
+5. **Keepsake imaging** yapmayın
+
+---
+
+## İleri Teknolojiler
+
+### 🖼️ 3D/4D Ultrasonografi
+
+#### **Volume Acquisition**
+- **Mekanik**: Motor-driven transducer
+- **Elektronik**: Matrix array tranducer
+- **Freehand**: Position sensing
+
+#### **Volume Rendering**
+- **Surface Rendering**: Yüzey görüntülemesi
+- **Maximum Intensity Projection (MIP)**: En yüksek yoğunluk
+- **Multi-planar Reconstruction (MPR)**: İstenilen düzlem kesitleri
+
+### Elastografi
+
+#### **Strain Elastografi**
+- **Yöntem**: Manuel kompresyon
+- **Ölçüm**: Relatif sertlik
+- **Uygulama**: Meme, tiroid nodülleri
+
+#### **Shear Wave Elastografi**
+- **Yöntem**: ARFI (Acoustic Radiation Force Impulse)
+- **Ölçüm**: Absolute elastisite (kPa)
+- **Uygulama**: Karaciğer fibrozis
+
+### Contrast Enhanced Ultrasound (CEUS)
+
+#### **Mikrobubble Kontrast**
+- **Boyut**: 1-8 μm (kan-beyin bariyerini geçemez)
+- **İçerik**: İnert gazlar (SF₆, C₃F₈)
+- **Yarılanma**: 3-5 dakika
+
+#### **Imaging Teknikleri**
+- **Low MI**: Mikrobubble korunması
+- **High MI**: Bubble destruction/replenishment
+- **Harmonic Imaging**: Nonlinear response
+
+---
+
+## Klinik Uygulamalar ve Optimizasyon
+
+### 🏥 Modalite Spesifik Optimizasyon
+
+#### **Abdominal USG**
+- **Frekans**: 2-5 MHz (penetrasyon)
+- **Transducer**: Convex array
+- **Teknik**: Graded compression
+- **Hazırlık**: 6-8 saat açlık
+
+#### **Obstetrik USG**
+- **1. Trimester**: 5-9 MHz (TV probe)
+- **2-3. Trimester**: 2-5 MHz (TA probe)
+- **Güvenlik**: TI&lt;1.0, scan time minimum
+- **4D**: Fetal yüz görüntüleme
+
+#### **Kardiyak Echo**
+- **Frekans**: 2-5 MHz 
+- **Transducer**: Phased array (small footprint)
+- **Pencereler**: Parasternal, apical, subxiphoid
+- **Doppler**: PW/CW her ikisi de gerekli
+
+#### **Vasküler USG**
+- **Frekans**: 5-12 MHz (yüzeyel)
+- **Transducer**: Linear array
+- **Doppler Açısı**: &lt;60° kritik
+- **Teknik**: Duplex/Triplex imaging
+
+#### **Musculoskeletal USG**
+- **Frekans**: 10-15 MHz (yüksek çözünürlük)
+- **Transducer**: Linear high-frequency
+- **Teknik**: Dynamic examination
+- **Power Doppler**: İnflamasyon tespiti
+
+#### **Pediatrik USG**
+- **Frekans**: Yaşa göre (5-12 MHz)
+- **Özellik**: Fontanel penceresi (beyin)
+- **Güvenlik**: TI ve MI daha düşük
+- **Sabır**: Kooperasyon sınırlı
+
+### Optimal Tarama Protokolü
+
+#### **Pre-Scan Kontrol Listesi**
+1. ✅ **Patient Preparation**: Uygun hazırlık
+2. ✅ **Transducer Selection**: Klinik soruya uygun
+3. ✅ **System Settings**: Default ayarları kontrol
+4. ✅ **Safety Parameters**: TI/MI görünümünü aç
+
+#### **Scanning Tekniği**
+1. **Systematic Approach**: Anatomik sıra takibi
+2. **Multiple Planes**: Longitudinal + Transvers
+3. **Optimize Settings**: Her yapı için ayar
+4. **Document Pathology**: Ölçümler + videolar
+
+#### **Post-Processing**
+1. **Measurement**: Kalipers doğru kullanımı
+2. **Calculation**: Otomatik hesaplamalar
+3. **Documentation**: Klinik soruya yanıt
+4. **Archive**: DICOM standardı
+
+---
+
+## 🔑 Önemli Noktalar
+
+> ### Akustik Temel Prensip
+> **Ultrason, 20 kHz üstü mekanik ses dalgalarıdır. Tıbbi USG 2-15 MHz aralığında çalışır.**
+>
+> ### Doku Etkileşimi
+> **Akustik impedans farkları görüntü kontrastının temelini oluşturur. Hava ve kemik en güçlü yansıtıcılardır.**
+>
+> ### Transducer Teknolojisi
+> **Piezoelektrik efekt sayesinde elektrik-akustik enerji dönüşümü gerçekleşir. Array teknolojisi elektronik kontrole olanak tanır.**
+>
+> ### Doppler Prensibi
+> **Frekans kayması hız ölçümünü sağlar. Doppler açısı 60°'den küçük olmalıdır.**
+>
+> ### Güvenlik
+> **ALARA prensibi: TI&lt;1.0 ve MI&lt;0.7 limitleri güvenli kabul edilir.**
+
+---
+
+## Sonuç
+
+Ultrason fiziğinin doğru anlaşılması, yüksek kaliteli tanısal görüntüleme için kritik öneme sahiptir. Bu rehberde ele aldığımız konular:
+
+- **Akustik Temeller**: Dalga özellikleri ve doku etkileşimi
+- **Teknoloji**: Piezoelektrik efekt ve transducer tasarımı  
+- **Beam Fiziği**: Fokus, steering ve optimizasyon
+- **Doppler**: Hız ölçümü ve kan akım değerlendirmesi
+- **Artefaktlar**: Tanıma ve çözümleme stratejileri
+- **Güvenlik**: ALARA prensibi ve bioeffektler
+- **Klinik Uygulama**: Modalite spesifik optimizasyon
+
+Bu bilgileri klinik pratikte uygulayarak hem hasta güvenliğini hem de tanısal doğruluğu maksimize edebilirsiniz.
+
+---
+
+## 🧠 Bilginizi Test Edin
+
+Ultrason fiziği konularındaki bilginizi test etmek için aşağıdaki kapsamlı quizi çözebilirsiniz. Quiz, bu makalede ele alınan tüm konuları kapsamaktadır:
+
+- Akustik temel kavramlar ve doku etkileşimi
+- Piezoelektrik efekt ve transducer teknolojisi
+- Beam formation, focusing ve steering
+- Doppler efekti ve klinik uygulamaları  
+- Görüntü optimizasyonu teknikleri
+- Ultrason artefaktları ve çözüm yöntemleri
+- Güvenlik parametreleri ve ALARA prensibi
+- İleri teknolojiler ve klinik uygulamalar
+
+<QuizComponent client:load quizFile="ultrasound-physics-quiz.json" />
+
+---
+
+*Bu makale, radyoloji uzmanları ve asistanları için hazırlanmış kapsamlı bir ultrason fiziği rehberidir. Klinik pratikte uygulanırken yerel protokoller ve güvenlik yönergeleri dikkate alınmalıdır.*
