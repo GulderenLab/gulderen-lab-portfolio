@@ -1,0 +1,309 @@
+{
+  "title": "Obstetrik ve Jinekolojik Radyoloji Kapsamlı Quiz",
+  "description": "Radyoloji asistanları için obstetrik ve jinekolojik radyoloji konularında kapsamlı değerlendirme quiz'i. 100 sorudan oluşan bu quiz, görüntüleme fiziği, ultrasonografi, MRI, gebelik radyolojisi ve jinekolojik patolojiler konularını kapsar.",
+  "passingScore": 70,
+  "totalQuestions": 100,
+  "timeLimit": 120,
+  "questions": [
+    {
+      "id": "obgyn_001",
+      "question": "Obstetrik ultrasonografide birinci trimesterde en doğru tarihleme parametresi hangisidir?",
+      "options": [
+        "Gestasyonel kese çapı",
+        "Yolk kesesi çapı", 
+        "Crown-rump uzunluğu (CRL)",
+        "Biparietal çap (BPD)"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Crown-rump uzunluğu (CRL) birinci trimesterde en doğru tarihleme parametresidir ve 3-5 gün doğrulukla gebelik yaşını belirler. Gestasyonel kese ve yolk kesesi çapı daha az doğrudur, BPD ise ikinci trimesterde kullanılır."
+    },
+    {
+      "id": "obgyn_002",
+      "question": "Transvajinal ultrasonografide hangi frekans aralığı kullanılır?",
+      "options": [
+        "2-5 MHz",
+        "5-9 MHz",
+        "10-15 MHz",
+        "15-20 MHz"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Transvajinal ultrasonografide 5-9 MHz frekans kullanılır. Bu yüksek frekans üstün yakın alan çözünürlüğü sağlar ve pelvik organların detaylı değerlendirmesi için optimal penetrasyon derinliği sunar."
+    },
+    {
+      "id": "obgyn_003",
+      "question": "Gebelikte gadolinyum tabanlı kontrast maddelerin FDA gebelik kategorisi nedir?",
+      "options": [
+        "Kategori A (güvenli)",
+        "Kategori B (muhtemelen güvenli)",
+        "Kategori C (bilinmeyen risk)",
+        "Kategori D (pozitif risk kanıtı)"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Gadolinyum tabanlı kontrast maddeler FDA Gebelik Kategorisi C'dir. Hayvan çalışmalarında advers etkiler gösterilmiş ancak yeterli insan çalışması yoktur. Plasental bariyeri geçer ve potansiyel yararlar riskleri aştığı durumlar dışında kaçınılmalıdır."
+    },
+    {
+      "id": "obgyn_004",
+      "question": "Oligohidramnios tanısı için amniyotik sıvı indeksi (AFI) hangi değerin altında olmalıdır?",
+      "options": [
+        "2 cm altında",
+        "5 cm altında", 
+        "8 cm altında",
+        "10 cm altında"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Oligohidramnios tanısı AFI 5 cm altında veya maksimum vertikal cep 2 cm altında ile konur. Bu durum böbrek anomalileri, preterm prematür membran rüptürü veya büyüme kısıtlılığı ile ilişkili olabilir."
+    },
+    {
+      "id": "obgyn_005",
+      "question": "Lambda işareti ikiz gebelikte neyi gösterir?",
+      "options": [
+        "Monokoriyonik gebelik",
+        "Dikoriyonik gebelik",
+        "Konjoint ikizler", 
+        "Vanishing twin sendromu"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Lambda işareti (twin peak işareti) gestasyonel keseler arasında kalın septum varlığını gösterir ve dikoriyonik ikiz gebeliği karakterizedir. T işareti ise ince septum insersiyonu ile monokoriyonik gebeliği gösterir."
+    },
+    {
+      "id": "obgyn_006",
+      "question": "Uterin MRI'da junctional zone normal kalınlığı ne kadar olmalıdır?",
+      "options": [
+        "5 mm altında",
+        "8 mm altında",
+        "12 mm altında",
+        "15 mm altında"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Normal junctional zone kalınlığı 12 mm altında olmalıdır. 12 mm'nin üzerindeki kalınlaşma adenomyoz tanısını düşündürür. Junctional zone iç myometrium tabakasını temsil eder ve T2 ağırlıklı görüntülerde düşük sinyal intensitesi gösterir."
+    },
+    {
+      "id": "obgyn_007",
+      "question": "Ektopik gebelik için diskriminatuar zone β-hCG değeri nedir?",
+      "options": [
+        "1000-1500 mIU/mL",
+        "1500-2000 mIU/mL",
+        "2000-3000 mIU/mL",
+        "3500-6500 mIU/mL"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Diskriminatuar zone β-hCG seviyesi 3500-6500 mIU/mL'dir. Bu seviyenin üzerinde transvajinal ultrasonografide intrauterin gebelik kesesi görülmelidir. Görülmemesi durumunda ektopik gebelik şüphesi artar."
+    },
+    {
+      "id": "obgyn_008",
+      "question": "Ovarian torsiyon en sık hangi overi etkiler?",
+      "options": [
+        "Sağ over",
+        "Sol over",
+        "Eşit sıklıkta",
+        "Yaşa bağlıdır"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Ovarian torsiyon sağ overi daha sık etkiler. Bu durumun nedeni sol taraftaki sigmoid kolonun koruyucu etkisi olduğu düşünülmektedir. Risk faktörleri arasında 5 cm'den büyük ovarian kitle, uzun ovarian ligament ve gebelik yer alır."
+    },
+    {
+      "id": "obgyn_009",
+      "question": "Leiomyomların MRI'daki karakteristik sinyal özelliği nedir?",
+      "options": [
+        "T2 ağırlıklı görüntülerde hiperintens",
+        "T2 ağırlıklı görüntülerde hipointens",
+        "T1 ağırlıklı görüntülerde hiperintens",
+        "Değişken sinyal intensitesi"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Leiomyomlar T2 ağırlıklı görüntülerde karakteristik olarak hipointens (koyu) sinyal gösterirler. Bu fibröz yapılarından kaynaklanır. Myometriumdan daha az kontrast tutulum gösterirler."
+    },
+    {
+      "id": "obgyn_010",
+      "question": "Nuchal şeffaflık ölçümü hangi gebelik haftalarında yapılır?",
+      "options": [
+        "8-10 hafta",
+        "11-14 hafta",
+        "15-18 hafta",
+        "18-22 hafta"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Nuchal şeffaflık ölçümü 11 hafta 0 gün ile 13 hafta 6 gün arasında yapılır. 12 haftalık gebelikte normal nuchal şeffaflık 2.5 mm altında olmalıdır. Bu ölçüm kromozom anomalileri için tarama testi olarak kullanılır."
+    },
+    {
+      "id": "obgyn_011",
+      "question": "IOTA basit kurallarına göre benign adneksal kitle özelliklerinden hangisi yanlıştır?",
+      "options": [
+        "Uniloküler kist",
+        "7 mm altında solid bileşenler",
+        "10 cm üzerinde multiloküler tümör",
+        "Kan akımı yokluğu"
+      ],
+      "correctAnswer": 2,
+      "explanation": "IOTA basit kurallarına göre benign özellikler: uniloküler kist, 7 mm altında solid bileşenler, 10 cm altında düz multiloküler tümör ve kan akımı yokluğu içerir. 10 cm üzerinde irregüler multiloküler solid tümör malign özellik (M-özelliği) olarak kabul edilir."
+    },
+    {
+      "id": "obgyn_012",
+      "question": "Postmenapozal dönemde normal endometrial kalınlık ne kadar olmalıdır?",
+      "options": [
+        "3 mm altında",
+        "5 mm altında",
+        "8 mm altında",
+        "10 mm altında"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Postmenapozal dönemde normal endometrial kalınlık 5 mm altında olmalıdır. 5 mm'nin üzerindeki kalınlık daha ileri değerlendirme gerektirebilir. Kanaması olan postmenapozal kadınlarda patolojik eşik 11 mm üzerindedir."
+    },
+    {
+      "id": "obgyn_013",
+      "question": "Twin-to-twin transfüzyon sendromu (TTTS) hangi ikiz gebelik tipinde görülür?",
+      "options": [
+        "Dikoriyonik diamniyotik",
+        "Monokoriyonik diamniyotik",
+        "Monokoriyonik monoamniyotik",
+        "Tüm ikiz gebelik tiplerinde"
+      ],
+      "correctAnswer": 1,
+      "explanation": "TTTS sadece monokoriyonik diamniyotik ikiz gebeliklerinde görülür çünkü ortak plasental dolaşım vardır. Tanı kriterleri: donör ikizde oligohidramnios (MVP 2 cm altında) ve alıcı ikizde polihidramnios (MVP 8 cm üzerinde) varlığıdır."
+    },
+    {
+      "id": "obgyn_014",
+      "question": "Ovarian kist karakterizasyonunda 'ring of fire' işareti neyi gösterir?",
+      "options": [
+        "Ovarian torsiyon",
+        "Korpus luteum kisti",
+        "Ektopik gebelik",
+        "Ovarian malignite"
+      ],
+      "correctAnswer": 1,
+      "explanation": "'Ring of fire' işareti korpus luteum kistinin karakteristik periferik vaskularitesini tanımlar. Bu görünüm Doppler ultrasonografide tipik olarak görülür ve korpus luteum kistlerinin tanısına yardımcı olur."
+    },
+    {
+      "id": "obgyn_015",
+      "question": "Plasenta previa sınıflandırmasında 'tam previa' ne anlama gelir?",
+      "options": [
+        "Plasental kenar serviks ağzından 2 cm içinde",
+        "Plasental kenar serviks ağzına değiyor",
+        "Plasenta serviks ağzının bir kısmını kapatıyor",
+        "Plasenta serviks ağzını tamamen kapatıyor"
+      ],
+      "correctAnswer": 3,
+      "explanation": "Tam plasenta previa, plasentanın internal serviks ağzını tamamen kapatması durumudur. Bu durum ciddi obstetrik kanama riski oluşturur ve genellikle sezaryen doğum gerektirir."
+    },
+    {
+      "id": "obgyn_016",
+      "question": "Doppler ultrasonografide umbilikal arter end-diyastolik akımın yokluğu neyi gösterir?",
+      "options": [
+        "Normal fetal gelişim",
+        "Hafif plasental yetmezlik",
+        "Ciddi plasental yetmezlik",
+        "Kord dolanması"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Umbilikal arterde yoktur veya tersine end-diyastolik akım ciddi plasental yetmezliği gösterir. Bu bulgu ciddi fetal kompromize işaretidir ve acil obstetrik değerlendirme gerektirir."
+    },
+    {
+      "id": "obgyn_017",
+      "question": "Matür kistik teratom (dermoid kist) ultrasonografide hangi karakteristik özelliği gösterir?",
+      "options": [
+        "Homojen hipoekoik görünüm",
+        "Posterior akustik gölgeleme ile ekojen odak",
+        "Septasyonlu kistik görünüm",
+        "Solid hiperekoik kitle"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Matür kistik teratom (dermoid kist) ultrasonografide posterior akustik gölgeleme ile ekojen odak ('tip of iceberg' işareti) gösterir. Bu görünüm kist içindeki yağ, saç ve diş gibi ektodermal türevlerden kaynaklanır."
+    },
+    {
+      "id": "obgyn_018",
+      "question": "İkinci trimester gebelikte normal serviks uzunluğu ne kadardır?",
+      "options": [
+        "2.0-2.5 cm",
+        "2.5-3.0 cm", 
+        "3.5-4.5 cm",
+        "5.0-6.0 cm"
+      ],
+      "correctAnswer": 2,
+      "explanation": "İkinci trimester gebelikte normal serviks uzunluğu transvajinal ölçümde 3.5-4.5 cm arasındadır. 25 mm altında serviks uzunluğu preterm doğum riski açısından anlamlıdır ve serklaj yerleştirilmesi düşünülebilir."
+    },
+    {
+      "id": "obgyn_019",
+      "question": "Adenomyoz tanısında MRI'da görülen junctional zone kalınlaşması hangi değerin üzerinde anlamlıdır?",
+      "options": [
+        "8 mm üzerinde",
+        "10 mm üzerinde",
+        "12 mm üzerinde",
+        "15 mm üzerinde"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Adenomyoz tanısında junctional zone kalınlaşması 12 mm üzerinde olduğunda anlamlıdır. Ek olarak myometrium içinde yüksek T2 sinyal odakları, zayıf tanımlanmış kenarlar ve endometriuma benzer güçlendirme görülür."
+    },
+    {
+      "id": "obgyn_020",
+      "question": "Gebelikte fetal kalp atışının ilk tespit edildiği hafta hangisidir?",
+      "options": [
+        "5 hafta",
+        "6 hafta", 
+        "7 hafta",
+        "8 hafta"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Fetal kalp atışı transvajinal ultrasonografide yaklaşık 6. gebelik haftasında ilk kez tespit edilebilir. Crown-rump uzunluğu 5 mm üzerinde olduğunda kardiyak aktivite görülmelidir. Normal kalp hızı 6 haftadan sonra 120-180 bpm arasındadır."
+    },
+    {
+      "id": "obgyn_021",
+      "question": "O-RADS sınıflandırmasında O-RADS 4 kategorisi hangi malignite riskini taşır?",
+      "options": [
+        "%1-10",
+        "%10-50",
+        "%50-75",
+        "%75-90"
+      ],
+      "correctAnswer": 1,
+      "explanation": "O-RADS 4 kategorisi orta risk grubuna girer ve %10-50 malignite riski taşır. Bu kategorideki hastalar jinekolojik onkoloji konsültasyonu için yönlendirilmelidir. Tümör markerları ve MRI ile daha ileri karakterizasyon yapılabilir."
+    },
+    {
+      "id": "obgyn_022",
+      "question": "Poliskistik over sendromu (PCOS) tanısında overde kaç adet folikül görülmelidir?",
+      "options": [
+        "6 üzerinde folikül (2-9 mm)",
+        "8 üzerinde folikül (2-9 mm)",
+        "12 üzerinde folikül (2-9 mm)", 
+        "20 üzerinde folikül (2-9 mm)"
+      ],
+      "correctAnswer": 2,
+      "explanation": "PCOS tanı kriterlerine göre transvajinal ultrasonografide her overde 12 üzerinde 2-9 mm çaplı folikül görülmesi gerekir. Bu ultrasonografik kriter Rotterdam kriterlerinin bir parçasıdır."
+    },
+    {
+      "id": "obgyn_023",
+      "question": "Birinci trimester gebelikte missed abortus tanısı için hangi kriter kullanılır?",
+      "options": [
+        "MSD 20 mm ve üzeri ile embriyo yok",
+        "MSD 25 mm ve üzeri ile embriyo yok",
+        "CRL 5 mm ve üzeri ile kardiyak aktivite yok", 
+        "CRL 10 mm ve üzeri ile kardiyak aktivite yok"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Missed abortus tanı kriterleri: ortalama kese çapı 25 mm ve üzeri ile embriyo yok veya crown-rump uzunluğu 7 mm ve üzeri ile fetal kalp atışı yokluğudur. Bu kriterler 2011 yılında güncellenmiş ve daha konservatif hale getirilmiştir."
+    },
+    {
+      "id": "obgyn_024",
+      "question": "Endometrioma MRI'da hangi sinyal karakteristiklerini gösterir?",
+      "options": [
+        "Yüksek T1, yüksek T2 sinyal",
+        "Yüksek T1, düşük T2 sinyal", 
+        "Düşük T1, yüksek T2 sinyal",
+        "Düşük T1, düşük T2 sinyal"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Endometrioma (çikolata kisti) MRI'da yüksek T1 sinyal (kan ürünleri nedeniyle) ve düşük T2 sinyal ('shading' etkisi) gösterir. Bu görünüm kronik hemorajiden kaynaklanan karakteristik bulgudur."
+    },
+    {
+      "id": "obgyn_025",
+      "question": "Uterin arter embolizasyonu (UAE) için en uygun emboli partikülleri hangi boyuttadır?",
+      "options": [
+        "100-300 μm",
+        "350-500 μm",
+        "500-700 μm",
+        "700-900 μm"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Fibroid tedavisi için uterin arter embolizasyonunda 350-500 μm boyutlarında PVA partikülleri veya mikroküreler kullanılır. Bu boyut uterin arterin distal dallarını etkili şekilde oklüde etmek için optimal boyuttadır."
+    }
+  ]
+}

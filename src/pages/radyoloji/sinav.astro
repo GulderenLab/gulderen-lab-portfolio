@@ -1,0 +1,1040 @@
+---
+// src/pages/radyoloji/sinav.astro
+import Layout from '../../layouts/Layout.astro';
+
+const pageTitle = "Radyoloji Sınavı";
+const pageDescription = "Oluşturulan radyoloji sınavınızı çözün ve bilginizi test edin.";
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Exam Interface -->
+  <section class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/5 to-blue-900/5">
+    <div class="container mx-auto px-6 py-8">
+      
+      <!-- No Exam Data State -->
+      <div id="no-exam-state" style="display: none;" class="text-center py-20">
+        <div class="max-w-md mx-auto">
+          <svg class="w-16 h-16 mx-auto mb-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <h3 class="text-2xl font-semibold text-gray-300 mb-4">Sınav Bulunamadı</h3>
+          <p class="text-gray-500 mb-6">Sınava başlamak için önce sınav oluşturucu sayfasından bir sınav oluşturun.</p>
+          <a 
+            href="/radyoloji/sinav-olusturucu" 
+            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-medium rounded-lg transition-all duration-300"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Sınav Oluştur
+          </a>
+        </div>
+      </div>
+
+      <!-- Exam Content -->
+      <div id="exam-content" style="display: none;" class="max-w-4xl mx-auto">
+        
+        <!-- Exam Header -->
+        <div class="bg-gradient-to-r from-slate-800/80 to-slate-900/80 backdrop-blur-sm border border-purple-500/20 rounded-2xl p-6 mb-8">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            
+            <!-- Exam Info -->
+            <div>
+              <h1 id="exam-title" class="text-2xl font-bold text-white mb-2">
+                Radyoloji Sınavı
+              </h1>
+              <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400">
+                <span id="exam-progress">Soru 1 / 10</span>
+                <span id="exam-topics">Loading...</span>
+              </div>
+            </div>
+
+            <!-- Timer and Controls -->
+            <div class="flex items-center gap-4">
+              <div id="timer-container" class="hidden">
+                <div class="flex items-center px-4 py-2 bg-gradient-to-r from-orange-600/20 to-red-600/20 border border-orange-500/30 rounded-lg">
+                  <svg class="w-5 h-5 mr-2 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span id="timer-display" class="text-orange-300 font-mono text-lg">30:00</span>
+                </div>
+              </div>
+              
+              <button 
+                id="finish-exam-btn"
+                class="px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-lg transition-colors"
+              >
+                Sınavı Bitir
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="mt-6">
+            <div class="flex items-center justify-between text-sm text-gray-400 mb-2">
+              <span>İlerleme</span>
+              <span id="progress-percentage">0%</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2">
+              <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Container -->
+        <div id="question-container" class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8 mb-8">
+          <!-- Question will be loaded here -->
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+          <button 
+            id="prev-question-btn"
+            class="w-full sm:w-auto px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled
+          >
+            <svg class="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Önceki Soru
+          </button>
+
+          <div class="flex flex-col sm:flex-row items-center gap-3">
+            <!-- Question Numbers -->
+            <div class="flex items-center gap-2">
+              <span class="text-gray-400 text-sm">Soru:</span>
+              <div id="question-numbers" class="flex gap-1">
+                <!-- Question number buttons will be generated here -->
+              </div>
+            </div>
+            
+            <!-- Skip Button (only show when no answer selected) -->
+            <button 
+              id="skip-question-btn"
+              class="px-4 py-2 bg-yellow-600/80 hover:bg-yellow-500 text-white text-sm font-medium rounded-lg transition-colors border border-yellow-500/50 hover:border-yellow-400"
+              style="display: none;"
+            >
+              <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Soruyu Atla
+            </button>
+          </div>
+
+          <button 
+            id="next-question-btn"
+            class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled
+          >
+            Sonraki Soru
+            <svg class="w-5 h-5 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Results Container -->
+      <div id="results-container" style="display: none;" class="max-w-4xl mx-auto">
+        
+        <!-- Results Header -->
+        <div class="text-center mb-12">
+          <div class="inline-flex items-center px-6 py-3 mb-6 bg-gradient-to-r from-green-600 to-blue-600 rounded-full">
+            <svg class="w-6 h-6 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-white font-medium">Sınav Tamamlandı!</span>
+          </div>
+          
+          <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            <span id="final-score" class="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">0%</span>
+          </h1>
+          <p id="score-message" class="text-xl text-gray-300">Tebrikler!</p>
+        </div>
+
+        <!-- Results Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-12">
+          <div class="bg-gradient-to-br from-green-900/20 to-green-800/20 border border-green-500/30 rounded-xl p-4 text-center">
+            <div class="text-2xl font-bold text-green-400 mb-1" id="correct-count">0</div>
+            <div class="text-green-300 font-medium text-sm">Doğru</div>
+          </div>
+          <div class="bg-gradient-to-br from-red-900/20 to-red-800/20 border border-red-500/30 rounded-xl p-4 text-center">
+            <div class="text-2xl font-bold text-red-400 mb-1" id="incorrect-count">0</div>
+            <div class="text-red-300 font-medium text-sm">Yanlış</div>
+          </div>
+          <div class="bg-gradient-to-br from-yellow-900/20 to-yellow-800/20 border border-yellow-500/30 rounded-xl p-4 text-center">
+            <div class="text-2xl font-bold text-yellow-400 mb-1" id="skipped-count">0</div>
+            <div class="text-yellow-300 font-medium text-sm">Atlandı</div>
+          </div>
+          <div class="bg-gradient-to-br from-blue-900/20 to-blue-800/20 border border-blue-500/30 rounded-xl p-4 text-center">
+            <div class="text-2xl font-bold text-blue-400 mb-1" id="total-questions">0</div>
+            <div class="text-blue-300 font-medium text-sm">Toplam</div>
+          </div>
+          <div class="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-500/30 rounded-xl p-4 text-center">
+            <div class="text-2xl font-bold text-purple-400 mb-1" id="exam-duration">0:00</div>
+            <div class="text-purple-300 font-medium text-sm">Süre</div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center space-y-4">
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <button 
+              id="review-answers-btn"
+              class="px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-medium rounded-lg transition-all duration-300"
+            >
+              <svg class="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              Cevapları İncele
+            </button>
+            
+            <a 
+              href="/radyoloji/sinav-olusturucu"
+              class="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-medium rounded-lg transition-all duration-300"
+            >
+              <svg class="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Yeni Sınav Oluştur
+            </a>
+          </div>
+          
+          <a 
+            href="/radyoloji" 
+            class="inline-flex items-center px-6 py-3 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 hover:border-purple-400/50 text-gray-300 hover:text-white font-medium rounded-lg transition-all duration-300"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Radyoloji Sayfasına Dön
+          </a>
+        </div>
+      </div>
+
+      <!-- Review Mode Container -->
+      <div id="review-container" style="display: none;" class="max-w-4xl mx-auto">
+        
+        <!-- Review Header -->
+        <div class="bg-gradient-to-r from-slate-800/80 to-slate-900/80 backdrop-blur-sm border border-blue-500/20 rounded-2xl p-6 mb-8">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 class="text-2xl font-bold text-white mb-2 flex items-center">
+                <svg class="w-6 h-6 mr-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Cevap İnceleme
+              </h1>
+              <p class="text-gray-400">Doğru ve yanlış cevaplarınızı inceleyin</p>
+            </div>
+            <button 
+              id="back-to-results-btn"
+              class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-lg transition-colors"
+            >
+              Sonuçlara Dön
+            </button>
+          </div>
+        </div>
+
+        <!-- Review Question Container -->
+        <div id="review-question-container" class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8 mb-8">
+          <!-- Review question will be loaded here -->
+        </div>
+
+        <!-- Review Navigation -->
+        <div class="flex justify-between items-center">
+          <button 
+            id="prev-review-btn"
+            class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg class="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Önceki
+          </button>
+
+          <span id="review-progress" class="text-gray-400">1 / 10</span>
+
+          <button 
+            id="next-review-btn"
+            class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Sonraki
+            <svg class="w-5 h-5 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<!-- Exam JavaScript -->
+<script>
+  // Exam state management
+  let examData = null;
+  let questions = [];
+  let userAnswers = [];
+  let currentQuestionIndex = 0;
+  let examStartTime = null;
+  let timerInterval = null;
+  let isExamFinished = false;
+
+  // Initialize exam
+  function initExam() {
+    try {
+      console.log('Initializing exam...');
+      
+      // Get exam data from sessionStorage
+      const storedExam = sessionStorage.getItem('currentExam');
+      if (!storedExam) {
+        console.log('No exam data found in sessionStorage');
+        showNoExamState();
+        return;
+      }
+
+      examData = JSON.parse(storedExam);
+      console.log('Loaded exam data:', examData);
+
+      // Generate questions
+      generateQuestions();
+      console.log('Generated questions:', questions.length);
+      
+      // Initialize exam state
+      userAnswers = new Array(questions.length).fill(null);
+      examStartTime = Date.now();
+      console.log('Initialized user answers array:', userAnswers);
+      
+      // Setup UI
+      setupExamUI();
+      displayQuestion();
+      setupTimer();
+      
+      // Show exam content
+      document.getElementById('exam-content').style.display = 'block';
+      console.log('Exam initialized successfully');
+
+    } catch (error) {
+      console.error('Error initializing exam:', error);
+      showNoExamState();
+    }
+  }
+
+  // Generate questions based on exam configuration
+  function generateQuestions() {
+    questions = [];
+    
+    if (examData.mixedQuestions) {
+      // Mix questions from all selected quizzes
+      examData.selectedQuizzes.forEach(quiz => {
+        questions.push(...quiz.questions);
+      });
+      
+      // Shuffle all questions
+      shuffleArray(questions);
+      
+      // Take requested number of questions
+      questions = questions.slice(0, examData.questionCount);
+    } else {
+      // Take questions from the quiz with most questions
+      const largestQuiz = examData.selectedQuizzes.reduce((prev, current) => {
+        return prev.questions.length > current.questions.length ? prev : current;
+      });
+      
+      // Shuffle questions from selected quiz
+      const shuffledQuestions = [...largestQuiz.questions];
+      shuffleArray(shuffledQuestions);
+      
+      // Take requested number of questions
+      questions = shuffledQuestions.slice(0, examData.questionCount);
+    }
+
+    console.log(`Generated ${questions.length} questions for exam`);
+  }
+
+  // Shuffle array function
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  // Setup exam UI
+  function setupExamUI() {
+    // Set exam title
+    const titles = examData.selectedQuizzes.map(quiz => quiz.title).join(', ');
+    document.getElementById('exam-title').textContent = examData.mixedQuestions ? 
+      'Karışık Radyoloji Sınavı' : titles;
+
+    // Set topics
+    const categories = [...new Set(examData.selectedQuizzes.map(quiz => quiz.category))];
+    document.getElementById('exam-topics').textContent = categories.join(', ');
+
+    // Generate question number buttons
+    const questionNumbers = document.getElementById('question-numbers');
+    questionNumbers.innerHTML = '';
+    
+    for (let i = 0; i < questions.length; i++) {
+      const button = document.createElement('button');
+      button.className = 'w-8 h-8 text-xs rounded-full bg-slate-700 text-gray-400 hover:bg-slate-600 transition-colors';
+      button.textContent = i + 1;
+      button.onclick = () => goToQuestion(i);
+      questionNumbers.appendChild(button);
+    }
+  }
+
+  // Setup timer
+  function setupTimer() {
+    if (examData.timeLimit > 0) {
+      document.getElementById('timer-container').classList.remove('hidden');
+      
+      let timeRemaining = examData.timeLimit * 60; // Convert to seconds
+      
+      timerInterval = setInterval(() => {
+        if (timeRemaining <= 0 || isExamFinished) {
+          clearInterval(timerInterval);
+          if (!isExamFinished) {
+            finishExam();
+          }
+          return;
+        }
+
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        document.getElementById('timer-display').textContent = display;
+
+        // Change color when time is running low
+        const timerDisplay = document.getElementById('timer-display');
+        if (timeRemaining <= 300) { // 5 minutes
+          timerDisplay.className = 'text-red-400 font-mono text-lg';
+        } else if (timeRemaining <= 600) { // 10 minutes
+          timerDisplay.className = 'text-orange-400 font-mono text-lg';
+        } else {
+          timerDisplay.className = 'text-orange-300 font-mono text-lg';
+        }
+
+        timeRemaining--;
+      }, 1000);
+    }
+  }
+
+  // Display current question
+  function displayQuestion() {
+    console.log('Displaying question', currentQuestionIndex + 1, 'of', questions.length);
+    
+    if (!questions[currentQuestionIndex]) {
+      console.error('No question found at index:', currentQuestionIndex);
+      return;
+    }
+
+    const question = questions[currentQuestionIndex];
+    const container = document.getElementById('question-container');
+    console.log('Question:', question.question);
+
+    container.innerHTML = `
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-purple-400">
+            Soru ${currentQuestionIndex + 1}
+          </h2>
+          <div class="text-sm text-gray-400">
+            ${questions.length} sorudan ${currentQuestionIndex + 1}.si
+          </div>
+        </div>
+        <p class="text-xl text-white leading-relaxed mb-8">
+          ${question.question}
+        </p>
+      </div>
+
+      <div class="space-y-4">
+        ${question.options.map((option, index) => `
+          <div class="answer-option flex items-center p-4 bg-slate-700/30 border-2 border-slate-600/50 rounded-xl cursor-pointer hover:border-purple-400/50 transition-all duration-300 ${userAnswers[currentQuestionIndex] === index ? 'border-purple-400 bg-purple-900/20 selected' : ''}" data-answer="${index}">
+            <div class="radio-indicator flex items-center justify-center w-6 h-6 mr-4 border-2 border-gray-400 rounded-full ${userAnswers[currentQuestionIndex] === index ? 'border-purple-400 bg-purple-400' : ''}">
+              <div class="radio-dot w-2 h-2 bg-white rounded-full ${userAnswers[currentQuestionIndex] === index ? 'opacity-100' : 'opacity-0'}"></div>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <div class="bg-purple-600/20 text-purple-300 px-2 py-1 rounded text-sm font-medium mr-3">
+                  ${String.fromCharCode(65 + index)}
+                </div>
+                <div class="flex-1 text-gray-200">
+                  ${option}
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    // Add click event listeners to answer options
+    const answerOptions = container.querySelectorAll('.answer-option');
+    console.log('Adding click listeners to', answerOptions.length, 'answer options');
+    
+    answerOptions.forEach((option, index) => {
+      console.log('Adding listener to answer option', index);
+      option.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Answer option clicked:', index);
+        selectAnswer(index);
+      });
+      
+      // Make keyboard accessible
+      option.setAttribute('tabindex', '0');
+      option.setAttribute('role', 'radio');
+      option.setAttribute('aria-checked', userAnswers[currentQuestionIndex] === index ? 'true' : 'false');
+      
+      option.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          console.log('Answer option selected via keyboard:', index);
+          selectAnswer(index);
+        }
+      });
+    });
+    
+    updateProgress();
+    updateNavigationButtons();
+  }
+
+  // Select answer
+  function selectAnswer(answerIndex) {
+    console.log('Selecting answer:', answerIndex, 'for question:', currentQuestionIndex);
+    
+    // Clear previous selection
+    const allAnswerOptions = document.querySelectorAll('.answer-option');
+    allAnswerOptions.forEach((option, index) => {
+      const radioIndicator = option.querySelector('.radio-indicator');
+      const radioDot = option.querySelector('.radio-dot');
+      
+      if (index === answerIndex) {
+        // Select this option
+        option.classList.remove('border-slate-600/50');
+        option.classList.add('border-purple-400', 'bg-purple-900/20', 'selected');
+        radioIndicator.classList.remove('border-gray-400');
+        radioIndicator.classList.add('border-purple-400', 'bg-purple-400');
+        radioDot.classList.remove('opacity-0');
+        radioDot.classList.add('opacity-100');
+        option.setAttribute('aria-checked', 'true');
+      } else {
+        // Deselect other options
+        option.classList.remove('border-purple-400', 'bg-purple-900/20', 'selected');
+        option.classList.add('border-slate-600/50');
+        radioIndicator.classList.remove('border-purple-400', 'bg-purple-400');
+        radioIndicator.classList.add('border-gray-400');
+        radioDot.classList.remove('opacity-100');
+        radioDot.classList.add('opacity-0');
+        option.setAttribute('aria-checked', 'false');
+      }
+    });
+    
+    userAnswers[currentQuestionIndex] = answerIndex;
+    console.log('User answers updated:', userAnswers);
+    console.log('Answer set for question', currentQuestionIndex, ':', userAnswers[currentQuestionIndex]);
+    
+    updateQuestionNumberButton(currentQuestionIndex);
+    console.log('About to update navigation buttons...');
+    updateNavigationButtons();
+    console.log('Navigation buttons updated');
+    
+    // Double-check the button state
+    const nextBtn = document.getElementById('next-question-btn');
+    if (nextBtn) {
+      console.log('Final next button state - disabled:', nextBtn.disabled, 'hasAttribute:', nextBtn.hasAttribute('disabled'));
+    }
+  }
+
+  // Update progress
+  function updateProgress() {
+    const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+    document.getElementById('progress-bar').style.width = progress + '%';
+    document.getElementById('progress-percentage').textContent = Math.round(progress) + '%';
+    document.getElementById('exam-progress').textContent = `Soru ${currentQuestionIndex + 1} / ${questions.length}`;
+  }
+
+  // Update navigation buttons
+  function updateNavigationButtons() {
+    console.log('Updating navigation buttons...');
+    console.log('Current question index:', currentQuestionIndex, 'of', questions.length);
+    console.log('Current answer:', userAnswers[currentQuestionIndex]);
+    
+    const prevBtn = document.getElementById('prev-question-btn');
+    const nextBtn = document.getElementById('next-question-btn');
+    const skipBtn = document.getElementById('skip-question-btn');
+    const submitBtn = document.getElementById('finish-exam-btn');
+    
+    // Previous button
+    if (prevBtn) {
+      const shouldDisablePrev = currentQuestionIndex === 0;
+      prevBtn.disabled = shouldDisablePrev;
+      if (shouldDisablePrev) {
+        prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      } else {
+        prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+      console.log('Previous button disabled:', prevBtn.disabled);
+    }
+    
+    const hasAnswer = userAnswers[currentQuestionIndex] !== null;
+    const isLastQuestion = currentQuestionIndex === questions.length - 1;
+    
+    console.log('Is last question:', isLastQuestion);
+    console.log('Has answer:', hasAnswer);
+    
+    // Next button logic
+    if (nextBtn) {
+      if (isLastQuestion) {
+        // Hide next button on last question
+        nextBtn.style.display = 'none';
+        console.log('Next button hidden (last question)');
+      } else {
+        // Show next button on other questions
+        nextBtn.style.display = 'inline-flex';
+        nextBtn.disabled = !hasAnswer;
+        
+        if (hasAnswer) {
+          nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          nextBtn.classList.add('hover:from-purple-500', 'hover:to-blue-500');
+          nextBtn.removeAttribute('disabled');
+          console.log('Next button enabled');
+        } else {
+          nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          nextBtn.classList.remove('hover:from-purple-500', 'hover:to-blue-500');
+          nextBtn.setAttribute('disabled', 'true');
+          console.log('Next button disabled');
+        }
+      }
+    }
+    
+    // Skip button logic
+    if (skipBtn) {
+      if (!hasAnswer) {
+        // Show skip button when no answer selected (including last question)
+        skipBtn.style.display = 'inline-flex';
+        console.log('Skip button shown');
+      } else {
+        // Hide skip button when answer selected
+        skipBtn.style.display = 'none';
+        console.log('Skip button hidden');
+      }
+    }
+    
+    // Finish exam button logic (always visible, but control enabled state)
+    if (submitBtn) {
+      // Check if all questions have been answered
+      const allAnswered = userAnswers.every(answer => answer !== null);
+      const answeredCount = userAnswers.filter(answer => answer !== null).length;
+      const skippedCount = questions.length - answeredCount;
+      
+      console.log('Questions status:', {
+        total: questions.length,
+        answered: answeredCount,
+        skipped: skippedCount,
+        allAnswered: allAnswered
+      });
+      
+      if (allAnswered) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        submitBtn.classList.add('hover:bg-green-500');
+        submitBtn.textContent = 'Sınavı Bitir';
+        console.log('Finish exam button enabled - all questions answered');
+      } else {
+        submitBtn.disabled = false; // Allow finishing even with skipped questions
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        submitBtn.classList.add('hover:bg-green-500');
+        if (skippedCount > 0) {
+          submitBtn.textContent = `Sınavı Bitir (${skippedCount} atlandı)`;
+        } else {
+          submitBtn.textContent = 'Sınavı Bitir';
+        }
+        console.log('Finish exam button enabled - allowing skipped questions');
+      }
+    }
+  }
+
+  // Update question number button appearance
+  function updateQuestionNumberButton(questionIndex) {
+    const button = document.getElementById('question-numbers').children[questionIndex];
+    if (!button) return;
+    
+    if (userAnswers[questionIndex] !== null) {
+      // Answered question - purple
+      button.className = 'w-8 h-8 text-xs rounded-full bg-purple-600 text-white hover:bg-purple-500 transition-colors';
+      button.title = `Soru ${questionIndex + 1} - Cevaplanmış`;
+    } else {
+      // Unanswered question - gray  
+      button.className = 'w-8 h-8 text-xs rounded-full bg-slate-700 text-gray-400 hover:bg-slate-600 transition-colors';
+      button.title = `Soru ${questionIndex + 1} - Cevaplanmamış`;
+    }
+  }
+
+  // Navigation functions
+  function nextQuestion() {
+    console.log('nextQuestion called, current index:', currentQuestionIndex);
+    if (currentQuestionIndex < questions.length - 1) {
+      currentQuestionIndex++;
+      console.log('Moving to next question:', currentQuestionIndex);
+      displayQuestion();
+    } else {
+      console.log('Already at last question');
+    }
+  }
+
+  function prevQuestion() {
+    console.log('prevQuestion called, current index:', currentQuestionIndex);
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      console.log('Moving to previous question:', currentQuestionIndex);
+      displayQuestion();
+    } else {
+      console.log('Already at first question');
+    }
+  }
+
+  function goToQuestion(index) {
+    currentQuestionIndex = index;
+    displayQuestion();
+  }
+
+  // Skip question function
+  function skipQuestion() {
+    console.log('skipQuestion called, current index:', currentQuestionIndex);
+    
+    if (currentQuestionIndex < questions.length - 1) {
+      // Don't set an answer - just move to next question
+      currentQuestionIndex++;
+      console.log('Skipping to next question:', currentQuestionIndex);
+      displayQuestion();
+    } else {
+      // On last question, just update the UI to reflect skipped state
+      console.log('Skipping last question - updating navigation');
+      updateNavigationButtons();
+      
+      // Show a message that the question was skipped
+      const skipMessage = document.createElement('div');
+      skipMessage.className = 'mt-4 p-3 bg-yellow-900/20 border border-yellow-500/30 rounded-lg text-yellow-300 text-sm';
+      skipMessage.innerHTML = `
+        <div class="flex items-center">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.232 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+          Bu soru atlandı. Sınavı bitirmek için "Sınavı Bitir" butonunu kullanın.
+        </div>
+      `;
+      
+      const questionContainer = document.getElementById('question-container');
+      const existingMessage = questionContainer.querySelector('.skip-message');
+      if (existingMessage) {
+        existingMessage.remove();
+      }
+      skipMessage.classList.add('skip-message');
+      questionContainer.appendChild(skipMessage);
+    }
+  }
+
+  // Finish exam
+  function finishExam() {
+    console.log('finishExam called, isExamFinished:', isExamFinished);
+    
+    if (isExamFinished) {
+      console.log('Exam already finished, returning');
+      return;
+    }
+    
+    console.log('Finishing exam...');
+    isExamFinished = true;
+    
+    if (timerInterval) {
+      console.log('Clearing timer interval');
+      clearInterval(timerInterval);
+    }
+
+    console.log('Calculating results...');
+    calculateResults();
+    console.log('Showing results...');
+    showResults();
+  }
+
+  // Calculate results
+  function calculateResults() {
+    let correctCount = 0;
+    let answeredCount = 0;
+    let skippedCount = 0;
+    
+    userAnswers.forEach((answer, index) => {
+      if (answer !== null) {
+        answeredCount++;
+        if (answer === questions[index].correctAnswer) {
+          correctCount++;
+        }
+      } else {
+        skippedCount++;
+      }
+    });
+
+    const totalQuestions = questions.length;
+    const incorrectCount = answeredCount - correctCount;
+    const percentage = answeredCount > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+    const duration = Math.floor((Date.now() - examStartTime) / 1000);
+
+    console.log('Results calculated:', {
+      total: totalQuestions,
+      answered: answeredCount,
+      correct: correctCount,
+      incorrect: incorrectCount,
+      skipped: skippedCount,
+      percentage: percentage
+    });
+
+    // Store results
+    const results = {
+      correctCount,
+      incorrectCount,
+      answeredCount,
+      skippedCount,
+      totalQuestions,
+      percentage,
+      duration,
+      questions,
+      userAnswers
+    };
+
+    sessionStorage.setItem('examResults', JSON.stringify(results));
+  }
+
+  // Show results
+  function showResults() {
+    const results = JSON.parse(sessionStorage.getItem('examResults'));
+    
+    document.getElementById('exam-content').style.display = 'none';
+    document.getElementById('results-container').style.display = 'block';
+
+    // Update result displays
+    document.getElementById('final-score').textContent = results.percentage + '%';
+    document.getElementById('correct-count').textContent = results.correctCount;
+    document.getElementById('incorrect-count').textContent = results.incorrectCount;
+    document.getElementById('skipped-count').textContent = results.skippedCount || 0;
+    document.getElementById('total-questions').textContent = results.totalQuestions;
+    
+    const minutes = Math.floor(results.duration / 60);
+    const seconds = results.duration % 60;
+    document.getElementById('exam-duration').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+    // Set score message
+    let message = 'Tebrikler!';
+    if (results.percentage >= 90) message = 'Mükemmel! Radyoloji bilginiz çok iyi.';
+    else if (results.percentage >= 80) message = 'Çok iyi! Başarılı bir performans.';
+    else if (results.percentage >= 70) message = 'İyi! Konuları tekrar etmenizi öneririz.';
+    else if (results.percentage >= 60) message = 'Orta seviye. Daha fazla çalışma gerekli.';
+    else message = 'Konuları yeniden çalışmanızı öneriyoruz.';
+    
+    document.getElementById('score-message').textContent = message;
+  }
+
+  // Review functions
+  let reviewIndex = 0;
+
+  function showReview() {
+    reviewIndex = 0;
+    document.getElementById('results-container').style.display = 'none';
+    document.getElementById('review-container').style.display = 'block';
+    displayReviewQuestion();
+  }
+
+  function displayReviewQuestion() {
+    const results = JSON.parse(sessionStorage.getItem('examResults'));
+    const question = results.questions[reviewIndex];
+    const userAnswer = results.userAnswers[reviewIndex];
+    const correctAnswer = question.correctAnswer;
+    const isCorrect = userAnswer === correctAnswer;
+
+    const container = document.getElementById('review-question-container');
+    
+    container.innerHTML = `
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-blue-400">
+            Soru ${reviewIndex + 1} - İnceleme
+          </h2>
+          <div class="flex items-center gap-2">
+            ${isCorrect ? 
+              '<span class="px-3 py-1 bg-green-600/20 text-green-400 text-sm rounded-full border border-green-500/30">✓ Doğru</span>' :
+              '<span class="px-3 py-1 bg-red-600/20 text-red-400 text-sm rounded-full border border-red-500/30">✗ Yanlış</span>'
+            }
+          </div>
+        </div>
+        <p class="text-xl text-white leading-relaxed mb-8">
+          ${question.question}
+        </p>
+      </div>
+
+      <div class="space-y-4 mb-8">
+        ${question.options.map((option, index) => {
+          let className = 'flex items-center p-4 border-2 rounded-xl';
+          
+          if (index === correctAnswer) {
+            className += ' border-green-500 bg-green-900/20';
+          } else if (index === userAnswer && index !== correctAnswer) {
+            className += ' border-red-500 bg-red-900/20';
+          } else {
+            className += ' border-slate-600/50 bg-slate-700/30';
+          }
+
+          return `
+            <div class="${className}">
+              <div class="flex items-center justify-center w-6 h-6 mr-4 border-2 ${index === correctAnswer ? 'border-green-400 bg-green-400' : index === userAnswer ? 'border-red-400 bg-red-400' : 'border-gray-400'} rounded-full">
+                <div class="w-2 h-2 bg-white rounded-full"></div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <div class="bg-purple-600/20 text-purple-300 px-2 py-1 rounded text-sm font-medium mr-3">
+                    ${String.fromCharCode(65 + index)}
+                  </div>
+                  <div class="flex-1 ${index === correctAnswer ? 'text-green-200' : index === userAnswer && index !== correctAnswer ? 'text-red-200' : 'text-gray-200'}">
+                    ${option}
+                  </div>
+                  ${index === correctAnswer ? '<span class="text-green-400 text-sm ml-2">✓ Doğru cevap</span>' : ''}
+                  ${index === userAnswer && index !== correctAnswer ? '<span class="text-red-400 text-sm ml-2">✗ Sizin cevabınız</span>' : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      ${question.explanation ? `
+        <div class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-6">
+          <h4 class="text-blue-300 font-semibold mb-3 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Açıklama
+          </h4>
+          <p class="text-blue-100 leading-relaxed">
+            ${question.explanation}
+          </p>
+        </div>
+      ` : ''}
+    `;
+
+    document.getElementById('review-progress').textContent = `${reviewIndex + 1} / ${results.questions.length}`;
+    
+    document.getElementById('prev-review-btn').disabled = reviewIndex === 0;
+    document.getElementById('next-review-btn').disabled = reviewIndex === results.questions.length - 1;
+  }
+
+  function nextReview() {
+    const results = JSON.parse(sessionStorage.getItem('examResults'));
+    if (reviewIndex < results.questions.length - 1) {
+      reviewIndex++;
+      displayReviewQuestion();
+    }
+  }
+
+  function prevReview() {
+    if (reviewIndex > 0) {
+      reviewIndex--;
+      displayReviewQuestion();
+    }
+  }
+
+  function backToResults() {
+    document.getElementById('review-container').style.display = 'none';
+    document.getElementById('results-container').style.display = 'block';
+  }
+
+  // Show no exam state
+  function showNoExamState() {
+    document.getElementById('no-exam-state').style.display = 'block';
+  }
+
+  // Event listeners
+  document.getElementById('next-question-btn').addEventListener('click', function(e) {
+    console.log('Next button clicked, disabled:', e.target.disabled);
+    if (!e.target.disabled) {
+      nextQuestion();
+    } else {
+      console.log('Next button click ignored - button is disabled');
+    }
+  });
+  
+  document.getElementById('prev-question-btn').addEventListener('click', function(e) {
+    console.log('Previous button clicked, disabled:', e.target.disabled);
+    if (!e.target.disabled) {
+      prevQuestion();
+    } else {
+      console.log('Previous button click ignored - button is disabled');
+    }
+  });
+  
+  document.getElementById('skip-question-btn').addEventListener('click', function(e) {
+    console.log('Skip button clicked');
+    skipQuestion();
+  });
+  document.getElementById('finish-exam-btn').addEventListener('click', function(e) {
+    console.log('Finish exam button clicked, disabled:', e.target.disabled);
+    
+    if (e.target.disabled) {
+      console.log('Finish exam button is disabled, ignoring click');
+      return;
+    }
+    
+    if (confirm('Sınavı bitirmek istediğinizden emin misiniz?')) {
+      console.log('User confirmed exam finish');
+      finishExam();
+    } else {
+      console.log('User cancelled exam finish');
+    }
+  });
+  
+  document.getElementById('review-answers-btn').addEventListener('click', showReview);
+  document.getElementById('back-to-results-btn').addEventListener('click', backToResults);
+  document.getElementById('next-review-btn').addEventListener('click', nextReview);
+  document.getElementById('prev-review-btn').addEventListener('click', prevReview);
+
+  // Initialize when page loads
+  document.addEventListener('DOMContentLoaded', initExam);
+</script>
+
+<style>
+  /* Custom styles for better exam interface */
+  .question-option:hover {
+    transform: translateX(4px);
+    transition: transform 0.2s ease;
+  }
+
+  .question-option.selected {
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.2);
+  }
+
+  /* Timer animations */
+  @keyframes pulse-warning {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .timer-warning {
+    animation: pulse-warning 1s infinite;
+  }
+
+  /* Progress bar animation */
+  #progress-bar {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Question number button states */
+  .question-number-answered {
+    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  }
+
+  .question-number-current {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.3);
+  }
+</style>
+</Layout>
