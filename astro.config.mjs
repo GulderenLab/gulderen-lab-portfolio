@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import pagefind from 'astro-pagefind';
 import tailwindcss from '@tailwindcss/vite';
 import { unified } from '@astrojs/markdown-remark';
 
@@ -41,8 +42,12 @@ export default defineConfig({
     mdx(),
     sitemap({
       i18n: { defaultLocale: 'tr', locales: { tr: 'tr-TR' } },
-      filter: (page) => !page.includes('/api/'),
+      filter: (page) =>
+        !page.includes('/api/') && !page.includes('/ara/') && !page.endsWith('/404/') &&
+        // etiket detay sayfaları site içi gezinme içindir; haritaya yalnızca etiket dizini girer
+        !/\/etiket\/[^/]+\/$/.test(decodeURI(new URL(page).pathname)),
     }),
+    pagefind(),
     react({
       include: ['**/*.jsx', '**/*.tsx'],
     }),

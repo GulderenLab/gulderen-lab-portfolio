@@ -86,6 +86,15 @@ const isActive = (path: string) => {
           <div class="nav-hover-bg"></div>
         </a>
         
+        <a href="/ara/" class={`nav-link ${isActive('/ara') ? 'active-nav-link text-white font-semibold' : ''}`} aria-label="Sitede ara" title="Sitede ara">
+          <span class="relative z-10 flex items-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+            </svg>
+          </span>
+          <div class="nav-hover-bg"></div>
+        </a>
+
         <a 
           href="/iletisim" 
           class="bg-linear-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 px-6 py-2.5 rounded-lg text-white font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 flex items-center space-x-2"
@@ -126,7 +135,7 @@ const isActive = (path: string) => {
     <div class="container mx-auto px-6 py-4">
       <ul class="space-y-1" role="none">
         <li role="none">
-          <a href="/" class={`mobile-nav-link ${isActive('/') ? 'active-mobile-link text-white font-semibold' : ''}`} role="menuitem">
+          <a href="/" aria-current={isActive('/') ? 'page' : undefined} class={`mobile-nav-link ${isActive('/') ? 'active-mobile-link text-white font-semibold' : ''}`} role="menuitem">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
             </svg>
@@ -164,6 +173,14 @@ const isActive = (path: string) => {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
             <span>Hakkımızda</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/ara/" class={`mobile-nav-link ${isActive('/ara') ? 'active-mobile-link text-white font-semibold' : ''}`} role="menuitem">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+            </svg>
+            <span>Ara</span>
           </a>
         </li>
         <li role="none">
@@ -237,98 +254,64 @@ const isActive = (path: string) => {
 
 {/* JavaScript for Mobile Menu Toggle */}
 <script>
+  // Mobil menü. `astro:page-load` hem ilk yüklemede hem de her ClientRouter geçişinde tetiklenir;
+  // önceki dinleyiciler AbortController ile temizlenir (çift tetiklenme / sızıntı olmaz).
+  let controller: AbortController | undefined;
+
   function initMobileMenu() {
+    controller?.abort();
+    controller = new AbortController();
+    const { signal } = controller;
+
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const menuIcon = document.getElementById('menu-icon');
     const closeIcon = document.getElementById('close-icon');
-
     if (!menuToggle || !mobileMenu) return;
 
     let isOpen = false;
 
-    function applyIconState() {
-      if (!menuIcon || !closeIcon) return;
-      if (isOpen) {
-        menuIcon.classList.add('hidden');
-        closeIcon.classList.remove('hidden');
-      } else {
-        closeIcon.classList.add('hidden');
-        menuIcon.classList.remove('hidden');
-      }
-    }
-
-    function toggleMenu() {
-      isOpen = !isOpen;
-
-      // Visibility control
+    const render = () => {
       mobileMenu.classList.toggle('hidden', !isOpen);
       mobileMenu.classList.toggle('menu-open', isOpen);
-
-      // ARIA state
-      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-
-      // Icons state
-      applyIconState();
-
-      // Body scroll lock
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuIcon?.classList.toggle('hidden', isOpen);
+      closeIcon?.classList.toggle('hidden', !isOpen);
       document.body.style.overflow = isOpen ? 'hidden' : '';
-    }
+    };
+    const setOpen = (open: boolean) => {
+      if (isOpen === open) return;
+      isOpen = open;
+      render();
+    };
 
-    function closeMenu() {
-      if (!isOpen) return;
-      isOpen = false;
-      mobileMenu.classList.add('hidden');
-      mobileMenu.classList.remove('menu-open');
-      menuToggle.setAttribute('aria-expanded', 'false');
-      applyIconState();
-      document.body.style.overflow = '';
-    }
-
-    // Toggle menu on button click
     menuToggle.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      toggleMenu();
-    });
+      setOpen(!isOpen);
+    }, { signal });
 
-    // Close menu when clicking outside
     document.addEventListener('click', (event) => {
-      if (isOpen && !mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
-        closeMenu();
-      }
-    });
+      const t = event.target as Node;
+      if (isOpen && !mobileMenu.contains(t) && !menuToggle.contains(t)) setOpen(false);
+    }, { signal });
 
-    // Close menu on escape key
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && isOpen) {
-        closeMenu();
+        setOpen(false);
+        menuToggle.focus();
       }
-    });
+    }, { signal });
 
-    // Close menu when clicking on menu links
-    const menuLinks = mobileMenu.querySelectorAll('a');
-    menuLinks.forEach(link => {
-      link.addEventListener('click', closeMenu);
-    });
+    mobileMenu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false), { signal }));
 
-    // Handle window resize
     window.addEventListener('resize', () => {
-      if (window.innerWidth >= 1024 && isOpen) { // lg breakpoint
-        closeMenu();
-      }
-    });
+      if (window.innerWidth >= 1024) setOpen(false);
+    }, { signal });
+
+    // Sayfa değişirken kaydırma kilidi kalmasın
+    document.addEventListener('astro:before-swap', () => { document.body.style.overflow = ''; }, { signal, once: true });
   }
 
-  // Initialize on DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMobileMenu);
-  } else {
-    initMobileMenu();
-  }
-
-  // Re-initialize on Astro page transitions
-  document.addEventListener('astro:page-load', () => {
-    initMobileMenu();
-  });
+  document.addEventListener('astro:page-load', initMobileMenu);
 </script>

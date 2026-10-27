@@ -9,6 +9,7 @@ const projelerCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    author: z.string().default('Abdullah Gülderen'),
     publishDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),

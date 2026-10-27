@@ -1,0 +1,28 @@
+---
+// src/components/EntryCard.astro — Yazı/proje için sade kart
+import { entryUrl, formatDate, readingTime, type AnyEntry, type ContentKind } from '../lib/content';
+
+interface Props {
+  entry: AnyEntry;
+  kind: ContentKind;
+}
+const { entry, kind } = Astro.props;
+const { data } = entry;
+---
+
+<article class="group relative flex flex-col h-full bg-slate-800/50 border border-slate-700/50 rounded-2xl overflow-hidden hover:border-cyan-400/50 transition-colors">
+  {data.image && (
+    <img src={data.image.src} alt={data.image.alt} loading="lazy" decoding="async" width="640" height="360" class="w-full h-44 object-cover" />
+  )}
+  <div class="p-5 flex flex-col grow">
+    <div class="flex items-center gap-3 text-xs text-gray-400 mb-2">
+      <span class="px-2 py-0.5 rounded-full bg-blue-600/80 text-white">{kind === 'blog' ? 'Blog' : 'Proje'}</span>
+      <time datetime={data.publishDate.toISOString()}>{formatDate(data.publishDate)}</time>
+      <span>· {readingTime(entry.body)} dk</span>
+    </div>
+    <h2 class="text-lg font-bold text-white mb-2 leading-snug">
+      <a href={entryUrl(kind, entry)} class="after:absolute after:inset-0 hover:text-cyan-300">{data.title}</a>
+    </h2>
+    <p class="text-sm text-gray-400 line-clamp-3">{data.description}</p>
+  </div>
+</article>

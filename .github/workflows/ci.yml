@@ -1,0 +1,22 @@
+# Her push ve pull request'te siteyi tip kontrolünden geçirip derler.
+name: CI
+
+on:
+  push:
+    branches: [master, main, modernizasyon-2026]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx astro check
+      - run: npm run build
+      - name: Kırık iç bağlantıları kontrol et
+        run: node scripts/check-links.mjs

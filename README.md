@@ -1,198 +1,103 @@
-# Gulderen Lab - Teknik Blog ve Proje Sitesi
+# Gulderen Lab — Teknik Blog ve Proje Sitesi
 
-🚀 **Modern web teknolojileri ile geliştirilmiş Türkçe teknik blog ve proje sergileme sitesi**
+Elektronik, gömülü sistemler, CAD ve yazılım üzerine Türkçe teknik içerikler: <https://www.gulderenlab.com>
 
-Elektronik, gömülü sistemler, web geliştirme ve CAD tasarım konularında teknik içerikler paylaşan kişisel site.
+## Teknoloji
 
-## ✨ Özellikler
+| Katman | Kullanılan |
+| --- | --- |
+| Çatı | **Astro 7** (statik site, Content Layer API) |
+| Etkileşim | React 19 adaları (`client:*`) |
+| Stil | **Tailwind CSS 4** (`@tailwindcss/vite`, CSS-first `@theme`) + Typography |
+| İçerik | Markdown / MDX, KaTeX (derleme zamanında), Shiki |
+| Arama | Pagefind (sunucusuz tam metin arama, `/ara/`) |
+| 3B | `@google/model-viewer` (yalnızca `<model-viewer>` içeren sayfalarda yüklenir) |
+| SEO | Sitemap, RSS (`/rss.xml`), Open Graph, JSON-LD (WebSite, Person, BlogPosting, BreadcrumbList) |
 
-- 🌐 **Modern Tech Stack**: Astro, React, TailwindCSS, TypeScript
-- 📝 **Teknik Blog**: MDX desteği ile matematik formülleri, kod örnekleri
-- 🎯 **3D Model Görüntüleme**: CAD Query projeleri için interaktif 3D modeller
-- 📱 **Responsive Design**: Mobil-first yaklaşım
-- 🔍 **Arama Özelliği**: Blog yazıları ve projeler için gelişmiş arama
-- ⚡ **Performance**: Optimized asset loading ve lazy loading
-- 🎨 **Interaktif Bileşenler**: P5.js, GSAP, Framer Motion animasyonları
-- 🧮 **Matematik Desteği**: KaTeX ile matematiksel formüller
-- 🌙 **Dark Theme**: Geliştirici dostu karanlık tema
+Gereksinim: **Node.js 22.23.4 veya üstü** (`.nvmrc`). npm kayıt adresi `.npmrc` ile `registry.npmjs.org` olarak sabitlenmiştir.
 
-## 🛠️ Teknolojiler
-
-### Frontend
-- **Astro 5.11**: Static Site Generation
-- **React 19**: Interaktif bileşenler
-- **TailwindCSS 3.4**: Utility-first CSS framework
-- **TypeScript**: Type safety
-
-### Content  Styling
-- **MDX**: Markdown with React components
-- **KaTeX**: Mathematical expressions
-- **Shiki**: Syntax highlighting
-- **Tailwind Typography**: Beautiful prose styling
-
-### 3D  Animation
-- **Model Viewer**: 3D model display
-- **Three.js**: Advanced 3D graphics
-- **GSAP**: Professional animations
-- **Framer Motion**: React animations
-- **P5.js**: Creative coding
-
-## 📁 Proje Yapısı
-
-```text
-/
-├── public/
-│   ├── images/           # Blog ve proje görselleri
-│   ├── models/           # 3D modeller (GLTF, GLB, STEP)
-│   └── p5/               # P5.js sketch dosyaları
-├── src/
-│   ├── components/       # Yeniden kullanılabilir bileşenler
-│   │   ├── i2c/          # I2C protokolü için özel bileşenler
-│   │   └── OrtakModBobinleri/ # Elektronik projeler
-│   ├── content/
-│   │   ├── blog/         # Blog yazıları (MDX)
-│   │   └── projeler/     # Proje koleksiyonu
-│   ├── layouts/          # Sayfa şablonları
-│   ├── pages/            # Sayfa rotaları
-│   └── styles/           # Global stiller
-├── scripts/              # Utility ve optimizasyon scriptleri
-├── astro.config.mjs      # Astro yapılandırması
-└── tailwind.config.js    # Tailwind yapılandırması
-```
-
-## 🚀 Kurulum ve Çalıştırma
-
-### Gereksinimler
-- Node.js 18+ 
-- npm veya yarn
-
-### Kurulum
-```bash
-# Projeyi klonla
-git clone https://github.com/GulderenLab/web-page-design.git
-cd web-page-design
-
-# Bağımlılıkları yükle
-npm install
-
-# Geliştirme sunucusunu başlat
-npm run dev
-```
-
-### Komutlar
+## Komutlar
 
 | Komut | Açıklama |
-|-------|----------|
-| `npm run dev` | Geliştirme sunucusunu başlat (localhost:4321) |
-| `npm run build` | Production build oluştur |
-| `npm run preview` | Build'i önizle |
-| `npm run clean` | Cache'i temizle |
-| `npm run analyze` | Performance analizi yap |
-| `npm run optimize` | Tam optimizasyon süreci |
+| --- | --- |
+| `npm install` | Bağımlılıkları kurar |
+| `npm run dev` | Geliştirme sunucusu (`localhost:4321`; `localhost+3*.pem` varsa HTTPS) |
+| `npm run build` | Üretim derlemesi → `dist/` (Pagefind indeksi dahil) |
+| `npm run preview` | Derlenmiş siteyi yerelde önizler |
+| `npm run check` | TypeScript / Astro tip kontrolü |
+| `npm run verify` | Tip kontrolü + derleme (CI ile aynı) |
+| `npm run check:links` | `dist/` içinde kırık iç bağlantıları arar |
+| `npm run new:post -- "Başlık"` | Yeni blog taslağı oluşturur (`--proje` ile proje) |
+| `npm run optimize:images` | `public/images` altındaki büyük görselleri yerinde küçültür |
+| `npm run clean` | `dist` ve önbellekleri siler |
 
-## 📊 Performance Optimizasyonu
+## Proje yapısı
 
-### Analiz Çalıştırma
-```bash
-npm run analyze
+```text
+src/
+├── content.config.ts     # Koleksiyon şemaları (blog, projeler)
+├── content/
+│   ├── blog/             # Blog yazıları (.md / .mdx)
+│   └── projeler/         # Proje yazıları (.mdx)
+├── layouts/
+│   ├── Layout.astro      # Temel iskelet: SEO, meta, OG, JSON-LD, header/footer
+│   └── PostLayout.astro  # Yazı/proje detay şablonu (TOC, seri, ilgili içerik, paylaşım)
+├── lib/
+│   ├── site.ts           # Site adı, e-posta, sosyal bağlantılar — TEK KAYNAK
+│   └── content.ts        # getPublished, okuma süresi, seri ve ilgili içerik yardımcıları
+├── components/           # Header, Footer, TableOfContents, i2c/, OrtakModBobinleri/ ...
+├── pages/
+│   ├── blog/, projeler/  # Liste + [slug] detay sayfaları
+│   ├── etiket/           # Etiket dizini ve etiket sayfaları
+│   ├── ara.astro         # Pagefind arama sayfası
+│   ├── hesaplama-araclari.astro
+│   ├── rss.xml.ts, robots.txt.ts, sitemap.xml.ts, 404.astro
+└── styles/tailwind.css   # Tailwind 4 tema belirteçleri ve içerik stilleri
+public/
+├── images/  models/  p5/  scripts/image-modal.js
+scripts/                  # new-post, optimize-images, check-links, performance-analysis
 ```
 
-### Öneriler
-1. **Görsel Optimizasyonu**
-   - WebP/AVIF formatlarını kullan
-   - Lazy loading uygula
-   - Responsive images
+## İçerik ekleme
 
-2. **3D Model Optimizasyonu**
-   - GLTF/GLB sıkıştırma
-   - Draco compression
-   - Progressive loading
-
-3. **Genel Optimizasyon**
-   - Service Worker
-   - CDN kullanımı
-   - Brotli compression
-
-## 🎯 İçerik Yönetimi
-
-### Blog Yazısı Ekleme
 ```bash
-# src/content/blog/ dizinine yeni .mdx dosyası ekle
+npm run new:post -- "LM317 ile Ayarlı Güç Kaynağı"          # blog
+npm run new:post -- "Mini Osiloskop" --proje                 # proje
 ```
 
-### MDX Frontmatter Örneği
+Frontmatter alanları:
+
 ```yaml
 ---
 title: "Yazı Başlığı"
-description: "Yazı açıklaması"
-publishDate: 2025-01-01
-tags: ["elektronik", "programming"]
-image:
-  src: "/images/kapak.jpg"
-  alt: "Kapak görseli"
-isDraft: false
+description: "Arama sonuçlarında görünecek 150-160 karakterlik açıklama"
+publishDate: 2026-01-15
+updatedDate: 2026-02-01        # isteğe bağlı — SEO'da 'dateModified' olur
+tags: ["elektronik", "stm32"]
+image: { src: "/images/kapak.png", alt: "Kapak açıklaması" }
+isDraft: false                 # true ise yalnızca `npm run dev` sırasında görünür
+# Seri yazıları (önceki/sonraki bağlantıları otomatik hesaplanır):
+seriesSlug: "cad-query-klavuzu"
+part: 2
+totalPages: 8
 ---
 ```
 
-### Proje Ekleme
-```bash
-# src/content/projeler/ dizinine yeni .md dosyası ekle
-```
+- Seri gezinmesi `seriesSlug` + `part` ile otomatik bulunur; `prevPageSlug`/`nextPageSlug` hâlâ desteklenir ama artık yalnızca var olan yazılara bağlantı verilir.
+- Matematik: satır içi `$E = mc^2$`, blok `$$ ... $$` (derleme zamanında KaTeX ile işlenir, tarayıcıda ek betik yüklenmez).
+- 3B model: içeriğe `<model-viewer src="/models/x.gltf" ...>` eklemeniz yeterli; kütüphane otomatik yüklenir.
 
-## 🔧 Geliştirme Notları
+## Site bilgilerini değiştirme
 
-### Yeni Bileşen Ekleme
-1. `src/components/` altında oluştur
-2. TypeScript interface'lerini tanımla
-3. Responsive design uygula
-4. Accessibility standartlarına uy
+E-posta, sosyal bağlantılar, varsayılan OG görseli gibi bilgiler `src/lib/site.ts` dosyasındadır.
 
-### 3D Model Entegrasyonu
-1. Model'i `public/models/` dizinine koy
-2. GLTF/GLB formatını tercih et
-3. Model-viewer component'ini kullan
+## Sürekli entegrasyon
 
-### Matematik Formülleri
-```markdown
-# Inline: $E = mc^2$
-# Block:
-$$
-\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
-$$
-```
+`.github/workflows/ci.yml` her push / PR'da `npm ci → astro check → build → check-links` çalıştırır.
+`.github/dependabot.yml` bağımlılık güncellemeleri için haftalık PR açar.
 
-## 📱 Mobil Optimizasyon
+## Bağlantılar
 
-- Responsive breakpoints
-- Touch-friendly interface
-- Optimized image loading
-- Reduced motion preferences
-
-## 🌐 SEO ve Performans
-
-- Lighthouse score: 95+
-- SEO-friendly URLs
-- Open Graph metadata
-- Sitemap auto-generation
-- Fast loading times
-
-## 🤝 Katkıda Bulunma
-
-1. Fork yapın
-2. Feature branch oluşturun
-3. Commit'lerinizi yapın
-4. Pull request gönderin
-
-## 📄 Lisans
-
-MIT License - Detaylar için LICENSE dosyasına bakınız.
-
-## 🔗 Bağlantılar
-
-- **Site**: [gulderenlab.com](https://gulderenlab.com)
-- **GitHub**: [GulderenLab](https://github.com/GulderenLab)
-- **LinkedIn**: [Abdullah Gülderen](https://linkedin.com/in/abdullah-gülderen-31120b35b/)
-
----
-
-⭐ **Projeyi beğendiyseniz star vermeyi unutmayın!**
+- Site: [gulderenlab.com](https://www.gulderenlab.com)
+- GitHub: [GulderenLab](https://github.com/GulderenLab)
+- LinkedIn: [Abdullah Gülderen](https://linkedin.com/in/abdullah-gülderen-31120b35b/)

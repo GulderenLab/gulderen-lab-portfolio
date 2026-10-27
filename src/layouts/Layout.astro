@@ -1,128 +1,130 @@
 ---
-// src/layouts/Layout.astro
+// src/layouts/Layout.astro — Tüm sayfaların temel iskeleti (SEO, meta, global stiller)
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
+import { SITE } from '../lib/site';
 import '../styles/tailwind.css';
 import '../styles/design-system-optimized.css';
 import '../styles/animations.css';
 
-// Props interface'ini tanımlıyoruz
 interface Props {
     title: string;
-    description?: string; // Açıklama (isteğe bağlı)
-    image?: string; // Sayfa resmi (OG için, isteğe bağlı)
+    description?: string;
+    /** OG/Twitter görseli (site köküne göre yol veya tam URL) */
+    image?: string;
+    imageAlt?: string;
+    type?: 'website' | 'article';
+    publishedTime?: Date;
+    modifiedTime?: Date;
+    tags?: string[];
+    /** Sayfaya özel ek JSON-LD nesneleri */
+    jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+    /** Arama motorlarından gizle (ör. 404) */
+    noindex?: boolean;
 }
 
-// Prop'ları alıyoruz ve varsayılan değerler atıyoruz
 const {
     title,
-    description = 'Elektronik ve Yazılım Projelerimi sergilediğim kişisel web sitem.', // Varsayılan açıklama
+    description = SITE.description,
     image,
+    imageAlt,
+    type = 'website',
+    publishedTime,
+    modifiedTime,
+    tags = [],
+    jsonLd,
+    noindex = false,
 } = Astro.props;
 
-const siteName = 'Gulderen Lab';
-const formattedTitle = `${title} | ${siteName}`;
-const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
-const ogImageURL = image && Astro.site ? new URL(image, Astro.site).toString() : undefined;
+const siteName = SITE.name;
+const formattedTitle = title === siteName ? title : `${title} | ${siteName}`;
+const site = Astro.site ?? new URL(SITE.url);
+const canonicalURL = new URL(Astro.url.pathname, site);
+const ogImageURL = new URL(image ?? SITE.defaultOgImage, site).toString();
+const ogImageAlt = imageAlt ?? title;
 
-// Animate background only on homepage
+// Animasyonlu arka plan yalnızca ana sayfada
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/index.html';
 
-if (!Astro.site && import.meta.env.PROD) {
-    console.warn(
-        `Astro.site yapılandırması astro.config.mjs dosyasında tanımlanmamış. Canonical ve OG URL'ler düzgün oluşturulamayacak.`
-    );
-}
+const baseJsonLd = [
+    {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: siteName,
+        url: site.toString(),
+        inLanguage: 'tr-TR',
+        potentialAction: {
+            '@type': 'SearchAction',
+            target: `${new URL('/ara/', site)}?q={search_term_string}`,
+            'query-input': 'required name=search_term_string',
+        },
+    },
+    {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: SITE.author.name,
+        url: site.toString(),
+        sameAs: [SITE.social.github, SITE.social.linkedin],
+        jobTitle: SITE.author.jobTitle,
+        knowsAbout: ['Elektronik', 'Gömülü Sistemler', 'PCB Tasarımı', 'CAD', 'Yazılım Geliştirme'],
+    },
+];
+const allJsonLd = [...baseJsonLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [])];
 ---
 
 <!doctype html>
 <html lang="tr" class="scroll-smooth">
     <head>
         <meta charset="UTF-8" />
-        <ClientRouter />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-        <meta name="generator" content={Astro.generator} />
-
-        {/* KaTeX (Matematik Formülleri) Stil ve Script Dosyaları - Optimized */}
-        <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"></noscript>
-        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-        <script>
-          document.addEventListener("DOMContentLoaded", function () {
-            const renderMath = () => {
-              if (typeof renderMathInElement === 'function') {
-                renderMathInElement(document.body, {
-                  delimiters: [
-                    { left: "$$", right: "$$", display: true },
-                    { left: "$", right: "$", display: false }
-                  ]
-                });
-              }
-            };
-            renderMath();
-            document.addEventListener('astro:page-load', renderMath);
-          });
-        </script>
-        
-        {/* model-viewer script - Optimized */}
-        <link rel="modulepreload" href="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" defer></script>
-        
-        {/* Image modal script */}
-        <script src="/scripts/image-modal.js" defer></script>
-        
-        {/* Performance and SEO Optimizations */}
-        <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
-        <link rel="dns-prefetch" href="//unpkg.com">
-        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-        <meta name="googlebot" content="index, follow">
-        <meta name="theme-color" content="#1e293b">
-        <meta name="msapplication-TileColor" content="#1e293b">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <meta name="format-detection" content="telephone=no">
-
-        {/* SEO ve META ETİKETLERİ */}
         <title>{formattedTitle}</title>
         <meta name="description" content={description} />
-        {canonicalURL && <link rel="canonical" href={canonicalURL.toString()} />}
+        <link rel="canonical" href={canonicalURL.toString()} />
+        <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="author" content={SITE.author.name} />
+
+        {/* Simgeler ve PWA */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content={SITE.themeColor} />
+        <meta name="color-scheme" content="dark" />
+        <meta name="format-detection" content="telephone=no" />
+
+        {/* Beslemeler ve site haritası */}
+        <link rel="alternate" type="application/rss+xml" title={`${siteName} — RSS`} href={new URL('/rss.xml', site)} />
+        <link rel="sitemap" href="/sitemap-index.xml" />
+
+        {/* Open Graph */}
+        <meta property="og:type" content={type} />
+        <meta property="og:site_name" content={siteName} />
+        <meta property="og:locale" content={SITE.locale} />
         <meta property="og:title" content={formattedTitle} />
         <meta property="og:description" content={description} />
-        {canonicalURL && <meta property="og:url" content={canonicalURL.toString()} />}
-        {ogImageURL && <meta property="og:image" content={ogImageURL} />}
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content={siteName} />
-        <meta property="og:locale" content="tr_TR" />
-        
-        {/* Twitter Card Meta Tags */}
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content={formattedTitle}>
-        <meta name="twitter:description" content={description}>
-        {ogImageURL && <meta name="twitter:image" content={ogImageURL}>}
-        <meta name="twitter:creator" content="@GulderenLab">
-        
-        {/* JSON-LD Structured Data */}
-        <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Person",
-          "name": "Abdullah Gülderen",
-          "url": Astro.site?.toString(),
-          "sameAs": [
-            "https://github.com/GulderenLab",
-            "https://linkedin.com/in/abdullah-gülderen-31120b35b/"
-          ],
-          "jobTitle": "Electronics Engineer & Software Developer",
-          "worksFor": {
-            "@type": "Organization",
-            "name": "Gulderen Lab"
-          },
-          "knowsAbout": ["Electronics", "Software Development", "IoT", "Machine Learning", "PCB Design"]
-        })}
-        </script>
+        <meta property="og:url" content={canonicalURL.toString()} />
+        <meta property="og:image" content={ogImageURL} />
+        <meta property="og:image:alt" content={ogImageAlt} />
+        {type === 'article' && publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+        {type === 'article' && (modifiedTime ?? publishedTime) && <meta property="article:modified_time" content={(modifiedTime ?? publishedTime)!.toISOString()} />}
+        {type === 'article' && <meta property="article:author" content={SITE.author.name} />}
+        {type === 'article' && tags.map((tag) => <meta property="article:tag" content={tag} />)}
+
+        {/* Twitter / X */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={formattedTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImageURL} />
+
+        {/* Yapılandırılmış veri */}
+        <script type="application/ld+json" set:html={JSON.stringify(allJsonLd)} />
+
+        <ClientRouter />
+
+        {/* Görsel büyütme (lightbox) */}
+        <script src="/scripts/image-modal.js" defer is:inline></script>
 
         {/* STİLLER */}
         <style is:inline>
@@ -201,7 +203,7 @@ if (!Astro.site && import.meta.env.PROD) {
             }
         </style>
     </head>
-    <body class="relative bg-linear-to-br from-slate-900 via-gray-900 to-slate-800 text-gray-100 flex flex-col min-h-screen font-sans antialiased overflow-x-hidden">
+<body class="relative bg-linear-to-br from-slate-900 via-gray-900 to-slate-800 text-gray-100 flex flex-col min-h-screen font-sans antialiased overflow-x-hidden">
         {/* Dynamic Conic Gradient Wave Background (Option B) - only on Home */}
         {isHome && (
           <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
@@ -209,20 +211,35 @@ if (!Astro.site && import.meta.env.PROD) {
           </div>
         )}
 
+        <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-cyan-600 focus:px-4 focus:py-2 focus:text-white">
+            İçeriğe geç
+        </a>
+
         <Header siteTitle={siteName} />
 
-        <main class="relative px-4 py-8 grow w-full overflow-x-hidden">
+        <main id="main-content" class="relative px-4 py-8 grow w-full overflow-x-hidden">
             <div class="max-w-full">
-                <article class="prose prose-invert w-full max-w-none">
+                <div class="prose prose-invert w-full max-w-none">
                     <slot />
-                </article>
+                </div>
             </div>
         </main>
 
         
         <Footer />
 
-        {/* GEREKLİ SCRIPT GERİ EKLENDİ */}
+        {/* 3B model görüntüleyici: yalnızca sayfada <model-viewer> varsa yüklenir */}
+        <script>
+            async function loadModelViewer() {
+                if (document.querySelector('model-viewer') && !customElements.get('model-viewer')) {
+                    await import('@google/model-viewer');
+                }
+            }
+            loadModelViewer();
+            document.addEventListener('astro:page-load', loadModelViewer);
+        </script>
+
+        {/* Kod bloklarına "Kopyala" düğmesi */}
         <script is:inline>
             function addCopyButtons() {
                 document.querySelectorAll('pre:has(code)').forEach((block) => {

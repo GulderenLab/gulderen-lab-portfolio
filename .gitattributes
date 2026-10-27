@@ -1,0 +1,11 @@
+* text=auto
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.glb binary
+*.bin binary
+*.3mf binary
+*.stl binary
+*.pdf binary

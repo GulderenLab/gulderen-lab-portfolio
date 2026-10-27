@@ -1,0 +1,47 @@
+---
+// src/pages/etiket/[tag].astro — Etikete göre filtrelenmiş içerik listesi
+import Layout from '../../layouts/Layout.astro';
+import EntryCard from '../../components/EntryCard.astro';
+import { getPublished, tagSlug, type AnyEntry, type ContentKind } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const [blog, projeler] = await Promise.all([getPublished('blog'), getPublished('projeler')]);
+  const items = [
+    ...blog.map((entry) => ({ entry: entry as AnyEntry, kind: 'blog' as ContentKind })),
+    ...projeler.map((entry) => ({ entry: entry as AnyEntry, kind: 'projeler' as ContentKind })),
+  ];
+  const byTag = new Map<string, { label: string; items: typeof items }>();
+  for (const item of items) {
+    for (const tag of item.entry.data.tags ?? []) {
+      const slug = tagSlug(tag);
+      if (!slug) continue;
+      if (!byTag.has(slug)) byTag.set(slug, { label: tag, items: [] });
+      byTag.get(slug)!.items.push(item);
+    }
+  }
+  return [...byTag.entries()].map(([tag, { label, items }]) => ({
+    params: { tag },
+    props: {
+      label,
+      items: items.sort((a, b) => b.entry.data.publishDate.valueOf() - a.entry.data.publishDate.valueOf()),
+    },
+  }));
+}
+
+const { label, items } = Astro.props;
+const title = `#${label} etiketli içerikler`;
+const noindex = items.length < 2; // tek içerikli etiket sayfaları "ince içerik" sayılmasın
+---
+
+<Layout title={title} description={`Gulderen Lab'da "${label}" etiketiyle yayınlanan ${items.length} yazı ve proje.`} noindex={noindex}>
+  <section class="not-prose max-w-6xl mx-auto px-4 py-12">
+    <nav aria-label="Konum" class="text-sm text-gray-400 mb-4">
+      <a href="/" class="hover:text-cyan-300">Ana Sayfa</a> / <a href="/etiket/" class="hover:text-cyan-300">Etiketler</a> / <span class="text-gray-300">#{label}</span>
+    </nav>
+    <h1 class="text-4xl font-bold text-white mb-2">#{label}</h1>
+    <p class="text-gray-400 mb-10">{items.length} içerik</p>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map(({ entry, kind }) => <EntryCard entry={entry} kind={kind} />)}
+    </div>
+  </section>
+</Layout>

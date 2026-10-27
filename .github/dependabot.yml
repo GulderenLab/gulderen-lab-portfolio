@@ -1,0 +1,20 @@
+# Bağımlılık güncellemeleri için haftalık otomatik PR'lar
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      astro:
+        patterns: ['astro', '@astrojs/*', 'astro-*']
+      tailwind:
+        patterns: ['tailwindcss', '@tailwindcss/*']
+      react:
+        patterns: ['react', 'react-dom', '@types/react*']
+    open-pull-requests-limit: 5
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

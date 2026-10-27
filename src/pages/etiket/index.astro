@@ -1,0 +1,33 @@
+---
+// src/pages/etiket/index.astro — Tüm etiketler (kullanım sıklığına göre)
+import Layout from '../../layouts/Layout.astro';
+import { getPublished, tagSlug } from '../../lib/content';
+
+const [blog, projeler] = await Promise.all([getPublished('blog'), getPublished('projeler')]);
+const counts = new Map<string, { label: string; count: number }>();
+for (const e of [...blog, ...projeler]) {
+  for (const tag of e.data.tags ?? []) {
+    const slug = tagSlug(tag);
+    if (!slug) continue;
+    const cur = counts.get(slug) ?? { label: tag, count: 0 };
+    cur.count++;
+    counts.set(slug, cur);
+  }
+}
+const tags = [...counts.entries()].sort((a, b) => b[1].count - a[1].count || a[1].label.localeCompare(b[1].label, 'tr'));
+---
+
+<Layout title="Etiketler" description="Gulderen Lab'daki tüm yazı ve projelerin konu etiketleri.">
+  <section class="not-prose max-w-5xl mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold text-white mb-8">Etiketler</h1>
+    <ul class="flex flex-wrap gap-3">
+      {tags.map(([slug, { label, count }]) => (
+        <li>
+          <a href={`/etiket/${slug}/`} class="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/50 px-3 py-1.5 text-sm text-gray-200 hover:border-cyan-400/60 hover:text-white">
+            #{label} <span class="text-xs text-gray-400">{count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Layout>

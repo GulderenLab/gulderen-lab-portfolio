@@ -1,23 +1,31 @@
 ---
 // src/components/Footer.astro
+import { SITE } from '../lib/site';
+import { getPublished } from '../lib/content';
 const today = new Date();
+
+// Gerçek içerik sayıları (elle güncellemeye gerek yok)
+const [blogCount, projectCount] = await Promise.all([
+  getPublished('blog').then((r) => r.length),
+  getPublished('projeler').then((r) => r.length),
+]);
 
 // Social media links with icons
 const socialLinks = [
   {
-    href: 'https://github.com/GulderenLab',
+    href: SITE.social.github,
     text: 'GitHub',
     icon: 'github',
     color: 'hover:text-gray-300'
   },
   {
-    href: 'https://linkedin.com/in/abdullah-gülderen-31120b35b/',
+    href: SITE.social.linkedin,
     text: 'LinkedIn',
     icon: 'linkedin',
     color: 'hover:text-blue-400'
   },
   {
-    href: 'mailto:contact@gulderenlab.com',
+    href: `mailto:${SITE.author.email}`,
     text: 'Email',
     icon: 'email',
     color: 'hover:text-green-400'
@@ -31,14 +39,16 @@ const footerNavLinks = [
   { href: '/hesaplama-araclari', text: 'Araçlar' },
   { href: '/hakkimizda', text: 'Hakkımızda' },
   { href: '/iletisim', text: 'İletişim' },
+  { href: '/etiket/', text: 'Etiketler' },
+  { href: '/ara/', text: 'Ara' },
+  { href: '/rss.xml', text: 'RSS' },
   { href: '/gizlilik-politikasi', text: 'Gizlilik' }
 ];
 
 // Quick stats
 const stats = [
-  { label: 'Projeler', value: '15+' },
-  { label: 'Blog Yazıları', value: '25+' },
-  { label: 'Teknoloji', value: '10+' }
+  { label: 'Proje', value: String(projectCount) },
+  { label: 'Blog Yazısı', value: String(blogCount) },
 ];
 ---
 
