@@ -24,3 +24,6 @@ pnpm-debug.log*
 .idea/
 # Yerel SSL sertifika ve anahtar dosyalarını yoksay
 *.pem
+# performans raporu (scripts/performance-analysis.js tarafından üretilir)
+performance-report.json
+_claude_transfer.bundle
