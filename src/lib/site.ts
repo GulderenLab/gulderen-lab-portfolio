@@ -32,15 +32,15 @@ export const SITE = {
     client: 'ca-pub-9326448562655435',
     slots: {
       /** Yazı/proje sayfası — geniş ekranlarda sağ boşlukta, kaydırırken sabit kalan dikey alan */
-      sidebar: '',
+      sidebar: '3375104301', // gulderenlab-sidebar
       /** Uzun yazıların ortasında, iki ana başlık arasında (yalnızca ≥ 4 ana başlıklı yazılar) */
-      inArticle: '',
+      inArticle: '5833534656', // gulderenlab-inArticle
       /** Yazı/proje bitiminde, "İlgili yazılar" bölümünden önce */
-      afterArticle: '',
+      afterArticle: '1211975393', // gulderenlab-afterArticle
       /** Blog / proje / etiket listelerinin altında */
-      listing: '',
+      listing: '7805303908', // gulderenlab-listing
       /** Hesaplama araçları sayfasının altında */
-      tools: '',
+      tools: '5645832396', // gulderenlab-tools
     },
   },
 } as const;
