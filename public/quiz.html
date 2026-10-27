@@ -247,6 +247,115 @@
             display: block;
         }
 
+        /* Question Image Styles */
+        .question-image-container {
+            margin: 1.5rem 0;
+            text-align: center;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+        }
+        
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .question-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .image-caption {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-style: italic;
+            line-height: 1.4;
+        }
+        
+        /* Image Modal Styles */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+        }
+        
+        .image-modal-content {
+            margin: auto;
+            display: block;
+            width: 90%;
+            max-width: 900px;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .image-modal-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        .image-modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .image-modal-close:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+        
+        .image-modal-caption {
+            margin: auto;
+            display: block;
+            width: 90%;
+            max-width: 700px;
+            text-align: center;
+            color: white;
+            padding: 10px 0;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        
+        /* Animation for modal */
+        .image-modal {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive Image Styles */
         @media (max-width: 768px) {
             .quiz-container {
                 margin: 1rem;
@@ -261,6 +370,29 @@
             .btn {
                 width: 100%;
                 justify-content: center;
+            }
+            
+            .question-image-container {
+                margin: 1rem 0;
+                padding: 0.5rem;
+            }
+            
+            .image-modal-content {
+                width: 95%;
+                margin: 5% auto;
+                transform: none;
+                top: auto;
+            }
+            
+            .image-modal-close {
+                top: -30px;
+                font-size: 1.5rem;
+                width: 30px;
+                height: 30px;
+            }
+            
+            .image-caption {
+                font-size: 0.8rem;
             }
         }
     </style>

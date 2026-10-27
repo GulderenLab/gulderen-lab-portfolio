@@ -387,7 +387,7 @@ export default function OrtakModSokBobiniEgitici() {
           Gürültü engelleme
         </text>
         <text x="150" y="110" fill={CONFIG.TEXT_COLOR} fontSize="12" textAnchor="middle">
-          Z >> 0 Ω
+          Z &gt;&gt; 0 Ω
         </text>
 
         {/* Ortak mod bilgisi */}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Creator Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 20px auto; padding: 20px; }
+        .test-result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Exam Creator Quiz Loading Debug</h1>
+    
+    <div id="debug-results"></div>
+    
+    <h2>Manual Tests</h2>
+    <button onclick="testGenitalQuizLoading()">Test Genital Quiz Loading</button>
+    <button onclick="testAllQuizFiles()">Test All Quiz Files</button>
+    <button onclick="simulateExamCreatorLoad()">Simulate Exam Creator Load</button>
+    
+    <script>
+        async function testGenitalQuizLoading() {
+            const resultsDiv = document.getElementById('debug-results');
+            resultsDiv.innerHTML = '<div class="info">Testing genital_aciller.json loading...</div>';
+            
+            try {
+                console.log('Attempting to load genital_aciller.json...');
+                const response = await fetch('/data/quizzes/genital_aciller.json');
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                console.log('Response URL:', response.url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Successfully loaded data:', data);
+                
+                resultsDiv.innerHTML = `
+                    <div class="success">✅ Quiz loaded successfully!</div>
+                    <div class="info">
+                        <h3>Quiz Details:</h3>
+                        <ul>
+                            <li><strong>ID:</strong> ${data.id}</li>
+                            <li><strong>Title:</strong> ${data.title}</li>
+                            <li><strong>Category:</strong> ${data.category}</li>
+                            <li><strong>Questions:</strong> ${data.questions?.length || 0}</li>
+                            <li><strong>Difficulty:</strong> ${data.difficulty}</li>
+                            <li><strong>Time Limit:</strong> ${data.timeLimit} minutes</li>
+                        </ul>
+                    </div>
+                    <details>
+                        <summary>Raw JSON Data</summary>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </details>
+                `;
+                
+            } catch (error) {
+                console.error('Error loading quiz:', error);
+                resultsDiv.innerHTML = `
+                    <div class="error">❌ Failed to load quiz</div>
+                    <div class="error">Error: ${error.message}</div>
+                    <div class="info">
+                        <p>Possible causes:</p>
+                        <ul>
+                            <li>File path incorrect</li>
+                            <li>JSON syntax error</li>
+                            <li>Server not running</li>
+                            <li>CORS issues</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testAllQuizFiles() {
+            const quizFiles = [
+                'x-ray-physics-quiz.json',
+                'ct-physics-quiz.json',
+                'ultrasound-physics-quiz.json',
+                'interventional-radiology-quiz.json',
+                'thyroid-radiology-quiz-clean.json',
+                'obgyn-radiology-quiz.json',
+                'breast-radiology-quiz.json',
+                'genital_aciller.json'
+            ];
+            
+            const resultsDiv = document.getElementById('debug-results');
+            resultsDiv.innerHTML = '<div class="info">Testing all quiz files...</div>';
+            
+            const results = [];
+            
+            for (const file of quizFiles) {
+                try {
+                    const response = await fetch(`/data/quizzes/${file}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        results.push({
+                            file,
+                            status: 'success',
+                            data: {
+                                id: data.id,
+                                title: data.title,
+                                questionCount: data.questions?.length || 0
+                            }
+                        });
+                    } else {
+                        results.push({
+                            file,
+                            status: 'error',
+                            error: `HTTP ${response.status}`
+                        });
+                    }
+                } catch (error) {
+                    results.push({
+                        file,
+                        status: 'error',
+                        error: error.message
+                    });
+                }
+            }
+            
+            let html = '<h3>Quiz Files Test Results:</h3>';
+            results.forEach(result => {
+                if (result.status === 'success') {
+                    html += `
+                        <div class="success">
+                            ✅ ${result.file} 
+                            - ID: ${result.data.id} 
+                            - Questions: ${result.data.questionCount}
+                            ${result.file === 'genital_aciller.json' ? ' <strong>(TARGET QUIZ!)</strong>' : ''}
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="error">❌ ${result.file} - Error: ${result.error}</div>
+                    `;
+                }
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        async function simulateExamCreatorLoad() {
+            const resultsDiv = document.getElementById('debug-results');
+            resultsDiv.innerHTML = '<div class="info">Simulating exam creator loading process...</div>';
+            
+            // This simulates how an exam creator might load quiz files
+            try {
+                const quizConfigs = {
+                    'genital-aciller': {
+                        file: 'genital_aciller.json',
+                        name: 'Genital Aciller Radyoloji'
+                    }
+                };
+                
+                const availableQuizzes = [];
+                
+                for (const [key, config] of Object.entries(quizConfigs)) {
+                    try {
+                        const response = await fetch(`/data/quizzes/${config.file}`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            availableQuizzes.push({
+                                key,
+                                config,
+                                data,
+                                loaded: true
+                            });
+                        } else {
+                            availableQuizzes.push({
+                                key,
+                                config,
+                                error: `HTTP ${response.status}`,
+                                loaded: false
+                            });
+                        }
+                    } catch (error) {
+                        availableQuizzes.push({
+                            key,
+                            config,
+                            error: error.message,
+                            loaded: false
+                        });
+                    }
+                }
+                
+                let html = '<h3>Exam Creator Simulation Results:</h3>';
+                availableQuizzes.forEach(quiz => {
+                    if (quiz.loaded) {
+                        html += `
+                            <div class="success">
+                                ✅ ${quiz.config.name} loaded successfully
+                                <br>File: ${quiz.config.file}
+                                <br>Quiz ID: ${quiz.data.id}
+                                <br>Questions: ${quiz.data.questions?.length}
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="error">
+                                ❌ ${quiz.config.name} failed to load
+                                <br>Error: ${quiz.error}
+                            </div>
+                        `;
+                    }
+                });
+                
+                if (availableQuizzes.filter(q => q.loaded).length > 0) {
+                    html += '<div class="success"><strong>✅ Genital Aciller quiz would appear in exam creator!</strong></div>';
+                } else {
+                    html += '<div class="error"><strong>❌ Genital Aciller quiz would NOT appear in exam creator</strong></div>';
+                }
+                
+                resultsDiv.innerHTML = html;
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Simulation failed: ${error.message}</div>`;
+            }
+        }
+        
+        // Auto-run basic test on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            testGenitalQuizLoading();
+        });
+    </script>
+</body>
+</html>

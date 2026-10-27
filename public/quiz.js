@@ -37,6 +37,19 @@ const QUIZ_CONFIGS = {
         title: 'Floroskopi Fiziği Quiz',
         description: 'Gerçek zamanlı görüntüleme ve radyasyon yönetimi',
         category: 'fluoroscopy-physics'
+    },
+    // External JSON quiz files
+    'genital-emergencies-quiz': {
+        title: 'Genital Aciller Radyoloji Quiz',
+        description: 'Kadın genital acillerinin radyolojik bulguları, ayırıcı tanıları ve görüntüleme yaklaşımları',
+        category: 'external',
+        jsonFile: 'data/quizzes/genital_aciller.json'
+    },
+    'x-ray-physics-external-quiz': {
+        title: 'X-Ray Fiziği Quiz (Detaylı)',
+        description: 'Kapsamlı X-ışını fiziği soruları',
+        category: 'external',
+        jsonFile: 'data/quizzes/x-ray-physics-quiz.json'
     }
 };
 
@@ -87,17 +100,50 @@ async function initializeQuiz() {
 
 async function loadQuestions(category) {
     try {
-        // In a real app, this would fetch from an API or database
-        questions = getQuestionsForCategory(category);
+        console.log('Loading questions for category:', category);
+        
+        if (category === 'external') {
+            // Load from external JSON file
+            const config = QUIZ_CONFIGS[currentQuiz];
+            console.log('External quiz config:', config);
+            
+            if (config && config.jsonFile) {
+                console.log('Fetching JSON file:', config.jsonFile);
+                const response = await fetch(config.jsonFile);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch quiz file: ${response.status}`);
+                }
+                const quizData = await response.json();
+                console.log('Quiz data loaded:', quizData);
+                questions = quizData.questions || [];
+                console.log('Questions extracted:', questions.length, 'questions');
+                
+                // Update title and description from JSON file if available
+                if (quizData.title) {
+                    document.getElementById('quiz-title').textContent = quizData.title;
+                }
+                if (quizData.description) {
+                    document.getElementById('quiz-description').textContent = quizData.description;
+                }
+            } else {
+                throw new Error('No JSON file specified for external quiz');
+            }
+        } else {
+            // Load from internal question bank
+            questions = getQuestionsForCategory(category);
+        }
         
         if (questions.length === 0) {
             throw new Error('No questions found for category: ' + category);
         }
         
+        console.log('Final questions count:', questions.length);
+        
         // Shuffle questions for variety
         shuffleArray(questions);
         
     } catch (error) {
+        console.error('Failed to load questions:', error);
         throw new Error('Failed to load questions: ' + error.message);
     }
 }
@@ -240,9 +286,24 @@ function displayQuestion() {
     const question = questions[currentQuestionIndex];
     const container = document.getElementById('question-container');
     
+    // Generate image HTML if question has an image
+    const imageHtml = question.image ? `
+        <div class="question-image-container">
+            <img 
+                src="${question.image.url}" 
+                alt="${question.image.alt}" 
+                class="question-image"
+                onclick="openImageModal('${question.image.url}', '${question.image.alt}')"
+                loading="lazy"
+            />
+            ${question.image.caption ? `<div class="image-caption">${question.image.caption}</div>` : ''}
+        </div>
+    ` : '';
+    
     container.innerHTML = `
         <div class="question-number">Soru ${currentQuestionIndex + 1}</div>
         <div class="question-text">${question.question}</div>
+        ${imageHtml}
         <div class="answers-container">
             ${question.options.map((option, index) => `
                 <div class="answer-option" onclick="selectAnswer(${index})">
@@ -348,9 +409,12 @@ function calculateAndShowResults() {
     
     let correctCount = 0;
     
-    // Calculate score
+    // Calculate score - handle both correct and correctAnswer formats
     userAnswers.forEach((answer, index) => {
-        if (answer === questions[index].correct) {
+        const correctAnswerIndex = questions[index].correct !== undefined 
+            ? questions[index].correct 
+            : questions[index].correctAnswer;
+        if (answer === correctAnswerIndex) {
             correctCount++;
         }
     });
@@ -371,8 +435,8 @@ function calculateAndShowResults() {
         answers: userAnswers.map((answer, index) => ({
             question: questions[index].question,
             userAnswer: answer,
-            correctAnswer: questions[index].correct,
-            isCorrect: answer === questions[index].correct
+            correctAnswer: questions[index].correct !== undefined ? questions[index].correct : questions[index].correctAnswer,
+            isCorrect: answer === (questions[index].correct !== undefined ? questions[index].correct : questions[index].correctAnswer)
         }))
     };
     
@@ -455,12 +519,27 @@ function reviewMode() {
 function displayReviewQuestion() {
     const question = questions[currentQuestionIndex];
     const userAnswer = userAnswers[currentQuestionIndex];
-    const correctAnswer = question.correct;
+    const correctAnswer = question.correct !== undefined ? question.correct : question.correctAnswer;
     const container = document.getElementById('question-container');
+    
+    // Generate image HTML if question has an image
+    const imageHtml = question.image ? `
+        <div class="question-image-container">
+            <img 
+                src="${question.image.url}" 
+                alt="${question.image.alt}" 
+                class="question-image"
+                onclick="openImageModal('${question.image.url}', '${question.image.alt}')"
+                loading="lazy"
+            />
+            ${question.image.caption ? `<div class="image-caption">${question.image.caption}</div>` : ''}
+        </div>
+    ` : '';
     
     container.innerHTML = `
         <div class="question-number">Soru ${currentQuestionIndex + 1} - İnceleme</div>
         <div class="question-text">${question.question}</div>
+        ${imageHtml}
         <div class="answers-container">
             ${question.options.map((option, index) => {
                 let className = 'answer-option';
@@ -533,11 +612,65 @@ function showError(message) {
     `;
 }
 
+// Image modal functionality
+function openImageModal(imageUrl, imageAlt) {
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('image-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'image-modal';
+        modal.className = 'image-modal';
+        modal.innerHTML = `
+            <div class="image-modal-content">
+                <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
+                <img class="image-modal-img" id="modal-image" src="" alt="">
+                <div class="image-modal-caption" id="modal-caption"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Close modal when clicking outside the image
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeImageModal();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+    }
+    
+    // Set image and show modal
+    const modalImg = document.getElementById('modal-image');
+    const modalCaption = document.getElementById('modal-caption');
+    
+    modalImg.src = imageUrl;
+    modalImg.alt = imageAlt;
+    modalCaption.textContent = imageAlt;
+    
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('image-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+}
+
 // Export functions for testing
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         selectAnswer,
         calculateResults: calculateAndShowResults,
-        getQuestionsForCategory
+        getQuestionsForCategory,
+        openImageModal,
+        closeImageModal
     };
 }

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Quiz Loading</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .debug-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .success {
+            color: #28a745;
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .quiz-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Quiz Loading Debug Tool</h1>
+    
+    <div class="debug-section">
+        <h2>Test Individual Quiz Files</h2>
+        <button onclick="testGenitalAcillerQuiz()">Test genital_aciller.json</button>
+        <button onclick="testAllQuizzes()">Test All Quiz Files</button>
+        <button onclick="clearResults()">Clear Results</button>
+        <div id="single-test-results"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Exam Creator Simulation</h2>
+        <button onclick="simulateExamCreator()">Simulate Exam Creator Loading</button>
+        <div id="exam-creator-results"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>Quiz Files Status</h2>
+        <div id="all-quiz-results"></div>
+    </div>
+
+    <script>
+        async function testGenitalAcillerQuiz() {
+            const resultsDiv = document.getElementById('single-test-results');
+            resultsDiv.innerHTML = '<p>Testing genital_aciller.json...</p>';
+            
+            try {
+                console.log('Fetching genital_aciller.json...');
+                const response = await fetch('/data/quizzes/genital_aciller.json');
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Parsed JSON data:', data);
+                
+                resultsDiv.innerHTML = `
+                    <div class="success">✅ Success! genital_aciller.json loaded correctly</div>
+                    <div class="quiz-card">
+                        <h3>${data.title}</h3>
+                        <p><strong>ID:</strong> ${data.id}</p>
+                        <p><strong>Category:</strong> ${data.category}</p>
+                        <p><strong>Difficulty:</strong> ${data.difficulty}</p>
+                        <p><strong>Questions:</strong> ${data.questions.length}</p>
+                        <p><strong>Description:</strong> ${data.description}</p>
+                    </div>
+                    <details>
+                        <summary>Raw JSON Data</summary>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </details>
+                `;
+                
+            } catch (error) {
+                console.error('Error loading genital_aciller.json:', error);
+                resultsDiv.innerHTML = `
+                    <div class="error">❌ Error loading genital_aciller.json</div>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+
+        async function testAllQuizzes() {
+            const quizFiles = [
+                'x-ray-physics-quiz.json',
+                'ct-physics-quiz.json', 
+                'ultrasound-physics-quiz.json',
+                'interventional-radiology-quiz.json',
+                'thyroid-radiology-quiz-clean.json',
+                'obgyn-radiology-quiz.json',
+                'breast-radiology-quiz.json',
+                'genital_aciller.json'
+            ];
+            
+            const resultsDiv = document.getElementById('all-quiz-results');
+            resultsDiv.innerHTML = '<p>Testing all quiz files...</p>';
+            
+            const results = [];
+            
+            for (const file of quizFiles) {
+                try {
+                    console.log(`Testing ${file}...`);
+                    const response = await fetch(`/data/quizzes/${file}`);
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        results.push({
+                            file,
+                            status: 'success',
+                            data: {
+                                id: data.id,
+                                title: data.title,
+                                category: data.category,
+                                difficulty: data.difficulty,
+                                questionCount: data.questions?.length || 0
+                            }
+                        });
+                    } else {
+                        results.push({
+                            file,
+                            status: 'error',
+                            error: `HTTP ${response.status}`
+                        });
+                    }
+                } catch (error) {
+                    results.push({
+                        file,
+                        status: 'error',
+                        error: error.message
+                    });
+                }
+            }
+            
+            const successCount = results.filter(r => r.status === 'success').length;
+            
+            resultsDiv.innerHTML = `
+                <h3>Results: ${successCount}/${quizFiles.length} files loaded successfully</h3>
+                ${results.map(result => {
+                    if (result.status === 'success') {
+                        return `
+                            <div class="quiz-card" style="border-left: 4px solid #28a745;">
+                                <h4>✅ ${result.file}</h4>
+                                <p><strong>ID:</strong> ${result.data.id}</p>
+                                <p><strong>Title:</strong> ${result.data.title}</p>
+                                <p><strong>Category:</strong> ${result.data.category}</p>
+                                <p><strong>Questions:</strong> ${result.data.questionCount}</p>
+                                ${result.file === 'genital_aciller.json' ? '<p style="color: #007bff;"><strong>🎯 This is our target quiz!</strong></p>' : ''}
+                            </div>
+                        `;
+                    } else {
+                        return `
+                            <div class="quiz-card" style="border-left: 4px solid #dc3545;">
+                                <h4>❌ ${result.file}</h4>
+                                <p>Error: ${result.error}</p>
+                            </div>
+                        `;
+                    }
+                }).join('')}
+            `;
+        }
+
+        async function simulateExamCreator() {
+            const resultsDiv = document.getElementById('exam-creator-results');
+            resultsDiv.innerHTML = '<p>Simulating exam creator loading process...</p>';
+            
+            try {
+                // Simulate the exact same loading process as exam creator
+                const quizFiles = [
+                    'x-ray-physics-quiz.json',
+                    'ct-physics-quiz.json',
+                    'ultrasound-physics-quiz.json', 
+                    'interventional-radiology-quiz.json',
+                    'thyroid-radiology-quiz-clean.json',
+                    'obgyn-radiology-quiz.json',
+                    'breast-radiology-quiz.json',
+                    'genital_aciller.json'
+                ];
+
+                const loadPromises = quizFiles.map(async (file) => {
+                    try {
+                        console.log(`Loading ${file}...`);
+                        const response = await fetch(`/data/quizzes/${file}`);
+                        if (!response.ok) throw new Error(`Failed to load ${file}: ${response.status}`);
+                        const data = await response.json();
+                        console.log(`Loaded ${file}:`, data);
+                        return data;
+                    } catch (error) {
+                        console.warn(`Could not load ${file}:`, error);
+                        return null;
+                    }
+                });
+
+                const results = await Promise.all(loadPromises);
+                const availableQuizzes = results.filter(quiz => quiz !== null);
+                
+                console.log('All results:', results);
+                console.log('Filtered quizzes:', availableQuizzes);
+                
+                // Find the genital aciller quiz
+                const genitalQuiz = availableQuizzes.find(quiz => 
+                    quiz.id === 'genital-aciller-radyoloji-quiz' || 
+                    quiz.title?.toLowerCase().includes('genital')
+                );
+                
+                resultsDiv.innerHTML = `
+                    <div class="success">✅ Exam Creator Simulation Complete</div>
+                    <p><strong>Total Quizzes Loaded:</strong> ${availableQuizzes.length}</p>
+                    <p><strong>Genital Quiz Found:</strong> ${genitalQuiz ? '✅ YES' : '❌ NO'}</p>
+                    
+                    ${genitalQuiz ? `
+                        <div class="quiz-card" style="border-left: 4px solid #007bff;">
+                            <h4>🎯 Found: ${genitalQuiz.title}</h4>
+                            <p><strong>ID:</strong> ${genitalQuiz.id}</p>
+                            <p><strong>Category:</strong> ${genitalQuiz.category}</p>
+                            <p><strong>Questions:</strong> ${genitalQuiz.questions?.length}</p>
+                        </div>
+                    ` : ''}
+                    
+                    <details>
+                        <summary>All Loaded Quizzes</summary>
+                        <pre>${JSON.stringify(availableQuizzes.map(q => ({
+                            id: q.id,
+                            title: q.title,
+                            category: q.category,
+                            questionCount: q.questions?.length
+                        })), null, 2)}</pre>
+                    </details>
+                `;
+                
+            } catch (error) {
+                console.error('Simulation error:', error);
+                resultsDiv.innerHTML = `
+                    <div class="error">❌ Simulation failed</div>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('single-test-results').innerHTML = '';
+            document.getElementById('exam-creator-results').innerHTML = '';
+            document.getElementById('all-quiz-results').innerHTML = '';
+        }
+
+        // Auto-test on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Debug page loaded');
+        });
+    </script>
+</body>
+</html>

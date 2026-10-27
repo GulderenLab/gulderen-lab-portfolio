@@ -1,0 +1,251 @@
+---
+// src/pages/debug-image.astro
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Image Debug Test" description="Test image loading in Astro.js">
+  <section class="py-20">
+    <div class="container mx-auto px-6">
+      <h1 class="text-4xl font-bold text-white mb-8 text-center">🔍 Image Loading Debug</h1>
+      
+      <!-- Test different image paths -->
+      <div class="max-w-4xl mx-auto space-y-8">
+        
+        <div class="bg-slate-800/50 border border-purple-500/20 rounded-2xl p-8">
+          <h2 class="text-2xl font-bold text-white mb-6">🖼️ Image Path Tests</h2>
+          
+          <!-- Test 1: Absolute path from JSON -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-purple-400 mb-4">Test 1: Absolute path from JSON (/data/images/genital_aciller/ga_1.png)</h3>
+            <div class="bg-slate-700/30 border border-slate-600/50 rounded-xl p-4">
+              <img 
+                src="/data/images/genital_aciller/ga_1.png" 
+                alt="Test 1 - Absolute path"
+                class="max-w-full h-auto rounded-lg"
+                onload="logSuccess('Test 1')"
+                onerror="logError('Test 1')"
+              />
+              <div id="test1-result" class="mt-2 text-sm"></div>
+            </div>
+          </div>
+          
+          <!-- Test 2: Relative path -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-purple-400 mb-4">Test 2: Relative path (data/images/genital_aciller/ga_1.png)</h3>
+            <div class="bg-slate-700/30 border border-slate-600/50 rounded-xl p-4">
+              <img 
+                src="data/images/genital_aciller/ga_1.png" 
+                alt="Test 2 - Relative path"
+                class="max-w-full h-auto rounded-lg"
+                onload="logSuccess('Test 2')"
+                onerror="logError('Test 2')"
+              />
+              <div id="test2-result" class="mt-2 text-sm"></div>
+            </div>
+          </div>
+          
+          <!-- Test 3: File existence check via fetch -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-purple-400 mb-4">Test 3: Fetch API check</h3>
+            <div class="bg-slate-700/30 border border-slate-600/50 rounded-xl p-4">
+              <button onclick="testFetch()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg">
+                Test Fetch
+              </button>
+              <div id="fetch-result" class="mt-2 text-sm"></div>
+            </div>
+          </div>
+          
+          <!-- Test 4: Quiz JSON loading -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-purple-400 mb-4">Test 4: Quiz JSON image URL</h3>
+            <div class="bg-slate-700/30 border border-slate-600/50 rounded-xl p-4">
+              <button onclick="loadQuizAndTestImage()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg">
+                Load Quiz & Test Image
+              </button>
+              <div id="quiz-result" class="mt-2"></div>
+            </div>
+          </div>
+          
+          <!-- Console log section -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-purple-400 mb-4">📋 Debug Logs</h3>
+            <div class="bg-slate-900/50 border border-slate-600/50 rounded-xl p-4">
+              <div id="debug-logs" class="text-xs text-gray-300 font-mono whitespace-pre-wrap min-h-[100px]">
+                Debug logs will appear here...
+              </div>
+              <button onclick="clearLogs()" class="mt-2 px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs rounded">
+                Clear Logs
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Environment Info -->
+        <div class="bg-slate-800/50 border border-blue-500/20 rounded-2xl p-8">
+          <h2 class="text-2xl font-bold text-white mb-6">🌐 Environment Info</h2>
+          <div id="env-info" class="text-sm text-gray-300"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Debug logging function
+  function debugLog(message) {
+    const timestamp = new Date().toLocaleTimeString();
+    const logElement = document.getElementById('debug-logs');
+    const currentLogs = logElement.textContent;
+    logElement.textContent = `[${timestamp}] ${message}\n${currentLogs}`;
+    console.log(`[DEBUG] ${message}`);
+  }
+
+  function logSuccess(testName) {
+    const resultElement = document.getElementById(`${testName.toLowerCase().replace(' ', '')}-result`);
+    resultElement.innerHTML = '<span class="text-green-400">✅ Image loaded successfully!</span>';
+    debugLog(`${testName}: Image loaded successfully`);
+  }
+
+  function logError(testName) {
+    const resultElement = document.getElementById(`${testName.toLowerCase().replace(' ', '')}-result`);
+    resultElement.innerHTML = '<span class="text-red-400">❌ Image failed to load</span>';
+    debugLog(`${testName}: Image failed to load`);
+  }
+
+  function clearLogs() {
+    document.getElementById('debug-logs').textContent = 'Debug logs cleared...\n';
+  }
+
+  // Test fetch API
+  async function testFetch() {
+    const resultElement = document.getElementById('fetch-result');
+    resultElement.innerHTML = '<span class="text-yellow-400">🔄 Testing...</span>';
+    
+    try {
+      debugLog('Starting fetch test...');
+      
+      const paths = [
+        '/data/images/genital_aciller/ga_1.png',
+        'data/images/genital_aciller/ga_1.png',
+        './data/images/genital_aciller/ga_1.png'
+      ];
+      
+      for (const path of paths) {
+        try {
+          debugLog(`Testing path: ${path}`);
+          const response = await fetch(path, { method: 'HEAD' });
+          debugLog(`Path ${path}: ${response.status} ${response.statusText}`);
+          
+          if (response.ok) {
+            const contentType = response.headers.get('Content-Type');
+            const contentLength = response.headers.get('Content-Length');
+            debugLog(`Success! Type: ${contentType}, Size: ${contentLength} bytes`);
+            
+            resultElement.innerHTML = `<span class="text-green-400">✅ Found at: ${path}</span><br><span class="text-xs text-gray-400">Type: ${contentType}, Size: ${contentLength} bytes</span>`;
+            return;
+          }
+        } catch (error) {
+          debugLog(`Path ${path} error: ${error.message}`);
+        }
+      }
+      
+      resultElement.innerHTML = '<span class="text-red-400">❌ All fetch attempts failed</span>';
+      
+    } catch (error) {
+      debugLog(`Fetch test error: ${error.message}`);
+      resultElement.innerHTML = `<span class="text-red-400">❌ Fetch error: ${error.message}</span>`;
+    }
+  }
+
+  // Load quiz and test image
+  async function loadQuizAndTestImage() {
+    const resultElement = document.getElementById('quiz-result');
+    resultElement.innerHTML = '<span class="text-yellow-400">🔄 Loading quiz...</span>';
+    
+    try {
+      debugLog('Loading genital_aciller.json...');
+      
+      const response = await fetch('/data/quizzes/genital_aciller.json');
+      debugLog(`Quiz JSON response: ${response.status} ${response.statusText}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const quizData = await response.json();
+      debugLog(`Quiz loaded successfully. Questions: ${quizData.questions.length}`);
+      
+      // Find question with image
+      const questionWithImage = quizData.questions.find(q => q.image && q.image.url);
+      
+      if (!questionWithImage) {
+        debugLog('No question with image found in quiz');
+        resultElement.innerHTML = '<span class="text-yellow-400">⚠️ No question with image found</span>';
+        return;
+      }
+      
+      debugLog(`Found question with image: ${questionWithImage.image.url}`);
+      
+      // Create image element to test
+      const testImg = document.createElement('img');
+      testImg.src = questionWithImage.image.url;
+      testImg.alt = questionWithImage.image.alt || 'Quiz image';
+      testImg.className = 'max-w-full h-auto rounded-lg mt-2';
+      
+      testImg.onload = function() {
+        debugLog('Quiz image loaded successfully!');
+        resultElement.innerHTML = `
+          <div class="text-green-400 mb-2">✅ Quiz JSON loaded & image working!</div>
+          <div class="text-xs text-gray-400 mb-2">Image URL: ${questionWithImage.image.url}</div>
+        `;
+        resultElement.appendChild(testImg);
+      };
+      
+      testImg.onerror = function() {
+        debugLog('Quiz image failed to load!');
+        resultElement.innerHTML = `
+          <div class="text-red-400 mb-2">❌ Quiz loaded but image failed</div>
+          <div class="text-xs text-gray-400">Image URL: ${questionWithImage.image.url}</div>
+        `;
+      };
+      
+    } catch (error) {
+      debugLog(`Quiz loading error: ${error.message}`);
+      resultElement.innerHTML = `<span class="text-red-400">❌ Error: ${error.message}</span>`;
+    }
+  }
+
+  // Display environment info
+  function displayEnvironmentInfo() {
+    const envElement = document.getElementById('env-info');
+    const info = {
+      'Current URL': window.location.href,
+      'Origin': window.location.origin,
+      'Protocol': window.location.protocol,
+      'Host': window.location.host,
+      'Pathname': window.location.pathname,
+      'User Agent': navigator.userAgent.substring(0, 100) + '...'
+    };
+    
+    let html = '';
+    for (const [key, value] of Object.entries(info)) {
+      html += `<div><strong>${key}:</strong> ${value}</div>`;
+    }
+    
+    envElement.innerHTML = html;
+    debugLog('Environment info displayed');
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    debugLog('Debug page loaded - initializing tests...');
+    displayEnvironmentInfo();
+    
+    // Auto-test fetch after 1 second
+    setTimeout(() => {
+      debugLog('Auto-running fetch test...');
+      testFetch();
+    }, 1000);
+  });
+</script>
+</Layout>

@@ -2,6 +2,7 @@
 // src/layouts/Layout.astro
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { ClientRouter } from 'astro:transitions';
 import '../styles/tailwind.css';
 import '../styles/design-system-optimized.css';
 import '../styles/animations.css';
@@ -39,6 +40,7 @@ if (!Astro.site && import.meta.env.PROD) {
 <html lang="tr" class="scroll-smooth">
     <head>
         <meta charset="UTF-8" />
+        <ClientRouter />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
         <meta name="generator" content={Astro.generator} />

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Genital Quiz Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .question-test {
+            border: 1px solid #ddd;
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        .success { color: #28a745; background: #d4edda; padding: 10px; border-radius: 5px; margin: 5px 0; }
+        .error { color: #dc3545; background: #f8d7da; padding: 10px; border-radius: 5px; margin: 5px 0; }
+        .info { color: #0c5460; background: #d1ecf1; padding: 10px; border-radius: 5px; margin: 5px 0; }
+        .warning { color: #856404; background: #fff3cd; padding: 10px; border-radius: 5px; margin: 5px 0; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; font-size: 12px; }
+        .image-status {
+            padding: 5px;
+            margin: 5px 0;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>🩺 Direct Genital Aciller Quiz Test</h1>
+    
+    <div class="test-section">
+        <h2>📊 Test Results</h2>
+        <div id="test-results"></div>
+        <button onclick="runFullTest()">Run Full Test</button>
+        <button onclick="loadQuizData()">Load Quiz Data</button>
+        <button onclick="testImageLoading()">Test Image Loading</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>📋 Quiz Questions</h2>
+        <div id="questions-display"></div>
+    </div>
+    
+    <script>
+        let quizData = null;
+        let imageLoadResults = {};
+        
+        async function runFullTest() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<div class="info">Running comprehensive test...</div>';
+            
+            const tests = [];
+            
+            try {
+                // Test 1: Load quiz JSON
+                console.log('Testing quiz JSON loading...');
+                const response = await fetch('data/quizzes/genital_aciller.json');
+                if (response.ok) {
+                    quizData = await response.json();
+                    tests.push({
+                        name: 'Quiz JSON Loading',
+                        status: 'success',
+                        message: `Quiz loaded successfully (${quizData.questions.length} questions)`
+                    });
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                // Test 2: Check quiz structure
+                const requiredFields = ['id', 'title', 'description', 'questions'];
+                const missingFields = requiredFields.filter(field => !quizData[field]);
+                
+                if (missingFields.length === 0) {
+                    tests.push({
+                        name: 'Quiz Structure',
+                        status: 'success',
+                        message: 'All required fields present'
+                    });
+                } else {
+                    tests.push({
+                        name: 'Quiz Structure',
+                        status: 'error',
+                        message: `Missing fields: ${missingFields.join(', ')}`
+                    });
+                }
+                
+                // Test 3: Check questions with images
+                let questionsWithImages = 0;
+                let imageLoadPromises = [];
+                
+                quizData.questions.forEach((question, index) => {
+                    if (question.image && question.image.url) {
+                        questionsWithImages++;
+                        imageLoadPromises.push(testImageExists(question.image.url, index + 1));
+                    }
+                });
+                
+                tests.push({
+                    name: 'Questions with Images',
+                    status: 'info',
+                    message: `Found ${questionsWithImages} questions with images`
+                });
+                
+                // Test 4: Test image loading
+                if (imageLoadPromises.length > 0) {
+                    const imageResults = await Promise.all(imageLoadPromises);
+                    const successfulImages = imageResults.filter(r => r.success).length;
+                    
+                    if (successfulImages === imageLoadPromises.length) {
+                        tests.push({
+                            name: 'Image Loading',
+                            status: 'success',
+                            message: `All ${successfulImages} images loaded successfully`
+                        });
+                    } else {
+                        tests.push({
+                            name: 'Image Loading',
+                            status: 'warning',
+                            message: `${successfulImages}/${imageLoadPromises.length} images loaded successfully`
+                        });
+                    }
+                } else {
+                    tests.push({
+                        name: 'Image Loading',
+                        status: 'info',
+                        message: 'No images to test'
+                    });
+                }
+                
+                // Test 5: Quiz compatibility check
+                const hasCorrectFormat = quizData.questions.every(q => 
+                    q.question && 
+                    q.options && 
+                    Array.isArray(q.options) && 
+                    (q.correctAnswer !== undefined || q.correct !== undefined) && 
+                    q.explanation
+                );
+                
+                if (hasCorrectFormat) {
+                    tests.push({
+                        name: 'Quiz Format Compatibility',
+                        status: 'success',
+                        message: 'All questions have correct format'
+                    });
+                } else {
+                    tests.push({
+                        name: 'Quiz Format Compatibility',
+                        status: 'error',
+                        message: 'Some questions have incorrect format'
+                    });
+                }
+                
+            } catch (error) {
+                tests.push({
+                    name: 'Critical Error',
+                    status: 'error',
+                    message: error.message
+                });
+            }
+            
+            // Display results
+            let html = '<h3>Test Results:</h3>';
+            tests.forEach(test => {
+                html += `<div class="${test.status}"><strong>${test.name}:</strong> ${test.message}</div>`;
+            });
+            resultsDiv.innerHTML = html;
+            
+            // Display questions if loaded
+            if (quizData) {
+                displayQuestions();
+            }
+        }
+        
+        async function testImageExists(imageUrl, questionNumber) {
+            try {
+                const response = await fetch(imageUrl, { method: 'HEAD' });
+                imageLoadResults[questionNumber] = {
+                    url: imageUrl,
+                    success: response.ok,
+                    status: response.status,
+                    size: response.headers.get('Content-Length') || 'unknown'
+                };
+                return { success: response.ok, questionNumber, imageUrl, status: response.status };
+            } catch (error) {
+                imageLoadResults[questionNumber] = {
+                    url: imageUrl,
+                    success: false,
+                    error: error.message
+                };
+                return { success: false, questionNumber, imageUrl, error: error.message };
+            }
+        }
+        
+        async function loadQuizData() {
+            try {
+                const response = await fetch('data/quizzes/genital_aciller.json');
+                quizData = await response.json();
+                
+                const resultsDiv = document.getElementById('test-results');
+                resultsDiv.innerHTML = `
+                    <div class="success">✅ Quiz data loaded successfully!</div>
+                    <div class="info">
+                        <strong>Quiz Details:</strong><br>
+                        ID: ${quizData.id}<br>
+                        Title: ${quizData.title}<br>
+                        Questions: ${quizData.questions.length}<br>
+                        Difficulty: ${quizData.difficulty}<br>
+                        Time Limit: ${quizData.timeLimit} minutes
+                    </div>
+                `;
+                
+                displayQuestions();
+                
+            } catch (error) {
+                document.getElementById('test-results').innerHTML = 
+                    `<div class="error">❌ Failed to load quiz: ${error.message}</div>`;
+            }
+        }
+        
+        function displayQuestions() {
+            const questionsDiv = document.getElementById('questions-display');
+            
+            if (!quizData) {
+                questionsDiv.innerHTML = '<div class="warning">No quiz data loaded</div>';
+                return;
+            }
+            
+            let html = `<h3>Questions Preview (${quizData.questions.length} total):</h3>`;
+            
+            quizData.questions.forEach((question, index) => {
+                html += `
+                    <div class="question-test">
+                        <h4>Question ${index + 1}</h4>
+                        <p><strong>Question:</strong> ${question.question}</p>
+                        
+                        ${question.image ? `
+                            <div style="margin: 10px 0;">
+                                <strong>Image:</strong> ${question.image.url}<br>
+                                <div class="image-status" id="img-status-${index}">Loading image...</div>
+                                <img src="${question.image.url}" 
+                                     alt="${question.image.alt}" 
+                                     class="question-image"
+                                     onload="imageLoaded(${index}, '${question.image.url}')"
+                                     onerror="imageFailed(${index}, '${question.image.url}')"
+                                     onclick="openImageTest('${question.image.url}')">
+                                <p><em>Caption: ${question.image.caption}</em></p>
+                            </div>
+                        ` : '<div class="info">No image for this question</div>'}
+                        
+                        <p><strong>Options:</strong></p>
+                        <ul>
+                            ${question.options.map((opt, i) => 
+                                `<li ${i === question.correctAnswer ? 'style="color: green; font-weight: bold;"' : ''}>${opt} ${i === question.correctAnswer ? '✓' : ''}</li>`
+                            ).join('')}
+                        </ul>
+                        
+                        <p><strong>Correct Answer:</strong> ${question.correctAnswer} (${question.options[question.correctAnswer]})</p>
+                        <p><strong>Explanation:</strong> ${question.explanation}</p>
+                    </div>
+                `;
+            });
+            
+            questionsDiv.innerHTML = html;
+        }
+        
+        function imageLoaded(questionIndex, imageUrl) {
+            console.log(`Image loaded successfully: Question ${questionIndex + 1}`);
+            const statusDiv = document.getElementById(`img-status-${questionIndex}`);
+            if (statusDiv) {
+                statusDiv.innerHTML = '✅ Image loaded successfully';
+                statusDiv.className = 'image-status success';
+            }
+        }
+        
+        function imageFailed(questionIndex, imageUrl) {
+            console.error(`Image failed to load: Question ${questionIndex + 1}, URL: ${imageUrl}`);
+            const statusDiv = document.getElementById(`img-status-${questionIndex}`);
+            if (statusDiv) {
+                statusDiv.innerHTML = `❌ Failed to load: ${imageUrl}`;
+                statusDiv.className = 'image-status error';
+            }
+        }
+        
+        function openImageTest(imageUrl) {
+            window.open(imageUrl, '_blank');
+        }
+        
+        async function testImageLoading() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<div class="info">Testing image loading specifically...</div>';
+            
+            const imagePaths = [
+                'data/images/genital_aciller/ga_1.png',
+                '/data/images/genital_aciller/ga_1.png',
+                './data/images/genital_aciller/ga_1.png'
+            ];
+            
+            let html = '<h3>Image Path Test Results:</h3>';
+            
+            for (const path of imagePaths) {
+                try {
+                    const response = await fetch(path, { method: 'HEAD' });
+                    const contentType = response.headers.get('Content-Type');
+                    const contentLength = response.headers.get('Content-Length');
+                    
+                    if (response.ok) {
+                        html += `
+                            <div class="success">
+                                ✅ ${path}<br>
+                                Status: ${response.status}<br>
+                                Type: ${contentType}<br>
+                                Size: ${contentLength} bytes
+                            </div>
+                        `;
+                    } else {
+                        html += `<div class="error">❌ ${path}: HTTP ${response.status}</div>`;
+                    }
+                } catch (error) {
+                    html += `<div class="error">❌ ${path}: ${error.message}</div>`;
+                }
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        // Auto-load quiz on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadQuizData();
+        });
+    </script>
+</body>
+</html>

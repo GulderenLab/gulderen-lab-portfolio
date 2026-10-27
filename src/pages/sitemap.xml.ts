@@ -12,10 +12,7 @@ export const GET: APIRoute = async ({ site }) => {
   // Get all projects
   const projects = await getCollection('projeler');
   const publishedProjects = projects.filter(project => !project.data.isDraft);
-  
-  // Get all radiology posts
-  const radyolojiPosts = await getCollection('radyoloji');
-  const publishedRadyolojiPosts = radyolojiPosts.filter(post => !post.data.isDraft);
+
   
   // Static pages
   const staticPages = [
@@ -37,12 +34,7 @@ export const GET: APIRoute = async ({ site }) => {
       priority: '0.9',
       lastmod: new Date().toISOString()
     },
-    {
-      url: 'radyoloji',
-      changefreq: 'weekly',
-      priority: '0.8',
-      lastmod: new Date().toISOString()
-    },
+
     {
       url: 'hesaplama-araclari',
       changefreq: 'monthly',
@@ -94,12 +86,6 @@ ${publishedProjects.map(project => `  <url>
     <lastmod>${project.data.publishDate.toISOString()}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>`).join('\n')}
-${publishedRadyolojiPosts.map(post => `  <url>
-    <loc>${siteUrl}/radyoloji/${post.slug}/</loc>
-    <lastmod>${post.data.publishDate.toISOString()}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>`).join('\n')}
 </urlset>`;
 

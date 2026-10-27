@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Hub - RadyolojiHub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .quiz-hub-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+
+        .hero-section h1 {
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .quiz-categories {
+            margin-bottom: 3rem;
+        }
+
+        .category-section {
+            margin-bottom: 3rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .category-header i {
+            font-size: 2rem;
+            margin-right: 1rem;
+            color: #667eea;
+        }
+
+        .category-header h2 {
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .quiz-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .quiz-card-header i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .quiz-card-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .quiz-card-content {
+            padding: 2rem;
+        }
+
+        .quiz-card-content p {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .quiz-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-difficulty {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .difficulty-easy {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .difficulty-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty-hard {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .quiz-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .quiz-stats {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-card i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .featured-quiz {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border: none !important;
+        }
+
+        .featured-quiz .quiz-card-header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        }
+
+        .new-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .quiz-card {
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-hub-container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+            
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+            
+            .quiz-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">RadyolojiHub</a>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i> Ana Sayfa
+                </a>
+                <a href="radiology-physics.html" class="nav-link">
+                    <i class="fas fa-atom"></i> Radyoloji Fiziği
+                </a>
+                <a href="quiz-hub.html" class="nav-link active">
+                    <i class="fas fa-brain"></i> Quiz Hub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="quiz-hub-container">
+            <div class="hero-section">
+                <h1><i class="fas fa-brain"></i> Quiz Hub</h1>
+                <p>Radyoloji bilginizi test edin, öğrenin ve geliştirin. Her seviyeye uygun interaktif quizler ile kendinizi challenge edin!</p>
+            </div>
+
+            <div class="quiz-stats">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: #2c3e50;">
+                    <i class="fas fa-chart-bar"></i> Quiz İstatistikleri
+                </h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-question-circle"></i>
+                        <div class="stat-number">200+</div>
+                        <div class="stat-label">Toplam Soru</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-brain"></i>
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Quiz Kategorisi</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div class="stat-number">5000+</div>
+                        <div class="stat-label">Aktif Kullanıcı</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-trophy"></i>
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">Ortalama Başarı</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-categories">
+                <!-- Klinik Radyoloji Section -->
+                <div class="category-section">
+                    <div class="category-header">
+                        <i class="fas fa-stethoscope"></i>
+                        <h2>Klinik Radyoloji</h2>
+                    </div>
+                    <div class="quiz-grid">
+                        <div class="quiz-card featured-quiz">
+                            <div class="new-badge">YENİ!</div>
+                            <div class="quiz-card-header">
+                                <i class="fas fa-venus"></i>
+                                <h3>Genital Aciller Radyoloji</h3>
+                            </div>
+                            <div class="quiz-card-content">
+                                <p>Kadın genital acillerinin radyolojik bulguları, ayırıcı tanıları ve görüntüleme yaklaşımlarını kapsayan kapsamlı quiz.</p>
+                                <div class="quiz-meta">
+                                    <span><i class="fas fa-clock"></i> 15-20 dk</span>
+                                    <span><i class="fas fa-question-circle"></i> 10 Soru</span>
+                                    <div class="quiz-difficulty difficulty-medium">Orta</div>
+                                </div>
+                                <div class="quiz-actions">
+                                    <a href="quiz.html?quiz=genital-emergencies-quiz" class="btn btn-primary">
+                                        <i class="fas fa-play"></i> Quiz Başlat
+                                    </a>
+                                    <a href="#" class="btn btn-outline" onclick="showQuizPreview('genital-emergencies')">
+                                        <i class="fas fa-eye"></i> Önizleme
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quiz-card">
+                            <div class="quiz-card-header">
+                                <i class="fas fa-heart"></i>
+                                <h3>Meme Radyolojisi</h3>
+                            </div>
+                            <div class="quiz-card-content">
+                                <p>Mamografi, ultrasonografi ve MRG ile meme hastalıklarının radyolojik değerlendirmesi.</p>
+                                <div class="quiz-meta">
+                                    <span><i class="fas fa-clock"></i> 20-25 dk</span>
+                                    <span><i class="fas fa-question-circle"></i> 15 Soru</span>
+                                    <div class="quiz-difficulty difficulty-medium">Orta</div>
+                                </div>
+                                <div class="quiz-actions">
+                                    <a href="quiz.html?quiz=breast-radiology-quiz" class="btn btn-primary">
+                                        <i class="fas fa-play"></i> Quiz Başlat
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fas fa-eye"></i> Önizleme
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quiz-card">
+                            <div class="quiz-card-header">
+                                <i class="fas fa-baby"></i>
+                                <h3>Kadın Doğum Radyolojisi</h3>
+                            </div>
+                            <div class="quiz-card-content">
+                                <p>Obstetrik ve jinekololik hastalıkların görüntüleme yöntemleri ve tanısal yaklaşımlar.</p>
+                                <div class="quiz-meta">
+                                    <span><i class="fas fa-clock"></i> 25-30 dk</span>
+                                    <span><i class="fas fa-question-circle"></i> 20 Soru</span>
+                                    <div class="quiz-difficulty difficulty-hard">Zor</div>
+                                </div>
+                                <div class="quiz-actions">
+                                    <a href="quiz.html?quiz=obgyn-radiology-quiz" class="btn btn-primary">
+                                        <i class="fas fa-play"></i> Quiz Başlat
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fas fa-eye"></i> Önizleme
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quiz-card">
+                            <div class="quiz-card-header">
+                                <i class="fas fa-user-md"></i>
+                                <h3>Tiroid Radyolojisi</h3>
+                            </div>
+                            <div class="quiz-card-content">
+                                <p>Tiroid nodüllerinin ultrasonografik değerlendirmesi, TIRADS sistemi ve biyopsi endikasyonları.</p>
+                                <div class="quiz-meta">
+                                    <span><i class="fas fa-clock"></i> 15-20 dk</span>
+                                    <span><i class="fas fa-question-circle"></i> 12 Soru</span>
+                                    <div class="quiz-difficulty difficulty-medium">Orta</div>
+                                </div>
+                                <div class="quiz-actions">
+                                    <a href="quiz.html?quiz=thyroid-radiology-quiz" class="btn btn-primary">
+                                        <i class="fas fa-play"></i> Quiz Başlat
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fas fa-eye"></i> Önizleme
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quiz-card">
+                            <div class="quiz-card-header">
+                                <i class="fas fa-syringe"></i>
+                                <h3>Girişimsel Radyoloji</h3>
+                            </div>
+                            <div class="quiz-card-content">
+                                <p>Minimal invaziv girişimsel prosedürler, teknik yaklaşımlar ve komplikasyon yönetimi.</p>
+                                <div class="quiz-meta">
+                                    <span><i class="fas fa-clock"></i> 30-35 dk</span>
+                                    <span><i class="fas fa-question-circle"></i> 25 Soru</span>
+                                    <div class="quiz-difficulty difficulty-hard">Zor</div>
+                                </div>
+                                <div class="quiz-actions">
+                                    <a href="quiz.html?quiz=interventional-radiology-quiz" class="btn btn-primary">
+                                        <i class="fas fa-play"></i> Quiz Başlat
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fas fa-eye"></i> Önizleme
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Radyoloji Fiziği Section -->
+                <div class="category-section">
+                    <div class="category-header">
+                        <i class="fas fa-atom"></i>
+                        <h2>Radyoloji Fiziği</h2>
+                    </div>
+                    <div class="quiz-grid">
+                        <div class="quiz-card">
+                            <div class="quiz-card-header">
+                                <i class="fas fa-radiation"></i>
+                                <h3>X-Ray Fiziği</h3>
+                            </div>
+                            <div class="quiz-card-content">
+                                <p>X-ışını üretimi, madde ile etkileşim, görüntü oluşumu ve kalite faktörleri hakkında detaylı quiz.</p>
+                                <div class="quiz-meta">
+                                    <span><i class="fas fa-clock"></i> 25-30 dk</span>
+                                    <span><i class="fas fa-question-circle"></i> 20 Soru</span>
+                                    <div class="quiz-difficulty difficulty-medium">Orta</div>
+                                </div>
+                                <div class="quiz-actions">
+                                    <a href="quiz.html?quiz=x-ray-physics-external-quiz" class="btn btn-primary">
+                                        <i class="fas fa-play"></i> Quiz Başlat
+                                    </a>
+                                    <a href="x-ray-physics.html" class="btn btn-outline">
+                                        <i class="fas fa-book"></i> Ders İçeriği
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quiz-card">
+                            <div class="quiz-card-header">
+                                <i class="fas fa-circle-dot"></i>
+                                <h3>BT Fiziği</h3>
+                            </div>
+                            <div class="quiz-card-content">
+                                <p>Bilgisayarlı tomografi prensipleri, rekonstrüksiyon algoritmaları ve artefaktlar.</p>
+                                <div class="quiz-meta">
+                                    <span><i class="fas fa-clock"></i> 20-25 dk</span>
+                                    <span><i class="fas fa-question-circle"></i> 15 Soru</span>
+                                    <div class="quiz-difficulty difficulty-medium">Orta</div>
+                                </div>
+                                <div class="quiz-actions">
+                                    <a href="quiz.html?quiz=ct-physics-quiz" class="btn btn-primary">
+                                        <i class="fas fa-play"></i> Quiz Başlat
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fas fa-book"></i> Ders İçeriği
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quiz-card">
+                            <div class="quiz-card-header">
+                                <i class="fas fa-magnet"></i>
+                                <h3>MRG Fiziği</h3>
+                            </div>
+                            <div class="quiz-card-content">
+                                <p>Manyetik rezonans prensipleri, relaxasyon zamanları ve pulse sekansları.</p>
+                                <div class="quiz-meta">
+                                    <span><i class="fas fa-clock"></i> 25-30 dk</span>
+                                    <span><i class="fas fa-question-circle"></i> 18 Soru</span>
+                                    <div class="quiz-difficulty difficulty-hard">Zor</div>
+                                </div>
+                                <div class="quiz-actions">
+                                    <a href="quiz.html?quiz=mri-physics-quiz" class="btn btn-primary">
+                                        <i class="fas fa-play"></i> Quiz Başlat
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fas fa-book"></i> Ders İçeriği
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quiz-card">
+                            <div class="quiz-card-header">
+                                <i class="fas fa-sound"></i>
+                                <h3>Ultrason Fiziği</h3>
+                            </div>
+                            <div class="quiz-card-content">
+                                <p>Akustik özellikler, beam oluşumu, Doppler prensipleri ve artefaktlar.</p>
+                                <div class="quiz-meta">
+                                    <span><i class="fas fa-clock"></i> 20-25 dk</span>
+                                    <span><i class="fas fa-question-circle"></i> 16 Soru</span>
+                                    <div class="quiz-difficulty difficulty-medium">Orta</div>
+                                </div>
+                                <div class="quiz-actions">
+                                    <a href="quiz.html?quiz=ultrasound-physics-quiz" class="btn btn-primary">
+                                        <i class="fas fa-play"></i> Quiz Başlat
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fas fa-book"></i> Ders İçeriği
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quiz-card">
+                            <div class="quiz-card-header">
+                                <i class="fas fa-user-nurse"></i>
+                                <h3>Mamografi Fiziği</h3>
+                            </div>
+                            <div class="quiz-card-content">
+                                <p>Meme görüntüleme için özel fizik gereksinimleri ve optimizasyon teknikleri.</p>
+                                <div class="quiz-meta">
+                                    <span><i class="fas fa-clock"></i> 15-20 dk</span>
+                                    <span><i class="fas fa-question-circle"></i> 12 Soru</span>
+                                    <div class="quiz-difficulty difficulty-easy">Kolay</div>
+                                </div>
+                                <div class="quiz-actions">
+                                    <a href="quiz.html?quiz=mammography-physics-quiz" class="btn btn-primary">
+                                        <i class="fas fa-play"></i> Quiz Başlat
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fas fa-book"></i> Ders İçeriği
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quiz-card">
+                            <div class="quiz-card-header">
+                                <i class="fas fa-video"></i>
+                                <h3>Floroskopi Fiziği</h3>
+                            </div>
+                            <div class="quiz-card-content">
+                                <p>Gerçek zamanlı görüntüleme prensipleri ve radyasyon dozu optimizasyonu.</p>
+                                <div class="quiz-meta">
+                                    <span><i class="fas fa-clock"></i> 20-25 dk</span>
+                                    <span><i class="fas fa-question-circle"></i> 14 Soru</span>
+                                    <div class="quiz-difficulty difficulty-medium">Orta</div>
+                                </div>
+                                <div class="quiz-actions">
+                                    <a href="quiz.html?quiz=fluoroscopy-physics-quiz" class="btn btn-primary">
+                                        <i class="fas fa-play"></i> Quiz Başlat
+                                    </a>
+                                    <a href="#" class="btn btn-outline">
+                                        <i class="fas fa-book"></i> Ders İçeriği
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 RadyolojiHub. Tüm hakları saklıdır.</p>
+            <p>Radyoloji eğitiminde kalite ve bilimsellik için</p>
+        </div>
+    </footer>
+
+    <script>
+        function showQuizPreview(quizType) {
+            // Implement quiz preview functionality
+            alert(`${quizType} quiz önizlemesi yakında eklenecek!`);
+        }
+
+        // Add animation when cards come into view
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.quiz-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
