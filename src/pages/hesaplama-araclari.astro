@@ -1,6 +1,7 @@
 ---
 // src/pages/hesaplama-araclari.astro
 import Layout from '../layouts/Layout.astro';
+import AdSlot from '../components/AdSlot.astro';
 
 const pageTitle = "Hesaplama Araçları";
 const pageDescription = "Elektronik, mühendislik ve yazılım geliştirme için pratik hesaplama araçları. Ohm Kanunu, güç hesaplamaları, frekans dönüştürücüleri ve daha fazlası.";
@@ -226,6 +227,11 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
             </div>
         </div>
     </section>
+
+    {/* Araç listesinin altında reklam alanı */}
+    <div class="container mx-auto px-6 max-w-4xl">
+      <AdSlot name="tools" shape="horizontal" />
+    </div>
 
     {/* CALCULATOR MODAL */}
     {/* CALCULATOR MODAL (sticky header, better spacing) */}

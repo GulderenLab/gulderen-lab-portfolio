@@ -1,0 +1,59 @@
+---
+// src/components/AdsLoader.astro — AdSense betiğini yalnızca sayfada reklam alanı varsa ve
+// alan ekrana yaklaştığında yükler. ClientRouter (sayfa geçişleri) ile uyumludur.
+// Not: <head> içinde kullanılmalı; ClientRouter head'deki aynı betikleri tekrar çalıştırmaz.
+import { SITE } from '../lib/site';
+const { enabled, client } = SITE.ads;
+const active = enabled && !!client;
+---
+
+{active && (
+  <script is:inline define:vars={{ client }}>
+    (function () {
+      var SRC = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + client;
+      var observer;
+
+      function loadScript() {
+        // Betik bir kez yüklenir; ClientRouter <head>'i yenilese de tekrar eklenmez
+        if (window.__gulderenAdsLoaded) return;
+        window.__gulderenAdsLoaded = true;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = SRC;
+        s.crossOrigin = 'anonymous';
+        s.setAttribute('data-adsense', '');
+        document.head.appendChild(s);
+      }
+
+      function fill(ins) {
+        if (ins.dataset.adPushed) return;
+        // Görünmeyen (ör. mobilde gizlenen kenar) alanlar doldurulmaz
+        if (!ins.offsetParent) return;
+        ins.dataset.adPushed = '1';
+        loadScript();
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
+
+      function init() {
+        if (observer) observer.disconnect();
+        var slots = document.querySelectorAll('ins.adsbygoogle:not([data-ad-pushed])');
+        if (!slots.length) return;
+        if (!('IntersectionObserver' in window)) {
+          slots.forEach(fill);
+          return;
+        }
+        observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              fill(e.target);
+              observer.unobserve(e.target);
+            }
+          });
+        }, { rootMargin: '400px 0px' });
+        slots.forEach(function (s) { observer.observe(s); });
+      }
+
+      document.addEventListener('astro:page-load', init);
+    })();
+  </script>
+)}

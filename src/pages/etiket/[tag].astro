@@ -2,6 +2,7 @@
 // src/pages/etiket/[tag].astro — Etikete göre filtrelenmiş içerik listesi
 import Layout from '../../layouts/Layout.astro';
 import EntryCard from '../../components/EntryCard.astro';
+import AdSlot from '../../components/AdSlot.astro';
 import { getPublished, tagSlug, type AnyEntry, type ContentKind } from '../../lib/content';
 
 export async function getStaticPaths() {
@@ -42,6 +43,9 @@ const noindex = items.length < 2; // tek içerikli etiket sayfaları "ince içer
     <p class="text-gray-400 mb-10">{items.length} içerik</p>
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {items.map(({ entry, kind }) => <EntryCard entry={entry} kind={kind} />)}
+    </div>
+    <div class="max-w-4xl mx-auto mt-14">
+      <AdSlot name="listing" shape="horizontal" />
     </div>
   </section>
 </Layout>

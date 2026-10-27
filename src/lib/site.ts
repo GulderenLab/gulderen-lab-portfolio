@@ -18,4 +18,31 @@ export const SITE = {
   },
   defaultOgImage: '/images/og-default.png',
   themeColor: '#0f172a',
+
+  /**
+   * Reklam ayarları (Google AdSense).
+   * 1) AdSense hesabınızdaki yayıncı kimliğini `client` alanına yazın: 'ca-pub-1234567890123456'
+   * 2) AdSense > Reklamlar > "Reklam birimine göre" bölümünde her yerleşim için bir
+   *    "Görüntülü reklam" birimi oluşturup veri-reklam-alanı (data-ad-slot) numarasını aşağıya yazın.
+   * `client` boşken sitede hiçbir reklam kodu yüklenmez; `npm run dev` sırasında yalnızca
+   * reklamların duracağı yerler kesikli çerçeveyle gösterilir.
+   */
+  ads: {
+    enabled: true,
+    client: '', // örn. 'ca-pub-1234567890123456'
+    slots: {
+      /** Yazı/proje sayfası — geniş ekranlarda sağ boşlukta, kaydırırken sabit kalan dikey alan */
+      sidebar: '',
+      /** Uzun yazıların ortasında, iki ana başlık arasında (yalnızca ≥ 4 ana başlıklı yazılar) */
+      inArticle: '',
+      /** Yazı/proje bitiminde, "İlgili yazılar" bölümünden önce */
+      afterArticle: '',
+      /** Blog / proje / etiket listelerinin altında */
+      listing: '',
+      /** Hesaplama araçları sayfasının altında */
+      tools: '',
+    },
+  },
 } as const;
+
+export type AdSlotName = keyof typeof SITE.ads.slots;

@@ -1,6 +1,7 @@
 ---
 // src/pages/projeler/index.astro
 import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
 import SimpleSearch from '../../components/SimpleSearch.astro';
 import { getCollection } from 'astro:content';
 
@@ -152,6 +153,11 @@ const projeler = (await getCollection('projeler'))
             </div>
           </div>
         )}
+      </div>
+
+      {/* Liste sonu reklam alanı */}
+      <div class="max-w-4xl mx-auto mt-16">
+        <AdSlot name="listing" shape="horizontal" />
       </div>
     </div>
   </section>

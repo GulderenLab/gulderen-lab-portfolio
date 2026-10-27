@@ -120,3 +120,58 @@
     opacity: 1;
   }
 }
+
+/* ===== Reklam alanları (AdSlot.astro) ===== */
+@layer components {
+  .ad-slot {
+    position: relative;
+    margin-block: 2.5rem;
+    padding: 1.5rem 0.75rem 0.75rem;
+    border: 1px solid rgb(51 65 85 / 0.6);
+    border-radius: 0.75rem;
+    background: rgb(15 23 42 / 0.35);
+    text-align: center;
+    contain: layout;
+  }
+  .ad-label {
+    position: absolute;
+    top: 0.35rem;
+    left: 0.75rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-slate-500);
+  }
+  /* Yükseklik önceden ayrılır → reklam yüklenince sayfa zıplamaz */
+  .ad-rectangle { min-height: 300px; }
+  .ad-horizontal { min-height: 130px; }
+  .ad-vertical { min-height: 620px; margin: 0; }
+  .ad-slot ins.adsbygoogle { width: 100%; }
+
+  /* Reklam sunulamadıysa alanı tamamen kapat */
+  .ad-slot:has(ins[data-ad-status='unfilled']) { display: none; }
+
+  /* Geliştirme ortamı yer tutucusu */
+  .ad-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    align-items: center;
+    justify-content: center;
+    min-height: inherit;
+    height: 100%;
+    padding: 1rem;
+    border: 2px dashed rgb(34 211 238 / 0.35);
+    border-radius: 0.5rem;
+    color: var(--color-slate-400);
+    font-size: 0.8rem;
+  }
+  .ad-placeholder strong { color: var(--color-cyan-300); font-size: 0.9rem; }
+  .ad-rectangle .ad-placeholder { min-height: 260px; }
+  .ad-horizontal .ad-placeholder { min-height: 90px; }
+  .ad-vertical .ad-placeholder { min-height: 580px; }
+
+  @media print {
+    .ad-slot { display: none !important; }
+  }
+}

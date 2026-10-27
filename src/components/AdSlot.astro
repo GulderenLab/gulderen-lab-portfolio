@@ -1,0 +1,44 @@
+---
+// src/components/AdSlot.astro — Okuyucuyu rahatsız etmeyecek şekilde tasarlanmış reklam alanı.
+// - Açıkça "Reklam" olarak etiketlenir, içerikten çerçeveyle ayrılır
+// - Yükseklik önceden ayrılır (sayfa kayması/CLS olmaz); reklam gelmezse alan kendiliğinden kapanır
+// - Reklam kodu yalnızca alan ekrana yaklaştığında yüklenir (bkz. AdsLoader.astro)
+// - Pop-up, yapışkan alt bant, metin arasına sık reklam gibi rahatsız edici biçimler kullanılmaz
+import { SITE, type AdSlotName } from '../lib/site';
+
+interface Props {
+  name: AdSlotName;
+  /** 'vertical' = dikey kenar alanı, 'rectangle' = içerik arası, 'horizontal' = yatay bant */
+  shape?: 'vertical' | 'rectangle' | 'horizontal';
+  class?: string;
+}
+
+const { name, shape = 'rectangle', class: className = '' } = Astro.props;
+const { enabled, client } = SITE.ads;
+const slotId = SITE.ads.slots[name];
+const live = enabled && !!client && !!slotId;
+const showPlaceholder = !live && enabled && import.meta.env.DEV;
+
+const format = shape === 'vertical' ? 'vertical' : shape === 'horizontal' ? 'horizontal' : 'auto';
+---
+
+{(live || showPlaceholder) && (
+  <aside class:list={['ad-slot not-prose', `ad-${shape}`, className]} aria-label="Reklam" data-ad-name={name}>
+    <span class="ad-label">Reklam</span>
+    {live ? (
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-client={client}
+        data-ad-slot={slotId}
+        data-ad-format={format}
+        data-full-width-responsive={shape === 'vertical' ? 'false' : 'true'}
+      ></ins>
+    ) : (
+      <div class="ad-placeholder">
+        <strong>Reklam alanı: {name}</strong>
+        <span>site.ts → ads.client / ads.slots.{name} doldurulunca burada reklam görünür (yalnızca geliştirmede görünür)</span>
+      </div>
+    )}
+  </aside>
+)}
