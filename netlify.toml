@@ -1,0 +1,53 @@
+# netlify.toml — Netlify derleme ve yayın ayarları (panel ayarlarının yerine geçer)
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Astro 7 en az Node 22.23.4 ister (.nvmrc ile aynı)
+  NODE_VERSION = "22.23.4"
+  NPM_FLAGS = "--no-audit --no-fund"
+
+# --- Kaldırılan eski sayfalar ---
+# Radyoloji bölümü siteden çıkarıldı; eski bağlantılar 404 yerine ana sayfaya yönlensin.
+[[redirects]]
+  from = "/radyoloji/*"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/quiz*"
+  to = "/"
+  status = 301
+
+# --- Önbellek ---
+# Astro'nun ürettiği dosyaların adında içerik özeti (hash) var → 1 yıl önbelleklenebilir.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/pagefind/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/models/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# --- Güvenlik başlıkları ---
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
