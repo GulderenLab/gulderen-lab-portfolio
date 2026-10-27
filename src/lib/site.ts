@@ -29,7 +29,7 @@ export const SITE = {
    */
   ads: {
     enabled: true,
-    client: '', // örn. 'ca-pub-1234567890123456'
+    client: 'ca-pub-9326448562655435',
     slots: {
       /** Yazı/proje sayfası — geniş ekranlarda sağ boşlukta, kaydırırken sabit kalan dikey alan */
       sidebar: '',

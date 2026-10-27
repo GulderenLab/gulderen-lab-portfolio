@@ -85,6 +85,8 @@ const allJsonLd = [...baseJsonLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd :
         <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
         <meta name="generator" content={Astro.generator} />
         <meta name="author" content={SITE.author.name} />
+        {/* AdSense site doğrulaması (reklam betiğini her sayfada yüklemeden hesabı siteyle eşleştirir) */}
+        {SITE.ads.client && <meta name="google-adsense-account" content={SITE.ads.client} />}
 
         {/* Simgeler ve PWA */}
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
