@@ -9,9 +9,9 @@
       // "@/" ile başlayan her yolu "src/" klasörünün içinden ara.
       "@/*": ["src/*"]
     },
-    // JSX ayarlarını Astro'nun doğru çalışması için eklemek iyi bir pratiktir.
-    "jsx": "preserve",
-    "jsxImportSource": "astro"
+    // .jsx/.tsx dosyaları React bileşenleridir (Astro bileşenleri .astro dosyalarıdır).
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
   },
   // Bu kısımlar olduğu gibi kalabilir.
   "include": [".astro/types.d.ts", "**/*"],

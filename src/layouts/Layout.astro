@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
 import { SITE } from '../lib/site';
+import AdsLoader from '../components/AdsLoader.astro';
 import '../styles/tailwind.css';
 import '../styles/design-system-optimized.css';
 import '../styles/animations.css';
@@ -123,6 +124,9 @@ const allJsonLd = [...baseJsonLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd :
 
         <ClientRouter />
 
+        {/* Reklam yükleyici (site.ts → ads.client boşsa hiçbir şey eklemez) */}
+        <AdsLoader />
+
         {/* Görsel büyütme (lightbox) */}
         <script src="/scripts/image-modal.js" defer is:inline></script>
 
@@ -217,7 +221,7 @@ const allJsonLd = [...baseJsonLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd :
 
         <Header siteTitle={siteName} />
 
-        <main id="main-content" class="relative px-4 py-8 grow w-full overflow-x-hidden">
+        <main id="main-content" class="relative px-4 py-8 grow w-full overflow-x-clip">
             <div class="max-w-full">
                 <div class="prose prose-invert w-full max-w-none">
                     <slot />
