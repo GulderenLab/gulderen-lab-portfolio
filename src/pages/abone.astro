@@ -1,0 +1,96 @@
+---
+// src/pages/abone.astro — RSS ile abone olma rehberi
+import Layout from '../layouts/Layout.astro';
+import { SITE } from '../lib/site';
+import { entryUrl, formatDate, getPublished } from '../lib/content';
+
+const feedUrl = new URL('/rss.xml', Astro.site ?? SITE.url).toString();
+const enc = encodeURIComponent(feedUrl);
+const readers = [
+  { name: 'Feedly', href: `https://feedly.com/i/subscription/feed/${enc}`, note: 'Web, Android, iOS' },
+  { name: 'Inoreader', href: `https://www.inoreader.com/?add_feed=${enc}`, note: 'Web, Android, iOS' },
+  { name: 'NewsBlur', href: `https://www.newsblur.com/?url=${enc}`, note: 'Web, Android, iOS' },
+];
+
+const [blog, projeler] = await Promise.all([getPublished('blog'), getPublished('projeler')]);
+const latest = [
+  ...blog.map((e) => ({ e, kind: 'blog' as const })),
+  ...projeler.map((e) => ({ e, kind: 'projeler' as const })),
+]
+  .sort((a, b) => b.e.data.publishDate.valueOf() - a.e.data.publishDate.valueOf())
+  .slice(0, 5);
+---
+
+<Layout title="Abone Ol (RSS)" description="Gulderen Lab'daki yeni yazı ve projelerden RSS ile haberdar olun. Feedly, Inoreader ve diğer okuyucularla tek tıkla abone olun.">
+  <section class="not-prose max-w-3xl mx-auto px-4 py-12">
+    <p class="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full border border-slate-700 bg-slate-800/50 text-sm text-cyan-300">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.18 15.64a2.18 2.18 0 0 1 0 4.36 2.18 2.18 0 0 1 0-4.36M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/></svg>
+      RSS beslemesi
+    </p>
+    <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Yeni yazılardan haberdar olun</h1>
+    <p class="text-lg text-gray-300 mb-10">
+      E-posta bırakmadan, reklamsız ve algoritmasız takip: bir RSS okuyucuya Gulderen Lab'ı eklediğinizde
+      yeni blog yazıları ve projeler yayınlandıkça önünüze gelir.
+    </p>
+
+    <h2 class="text-xl font-semibold text-white mb-3">1. Besleme adresini kopyalayın</h2>
+    <div class="flex flex-col sm:flex-row gap-2 mb-10">
+      <input id="feed-url" readonly value={feedUrl} aria-label="RSS besleme adresi"
+        class="flex-1 min-w-0 rounded-lg border border-slate-600 bg-slate-900 px-4 py-3 font-mono text-sm text-cyan-200" />
+      <button id="copy-feed" type="button"
+        class="rounded-lg bg-linear-to-r from-blue-600 to-cyan-600 px-5 py-3 font-semibold text-white hover:from-blue-500 hover:to-cyan-500">
+        Kopyala
+      </button>
+    </div>
+
+    <h2 class="text-xl font-semibold text-white mb-3">2. Bir okuyucuda açın</h2>
+    <ul class="grid gap-3 sm:grid-cols-3 mb-6">
+      {readers.map((r) => (
+        <li>
+          <a href={r.href} target="_blank" rel="noopener noreferrer"
+            class="block h-full rounded-xl border border-slate-700 bg-slate-800/50 p-4 hover:border-cyan-400/60 transition-colors">
+            <span class="block font-semibold text-white">{r.name} ile abone ol →</span>
+            <span class="block text-xs text-gray-400 mt-1">{r.note}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="text-sm text-gray-400 mb-12">
+      Başka bir uygulama mı kullanıyorsunuz? NetNewsWire, Thunderbird, Outlook ya da herhangi bir RSS okuyucuda
+      “Besleme ekle / Add feed” seçeneğine yukarıdaki adresi yapıştırmanız yeterli.
+    </p>
+
+    <h2 class="text-xl font-semibold text-white mb-4">Son eklenenler</h2>
+    <ul class="space-y-3">
+      {latest.map(({ e, kind }) => (
+        <li>
+          <a href={entryUrl(kind, e)} class="group flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 rounded-lg border border-slate-700/70 px-4 py-3 hover:border-cyan-400/60">
+            <span class="font-medium text-gray-100 group-hover:text-cyan-300">{e.data.title}</span>
+            <span class="shrink-0 text-xs text-gray-400">{kind === 'blog' ? 'Blog' : 'Proje'} · {formatDate(e.data.publishDate)}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Layout>
+
+<script>
+  function initCopy() {
+    const btn = document.getElementById('copy-feed');
+    const input = document.getElementById('feed-url') as HTMLInputElement | null;
+    if (!btn || !input || btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(input.value);
+      } catch {
+        input.select();
+        document.execCommand('copy');
+      }
+      btn.textContent = 'Kopyalandı ✓';
+      setTimeout(() => (btn.textContent = 'Kopyala'), 2000);
+    });
+  }
+  initCopy();
+  document.addEventListener('astro:page-load', initCopy);
+</script>

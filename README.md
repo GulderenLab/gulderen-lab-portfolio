@@ -12,7 +12,7 @@ Elektronik, gömülü sistemler, CAD ve yazılım üzerine Türkçe teknik içer
 | İçerik | Markdown / MDX, KaTeX (derleme zamanında), Shiki |
 | Arama | Pagefind (sunucusuz tam metin arama, `/ara/`) |
 | 3B | `@google/model-viewer` (yalnızca `<model-viewer>` içeren sayfalarda yüklenir) |
-| SEO | Sitemap, RSS (`/rss.xml`), Open Graph, JSON-LD (WebSite, Person, BlogPosting, BreadcrumbList) |
+| SEO | Sitemap, RSS (`/rss.xml`, abone rehberi `/abone/`), Open Graph, JSON-LD (WebSite, Person, BlogPosting, BreadcrumbList) |
 
 Gereksinim: **Node.js 22.23.4 veya üstü** (`.nvmrc`). npm kayıt adresi `.npmrc` ile `registry.npmjs.org` olarak sabitlenmiştir.
 

@@ -26,6 +26,8 @@ export async function GET(context: APIContext) {
     site: context.site ?? SITE.url,
     items,
     customData: `<language>tr-tr</language>`,
+    // Tarayıcıda açıldığında okunabilir görünüm (bkz. public/rss-style.css)
+    stylesheet: '/rss-style.css',
     trailingSlash: true,
   });
 }

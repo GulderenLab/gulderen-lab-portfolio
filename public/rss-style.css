@@ -1,0 +1,97 @@
+/* public/rss-style.css — /rss.xml tarayıcıda açıldığında okunabilir görünmesi için.
+   XSLT yerine CSS kullanılır: Chrome, XSLT desteğini 2026 sonunda kaldırıyor;
+   <?xml-stylesheet type="text/css"?> ise desteklenmeye devam ediyor.
+   RSS okuyucu uygulamaları bu dosyayı yok sayar. */
+
+rss {
+  display: block;
+  min-height: 100vh;
+  margin: 0;
+  padding: 2rem 1rem 4rem;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+}
+
+channel {
+  display: block;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+/* Bilgilendirme bandı */
+channel::before {
+  content: '📡  Bu bir RSS beslemesi. Bu sayfanın adresini kopyalayıp Feedly, Inoreader gibi bir RSS okuyucuya ekleyerek yeni yazılardan haberdar olabilirsiniz. Tek tıkla abone olmak için: www.gulderenlab.com/abone/';
+  display: block;
+  margin-bottom: 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgb(34 211 238 / 0.35);
+  border-radius: 0.75rem;
+  background: rgb(8 145 178 / 0.12);
+  color: #a5f3fc;
+  font-size: 0.95rem;
+}
+
+channel > title {
+  display: block;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #67e8f9;
+  margin-bottom: 0.25rem;
+}
+
+channel > description {
+  display: block;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
+channel > link {
+  display: block;
+  color: #40e0d0;
+  margin-bottom: 2.5rem;
+  font-size: 0.9rem;
+}
+
+language, guid, category, author, lastBuildDate, generator {
+  display: none;
+}
+
+item {
+  display: block;
+  margin-bottom: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgb(51 65 85 / 0.7);
+  border-radius: 1rem;
+  background: rgb(30 41 59 / 0.5);
+}
+
+item > title {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 0.35rem;
+}
+
+item > pubDate {
+  display: block;
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 0.6rem;
+}
+
+item > description {
+  display: block;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  margin-bottom: 0.6rem;
+}
+
+item > link {
+  display: block;
+  font-size: 0.8rem;
+  color: #40e0d0;
+  word-break: break-all;
+}

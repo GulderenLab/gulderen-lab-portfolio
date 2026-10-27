@@ -17,4 +17,4 @@ Bu dosya, depoda çalışan AI kod asistanları (Warp, Claude vb.) için kısa b
 - URL'ler ve başlık id'leri SEO açısından sabit kalmalı; dosya adlarını değiştirmeyin.
 
 ## Rotalar
-`/`, `/blog/`, `/blog/[slug]/`, `/projeler/`, `/projeler/[slug]/`, `/etiket/`, `/etiket/[tag]/`, `/ara/`, `/hesaplama-araclari/`, `/hakkimizda/`, `/iletisim/`, `/gizlilik-politikasi/`, `/rss.xml`, `/sitemap-index.xml` (+ `/sitemap.xml` uyumluluk dizini), `/robots.txt`, `/404`.
+`/`, `/blog/`, `/blog/[slug]/`, `/projeler/`, `/projeler/[slug]/`, `/etiket/`, `/etiket/[tag]/`, `/ara/`, `/abone/`, `/hesaplama-araclari/`, `/hakkimizda/`, `/iletisim/`, `/gizlilik-politikasi/`, `/rss.xml`, `/sitemap-index.xml` (+ `/sitemap.xml` uyumluluk dizini), `/robots.txt`, `/404`.
