@@ -201,7 +201,7 @@ if (!Astro.site && import.meta.env.PROD) {
             }
         </style>
     </head>
-    <body class="relative bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 text-gray-100 flex flex-col min-h-screen font-sans antialiased overflow-x-hidden">
+    <body class="relative bg-linear-to-br from-slate-900 via-gray-900 to-slate-800 text-gray-100 flex flex-col min-h-screen font-sans antialiased overflow-x-hidden">
         {/* Dynamic Conic Gradient Wave Background (Option B) - only on Home */}
         {isHome && (
           <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
@@ -211,7 +211,7 @@ if (!Astro.site && import.meta.env.PROD) {
 
         <Header siteTitle={siteName} />
 
-        <main class="relative px-4 py-8 flex-grow w-full overflow-x-hidden">
+        <main class="relative px-4 py-8 grow w-full overflow-x-hidden">
             <div class="max-w-full">
                 <article class="prose prose-invert w-full max-w-none">
                     <slot />

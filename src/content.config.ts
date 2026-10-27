@@ -1,14 +1,17 @@
-// src/content/config.ts
-import { defineCollection, z } from 'astro:content';
+// src/content.config.ts — Astro Content Layer API
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 // 'projeler' adında bir koleksiyon tanımlıyoruz
 const projelerCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/projeler' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    publishDate: z.date(),
-    tags: z.array(z.string()),
+    publishDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    tags: z.array(z.string()).default([]),
     image: z.object({
         src: z.string(),
         alt: z.string()
@@ -19,13 +22,14 @@ const projelerCollection = defineCollection({
 
 // === BLOG KOLEKSİYONU TANIMI (GÜNCELLENDİ) ===
 const blogCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
     author: z.string().default('Abdullah Gülderen'),
-    publishDate: z.date(),
-    tags: z.array(z.string()).optional(),
+    publishDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(), // Son güncelleme tarihi (SEO: dateModified)
+    tags: z.array(z.string()).default([]),
     image: z.object({
         src: z.string(),
         alt: z.string()

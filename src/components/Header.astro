@@ -12,21 +12,21 @@ const isActive = (path: string) => {
 };
 ---
 <header class="backdrop-blur-md bg-slate-900/95 border-b border-slate-700/50 sticky top-0 z-50 transition-all duration-300" role="banner">
-  <div class="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-cyan-600/5"></div>
+  <div class="absolute inset-0 bg-linear-to-r from-blue-600/5 to-cyan-600/5"></div>
   
   {/* Ana Navigasyon Çubuğu */}
   <nav class="relative container mx-auto px-6 py-4" role="navigation" aria-label="Ana navigasyon">
     <div class="flex justify-between items-center">
       {/* Logo ve Site Başlığı */}
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center shadow-lg">
+        <div class="w-10 h-10 bg-linear-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center shadow-lg">
           <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
           </svg>
         </div>
         <a 
           href="/" 
-          class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent hover:from-blue-300 hover:to-cyan-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 rounded-md"
+          class="text-2xl font-bold bg-linear-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent hover:from-blue-300 hover:to-cyan-200 transition-all duration-300 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 rounded-md"
           aria-label="Gulderen Lab ana sayfa"
         >
           {siteTitle}
@@ -88,7 +88,7 @@ const isActive = (path: string) => {
         
         <a 
           href="/iletisim" 
-          class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 px-6 py-2.5 rounded-lg text-white font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 flex items-center space-x-2"
+          class="bg-linear-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 px-6 py-2.5 rounded-lg text-white font-medium transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 flex items-center space-x-2"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -100,7 +100,7 @@ const isActive = (path: string) => {
       {/* Mobile Menu Button */}
 <button 
   id="menu-toggle" 
-  class="lg:hidden p-2 rounded-lg hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors relative z-50"
+  class="lg:hidden p-2 rounded-lg hover:bg-slate-700/50 focus:outline-hidden focus:ring-2 focus:ring-blue-500 transition-colors relative z-50"
   aria-expanded="false"
   aria-controls="mobile-menu"
   aria-label="Menüyü aç/kapat"
@@ -167,7 +167,7 @@ const isActive = (path: string) => {
           </a>
         </li>
         <li role="none">
-          <a href="/iletisim" class="mobile-nav-link bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border border-blue-500/30" role="menuitem">
+          <a href="/iletisim" class="mobile-nav-link bg-linear-to-r from-blue-600/20 to-cyan-600/20 border border-blue-500/30" role="menuitem">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
             </svg>

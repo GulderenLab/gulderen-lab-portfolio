@@ -1,0 +1,65 @@
+---
+// src/components/ShareLinks.astro — Paylaşım bağlantıları (JS gerektirmez; destekleyen tarayıcılarda Web Share API kullanılır)
+interface Props {
+  url: string;
+  title: string;
+}
+const { url, title } = Astro.props;
+const u = encodeURIComponent(url);
+const t = encodeURIComponent(title);
+const links = [
+  { name: 'X', href: `https://x.com/intent/post?url=${u}&text=${t}` },
+  { name: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${u}` },
+  { name: 'WhatsApp', href: `https://wa.me/?text=${t}%20${u}` },
+  { name: 'E-posta', href: `mailto:?subject=${t}&body=${u}` },
+];
+---
+
+<div class="mt-10 flex flex-wrap items-center gap-2 text-sm" data-share>
+  <span class="text-gray-400 mr-1">Paylaş:</span>
+  {links.map((l) => (
+    <a
+      href={l.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="px-3 py-1.5 rounded-md border border-slate-700 text-gray-300 hover:text-white hover:border-cyan-400/60 transition-colors"
+    >
+      {l.name}
+    </a>
+  ))}
+  <button
+    type="button"
+    class="share-copy px-3 py-1.5 rounded-md border border-slate-700 text-gray-300 hover:text-white hover:border-cyan-400/60 transition-colors"
+    data-url={url}
+    data-title={title}
+  >
+    Bağlantıyı kopyala
+  </button>
+</div>
+
+<script>
+  function initShare() {
+    document.querySelectorAll<HTMLButtonElement>('button.share-copy').forEach((btn) => {
+      if (btn.dataset.bound) return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', async () => {
+        const url = btn.dataset.url ?? location.href;
+        const title = btn.dataset.title ?? document.title;
+        try {
+          if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+            await navigator.share({ url, title });
+            return;
+          }
+          await navigator.clipboard.writeText(url);
+          const old = btn.textContent;
+          btn.textContent = 'Kopyalandı ✓';
+          setTimeout(() => (btn.textContent = old), 2000);
+        } catch {
+          /* kullanıcı iptal etti */
+        }
+      });
+    });
+  }
+  initShare();
+  document.addEventListener('astro:page-load', initShare);
+</script>

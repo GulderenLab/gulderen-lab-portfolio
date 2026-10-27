@@ -5,7 +5,7 @@
 
 <section class="relative py-20 overflow-hidden">
   <!-- Background Elements -->
-  <div class="absolute inset-0 bg-gradient-to-br from-blue-900/10 via-transparent to-cyan-900/10"></div>
+  <div class="absolute inset-0 bg-linear-to-br from-blue-900/10 via-transparent to-cyan-900/10"></div>
   <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
   <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
   
@@ -15,7 +15,7 @@
       <div class="order-2 lg:order-1 flex justify-center lg:justify-start">
         <div class="relative group">
           <!-- Glowing Background -->
-          <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500 animate-pulse"></div>
+          <div class="absolute -inset-1 bg-linear-to-r from-blue-600 via-cyan-600 to-blue-600 rounded-full blur-sm opacity-30 group-hover:opacity-60 transition duration-500 animate-pulse"></div>
           
           <!-- Profile Image -->
           <div class="relative">
@@ -28,13 +28,13 @@
             />
             
             <!-- Floating Icons -->
-            <div class="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+            <div class="absolute -top-4 -right-4 w-16 h-16 bg-linear-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg animate-bounce">
               <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
               </svg>
             </div>
             
-            <div class="absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg animate-bounce delay-300">
+            <div class="absolute -bottom-4 -left-4 w-12 h-12 bg-linear-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg animate-bounce delay-300">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
               </svg>
@@ -46,7 +46,7 @@
       <!-- Right Column - Content -->
       <div class="order-1 lg:order-2 text-center lg:text-left space-y-6">
         <!-- Badge -->
-        <div class="inline-flex items-center space-x-2 bg-blue-900/30 backdrop-blur-sm border border-blue-500/30 rounded-full px-4 py-2">
+        <div class="inline-flex items-center space-x-2 bg-blue-900/30 backdrop-blur-xs border border-blue-500/30 rounded-full px-4 py-2">
           <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
           <span class="text-blue-300 text-sm font-medium">Aktif Geliştirici</span>
         </div>
@@ -55,7 +55,7 @@
         <h1 class="text-4xl md:text-6xl font-bold">
           <span class="text-white">Merhaba, Ben</span>
           <br />
-          <span class="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent animate-gradient-x">
+          <span class="bg-linear-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent animate-gradient-x">
             Abdullah Gülderen
           </span>
         </h1>
@@ -93,7 +93,7 @@
         <div class="flex flex-col sm:flex-row gap-4 pt-6">
           <a 
             href="/projeler" 
-            class="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            class="inline-flex items-center justify-center px-8 py-3 bg-linear-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>

@@ -1,31 +1,122 @@
-/* src/styles/tailwind.css (Nihai Temiz Versiyon) */
+/* src/styles/tailwind.css — Tailwind CSS v4 (CSS-first yapılandırma) */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
+/* Tailwind'in tarayacağı ek kaynaklar (JSX bileşenleri ve içerik dosyaları) */
+@source '../content';
+
+/* ===== Tasarım belirteçleri (design tokens) ===== */
+@theme {
+
+  /* Eski tailwind.config.js içindeki renkler.
+     Not: v3'te `accent-*` renkleri tanımsız bir CSS değişkenine bağlıydı ve hiç çalışmıyordu;
+     sitenin mavi/camgöbeği paletine uygun değerlerle yeniden tanımlandı. */
+  --color-accent: #22d3ee;        /* cyan-400 */
+  --color-accent-light: #a5f3fc;  /* cyan-200 */
+  --color-accent-dark: #0e7490;   /* cyan-700 */
+  --color-brand: #40e0d0;         /* turquoise */
+}
+
+/*
+  Tailwind v4'te varsayılan kenarlık rengi `currentcolor` oldu.
+  v3 görünümünü korumak için uyumluluk stili.
+*/
 @layer base {
-  /* Linklerin ve başlıkların alt çizgisini kaldırır */
-  .prose a, .prose-invert a,
-  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-    @apply no-underline;
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
   }
-  .prose a:hover, .prose-invert a:hover {
-    @apply underline;
-  }
-  
-  /* 
-    MOBİL DÜZEN SORUNLARINI KÖKTEN ÇÖZEN 2 KURAL:
-  */
 
-  /* 1. Tüm kod bloklarının içindeki uzun metinlerin taşmasını engeller */
-  .prose pre, .prose-invert pre {
-    white-space: pre-wrap;       /* Metni koru ama gerektiğinde alt satıra geç */
-    word-break: break-all;       /* Çok uzun tek kelimeleri bile ortasından kır */
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
-  
-  /* 2. Tüm tabloların mobilde yatayda kaydırılabilir olmasını sağlar */
-  .prose table, .prose-invert table {
-    @apply block w-full overflow-x-auto;
+
+  :focus-visible {
+    outline: 2px solid var(--color-cyan-400);
+    outline-offset: 2px;
+  }
+
+  /* Hareket hassasiyeti olan kullanıcılar için animasyonları azalt */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Linklerin ve başlıkların alt çizgisini kaldırır */
+  .prose a,
+  .prose-invert a,
+  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    text-decoration: none;
+  }
+  .prose a:hover,
+  .prose-invert a:hover {
+    text-decoration: underline;
+  }
+
+  /* Kod blokları: uzun satırlar mobilde taşmasın */
+  .prose pre,
+  .prose-invert pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+  }
+
+  /* Tablolar: mobilde yatay kaydırılabilir (eski tailwind.config.js typography ayarı) */
+  .prose table,
+  .prose-invert table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin-top: --spacing(6);
+    margin-bottom: --spacing(6);
+    -webkit-overflow-scrolling: touch;
+  }
+  .prose :where(td, th),
+  .prose-invert :where(td, th) {
+    padding: --spacing(2) --spacing(3);
+    vertical-align: baseline;
+  }
+
+  /* KaTeX blok formülleri: taşarsa yatay kaydır */
+  .katex-display {
+    display: block;
+    margin: 1rem 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  .katex-display > .katex {
+    text-align: center;
+  }
+
+  /* Başlıklara eklenen kalıcı bağlantı (#) simgesi */
+  .anchor-link {
+    margin-left: 0.4em;
+    opacity: 0;
+    color: var(--color-slate-500);
+    transition: opacity 150ms;
+  }
+  .anchor-link::after {
+    content: '#';
+  }
+  :is(h1, h2, h3, h4, h5, h6):hover > .anchor-link,
+  .anchor-link:focus-visible {
+    opacity: 1;
   }
 }

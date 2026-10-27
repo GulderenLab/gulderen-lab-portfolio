@@ -13,10 +13,10 @@ export async function GET() {
 
     // Format blog posts for search
     const searchableBlogPosts = publishedBlogPosts.map(post => ({
-      id: `blog-${post.slug}`,
+      id: `blog-${post.id}`,
       title: post.data.title,
       description: post.data.description,
-      href: `/blog/${post.slug}/`,
+      href: `/blog/${post.id}/`,
       type: 'blog',
       category: 'Blog',
       date: post.data.publishDate.toISOString(),
@@ -26,10 +26,10 @@ export async function GET() {
 
     // Format projects for search
     const searchableProjects = publishedProjects.map(project => ({
-      id: `project-${project.slug}`,
+      id: `project-${project.id}`,
       title: project.data.title,
       description: project.data.description,
-      href: `/projeler/${project.slug}/`,
+      href: `/projeler/${project.id}/`,
       type: 'project',
       category: 'Proje',
       date: project.data.publishDate.toISOString(),

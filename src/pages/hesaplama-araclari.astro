@@ -79,16 +79,16 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
     {/* HERO SECTION */}
     <section class="relative min-h-[60vh] flex items-center justify-center overflow-hidden mb-8">
         {/* Animated Background */}
-        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-blue-900/20"></div>
+        <div class="absolute inset-0 bg-linear-to-br from-slate-900 via-purple-900/20 to-blue-900/20"></div>
         <div class="absolute inset-0">
             <div class="absolute top-20 left-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
             <div class="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/5 to-blue-500/5 rounded-full blur-3xl"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-linear-to-r from-purple-500/5 to-blue-500/5 rounded-full blur-3xl"></div>
         </div>
         
         <div class="relative z-10 container mx-auto px-6 text-center">
             {/* Professional Badge */}
-            <div class="inline-flex items-center px-4 py-2 mb-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full">
+            <div class="inline-flex items-center px-4 py-2 mb-8 bg-slate-800/50 backdrop-blur-xs border border-slate-700/50 rounded-full">
                 <svg class="w-5 h-5 mr-3 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19.5 3.2l-1.6-1.6c-.4-.4-1-.4-1.4 0L4.8 13.3c-.2.2-.3.4-.3.7v3c0 .6.4 1 1 1h3c.3 0 .5-.1.7-.3L21 5.9c.4-.4.4-1 0-1.4zM5.5 16v-1.5L15.3 4.7l1.5 1.5L6.9 16H5.5zm11.3-11.3L15.3 3.2l1.4-1.4 1.5 1.5-1.4 1.4z"/>
                 </svg>
@@ -98,7 +98,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
             {/* Main Heading */}
             <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
                 <span class="block text-white mb-4">Hesaplama</span>
-                <span class="block bg-gradient-to-r from-purple-400 via-blue-300 to-cyan-400 bg-clip-text text-transparent">
+                <span class="block bg-linear-to-r from-purple-400 via-blue-300 to-cyan-400 bg-clip-text text-transparent">
                     Araçları
                 </span>
             </h1>
@@ -112,15 +112,15 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
             {/* Quick Stats + Search */}
             <div class="flex flex-col items-center gap-6">
                 <div class="flex flex-wrap justify-center gap-8 text-center">
-                    <div class="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl px-6 py-4">
+                    <div class="bg-slate-800/30 backdrop-blur-xs border border-slate-700/50 rounded-xl px-6 py-4">
                         <div class="text-2xl font-bold text-purple-400">{allCalculatorsFlat.length}</div>
                         <div class="text-sm text-gray-400">Hesaplama Aracı</div>
                     </div>
-                    <div class="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl px-6 py-4">
+                    <div class="bg-slate-800/30 backdrop-blur-xs border border-slate-700/50 rounded-xl px-6 py-4">
                         <div class="text-2xl font-bold text-blue-400">{calculatorCategories.length}</div>
                         <div class="text-sm text-gray-400">Kategori</div>
                     </div>
-                    <div class="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl px-6 py-4">
+                    <div class="bg-slate-800/30 backdrop-blur-xs border border-slate-700/50 rounded-xl px-6 py-4">
                         <div class="text-2xl font-bold text-cyan-400">∞</div>
                         <div class="text-sm text-gray-400">Kullanım</div>
                     </div>
@@ -134,7 +134,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                             <path d="M21 21l-4.3-4.3" stroke-width="2" stroke-linecap="round"></path>
                         </svg>
                         <input id="calc-search" type="text" placeholder="Araç adı veya kategori ara (örn: Ohm, AWG, Elektronik)..."
-                               class="w-full pl-10 pr-12 py-3 bg-slate-800/60 border border-slate-700/60 rounded-xl text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                               class="w-full pl-10 pr-12 py-3 bg-slate-800/60 border border-slate-700/60 rounded-xl text-white placeholder:text-gray-400 focus:outline-hidden focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
                         <button id="clear-search" class="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 text-sm text-gray-300 hover:text-white bg-slate-700/60 rounded-lg hidden">Temizle</button>
                     </div>
                     <div id="active-filters" class="mt-3 flex flex-wrap gap-2"></div>
@@ -156,11 +156,11 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
             
             {/* Section Header */}
             <div class="text-center mb-16">
-                <div class="inline-flex items-center px-4 py-2 mb-6 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full">
+                <div class="inline-flex items-center px-4 py-2 mb-6 bg-slate-800/50 backdrop-blur-xs border border-slate-700/50 rounded-full">
                     <span class="text-sm text-blue-400 font-medium">Hesaplama Kategorileri</span>
                 </div>
                 <h2 class="text-3xl md:text-4xl font-bold mb-6">
-                    <span class="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                    <span class="bg-linear-to-r from-white to-gray-300 bg-clip-text text-transparent">
                         Mühendislik Araçları
                     </span>
                 </h2>
@@ -173,10 +173,10 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
             <div id="categories-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
                 {calculatorCategories.map((category, categoryIndex) => (
                     <div class="group relative category-card" data-category={category.title}>
-                        <div class="bg-gradient-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-xl border border-slate-700/30 rounded-3xl p-6 md:p-8 hover:border-purple-400/40 transition-all duration-700 hover:transform hover:scale-[1.01] hover:shadow-2xl hover:shadow-purple-500/20">
+                        <div class="bg-linear-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-xl border border-slate-700/30 rounded-3xl p-6 md:p-8 hover:border-purple-400/40 transition-all duration-700 hover:transform hover:scale-[1.01] hover:shadow-2xl hover:shadow-purple-500/20">
                             <button class="w-full text-left flex items-center justify-between gap-4 mb-4 md:mb-6 toggle-category" aria-expanded="true">
                                 <div class="flex items-center">
-                                    <div class="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-purple-400/20 to-blue-500/20 backdrop-blur-sm border border-purple-400/30 rounded-2xl flex items-center justify-center mr-3 md:mr-4 group-hover:from-purple-400/30 group-hover:to-blue-500/30 group-hover:border-purple-400/50 transition-all duration-500">
+                                    <div class="w-12 h-12 md:w-16 md:h-16 bg-linear-to-br from-purple-400/20 to-blue-500/20 backdrop-blur-xs border border-purple-400/30 rounded-2xl flex items-center justify-center mr-3 md:mr-4 group-hover:from-purple-400/30 group-hover:to-blue-500/30 group-hover:border-purple-400/50 transition-all duration-500">
                                         <svg class="w-7 h-7 md:w-8 md:h-8 text-purple-400 group-hover:text-purple-300 transition-colors" fill="currentColor" viewBox="0 0 24 24">
                                             {categoryIndex === 0 && <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>}
                                             {categoryIndex === 1 && <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>}
@@ -218,8 +218,8 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 ))}
                             </div>
 
-                            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-blue-500/0 to-cyan-500/0 group-hover:from-purple-500/5 group-hover:via-blue-500/5 group-hover:to-cyan-500/5 rounded-3xl transition-all duration-700 pointer-events-none"></div>
-                            <div class="absolute -inset-1 bg-gradient-to-br from-purple-500/0 to-blue-500/0 group-hover:from-purple-500/20 group-hover:to-blue-500/20 rounded-3xl blur-xl transition-all duration-700 -z-10 opacity-0 group-hover:opacity-100"></div>
+                            <div class="absolute inset-0 bg-linear-to-br from-purple-500/0 via-blue-500/0 to-cyan-500/0 group-hover:from-purple-500/5 group-hover:via-blue-500/5 group-hover:to-cyan-500/5 rounded-3xl transition-all duration-700 pointer-events-none"></div>
+                            <div class="absolute -inset-1 bg-linear-to-br from-purple-500/0 to-blue-500/0 group-hover:from-purple-500/20 group-hover:to-blue-500/20 rounded-3xl blur-xl transition-all duration-700 -z-10 opacity-0 group-hover:opacity-100"></div>
                         </div>
                     </div>
                 ))}
@@ -229,7 +229,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
 
     {/* CALCULATOR MODAL */}
     {/* CALCULATOR MODAL (sticky header, better spacing) */}
-    <div id="calculator-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div id="calculator-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
       <div class="bg-slate-900/95 border border-slate-700/70 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
         <div class="sticky top-0 z-10 bg-slate-900/95 border-b border-slate-700/60 px-6 py-4 flex items-center justify-between">
           <h3 id="modal-title" class="text-lg md:text-xl font-bold text-white">Hesaplama Aracı</h3>
@@ -662,7 +662,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         <!-- Enhanced Header -->
                         <div class="calculator-header text-center">
                             <div class="flex justify-center mb-4">
-                                <div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-2xl flex items-center justify-center border border-purple-400/30">
+                                <div class="w-16 h-16 bg-linear-to-br from-purple-500/20 to-blue-500/20 rounded-2xl flex items-center justify-center border border-purple-400/30">
                                     <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                                     </svg>
@@ -762,7 +762,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         </div>
                         
                         <!-- Enhanced Formula Reference with Interactive Elements -->
-                        <div class="calculator-formula bg-gradient-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6">
+                        <div class="calculator-formula bg-linear-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6">
                             <h4 class="calculator-formula-title mb-4">
                                 <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
@@ -771,21 +771,21 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                             </h4>
                             
                             <div class="grid md:grid-cols-3 gap-4 mb-6">
-                                <div class="formula-card group bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-400/30 rounded-xl p-4 text-center hover:from-purple-500/20 hover:to-purple-600/20 transition-all duration-300 cursor-pointer"
+                                <div class="formula-card group bg-linear-to-br from-purple-500/10 to-purple-600/10 border border-purple-400/30 rounded-xl p-4 text-center hover:from-purple-500/20 hover:to-purple-600/20 transition-all duration-300 cursor-pointer"
                                      onclick="highlightFormula('voltage')">
                                     <div class="font-mono text-lg font-bold text-purple-300 mb-2 group-hover:text-purple-200">V = I × R</div>
                                     <div class="text-gray-400 text-sm group-hover:text-gray-300">Voltaj Hesaplama</div>
                                     <div class="text-xs text-purple-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Tıklayın</div>
                                 </div>
                                 
-                                <div class="formula-card group bg-gradient-to-br from-blue-500/10 to-blue-600/10 border border-blue-400/30 rounded-xl p-4 text-center hover:from-blue-500/20 hover:to-blue-600/20 transition-all duration-300 cursor-pointer"
+                                <div class="formula-card group bg-linear-to-br from-blue-500/10 to-blue-600/10 border border-blue-400/30 rounded-xl p-4 text-center hover:from-blue-500/20 hover:to-blue-600/20 transition-all duration-300 cursor-pointer"
                                      onclick="highlightFormula('current')">
                                     <div class="font-mono text-lg font-bold text-blue-300 mb-2 group-hover:text-blue-200">I = V ÷ R</div>
                                     <div class="text-gray-400 text-sm group-hover:text-gray-300">Akım Hesaplama</div>
                                     <div class="text-xs text-blue-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Tıklayın</div>
                                 </div>
                                 
-                                <div class="formula-card group bg-gradient-to-br from-cyan-500/10 to-cyan-600/10 border border-cyan-400/30 rounded-xl p-4 text-center hover:from-cyan-500/20 hover:to-cyan-600/20 transition-all duration-300 cursor-pointer"
+                                <div class="formula-card group bg-linear-to-br from-cyan-500/10 to-cyan-600/10 border border-cyan-400/30 rounded-xl p-4 text-center hover:from-cyan-500/20 hover:to-cyan-600/20 transition-all duration-300 cursor-pointer"
                                      onclick="highlightFormula('resistance')">
                                     <div class="font-mono text-lg font-bold text-cyan-300 mb-2 group-hover:text-cyan-200">R = V ÷ I</div>
                                     <div class="text-gray-400 text-sm group-hover:text-gray-300">Direnç Hesaplama</div>
@@ -833,15 +833,15 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                             <div class="calculator-info-content">
                                 <ul class="space-y-2 text-sm">
                                     <li class="flex items-start">
-                                        <span class="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span class="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 shrink-0"></span>
                                         <span>Herhangi iki değeri girin, üçüncüsü otomatik hesaplanacaktır</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <span class="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span class="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 shrink-0"></span>
                                         <span>Formül kartlarına tıklayarak ilgili alanları vurgulayabilirsiniz</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <span class="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span class="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 shrink-0"></span>
                                         <span>Güç değeri tüm hesaplamalarda otomatik olarak gösterilir</span>
                                     </li>
                                 </ul>
@@ -857,7 +857,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         <!-- Enhanced Header -->
                         <div class="calculator-header text-center">
                             <div class="flex justify-center mb-4">
-                                <div class="w-16 h-16 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl flex items-center justify-center border border-yellow-400/30">
+                                <div class="w-16 h-16 bg-linear-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl flex items-center justify-center border border-yellow-400/30">
                                     <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M13 3h-2v10h2V3zM17.83 5.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.59-5.41L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
                                     </svg>
@@ -868,7 +868,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         </div>
                         
                         <!-- DC Basic -->
-                        <div class="bg-gradient-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6 space-y-6">
+                        <div class="bg-linear-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6 space-y-6">
                             <h4 class="calculator-formula-title text-lg font-semibold text-white flex items-center">
                                 <svg class="w-5 h-5 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -916,7 +916,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         </div>
 
                         <!-- AC Single-Phase -->
-                        <div class="bg-gradient-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6 space-y-6">
+                        <div class="bg-linear-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6 space-y-6">
                             <h4 class="calculator-formula-title text-lg font-semibold text-white flex items-center">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L9 7V9L15 15L21 9Z"/>
@@ -999,7 +999,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                     </select>
                                 </div>
                                 <div class="md:col-span-2 flex items-end">
-                                    <button onclick="calcPowerAC3()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                                    <button onclick="calcPowerAC3()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
                                 </div>
                             </div>
                             <div id="pac3-out" class="text-sm text-green-300"></div>
@@ -1026,7 +1026,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                     </div>
                                 </div>
                                 <div class="md:col-span-2 flex items-end">
-                                    <button onclick="calcPowerEfficiency()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                                    <button onclick="calcPowerEfficiency()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
                                 </div>
                             </div>
                             <div id="peff-out" class="text-sm text-green-300"></div>
@@ -1062,7 +1062,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                             </div>
                         </div>
                         <div class="flex justify-center">
-                            <button onclick="convertFrequency()" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-6 py-2 rounded-lg text-white font-medium transition-all duration-300">
+                            <button onclick="convertFrequency()" class="bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-6 py-2 rounded-lg text-white font-medium transition-all duration-300">
                                 Dönüştür
                             </button>
                         </div>
@@ -1080,7 +1080,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <input type="number" id="period-f" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" placeholder="örn: 1000">
                             </div>
                             <div class="flex items-end">
-                                <button onclick="calcPeriod()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                                <button onclick="calcPeriod()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
                             </div>
                         </div>
                         <div id="period-result" class="text-center text-lg font-semibold text-green-400"></div>
@@ -1109,7 +1109,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                             </div>
                         </div>
                         <div class="flex justify-center">
-                            <button onclick="calcDb()" class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                            <button onclick="calcDb()" class="bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
                         </div>
                         <div id="db-result" class="text-center text-lg font-semibold text-green-400"></div>
                     </div>
@@ -1129,7 +1129,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <input type="number" id="wl-c" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="299792458" step="any">
                             </div>
                             <div class="flex items-end">
-                                <button onclick="calcWavelength()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                                <button onclick="calcWavelength()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
                             </div>
                         </div>
                         <div id="wl-result" class="text-center text-lg font-semibold text-green-400"></div>
@@ -1174,7 +1174,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 </select>
                             </div>
                             <div class="flex items-end">
-                                <button onclick="convertDataSize()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Dönüştür</button>
+                                <button onclick="convertDataSize()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Dönüştür</button>
                             </div>
                         </div>
                         <div id="ds-result" class="space-y-1"></div>
@@ -1216,7 +1216,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                             </div>
                         </div>
                         <div class="flex justify-center gap-3">
-                            <button onclick="calcWifiRange()" class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                            <button onclick="calcWifiRange()" class="bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
                         </div>
                         <div id="wifi-result" class="text-center text-lg font-semibold text-green-400"></div>
                         <div class="text-xs text-gray-400 text-center">Model: Serbest uzay FSPL + marj. Yansımalar/duvarlar için marj (dB) girin.</div>
@@ -1251,7 +1251,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <input type="number" id="friis-dkm" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="örn: 0.1">
                             </div>
                             <div class="flex items-end">
-                                <button onclick="calcFriis()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                                <button onclick="calcFriis()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
                             </div>
                         </div>
                         <div id="friis-result" class="text-center text-lg font-semibold text-green-400"></div>
@@ -1277,7 +1277,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 </select>
                             </div>
                             <div class="flex items-end">
-                                <button onclick="calcCRC()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                                <button onclick="calcCRC()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
                             </div>
                         </div>
                         <div id="crc-result" class="text-center text-lg font-semibold text-green-400"></div>
@@ -1322,7 +1322,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                             </div>
                         </div>
                         <div class="flex justify-center">
-                            <button onclick="convertTemperature()" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-6 py-2 rounded-lg text-white font-medium transition-all duration-300">
+                            <button onclick="convertTemperature()" class="bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-6 py-2 rounded-lg text-white font-medium transition-all duration-300">
                                 Dönüştür
                             </button>
                         </div>
@@ -1366,7 +1366,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 </div>
                             </div>
                             <div class="flex justify-center mt-6">
-                                <button onclick="calculateAWG()" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-8 py-3 rounded-lg text-white font-semibold transition-all duration-300">
+                                <button onclick="calculateAWG()" class="bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-8 py-3 rounded-lg text-white font-semibold transition-all duration-300">
                                     Hesapla
                                 </button>
                             </div>
@@ -1420,7 +1420,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <input type="number" id="i2c-v" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="3.3" step="any">
                             </div>
                             <div class="flex items-end">
-                                <button onclick="calcI2CPullup()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                                <button onclick="calcI2CPullup()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
                             </div>
                         </div>
                         <div id="i2c-result" class="text-center text-lg font-semibold text-green-400"></div>
@@ -1446,7 +1446,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <input type="number" id="uart-ovs" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="16">
                             </div>
                             <div class="flex items-end">
-                                <button onclick="calcUartError()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
+                                <button onclick="calcUartError()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium">Hesapla</button>
                             </div>
                         </div>
                         <div id="uart-result" class="text-center text-lg font-semibold text-green-400"></div>
@@ -1468,7 +1468,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <input type="number" id="rc-c" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
                             </div>
                             <div class="flex items-end">
-                                <button onclick="calcRCTime()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                                <button onclick="calcRCTime()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
                             </div>
                         </div>
                         <div id="rc-result" class="text-center text-lg font-semibold text-green-400"></div>
@@ -1496,7 +1496,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <input type="number" id="led-i" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any" placeholder="örn: 10">
                             </div>
                             <div class="flex items-end">
-                                <button onclick="calcLedRes()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                                <button onclick="calcLedRes()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
                             </div>
                         </div>
                         <div id="led-result" class="text-center text-lg font-semibold text-green-400"></div>
@@ -1538,7 +1538,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                             </div>
                         </div>
                         <div class="flex justify-center">
-                            <button onclick="calcReactive()" class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                            <button onclick="calcReactive()" class="bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
                         </div>
                         <div id="rx-result" class="text-center text-lg font-semibold text-green-400"></div>
                     </div>
@@ -1567,7 +1567,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                             </div>
                         </div>
                         <div class="flex justify-center">
-                            <button onclick="calcDividerLoad()" class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                            <button onclick="calcDividerLoad()" class="bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
                         </div>
                         <div id="vd-result" class="text-center text-lg font-semibold text-green-400"></div>
                         <div class="text-sm text-gray-300 bg-slate-700/50 rounded-lg p-4">
@@ -1594,7 +1594,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <input type="number" id="pwm-arr" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white">
                             </div>
                             <div class="flex items-end">
-                                <button onclick="calcPwm()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                                <button onclick="calcPwm()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
                             </div>
                         </div>
                         <div id="pwm-result" class="text-center text-lg font-semibold text-green-400"></div>
@@ -1622,7 +1622,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <input type="number" id="adc-vin" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" step="any">
                             </div>
                             <div class="flex items-end">
-                                <button onclick="calcAdc()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                                <button onclick="calcAdc()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
                             </div>
                         </div>
                         <div id="adc-result" class="text-center text-lg font-semibold text-green-400"></div>
@@ -1677,7 +1677,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <input type="number" id="bat-npar" class="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white" value="1" step="1" min="1">
                             </div>
                             <div class="md:col-span-4 flex items-end">
-                                <button onclick="calcBatteryAdvanced()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
+                                <button onclick="calcBatteryAdvanced()" class="w-full bg-linear-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-lg text-white font-medium transition-all">Hesapla</button>
                             </div>
                         </div>
                         <div id="bat-result" class="text-center text-lg font-semibold text-green-400"></div>
@@ -1772,7 +1772,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 </div>
                             </div>
                             <div class="flex justify-center mt-6">
-                                <button onclick="calculateLT3045()" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-8 py-3 rounded-lg text-white font-semibold transition-all duration-300">
+                                <button onclick="calculateLT3045()" class="bg-linear-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 px-8 py-3 rounded-lg text-white font-semibold transition-all duration-300">
                                     Hesapla
                                 </button>
                             </div>
@@ -1847,7 +1847,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         <!-- Enhanced Header -->
                         <div class="calculator-header text-center">
                             <div class="flex justify-center mb-4">
-                                <div class="w-16 h-16 bg-gradient-to-br from-blue-500/20 to-green-500/20 rounded-2xl flex items-center justify-center border border-blue-400/30">
+                                <div class="w-16 h-16 bg-linear-to-br from-blue-500/20 to-green-500/20 rounded-2xl flex items-center justify-center border border-blue-400/30">
                                     <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                     </svg>
@@ -1866,7 +1866,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         <!-- Disclaimer -->
                         <div class="bg-orange-500/10 border border-orange-500/20 rounded-lg p-4 mb-6">
                             <div class="flex items-start gap-3">
-                                <svg class="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 text-orange-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/>
                                 </svg>
                                 <div>
@@ -1888,7 +1888,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         </div>
                         
                         <!-- Quick Reference -->
-                        <div class="calculator-formula bg-gradient-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6">
+                        <div class="calculator-formula bg-linear-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6">
                             <h4 class="calculator-formula-title mb-4">
                                 <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -1940,15 +1940,15 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                             <div class="calculator-info-content">
                                 <ul class="space-y-2 text-sm">
                                     <li class="flex items-start">
-                                        <span class="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span class="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 shrink-0"></span>
                                         <span>Her kategori için en uygun seçeneği işaretleyin</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <span class="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span class="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 shrink-0"></span>
                                         <span>Nodül boyutunu girmeniz İİAB gereksinimi için önerilir</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <span class="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span class="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 shrink-0"></span>
                                         <span>Sonuçlar ACR TI-RADS kılavuzuna dayalıdır</span>
                                     </li>
                                 </ul>
@@ -1964,7 +1964,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         <!-- Enhanced Header -->
                         <div class="calculator-header text-center">
                             <div class="flex justify-center mb-4">
-                                <div class="w-16 h-16 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center border border-pink-400/30">
+                                <div class="w-16 h-16 bg-linear-to-br from-pink-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center border border-pink-400/30">
                                     <svg class="w-8 h-8 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                                     </svg>
@@ -1983,7 +1983,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         <!-- Disclaimer -->
                         <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-6">
                             <div class="flex items-start gap-3">
-                                <svg class="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 text-red-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/>
                                 </svg>
                                 <div>
@@ -2006,7 +2006,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         </div>
                         
                         <!-- Quick Reference -->
-                        <div class="calculator-formula bg-gradient-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6">
+                        <div class="calculator-formula bg-linear-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-6">
                             <h4 class="calculator-formula-title mb-4">
                                 <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -2063,19 +2063,19 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                             <div class="calculator-info-content">
                                 <ul class="space-y-2 text-sm">
                                     <li class="flex items-start">
-                                        <span class="w-2 h-2 bg-pink-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span class="w-2 h-2 bg-pink-400 rounded-full mt-2 mr-3 shrink-0"></span>
                                         <span>Görüntüleme modalitesini seçin (mamografi, ultrasonografi, MRG)</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <span class="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span class="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 shrink-0"></span>
                                         <span>Görüntüleme bulgularını detaylı olarak tanımlayın</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <span class="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span class="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 shrink-0"></span>
                                         <span>Klinik bilgileri (yaş, aile hikayesi) ekleyin</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <span class="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                        <span class="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 shrink-0"></span>
                                         <span>Sonuçlar sadece referans amaçlıdır, klinik karar için uzman konsültasyonu gereklidir</span>
                                     </li>
                                 </ul>
@@ -3191,7 +3191,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
 
         // View toggles (cards vs list)
         function setListView(isList){
-            document.getElementById('categories-grid')?.classList.toggle('!grid-cols-1', !!isList);
+            document.getElementById('categories-grid')?.classList.toggle('grid-cols-1!', !!isList);
             document.querySelectorAll('.category-card .calculator-item').forEach(function(el){
                 el.classList.toggle('md:flex', !!isList);
                 el.classList.toggle('items-center', !!isList);
@@ -3631,7 +3631,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
 
                         <!-- Calculate Button -->
                         <div class="calculator-button-container flex gap-3">
-                            <button onclick="calculateTIRADS()" class="calculator-button flex-1 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200">
+                            <button onclick="calculateTIRADS()" class="calculator-button flex-1 bg-linear-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                 </svg>
@@ -3645,7 +3645,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         </div>
 
                         <!-- Results -->
-                        <div id="tirads-result" class="hidden calculator-result bg-gradient-to-r from-slate-800/60 to-slate-700/60 border border-slate-600/50 rounded-xl p-6 space-y-4">
+                        <div id="tirads-result" class="hidden calculator-result bg-linear-to-r from-slate-800/60 to-slate-700/60 border border-slate-600/50 rounded-xl p-6 space-y-4">
                             <!-- Results will be populated by JavaScript -->
                         </div>
                     </div>
@@ -3792,7 +3792,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
 
                     <div class="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
                         <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-blue-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <div>
@@ -3854,7 +3854,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                 // Simple fallback
                 calculatorDiv.innerHTML = `
                     <div class="text-center py-12">
-                        <div class="w-16 h-16 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center border border-pink-400/30 mx-auto mb-4">
+                        <div class="w-16 h-16 bg-linear-to-br from-pink-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center border border-pink-400/30 mx-auto mb-4">
                             <svg class="w-8 h-8 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                             </svg>
@@ -3879,7 +3879,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                 <div class="max-w-6xl mx-auto">
                     <!-- Modality Selection Header -->
                     <div class="text-center mb-8">
-                        <div class="w-16 h-16 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center border border-pink-400/30 mx-auto mb-4">
+                        <div class="w-16 h-16 bg-linear-to-br from-pink-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center border border-pink-400/30 mx-auto mb-4">
                             <svg class="w-8 h-8 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                             </svg>
@@ -3895,10 +3895,10 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                     <!-- Modality Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                         <!-- Mammography Card -->
-                        <div class="group cursor-pointer bg-gradient-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-xl border border-slate-700/30 rounded-2xl p-6 hover:border-blue-400/40 transition-all duration-500 hover:transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/20" 
+                        <div class="group cursor-pointer bg-linear-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-xl border border-slate-700/30 rounded-2xl p-6 hover:border-blue-400/40 transition-all duration-500 hover:transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/20" 
                              onclick="showModalityCalculator('mammography')">
                             <div class="flex items-center gap-4 mb-4">
-                                <div class="w-12 h-12 bg-blue-500/20 border-blue-500/30 text-blue-300 backdrop-blur-sm border rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300">
+                                <div class="w-12 h-12 bg-blue-500/20 border-blue-500/30 text-blue-300 backdrop-blur-xs border rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300">
                                     🩻
                                 </div>
                                 <div>
@@ -3917,24 +3917,24 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <h5 class="text-sm font-semibold text-gray-300">Özellikler:</h5>
                                 <div class="grid grid-cols-1 gap-2">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-blue-500/20 border-blue-500/30 text-blue-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-blue-500/20 border-blue-500/30 text-blue-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">Kitle değerlendirmesi</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-blue-500/20 border-blue-500/30 text-blue-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-blue-500/20 border-blue-500/30 text-blue-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">Kalsifikasyon analizi</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-blue-500/20 border-blue-500/30 text-blue-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-blue-500/20 border-blue-500/30 text-blue-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">Architectural distortion</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-blue-500/20 border-blue-500/30 text-blue-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-blue-500/20 border-blue-500/30 text-blue-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">ACR yoğunluk kategorileri</span>
                                     </div>
                                 </div>
                             </div>
-                            <button class="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 group-hover:shadow-lg">
+                            <button class="w-full bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 group-hover:shadow-lg">
                                 <span class="flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
@@ -3945,10 +3945,10 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         </div>
                         
                         <!-- Ultrasonography Card -->
-                        <div class="group cursor-pointer bg-gradient-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-xl border border-slate-700/30 rounded-2xl p-6 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20" 
+                        <div class="group cursor-pointer bg-linear-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-xl border border-slate-700/30 rounded-2xl p-6 hover:border-cyan-400/40 transition-all duration-500 hover:transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20" 
                              onclick="showModalityCalculator('ultrasonography')">
                             <div class="flex items-center gap-4 mb-4">
-                                <div class="w-12 h-12 bg-cyan-500/20 border-cyan-500/30 text-cyan-300 backdrop-blur-sm border rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300">
+                                <div class="w-12 h-12 bg-cyan-500/20 border-cyan-500/30 text-cyan-300 backdrop-blur-xs border rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300">
                                     📡
                                 </div>
                                 <div>
@@ -3967,24 +3967,24 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <h5 class="text-sm font-semibold text-gray-300">Özellikler:</h5>
                                 <div class="grid grid-cols-1 gap-2">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-cyan-500/20 border-cyan-500/30 text-cyan-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-cyan-500/20 border-cyan-500/30 text-cyan-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">Solid/kistik ayırım</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-cyan-500/20 border-cyan-500/30 text-cyan-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-cyan-500/20 border-cyan-500/30 text-cyan-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">Doppler değerlendirmesi</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-cyan-500/20 border-cyan-500/30 text-cyan-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-cyan-500/20 border-cyan-500/30 text-cyan-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">Elastografi</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-cyan-500/20 border-cyan-500/30 text-cyan-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-cyan-500/20 border-cyan-500/30 text-cyan-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">Gerçek zamanlı değerlendirme</span>
                                     </div>
                                 </div>
                             </div>
-                            <button class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 group-hover:shadow-lg">
+                            <button class="w-full bg-linear-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 group-hover:shadow-lg">
                                 <span class="flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
@@ -3995,10 +3995,10 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         </div>
                         
                         <!-- MRI Card -->
-                        <div class="group cursor-pointer bg-gradient-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-xl border border-slate-700/30 rounded-2xl p-6 hover:border-purple-400/40 transition-all duration-500 hover:transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/20" 
+                        <div class="group cursor-pointer bg-linear-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-xl border border-slate-700/30 rounded-2xl p-6 hover:border-purple-400/40 transition-all duration-500 hover:transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/20" 
                              onclick="showModalityCalculator('mri')">
                             <div class="flex items-center gap-4 mb-4">
-                                <div class="w-12 h-12 bg-purple-500/20 border-purple-500/30 text-purple-300 backdrop-blur-sm border rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300">
+                                <div class="w-12 h-12 bg-purple-500/20 border-purple-500/30 text-purple-300 backdrop-blur-xs border rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform duration-300">
                                     🧲
                                 </div>
                                 <div>
@@ -4017,24 +4017,24 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 <h5 class="text-sm font-semibold text-gray-300">Özellikler:</h5>
                                 <div class="grid grid-cols-1 gap-2">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-purple-500/20 border-purple-500/30 text-purple-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-purple-500/20 border-purple-500/30 text-purple-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">Enhancement kinetikleri</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-purple-500/20 border-purple-500/30 text-purple-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-purple-500/20 border-purple-500/30 text-purple-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">Difüzyon ağırlıklı</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-purple-500/20 border-purple-500/30 text-purple-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-purple-500/20 border-purple-500/30 text-purple-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">T2 sinyal özellikleri</span>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-purple-500/20 border-purple-500/30 text-purple-300 rounded-full flex-shrink-0"></div>
+                                        <div class="w-1.5 h-1.5 bg-purple-500/20 border-purple-500/30 text-purple-300 rounded-full shrink-0"></div>
                                         <span class="text-gray-400 text-xs">Multiplanar değerlendirme</span>
                                     </div>
                                 </div>
                             </div>
-                            <button class="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 group-hover:shadow-lg">
+                            <button class="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 group-hover:shadow-lg">
                                 <span class="flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
@@ -4048,7 +4048,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                     <!-- Info Section -->
                     <div class="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
                         <div class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-blue-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <div>
@@ -4083,7 +4083,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
             calculatorDiv.innerHTML = `
                 <div class="max-w-4xl mx-auto">
                     <div class="text-center mb-8">
-                        <div class="w-16 h-16 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center border border-pink-400/30 mx-auto mb-4">
+                        <div class="w-16 h-16 bg-linear-to-br from-pink-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center border border-pink-400/30 mx-auto mb-4">
                             <svg class="w-8 h-8 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                             </svg>
@@ -4099,7 +4099,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         </button>
                     </div>
                     
-                    <div class="bg-gradient-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-8">
+                    <div class="bg-linear-to-br from-slate-800/40 to-slate-900/60 border border-slate-700/50 rounded-2xl p-8">
                         <h4 class="text-xl font-bold text-white mb-6">${modalityName} BI-RADS Kriterleri</h4>
                         
                         ${modality === 'mammography' ? `
@@ -4296,13 +4296,13 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 </div>
                                 
                                 <!-- Results -->
-                                <div id="mammography-results" class="hidden bg-gradient-to-r from-slate-800/60 to-slate-700/60 border border-slate-600/50 rounded-xl p-6">
+                                <div id="mammography-results" class="hidden bg-linear-to-r from-slate-800/60 to-slate-700/60 border border-slate-600/50 rounded-xl p-6">
                                     <!-- Results will be populated by JavaScript -->
                                 </div>
                                 
                                 <!-- Action Buttons -->
                                 <div class="flex gap-4">
-                                    <button type="button" onclick="calculateMammographyBIRADS()" class="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2">
+                                    <button type="button" onclick="calculateMammographyBIRADS()" class="flex-1 bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                         </svg>
@@ -4488,13 +4488,13 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                                 </div>
                                 
                                 <!-- Results -->
-                                <div id="ultrasonography-results" class="hidden bg-gradient-to-r from-slate-800/60 to-slate-700/60 border border-slate-600/50 rounded-xl p-6">
+                                <div id="ultrasonography-results" class="hidden bg-linear-to-r from-slate-800/60 to-slate-700/60 border border-slate-600/50 rounded-xl p-6">
                                     <!-- Results will be populated by JavaScript -->
                                 </div>
                                 
                                 <!-- Action Buttons -->
                                 <div class="flex gap-4">
-                                    <button type="button" onclick="calculateUltrasonographyBIRADS()" class="flex-1 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2">
+                                    <button type="button" onclick="calculateUltrasonographyBIRADS()" class="flex-1 bg-linear-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                         </svg>
@@ -4533,7 +4533,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                         
                         <div class="mt-8 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
                             <div class="flex items-start gap-3">
-                                <svg class="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 text-blue-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 <div>
@@ -4841,7 +4841,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                 
                 <div class="${results.bgColor} ${results.borderColor} border rounded-lg p-4">
                     <div class="flex items-start gap-3">
-                        <svg class="w-5 h-5 ${results.color} mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 ${results.color} mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                         <div>
@@ -5144,7 +5144,7 @@ const allCalculatorsFlat = calculatorCategories.flatMap(c => c.calculators.map(c
                 
                 <div class="${results.bgColor} ${results.borderColor} border rounded-lg p-4">
                     <div class="flex items-start gap-3">
-                        <svg class="w-5 h-5 ${results.color} mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 ${results.color} mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                         <div>
